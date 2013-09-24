@@ -657,32 +657,32 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = ../../src/stdlib/a3p_matrix.sc \
-                         ../../src/stdlib/a3p_random.sc \
-                         ../../src/stdlib/a3p_bloom.sc \
-                         ../../src/stdlib/a3p_sort.sc \
-                         ../../src/stdlib/additive3pp.sc \
-                         ../../src/stdlib/matrix.sc \
-                         ../../src/stdlib/oblivious.sc \
-                         ../../src/stdlib/profiling.sc \
-                         ../../src/stdlib/stdlib.sc \
-                         ../../src/stdlib/x3p_aes.sc \
-                         ../../src/stdlib/x3p_join.sc \
-                         ../../src/stdlib/x3p_string.sc \
-                         ../../src/stdlib/xor3pp.sc \
-                         ../../src/stdlib/a3p_oblivious.sc \
-                         ../../src/stdlib/doc/code_stucture.sc \
-                         ../../src/stdlib/doc/types.sc \
-                         ../../src/stdlib/doc/variables.sc \
-                         ../../src/stdlib/doc/expressions.sc \
-                         ../../src/stdlib/doc/arrays.sc \
-                         ../../src/stdlib/doc/control_structures.sc \
-                         ../../src/stdlib/doc/functions.sc \
-                         ../../src/stdlib/doc/templates.sc \
-                         ../../src/stdlib/doc/modules.sc \
-                         ../../src/stdlib/doc/data_types.sc \
-                         ../../src/stdlib/doc/operators.sc \
-                         ../../src/stdlib/doc/main.sc
+INPUT                  = ../lib/a3p_matrix.sc \
+                         ../lib/a3p_random.sc \
+                         ../lib/a3p_bloom.sc \
+                         ../lib/a3p_sort.sc \
+                         ../lib/additive3pp.sc \
+                         ../lib/matrix.sc \
+                         ../lib/oblivious.sc \
+                         ../lib/profiling.sc \
+                         ../lib/stdlib.sc \
+                         ../lib/x3p_aes.sc \
+                         ../lib/x3p_join.sc \
+                         ../lib/x3p_string.sc \
+                         ../lib/xor3pp.sc \
+                         ../lib/a3p_oblivious.sc \
+                         ../lib/doc/code_stucture.sc \
+                         ../lib/doc/types.sc \
+                         ../lib/doc/variables.sc \
+                         ../lib/doc/expressions.sc \
+                         ../lib/doc/arrays.sc \
+                         ../lib/doc/control_structures.sc \
+                         ../lib/doc/functions.sc \
+                         ../lib/doc/templates.sc \
+                         ../lib/doc/modules.sc \
+                         ../lib/doc/data_types.sc \
+                         ../lib/doc/operators.sc \
+                         ../lib/doc/main.sc
 
 # This tag can be used to specify the character encoding of the source files 
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding, which is 
