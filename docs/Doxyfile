@@ -657,7 +657,11 @@ WARN_LOGFILE           =
 # directories like "/usr/src/myproject". Separate the files or directories 
 # with spaces.
 
-INPUT                  = ../lib/a3p_matrix.sc \
+INPUT                  = ../lib/a3p_statistics_distribution.sc \
+                         ../lib/a3p_statistics_testing.sc \
+                         ../lib/a3p_statistics_summary.sc \
+                         ../lib/a3p_statistics_common.sc \
+                         ../lib/a3p_matrix.sc \
                          ../lib/a3p_random.sc \
                          ../lib/a3p_bloom.sc \
                          ../lib/a3p_sort.sc \
