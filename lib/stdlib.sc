@@ -1691,38 +1691,40 @@ D T[[1]] max (D T[[1]] vec, uint k) {
 /** \addtogroup <abs>
 *  @{
 *  @brief Function for finding the absolute value of the input
-*  @note **D** - all protection domains
 *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
-*  @param x - input scalar of supported type
-*  @return returns the absolute value of the input
-*  \todo
+*  @param x - input of supported type
+*  @return returns the absolute value of the input if it's a scalar or
+*  a vector where every element of the input vector is replaced with
+*  its absolute value
 */
-template <domain D>
-D int8 abs (D int8 x) {
-	return x < 0 ? -x : x;
+template <dim N>
+int8[[N]] abs (int8[[N]] x) {
+    return x < 0 ? -x : x;
 }
 
-template <domain D>
-D int16 abs (D int16 x) {
-	return x < 0 ? -x : x;
+template <dim N>
+int16[[N]] abs (int16[[N]] x) {
+    return x < 0 ? -x : x;
 }
 
-template <domain D>
-D int32 abs (D int32 x) {
-	return x < 0 ? -x : x;
+template <dim N>
+int32[[N]] abs (int32[[N]] x) {
+    return x < 0 ? -x : x;
 }
 
-template <domain D>
-D int abs (D int x) {
-	return x < 0 ? -x : x;
+template <dim N>
+int64[[N]] abs (int64[[N]] x) {
+    return x < 0 ? -x : x;
 }
 
-float32 abs (float32 x) {
-	return x < 0 ? -x : x;
+template <dim N>
+float32[[N]] abs (float32[[N]] x) {
+    return x < 0 ? -x : x;
 }
 
-float64 abs (float64 x) {
-	return x < 0 ? -x : x;
+template <dim N>
+float64[[N]] abs (float64[[N]] x) {
+    return x < 0 ? -x : x;
 }
 
 /** @}*/
