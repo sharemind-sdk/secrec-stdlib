@@ -1165,132 +1165,273 @@ D T[[1]] selectK (D T[[1]] vector, uint k) {
  *  @param column - column to select by
  *  @return returns a matrix with k rows selected from the input vector according to the input column index
  */
-
-/**
- *\cond
- */
 template <domain D : additive3pp>
 D uint8[[2]] selectK (D uint8[[2]] matrix, uint k, uint column) {
-    D xor_uint8[[2]] in = reshare (matrix);
-    D xor_uint8[[2]] out = selectK (in, k, column);
-    return reshare(out);
+    D uint8[[2]] shuffledMatrix = shuffleRows(matrix);
+    D xor_uint8[[1]] columnToSort = reshare(shuffledMatrix[:,column]);
+
+    uint[[1]] publicIndices = iota(size(columnToSort));
+    D xor_uint8[[1]] indexVector = (uint8) publicIndices;
+    indexVector = _selectK(columnToSort, indexVector, k);
+    publicIndices = (uint) declassify(indexVector);
+
+    D uint8[[2]] out(k, shape(matrix)[1]);
+    for (uint i = 0; i < k; i++) {
+        out[i, :] = shuffledMatrix[publicIndices[i], :];
+    }
+
+    return out;
 }
 
 template <domain D : additive3pp>
 D uint16[[2]] selectK (D uint16[[2]] matrix, uint k, uint column) {
-    D xor_uint16[[2]] in = reshare (matrix);
-    D xor_uint16[[2]] out = selectK (in, k, column);
-    return reshare(out);
+    D uint16[[2]] shuffledMatrix = shuffleRows(matrix);
+    D xor_uint16[[1]] columnToSort = reshare(shuffledMatrix[:,column]);
+
+    uint[[1]] publicIndices = iota(size(columnToSort));
+    D xor_uint16[[1]] indexVector = (uint16) publicIndices;
+    indexVector = _selectK(columnToSort, indexVector, k);
+    publicIndices = (uint) declassify(indexVector);
+
+    D uint16[[2]] out(k, shape(matrix)[1]);
+    for (uint i = 0; i < k; i++) {
+        out[i, :] = shuffledMatrix[publicIndices[i], :];
+    }
+
+    return out;
 }
 
 template <domain D : additive3pp>
 D uint32[[2]] selectK (D uint32[[2]] matrix, uint k, uint column) {
-    D xor_uint32[[2]] in = reshare (matrix);
-    D xor_uint32[[2]] out = selectK (in, k, column);
-    return reshare(out);
+    D uint32[[2]] shuffledMatrix = shuffleRows(matrix);
+    D xor_uint32[[1]] columnToSort = reshare(shuffledMatrix[:,column]);
+
+    uint[[1]] publicIndices = iota(size(columnToSort));
+    D xor_uint32[[1]] indexVector = (uint32) publicIndices;
+    indexVector = _selectK(columnToSort, indexVector, k);
+    publicIndices = (uint) declassify(indexVector);
+
+    D uint32[[2]] out(k, shape(matrix)[1]);
+    for (uint i = 0; i < k; i++) {
+        out[i, :] = shuffledMatrix[publicIndices[i], :];
+    }
+
+    return out;
 }
 
 template <domain D : additive3pp>
 D uint64[[2]] selectK (D uint64[[2]] matrix, uint k, uint column) {
-    D xor_uint64[[2]] in = reshare (matrix);
-    D xor_uint64[[2]] out = selectK (in, k, column);
-    return reshare(out);
+    D uint64[[2]] shuffledMatrix = shuffleRows(matrix);
+    D xor_uint64[[1]] columnToSort = reshare(shuffledMatrix[:,column]);
+
+    uint[[1]] publicIndices = iota(size(columnToSort));
+    D xor_uint64[[1]] indexVector = (uint64) publicIndices;
+    indexVector = _selectK(columnToSort, indexVector, k);
+    publicIndices = (uint) declassify(indexVector);
+
+    D uint64[[2]] out(k, shape(matrix)[1]);
+    for (uint i = 0; i < k; i++) {
+        out[i, :] = shuffledMatrix[publicIndices[i], :];
+    }
+
+    return out;
 }
 
 template <domain D : additive3pp>
 D int8[[2]] selectK (D int8[[2]] matrix, uint k, uint column) {
-    D uint8[[2]] y = (uint8)matrix + 128;
-    D xor_uint8[[2]] in = reshare (y);
-    D xor_uint8[[2]] out = selectK (in, k, column);
-    y = reshare (out) - 128;
-    return (int8)y;
+    D int8[[2]] shuffledMatrix = shuffleRows(matrix);
+    D xor_uint8[[1]] columnToSort = reshare((uint8) shuffledMatrix[:,column] + 128);
+
+    uint[[1]] publicIndices = iota(size(columnToSort));
+    D xor_uint8[[1]] indexVector = (uint8) publicIndices;
+    indexVector = _selectK(columnToSort, indexVector, k);
+    publicIndices = (uint) declassify(indexVector);
+
+    D int8[[2]] out(k, shape(matrix)[1]);
+    for (uint i = 0; i < k; i++) {
+        out[i, :] = shuffledMatrix[publicIndices[i], :];
+    }
+
+    return out;
 }
 
 template <domain D : additive3pp>
 D int16[[2]] selectK (D int16[[2]] matrix, uint k, uint column) {
-    D uint16[[2]] y = (uint16)matrix + 32768;
-    D xor_uint16[[2]] in = reshare (y);
-    D xor_uint16[[2]] out = selectK (in, k, column);
-    y = reshare(out) - 32768;
-    return (int16)y;
+    D int16[[2]] shuffledMatrix = shuffleRows(matrix);
+    D xor_uint16[[1]] columnToSort = reshare((uint16) shuffledMatrix[:,column] + 32768);
+
+    uint[[1]] publicIndices = iota(size(columnToSort));
+    D xor_uint16[[1]] indexVector = (uint16) publicIndices;
+    indexVector = _selectK(columnToSort, indexVector, k);
+    publicIndices = (uint) declassify(indexVector);
+
+    D int16[[2]] out(k, shape(matrix)[1]);
+    for (uint i = 0; i < k; i++) {
+        out[i, :] = shuffledMatrix[publicIndices[i], :];
+    }
+
+    return out;
 }
 
 template <domain D : additive3pp>
 D int32[[2]] selectK (D int32[[2]] matrix, uint k, uint column) {
-    D uint32[[2]] y = (uint32)matrix + 2147483648;
-    D xor_uint32[[2]] in = reshare (y);
-    D xor_uint32[[2]] out = selectK (in, k, column);
-    y = reshare(out) - 2147483648;
-    return (int32)y;
+    D int32[[2]] shuffledMatrix = shuffleRows(matrix);
+    D xor_uint32[[1]] columnToSort = reshare((uint32) shuffledMatrix[:,column] + 2147483648);
+
+    uint[[1]] publicIndices = iota(size(columnToSort));
+    D xor_uint32[[1]] indexVector = (uint32) publicIndices;
+    indexVector = _selectK(columnToSort, indexVector, k);
+    publicIndices = (uint) declassify(indexVector);
+
+    D int32[[2]] out(k, shape(matrix)[1]);
+    for (uint i = 0; i < k; i++) {
+        out[i, :] = shuffledMatrix[publicIndices[i], :];
+    }
+
+    return out;
 }
 
 template <domain D : additive3pp>
 D int64[[2]] selectK (D int64[[2]] matrix, uint k, uint column) {
-    D uint64[[2]] y = (uint64)matrix + 9223372036854775808;
-    D xor_uint64[[2]] in = reshare (y);
-    D xor_uint64[[2]] out = selectK (in, k, column);
-    y = reshare(out) - 9223372036854775808;
-    return (int64)y;
-}
-/**
- *\endcond
- */
+    D int64[[2]] shuffledMatrix = shuffleRows(matrix);
+    D xor_uint64[[1]] columnToSort = reshare((uint64) shuffledMatrix[:,column] + 9223372036854775808);
 
-template <domain D, type T>
-D T[[2]] selectK (D T[[2]] matrix, uint k, uint column) {
-    uint[[1]] matShape = shape(matrix);
-    uint[[1]] sortnet = generateTopKSortingNetwork (matShape[0], k);
+    uint[[1]] publicIndices = iota(size(columnToSort));
+    D xor_uint64[[1]] indexVector = (uint64) publicIndices;
+    indexVector = _selectK(columnToSort, indexVector, k);
+    publicIndices = (uint) declassify(indexVector);
+
+    D int64[[2]] out(k, shape(matrix)[1]);
+    for (uint i = 0; i < k; i++) {
+        out[i, :] = shuffledMatrix[publicIndices[i], :];
+    }
+
+    return out;
+}
+
+template <domain D : additive3pp>
+D xor_uint8[[2]] selectK (D xor_uint8[[2]] matrix, uint k, uint column) {
+    D xor_uint8[[2]] shuffledMatrix = shuffleRows(matrix);
+
+    uint[[1]] publicIndices = iota(shape(matrix)[0]);
+    D xor_uint8[[1]] indexVector = (uint8) publicIndices;
+    indexVector = _selectK(shuffledMatrix[:,column], indexVector, k);
+    publicIndices = (uint) declassify(indexVector);
+
+    D xor_uint8[[2]] out(k, shape(matrix)[1]);
+    for (uint i = 0; i < k; i++) {
+        out[i, :] = shuffledMatrix[publicIndices[i],:];
+    }
+
+    return out;
+}
+
+template <domain D : additive3pp>
+D xor_uint16[[2]] selectK (D xor_uint16[[2]] matrix, uint k, uint column) {
+    D xor_uint16[[2]] shuffledMatrix = shuffleRows(matrix);
+
+    uint[[1]] publicIndices = iota(shape(matrix)[0]);
+    D xor_uint16[[1]] indexVector = (uint16) publicIndices;
+    indexVector = _selectK(shuffledMatrix[:,column], indexVector, k);
+    publicIndices = (uint) declassify(indexVector);
+
+    D xor_uint16[[2]] out(k, shape(matrix)[1]);
+    for (uint i = 0; i < k; i++) {
+        out[i, :] = shuffledMatrix[publicIndices[i],:];
+    }
+
+    return out;
+}
+
+template <domain D : additive3pp>
+D xor_uint32[[2]] selectK (D xor_uint32[[2]] matrix, uint k, uint column) {
+    D xor_uint32[[2]] shuffledMatrix = shuffleRows(matrix);
+
+    uint[[1]] publicIndices = iota(shape(matrix)[0]);
+    D xor_uint32[[1]] indexVector = (uint32) publicIndices;
+    indexVector = _selectK(shuffledMatrix[:,column], indexVector, k);
+    publicIndices = (uint) declassify(indexVector);
+
+    D xor_uint32[[2]] out(k, shape(matrix)[1]);
+    for (uint i = 0; i < k; i++) {
+        out[i, :] = shuffledMatrix[publicIndices[i],:];
+    }
+
+    return out;
+}
+
+template <domain D : additive3pp>
+D xor_uint64[[2]] selectK (D xor_uint64[[2]] matrix, uint k, uint column) {
+    D xor_uint64[[2]] shuffledMatrix = shuffleRows(matrix);
+
+    uint[[1]] publicIndices = iota(shape(matrix)[0]);
+    D xor_uint64[[1]] indexVector = (uint64) publicIndices;
+    indexVector = _selectK(shuffledMatrix[:,column], indexVector, k);
+    publicIndices = (uint) declassify(indexVector);
+
+    D xor_uint64[[2]] out(k, shape(matrix)[1]);
+    for (uint i = 0; i < k; i++) {
+        out[i, :] = shuffledMatrix[publicIndices[i],:];
+    }
+
+    return out;
+}
+
+/**
+ * \cond
+ */
+template <domain D>
+D uint[[1]] iota (uint n) {
+    uint [[1]] out (n);
+
+    for (uint i = 0; i < n; ++ i)
+        out[i] = i;
+
+    return out;
+}
+
+template <domain D : additive3pp, type T>
+D T[[1]] _selectK (D T[[1]] vector, D T[[1]] indices, uint k) {
+    uint[[1]] sortnet = generateTopKSortingNetwork (size(vector), k);
     uint offset = 0;
     uint numOfStages = sortnet[offset++];
 
     for (uint stage = 0; stage < numOfStages; stage++) {
         uint sizeOfStage = sortnet[offset++];
-        D T[[2]] firstVector (sizeOfStage, matShape[1]);
-        D T[[2]] secondVector (sizeOfStage, matShape[1]);
-        D bool[[1]] exchangeFlagsVector (sizeOfStage);
+
+        D T[[1]] first (2 * sizeOfStage), second (2 * sizeOfStage);
 
         for (uint i = 0; i < sizeOfStage; ++i) {
-            firstVector[i, :] = matrix[sortnet[offset], :];
-            secondVector[i, :] = matrix[sortnet[offset+1], :];
+            first[i]                = vector[sortnet[offset+0]];
+            first[i + sizeOfStage]  = indices[sortnet[offset+0]];
+            second[i]               = vector[sortnet[offset+1]];
+            second[i + sizeOfStage] = indices[sortnet[offset+1]];
             offset += 2;
         }
 
-        exchangeFlagsVector = firstVector[:, column] <= secondVector[:, column];
+        D bool[[1]] exchangeFlagsVector = first[:sizeOfStage] <= second[:sizeOfStage];
+        exchangeFlagsVector = cat (exchangeFlagsVector, exchangeFlagsVector);
 
-        D bool[[2]] expandedExchangeFlagsVector (2 * sizeOfStage, matShape[1]);
+        D T[[1]] results = choose(exchangeFlagsVector, first, second);
 
-        uint counter = 0;
-        for(uint i = 0; i < 2 * sizeOfStage; i = i + 2){
-            expandedExchangeFlagsVector[i,:] = exchangeFlagsVector[counter];
-            expandedExchangeFlagsVector[i + 1,:] = exchangeFlagsVector[counter];
-            counter++;
-        }
-
-        D T[[2]] firstFactor (2 * sizeOfStage, matShape[1]);
-        D T[[2]] secondFactor (2 * sizeOfStage, matShape[1]);
-
-        counter = 0;
-        for (uint i = 0; i < 2 * sizeOfStage; i = i + 2) {
-            firstFactor[i, :] = firstVector[counter, :];
-            firstFactor[i + 1, :] = secondVector[counter, :];
-
-            secondFactor[i, :] = secondVector[counter, :];
-            secondFactor[i + 1, :] = firstVector[counter, :];
-            counter++;
-        }
-
-        D T[[2]] choiceResults (2 * sizeOfStage, matShape[1]);
-        choiceResults = choose(expandedExchangeFlagsVector, firstFactor, secondFactor);
+        second = results ^ first ^ second;
+        first = results;
 
         offset -= 2 * sizeOfStage;
-        for (uint i = 0; i < 2 * sizeOfStage; i = i + 2) {
-            matrix[sortnet[offset++], :] = choiceResults[i, :];
-            matrix[sortnet[offset++], :] = choiceResults[i+1, :];
+        for (uint i = 0; i < sizeOfStage; ++ i) {
+            vector[sortnet[offset+0]]  = first[i];
+            indices[sortnet[offset+0]] = first[i + sizeOfStage];
+            vector[sortnet[offset+1]]  = second[i];
+            indices[sortnet[offset+1]] = second[i + sizeOfStage];
+            offset += 2;
         }
     }
 
-    return matrix;
+    return indices;
 }
+/**
+ * \endcond
+ */
 /** @} */
 /** @} */
 /** @}*/
