@@ -125,6 +125,18 @@ uint sizeof (float64 x)  { return 8; }
  *  @return returns the value associated with the argument specified by parameter name.
  */
 
+/** 
+*  @return An argument of string type.
+*/
+string argument (string name) {
+    uint num_bytes;
+    __syscall ("process_get_argument", __cref name, __return num_bytes);
+    assert (num_bytes > 0);
+    uint8[[1]] bytes (num_bytes);
+    __syscall ("process_get_argument", __cref name, __ref bytes, __return num_bytes);
+    assert (bytes[num_bytes - 1] == 0);
+    return __string_from_bytes (bytes);
+}
 
 /** 
 *  @return An argument of scalar type.
@@ -171,6 +183,18 @@ T[[1]] argument (string name) {
 template <type T, dim N>
 void publish (string name, T[[N]] val) {
     __syscall ("process_set_result", __cref name, __cref "", __cref "$T", __cref val, 0::uint, size(val) * sizeof((T)0));
+}
+
+/** \addtogroup <publish>
+ *  @brief Function for publishing the named public strings.
+ *  @param name The name of the argument.
+ *  @param val the string value to publish under the given name.
+ */
+
+void publish (string name, string val) {
+    uint strsize = 0;
+    __syscall ("miner_string_get_size", __cref val, __return strsize);
+    __syscall ("process_set_result", __cref name, __cref "", __cref "string", __cref val, 0::uint, strsize);
 }
 
 /** @}*/
