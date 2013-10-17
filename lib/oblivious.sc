@@ -84,72 +84,62 @@ D bool[[N]] choose(D bool cond, D bool[[N]] first, D bool[[N]] second) {
 template <domain D, dim N>
 D uint8[[N]] choose(D bool cond, D uint8[[N]] first, D uint8[[N]] second) {
     assert(shapesAreEqual(first,second));
-    D uint8[[N]] cond2 = first;
-    cond2 = (uint8)cond;
+    D uint8[[N]] cond2 = (uint8)cond;
     return first * cond2 + second * (1 - cond2);
 }
 template <domain D, dim N>
 D uint16[[N]] choose(D bool cond, D uint16[[N]] first, D uint16[[N]] second) {
     assert(shapesAreEqual(first,second));
-    D uint16[[N]] cond2 = first;
-    cond2 = (uint16)cond;
+    D uint16[[N]] cond2 = (uint16)cond;
     return first * cond2 + second * (1 - cond2);
 }
 template <domain D, dim N>
 D uint32[[N]] choose(D bool cond, D uint32[[N]] first, D uint32[[N]] second) {
     assert(shapesAreEqual(first,second));
-    D uint32[[N]] cond2 = first;
-    cond2 = (uint32)cond;
+    D uint32[[N]] cond2 = (uint32)cond;
     return first * cond2 + second * (1 - cond2);
 }
 template <domain D, dim N>
 D uint[[N]] choose(D bool cond, D uint[[N]] first, D uint[[N]] second) {
     assert(shapesAreEqual(first,second));
-    D uint[[N]] cond2 = first;
-    cond2 = (uint)cond;
+    D uint[[N]] cond2 = (uint)cond;
     return first * cond2 + second * (1 - cond2);
 }
 template <domain D, dim N>
 D int8[[N]] choose(D bool cond, D int8[[N]] first, D int8[[N]] second) {
     assert(shapesAreEqual(first,second));
-    D int8[[N]] cond2 = first;
-    cond2 = (int8)cond;
+    D int8[[N]] cond2 = (int8)cond;
     return first * cond2 + second * (1 - cond2);
 }
 template <domain D, dim N>
 D int16[[N]] choose(D bool cond, D int16[[N]] first, D int16[[N]] second) {
     assert(shapesAreEqual(first,second));
-    D int16[[N]] cond2 = first;
-    cond2 = (int16)cond;
+    D int16[[N]] cond2 = (int16)cond;
     return first * cond2 + second * (1 - cond2);
 }
 template <domain D, dim N>
 D int32[[N]] choose(D bool cond, D int32[[N]] first, D int32[[N]] second) {
     assert(shapesAreEqual(first,second));
-    D int32[[N]] cond2 = first;
-    cond2 = (int32)cond;
+    D int32[[N]] cond2 = (int32)cond;
     return first * cond2 + second * (1 - cond2);
 }
 template <domain D, dim N>
 D int[[N]] choose(D bool cond, D int[[N]] first, D int[[N]] second) {
     assert(shapesAreEqual(first,second));
-    D int[[N]] cond2 = first;
-    cond2 = (int)cond;
+    D int[[N]] cond2 = (int)cond;
     return first * cond2 + second * (1 - cond2);
 }
 
 template <domain D, dim N>
 D float32[[N]] choose(D bool cond, D float32[[N]] first, D float32[[N]] second) {
     assert(shapesAreEqual(first,second));
-    D float32[[N]] cond2 = first;
-    cond2 = (float32)cond;
+    D float32[[N]] cond2 = (float32)cond;
     return first * cond2 + second * (1 - cond2);
 }
 template <domain D, dim N>
 D float64[[N]] choose(D bool cond, D float64[[N]] first, D float64[[N]] second) {
     assert(shapesAreEqual(first,second));
-    D float64[[N]] cond2 = first;
-    cond2 = (float64)cond;
+    D float64[[N]] cond2 = (float64)cond;
     return first * cond2 + second * (1 - cond2);
 }
 
