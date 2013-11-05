@@ -1,3 +1,4 @@
+#!/bin/sh
 doxygen Doxyfile
 for file in $(grep -il "." html/*.html)
 do
