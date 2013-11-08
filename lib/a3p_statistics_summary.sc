@@ -382,7 +382,9 @@ D FT[[1]] _fiveNumberSummarySn (D T[[1]] data, D bool[[1]] isAvailable) {
  *  @param data - input sample
  *  @param isAvailable - vector indicating which elements of the input sample are available
  *  @return returns a vector containing the minimum, lower quartile,
- *  median and upper quartile of the input sample (in that order)
+ *  median, upper quartile and maximum of the input sample (in that
+ *  order). If the input size is less than five, a vector of zeroes is
+ *  returned.
  */
 template<domain D>
 D float32[[1]] fiveNumberSummarySn (D int32[[1]] data, D bool[[1]] isAvailable) {
@@ -468,7 +470,9 @@ D FT[[1]] _fiveNumberSummaryNth (D T[[1]] data, D bool[[1]] isAvailable){
  *  @param data - input sample
  *  @param isAvailable - vector indicating which elements of the input sample are available
  *  @return returns a vector containing the minimum, lower quartile,
- *  median and upper quartile of the input sample (in that order)
+ *  median, upper quartile and maximum of the input sample (in that
+ *  order). If the input size is less than five, a vector of zeroes is
+ *  returned.
  */
 template<domain D : additive3pp>
 D float32[[1]] fiveNumberSummaryNth (D int32[[1]] data, D bool[[1]] isAvailable) {
