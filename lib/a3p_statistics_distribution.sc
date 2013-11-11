@@ -113,8 +113,8 @@ D T[[2]] _histogram (D T[[1]] data, D bool[[1]] isAvailable) {
 	}
 
 	uint64 noBreaks = _getNoOfBreaks (sizeData);
-	D T min = minimum (cutData, isAvailable);
-	D T max = maximum (cutData, isAvailable);
+    D T min = min (cutData);
+    D T max = max (cutData);
 
 	// Declassify min and max because you will see them on the histogram anyway
 	T[[1]] breaks = _getApproximateBreaksHist (declassify (min), declassify (max), noBreaks);
