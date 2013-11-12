@@ -139,7 +139,8 @@ D T[[2]] _histogram (D T[[1]] data, D bool[[1]] isAvailable) {
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns a matrix where the first row contains histogram
  *  bin boundaries and the second row contains counts for each bin
- *  (note that the first row is longer by 1 element)
+ *  (note that the last element of the second row is always 0 because
+ *  for n bins we have n+1 boundaries)
  */
 template<domain D>
 D int32[[2]] histogram (D int32[[1]] data, D bool[[1]] isAvailable) {
