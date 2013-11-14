@@ -371,7 +371,7 @@ D FT[[1]] _fiveNumberSummarySn (D T[[1]] data, D bool[[1]] isAvailable) {
 
 /** \addtogroup <five_number_summary_sn>
  *  @{
- *  @brief Find the minimum, lower quartile, median and upper quartile of a sample
+ *  @brief Find the minimum, lower quartile, median, upper quartile and maximum of a sample
  *  @note **D** - any protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @note This version sorts the input using a sorting network.
@@ -463,7 +463,7 @@ D FT[[1]] _fiveNumberSummaryNth (D T[[1]] data, D bool[[1]] isAvailable){
 
 /** \addtogroup <five_number_summary_nth>
  *  @{
- *  @brief Find the minimum, lower quartile, median and upper quartile of a sample
+ *  @brief Find the minimum, lower quartile, median, upper quartile and maximum of a sample
  *  @note **D** - additive3pp protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @note This version does not sort the input but uses the nthElement function instead.
