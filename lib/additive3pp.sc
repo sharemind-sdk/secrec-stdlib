@@ -2162,7 +2162,7 @@ D int64[[1]] ceiling (D float64[[1]] arr) {
 }
 
 /** @}*/
-/** \addtogroup <argument>
+/** \addtogroup <a3p_argument>
  *  @{
  *  @brief Function for accessing the named program arguments of additive3pp types.
  *  @note **T** - any \ref data_types "data" type
@@ -2200,7 +2200,7 @@ D T[[1]] argument (string name) {
 }
 
 /** @}*/
-/** \addtogroup <publish>
+/** \addtogroup <a3p_publish>
  *  @{
  *  @brief Function for publishing the named values of additive3pp types.
  *  @note **N** - any array size of any dimension
