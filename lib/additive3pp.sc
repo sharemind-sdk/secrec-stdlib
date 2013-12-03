@@ -49,6 +49,8 @@ kind additive3pp;
 * \defgroup a3p_max_2 max(2 vectors)
 * \defgroup a3p_floor floor
 * \defgroup a3p_ceiling ceiling
+* \defgroup a3p_argument argument
+* \defgroup a3p_publish publish
 */
 
 /** \addtogroup <additive3pp>
@@ -2160,29 +2162,17 @@ D int64[[1]] ceiling (D float64[[1]] arr) {
 }
 
 /** @}*/
-/** @}*/
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/**
- * \cond
- * Functions for accessing the main arguments.
+/** \addtogroup <argument>
+ *  @{
+ *  @brief Function for accessing the named program arguments of additive3pp types.
+ *  @note **T** - any \ref data_types "data" type
+ *  @param name The name of the argument.
+ *  @return returns the value associated with the argument specified by parameter name.
  */
 
+/** 
+*  @return An argument of scalar type.
+*/
 template <domain D : additive3pp, type T>
 D T argument (string name) {
     uint num_bytes;
@@ -2194,6 +2184,9 @@ D T argument (string name) {
     return out;
 }
 
+/**
+*  @return An argument of 1-dimensional array type.
+*/
 template <domain D : additive3pp, type T>
 D T[[1]] argument (string name) {
     uint num_bytes, vector_size;
@@ -2206,9 +2199,14 @@ D T[[1]] argument (string name) {
     return out;
 }
 
-
-/*
- * Functions for publishing values.
+/** @}*/
+/** \addtogroup <publish>
+ *  @{
+ *  @brief Function for publishing the named values of additive3pp types.
+ *  @note **N** - any array size of any dimension
+ *  @note **T** - any \ref data_types "data" type
+ *  @param name The name of the argument.
+ *  @param val the value to publish under the given name. Accepts scalars as well as arrays.
  */
 
 template <domain D : additive3pp, type T, dim N>
@@ -2219,7 +2217,5 @@ void publish (string name, D T[[N]] val) {
     __syscall ("additive3pp::get_shares_$T\_vec", __domainid(D), val, __ref bytes);
     __syscall ("process_set_result", __cref name, __cref "$D", __cref "$T", __cref bytes, 0::uint, num_bytes);
 }
-
-/**
-* \endcond
-*/
+/** @}*/
+/** @}*/
