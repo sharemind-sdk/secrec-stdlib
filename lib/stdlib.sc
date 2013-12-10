@@ -135,7 +135,7 @@ string argument (string name) {
     uint8[[1]] bytes (num_bytes);
     __syscall ("process_get_argument", __cref name, __ref bytes, __return num_bytes);
     assert (bytes[num_bytes - 1] == 0);
-    return __string_from_bytes (bytes);
+    return __string_from_bytes (bytes[:num_bytes - 1]); // exclude null-terminator byte
 }
 
 /** 
