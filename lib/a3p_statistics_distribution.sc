@@ -149,7 +149,7 @@ D T[[2]] _discrete_distribution_count (D T[[1]] data, D bool[[1]] isAvailable, D
     
     //Why exactly 5? Should it be bigger than 5?
     if (sizeData < 5) {
-        T[[2]] result;
+        D T[[2]] result;
         return result;
     }
     
