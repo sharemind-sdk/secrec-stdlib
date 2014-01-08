@@ -182,7 +182,7 @@ T[[1]] argument (string name) {
 
 template <type T, dim N>
 void publish (string name, T[[N]] val) {
-    __syscall ("process_set_result", __cref name, __cref "", __cref "$T", __cref val, 0::uint, size(val) * sizeof((T)0));
+    __syscall ("process_set_result", __cref name, __cref "", __cref "$T", __cref val, sizeof((T)0), 0::uint, size(val) * sizeof((T)0));
 }
 
 /** \addtogroup <publish>
@@ -194,7 +194,7 @@ void publish (string name, T[[N]] val) {
 void publish (string name, string val) {
     uint strsize = 0;
     __syscall ("miner_string_get_size", __cref val, __return strsize);
-    __syscall ("process_set_result", __cref name, __cref "", __cref "string", __cref val, 0::uint, strsize + 1::uint);
+    __syscall ("process_set_result", __cref name, __cref "", __cref "string", __cref val, strsize + 1::uint, 0::uint, strsize + 1::uint);
 }
 
 /** @}*/

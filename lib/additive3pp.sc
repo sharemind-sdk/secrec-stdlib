@@ -2215,7 +2215,9 @@ void publish (string name, D T[[N]] val) {
     __syscall ("additive3pp::get_shares_$T\_vec", __domainid(D), val, __return num_bytes);
     uint8 [[1]] bytes (num_bytes);
     __syscall ("additive3pp::get_shares_$T\_vec", __domainid(D), val, __ref bytes);
-    __syscall ("process_set_result", __cref name, __cref "$D", __cref "$T", __cref bytes, 0::uint, num_bytes);
+    uint type_size;
+    __syscall ("additive3pp::get_type_size_$T", __domainid(D), __return type_size);
+    __syscall ("process_set_result", __cref name, __cref "$D", __cref "$T", __cref bytes, type_size, 0::uint, num_bytes);
 }
 /** @}*/
 /** @}*/
