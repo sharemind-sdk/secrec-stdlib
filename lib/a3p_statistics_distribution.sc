@@ -140,7 +140,7 @@ D T[[2]] _histogram (D T[[1]] data, D bool[[1]] isAvailable) {
  * Private.
  */
 template<domain D, type T>
-D T[[2]] _discrete_distribution_count (D T[[1]] data, D bool[[1]] isAvailable, D T min, D T max, D T stepSize) {
+D T[[2]] _discreteDistributionCount (D T[[1]] data, D bool[[1]] isAvailable, D T min, D T max, D T stepSize) {
     //This is parallel.
     
     D T[[1]] cutData = cut (data, isAvailable);
@@ -222,17 +222,17 @@ D int64[[2]] histogram (D int64[[1]] data, D bool[[1]] isAvailable) {
  * Taking a wild guess, that in most of the use cases stepsize is 1, so can omit that from parameters.
  */
 template<domain D>
-D int32[[2]] discrete_distribution_count (D int32[[1]] data, D bool[[1]] isAvailable, D int32 min, D int32 max) {
+D int32[[2]] discreteDistributionCount (D int32[[1]] data, D bool[[1]] isAvailable, D int32 min, D int32 max) {
     //No better idea at the moment.
     D int32 one = 1;
-    return discrete_distribution_count (data, isAvailable, min, max, one);
+    return discreteDistributionCount (data, isAvailable, min, max, one);
 }
 
 template<domain D>
-D int64[[2]] discrete_distribution_count (D int64[[1]] data, D bool[[1]] isAvailable, D int64 min, D int64 max) {
+D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailable, D int64 min, D int64 max) {
     //No better idea at the moment.
     D int64 one = 1;
-    return discrete_distribution_count (data, isAvailable, min, max, one);
+    return discreteDistributionCount (data, isAvailable, min, max, one);
 }
 
 /*
@@ -240,13 +240,13 @@ D int64[[2]] discrete_distribution_count (D int64[[1]] data, D bool[[1]] isAvail
  * a) instead of stepSize give vector of possible values.
  */
 template<domain D>
-D int32[[2]] discrete_distribution_count (D int32[[1]] data, D bool[[1]] isAvailable, D int32 min, D int32 max, D int32 stepSize) {
-    return _discrete_distribution_count (data, isAvailable, min, max, stepSize);
+D int32[[2]] discreteDistributionCount (D int32[[1]] data, D bool[[1]] isAvailable, D int32 min, D int32 max, D int32 stepSize) {
+    return _discreteDistributionCount (data, isAvailable, min, max, stepSize);
 }
 
 template<domain D>
-D int64[[2]] discrete_distribution_count (D int64[[1]] data, D bool[[1]] isAvailable, D int64 min, D int64 max, D int64 stepSize) {
-    return _discrete_distribution_count (data, isAvailable, min, max, stepSize);
+D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailable, D int64 min, D int64 max, D int64 stepSize) {
+    return _discreteDistributionCount (data, isAvailable, min, max, stepSize);
 }
 
 /** @} */
