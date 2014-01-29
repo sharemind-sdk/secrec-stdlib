@@ -22,6 +22,8 @@ import stdlib;
  * @file
  * \defgroup a3p_statistics_distribution a3p_statistics_distribution.sc
  * \defgroup histogram histogram
+ * \defgroup discreteDistributionCount discreteDistributionCount
+ * \defgroup discreteDistributionCount_stepSize discreteDistributionCount(with stepSize)
  */
 
 /** \addtogroup <a3p_statistics_distribution>
@@ -136,54 +138,50 @@ D T[[2]] _histogram (D T[[1]] data, D bool[[1]] isAvailable) {
 }
 
 
-/*
- * Private.
- */
 template<domain D, type T>
 D T[[2]] _discreteDistributionCount (D T[[1]] data, D bool[[1]] isAvailable, D T min, D T max, D T stepSize) {
-    //This is parallel.
     
     D T[[1]] cutData = cut (data, isAvailable);
     
     uint sizeData = size (cutData);
     
-    //Why exactly 5? Should it be bigger than 5?
+    // Why exactly 5? Should it be bigger than 5?
     if (sizeData < 5) {
         D T[[2]] result;
         return result;
     }
     
-    //Number of "columns" (different possible values).
+    // Number of "columns" (different possible values).
     uint cols = (uint)declassify ((max - min)) + 1;
-    //Already declassifying stuff (matrix size).
+    // Already declassifying something (matrix size).
     D T[[2]] result (2, cols) = stepSize;
     
     uint compSize = sizeData * cols;
-    //Vectors for parallel computations.
+    // Vectors for parallel computations.
     D T[[1]] compA (compSize), compB (compSize), compC (compSize);
     
-    uint startIndex, endIndex;  //Tmp for loop.
+    uint startIndex, endIndex;  // Tmp for loop.
     D T colVal = 0;
-    //compA contains cols times cutData vector. (val1, val2, val3, val1, val2, val3)
-    //compB contains sizeData times values from "columns". (col1, col1, col1, col2, col2, col2)
-    //While we're at it we can also populate first row of result matrix.
-    //  (As we don't have {1..10} and { x * x | x <- {1..10}} syntax YET, have to do it with loops.)
+    // compA contains cols times cutData vector. (val1, val2, val3, val1, val2, val3)
+    // compB contains sizeData times values from "columns". (col1, col1, col1, col2, col2, col2)
+    // While we're at it we can also populate first row of result matrix.
+    // (As we don't have {1..10} and { x * x | x <- {1..10}} syntax YET, have to do it with loops.)
     for (uint i = 0; i < cols; ++i)
     {
         startIndex = i * sizeData;
         endIndex = (i + 1) * sizeData;
         compA[startIndex:endIndex] = cutData;
-        //So here we declassify stepSize. Problem? No?
+        // Here we declassify stepSize. Problem? No? Probably should make stepSize parameter public.
         colVal = min + (T)(i * (uint)declassify(stepSize));
         compB[startIndex:endIndex] = colVal;
         
         result[0,i] = colVal;
     }
     
-    //Here we get match between cutData value and distribution class value.
+    // Here we get match between cutData value and distribution class value.
     compC = (T)(compA == compB);
     
-    //We need to get "cols" sums. This way compC is split into "cols" arrays (each containing sizeData elements).
+    // We need to get "cols" sums. This way compC is split into "cols" arrays (each containing sizeData elements).
     result[1,:] = sum (compC, cols);
     
     return result;
@@ -214,33 +212,58 @@ template<domain D>
 D int64[[2]] histogram (D int64[[1]] data, D bool[[1]] isAvailable) {
     return _histogram (data, isAvailable);
 }
+/** @} */
 
 
-
-//Private distribution count.
+/** \addtogroup <discreteDistributionCount>
+ *  @{
+ *  @brief Find discrete distribution of an input vector
+ *  @note **D** - any protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @param data - input vector
+ *  @param isAvailable - vector indicating which elements of the input vector are available
+ *  @param min - fixed lowest value in returned matrix (lower values from input vector are discarded)
+ *  @param max - fixed highest value in returned matrix (higher values from input vector are discarded)
+ *  @return returns a matrix where the first row contains discrete distribution values
+ *  and the second row contains counts for each value
+ */
 /*
- * Taking a wild guess, that in most of the use cases stepsize is 1, so can omit that from parameters.
+ * In most of the use cases stepsize is 1, so can omit that from parameters for ease of use.
  */
 template<domain D>
 D int32[[2]] discreteDistributionCount (D int32[[1]] data, D bool[[1]] isAvailable, D int32 min, D int32 max) {
-    //No better idea at the moment.
-    D int32 one = 1;
+    D int32 one = 1;    // No better idea at the moment.
     return discreteDistributionCount (data, isAvailable, min, max, one);
 }
 
 template<domain D>
 D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailable, D int64 min, D int64 max) {
-    //No better idea at the moment.
-    D int64 one = 1;
+    D int64 one = 1;    // No better idea at the moment.
     return discreteDistributionCount (data, isAvailable, min, max, one);
 }
+/** @} */
 
+/** \addtogroup <discreteDistributionCount_stepSize>
+ *  @{
+ *  @brief Find discrete distribution of an input vector
+ *  @note **D** - any protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @param data - input vector
+ *  @param isAvailable - vector indicating which elements of the input vector are available
+ *  @param min - fixed lowest value in returned matrix (lower values from input vector are discarded)
+ *  @param max - fixed highest value in returned matrix (higher values from input vector are discarded)
+ *  @param stepSize - difference between adjacent values in returned matrix
+ *  (values in returned matrix are: min, min + stepSize, min + 2*stepSize, min + 3*stepSize, ...).
+ *  Other values from input vector are discarded.
+ *  @return returns a matrix where the first row contains discrete distribution values
+ *  and the second row contains counts for each value
+ */
 /*
- * More possible versions:
- * a) instead of stepSize give vector of possible values.
+ * More possible versions of discreteDistributionCount():
+ * a) instead of min/max/stepSize give vector of possible values.
  */
 template<domain D>
-D int32[[2]] discreteDistributionCount (D int32[[1]] data, D bool[[1]] isAvailable, D int32 min, D int32 max, D int32 stepSize) {
+D int32[[2]] discreteDistributionCount (D int32[[1]] data, D bool[[1]] isAvailable, D int32 minn, D int32 max, D int32 stepSize) {
     return _discreteDistributionCount (data, isAvailable, min, max, stepSize);
 }
 
