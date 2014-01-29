@@ -263,7 +263,7 @@ D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailab
  * a) instead of min/max/stepSize give vector of possible values.
  */
 template<domain D>
-D int32[[2]] discreteDistributionCount (D int32[[1]] data, D bool[[1]] isAvailable, D int32 minn, D int32 max, D int32 stepSize) {
+D int32[[2]] discreteDistributionCount (D int32[[1]] data, D bool[[1]] isAvailable, D int32 min, D int32 max, D int32 stepSize) {
     return _discreteDistributionCount (data, isAvailable, min, max, stepSize);
 }
 
