@@ -661,6 +661,7 @@ INPUT                  = ../lib/a3p_statistics_distribution.sc \
                          ../lib/a3p_statistics_testing.sc \
                          ../lib/a3p_statistics_summary.sc \
                          ../lib/a3p_statistics_common.sc \
+                         ../lib/a3p_statistics_outliers.sc \
                          ../lib/a3p_matrix.sc \
                          ../lib/a3p_random.sc \
                          ../lib/a3p_bloom.sc \

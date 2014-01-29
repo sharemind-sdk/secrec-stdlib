@@ -2108,28 +2108,42 @@ D int[[N]] max (D int[[N]] x, D int[[N]] y) {
  *  @{
  *  @brief Functions for rounding a value downwards
  *  @note **D** - additive3pp protection domain
- *  @note Supported types - \ref float64 "float64"
- *  @return returns a \ref uint64 "uint" type value with the downwards rounded value of the input scalar/vector
+ *  @note Supported types - \ref float32 "float32" \ref float64 "float64"
+ *  @return returns an integer value with the downwards rounded value of the input scalar/vector
  */
 
 /**
 * @param value - input scalar of supported type
 */
 template <domain D : additive3pp>
+D int32 floor (D float32 value) {
+    D int32 out;
+    __syscall("additive3pp::floor_float32_vec", __domainid( D ), value, out);
+    return out;
+}
+
+template <domain D : additive3pp>
 D int64 floor (D float64 value) {
     D int64 out;
-    __syscall("additive3pp::floor_float64_vec", __domainid( D ), value, out);
-    return out;
+    __syscall("additive3pp::floor_float64_vec", __domainid( D ), value, out);
+    return out;
 }
 
 /**
 * @param arr - input vector of supported type
 */
 template <domain D : additive3pp>
+D int32[[1]] floor (D float32[[1]] arr) {
+    D int32[[1]] out (size (arr));
+    __syscall("additive3pp::floor_float32_vec", __domainid( D ), arr, out);
+    return out;
+}
+
+template <domain D : additive3pp>
 D int64[[1]] floor (D float64[[1]] arr) {
     D int64[[1]] out (size (arr));
-    __syscall("additive3pp::floor_float64_vec", __domainid( D ), arr, out);
-    return out;
+    __syscall("additive3pp::floor_float64_vec", __domainid( D ), arr, out);
+    return out;
 }
 
 /** @}*/
@@ -2137,28 +2151,42 @@ D int64[[1]] floor (D float64[[1]] arr) {
  *  @{
  *  @brief Functions for rounding a value upwards
  *  @note **D** - additive3pp protection domain
- *  @note Supported types - \ref float64 "float64"
- *  @return returns a \ref uint64 "uint" type value with the upwards rounded value of the input scalar/vector
+ *  @note Supported types - \ref float32 "float32" \ref float64 "float64"
+ *  @return returns an integer value with the upwards rounded value of the input scalar/vector
  */
 
 /**
 * @param value - input scalar of supported type
 */
 template <domain D : additive3pp>
+D int32 ceiling (D float32 value) {
+    D int32 out;
+    __syscall("additive3pp::ceiling_float32_vec", __domainid( D ), value, out);
+    return out;
+}
+
+template <domain D : additive3pp>
 D int64 ceiling (D float64 value) {
     D int64 out;
-    __syscall("additive3pp::ceiling_float64_vec", __domainid( D ), value, out);
-    return out;
+    __syscall("additive3pp::ceiling_float64_vec", __domainid( D ), value, out);
+    return out;
 }
 
 /**
 * @param arr - input vector of supported type
 */
 template <domain D : additive3pp>
+D int32[[1]] ceiling (D float32[[1]] arr) {
+    D int32[[1]] out (size (arr));
+    __syscall("additive3pp::ceiling_float32_vec", __domainid( D ), arr, out);
+    return out;
+}
+
+template <domain D : additive3pp>
 D int64[[1]] ceiling (D float64[[1]] arr) {
     D int64[[1]] out (size (arr));
-    __syscall("additive3pp::ceiling_float64_vec", __domainid( D ), arr, out);
-    return out;
+    __syscall("additive3pp::ceiling_float64_vec", __domainid( D ), arr, out);
+    return out;
 }
 
 /** @}*/
