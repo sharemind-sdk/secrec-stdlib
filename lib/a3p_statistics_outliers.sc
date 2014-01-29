@@ -36,6 +36,7 @@ import additive3pp;
 /*
  * TODO: instead of floor and ceiling, use floats and compare directly
  * to Q_p and Q_(1-p)
+ * TODO: check that 0 < p < 1
  */
 template<domain D : additive3pp, type T, type FT>
 D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvailable) {
