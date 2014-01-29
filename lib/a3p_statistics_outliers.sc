@@ -12,6 +12,7 @@
  */
 module a3p_statistics_outliers;
 
+import a3p_sort;
 import a3p_statistics_common;
 import additive3pp;
 /**
@@ -41,6 +42,7 @@ import additive3pp;
 template<domain D : additive3pp, type T, type FT>
 D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvailable) {
     D T[[1]] cutData = cut (data, isAvailable);
+    D T[[1]] sortedData = sortingNetworkSort (cutData);
     uint cutSize = size (cutData);
     uint dataSize = size (data);
     D bool[[1]] result;
@@ -55,14 +57,14 @@ D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvail
     uint[[1]] j = floorP;
     FT[[1]] gamma = pSize - (FT) floorP;
 
-    D T q = floor ((1 - gamma[0]) * (FT) nthElement (cutData, j[0], false) +
-                    gamma[0] * (FT) nthElement (cutData, j[0] + 1, false));
+    D T q = floor ((1 - gamma[0]) * (FT) sortedData[j[0]] +
+                    gamma[0] * (FT) sortedData[j[0] + 1]);
     D T[[1]] quantiles (dataSize) = q;
 
     D bool[[1]] lowFilter = data > quantiles;
 
-    q = ceiling ((1 - gamma[1]) * (FT) nthElement (cutData, j[1], false) +
-                  gamma[1] * (FT) nthElement (cutData, j[1] + 1, false));
+    q = ceiling ((1 - gamma[1]) * (FT) sortedData[j[1]] +
+                  gamma[1] * (FT) sortedData[j[1] + 1]);
     quantiles = q;
     D bool[[1]] highFilter = data < quantiles;
 
