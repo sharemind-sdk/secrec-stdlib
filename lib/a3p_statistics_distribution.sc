@@ -259,9 +259,9 @@ D T[[2]] _heatmap (D T[[1]] x,
 
     // Increment bin counts
     for (uint i = 0; i < dataSize; i++) {
-        pd_a3p uint xbin = bins[i];
-        pd_a3p uint ybin = bins[i + dataSize];
-        pd_a3p T old = matrixLookup (z, ybin, xbin);
+        D uint xbin = bins[i];
+        D uint ybin = bins[i + dataSize];
+        D T old = matrixLookup (z, ybin, xbin);
         z = matrixUpdate (z, ybin, xbin, old + 1);
     }
 
