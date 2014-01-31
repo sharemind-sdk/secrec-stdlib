@@ -14,7 +14,6 @@ import a3p_sort;
 import a3p_statistics_common;
 import a3p_statistics_summary;
 import additive3pp;
-import oblivious;
 import stdlib;
 /** \endcond */
 
@@ -257,12 +256,16 @@ D T[[2]] _heatmap (D T[[1]] x,
     // TODO: replace with a single cast when we have T -> uint64.
     bins = (uint) (UT) (xy - mins) / steps;
 
-    // Increment bin counts
-    for (uint i = 0; i < dataSize; i++) {
-        D uint xbin = bins[i];
-        D uint ybin = bins[i + dataSize];
-        D T old = matrixLookup (z, ybin, xbin);
-        z = matrixUpdate (z, ybin, xbin, old + 1);
+    for (uint i = 0; i < rows; i++) {
+        for (uint j = 0; j < columns; j++) {
+            // Count the number data points that have coordinates of this bin
+            D uint[[1]] zcoords (size (bins));
+            zcoords[:dataSize] = j;
+            zcoords[dataSize:] = i;
+            D bool[[1]] eq = zcoords == bins;
+            eq = eq[:dataSize] && eq[dataSize:];
+            z[i, j] = (T) sum ((UT) eq);
+        }
     }
 
     // We can't publish exact counts. So we will find ranges for z as
