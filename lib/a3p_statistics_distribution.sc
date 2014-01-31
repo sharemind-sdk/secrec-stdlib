@@ -195,7 +195,6 @@ T _max (T x, T y) {
     return max (z);
 }
 
-// TODO - does this work with other PDKs?
 template <domain D : additive3pp, type T, type UT>
 D T[[2]] _heatmap (D T[[1]] x,
                    D T[[1]] y,
