@@ -234,11 +234,11 @@ D T[[2]] _heatmap (D T[[1]] x,
     // points falling in a specific bin. The bins are sequential, ie
     // element (a, b) is the a-th bin on the x-axis and b-th bin on
     // the y-axis.
-    uint rows = (uint) (xmax - xmin) / xstep + 1;
-    uint columns = (uint) (ymax - ymin) / ystep + 1;
+    uint rows = (uint) (ymax - ymin) / ystep + 1;
+    uint columns = (uint) (xmax - xmin) / xstep + 1;
     D T[[2]] z (rows, columns);
 
-    // For data point we'll find coordinates of its bin in z
+    // For each data point we'll find coordinates of its bin in z
     dataSize = shape (mat)[0];
 
     D T[[1]] xy (2 * dataSize);
@@ -261,8 +261,8 @@ D T[[2]] _heatmap (D T[[1]] x,
     for (uint i = 0; i < dataSize; i++) {
         pd_a3p uint xbin = bins[i];
         pd_a3p uint ybin = bins[i + dataSize];
-        pd_a3p T old = matrixLookup (z, xbin, ybin);
-        z = matrixUpdate (z, xbin, ybin, old + 1);
+        pd_a3p T old = matrixLookup (z, ybin, xbin);
+        z = matrixUpdate (z, ybin, xbin, old + 1);
     }
 
     // We can't publish exact counts. So we will find ranges for z as
