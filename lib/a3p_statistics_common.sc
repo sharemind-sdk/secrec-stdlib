@@ -331,10 +331,8 @@ D T[[2]] _contingencyTable (D T[[1]] data, D bool[[1]] cases, D bool[[1]] contro
     D T[[1]] dataControls = data;
 
 	if (codeBookZeroes) {
-		for (uint i = 0; i < dataSize; i = i + 1) {
-			dataCases = dataCases + (T)cases;
-			dataControls = dataControls + (T)controls;
-		}
+        dataCases = dataCases + (T)cases;
+        dataControls = dataControls + (T)controls;
 		codeBook [0, :] = codeBook [0, :] + 1;
 	}
 
