@@ -41,39 +41,39 @@ import stdlib;
  */
 template <domain D : additive3pp, type T>
 D T[[1]] _cut (D T[[1]] data, D bool[[1]] isAvailable){
-	// Shuffle, open isAvailable, remove all where isAvailable = 0
+    // Shuffle, open isAvailable, remove all where isAvailable = 0
 
-	assert (size (data) == size (isAvailable));
+    assert (size (data) == size (isAvailable));
 
-	uint s = size (data);
+    uint s = size (data);
 
-	D T[[2]] matrix (s, 2), shufMat (s, 2);
-	matrix[:,0] = data;
-	matrix[:,1] = (T)isAvailable;
+    D T[[2]] matrix (s, 2), shufMat (s, 2);
+    matrix[:,0] = data;
+    matrix[:,1] = (T)isAvailable;
 
-	shufMat = shuffleRows (matrix);
+    shufMat = shuffleRows (matrix);
 
-	T[[1]] shufIsAvailablePub (s);
-	shufIsAvailablePub = declassify (shufMat[:, 1]);
+    T[[1]] shufIsAvailablePub (s);
+    shufIsAvailablePub = declassify (shufMat[:, 1]);
 
     T countAvailable = 0;
 
     countAvailable = sum (shufIsAvailablePub);
-	/*for (uint i = 0; i < s; i = i + 1){
-		countAvailable = countAvailable + shufIsAvailablePub[i];
-	}*/
+    /*for (uint i = 0; i < s; i = i + 1){
+        countAvailable = countAvailable + shufIsAvailablePub[i];
+    }*/
 
-	D T[[1]] cutData ((uint)countAvailable);
-	uint indexCutData = 0;
+    D T[[1]] cutData ((uint)countAvailable);
+    uint indexCutData = 0;
 
-	for (uint i = 0; i < s; i = i + 1){
-		if (shufIsAvailablePub [i] == 1){
-			cutData [indexCutData] = shufMat [i, 0];
-			indexCutData = indexCutData + 1;
-		}
-	}
+    for (uint i = 0; i < s; i = i + 1){
+        if (shufIsAvailablePub [i] == 1){
+            cutData [indexCutData] = shufMat [i, 0];
+            indexCutData = indexCutData + 1;
+        }
+    }
 
-	return cutData;
+    return cutData;
 }
 /**
  * \endcond
@@ -108,40 +108,40 @@ D int64[[1]] cut (D int64[[1]] data, D bool[[1]] isAvailable) {
 // This cutting function is used by Wilcoxon tests
 template <domain D : additive3pp, type T>
 D T[[2]] _cut (D T[[2]] data, D bool[[1]] isAvailable) {
-	uint64[[1]] shapeData = shape (data);
+    uint64[[1]] shapeData = shape (data);
 
-	// Shuffle, open isAvailable, remove all where isAvailable = 0
-	assert (shapeData[0] == size (isAvailable));
+    // Shuffle, open isAvailable, remove all where isAvailable = 0
+    assert (shapeData[0] == size (isAvailable));
 
-	uint rows = shapeData[0];
-	uint columns = shapeData[1];
+    uint rows = shapeData[0];
+    uint columns = shapeData[1];
 
-	D T[[2]] matrix (rows, columns + 1), shufMat (rows, columns + 1);
-	matrix[:, 0 : columns] = data;
-	matrix[:, columns] = (T)isAvailable;
+    D T[[2]] matrix (rows, columns + 1), shufMat (rows, columns + 1);
+    matrix[:, 0 : columns] = data;
+    matrix[:, columns] = (T)isAvailable;
 
-	shufMat = shuffleRows (matrix);
+    shufMat = shuffleRows (matrix);
 
-	T[[1]] shufIsAvailablePub (rows);
-	shufIsAvailablePub = declassify (shufMat[:, columns]);
+    T[[1]] shufIsAvailablePub (rows);
+    shufIsAvailablePub = declassify (shufMat[:, columns]);
 
-	T countAvailable = 0;
+    T countAvailable = 0;
 
-	for (uint i = 0; i < rows; i = i + 1){
-		countAvailable = countAvailable + shufIsAvailablePub[i];
-	}
+    for (uint i = 0; i < rows; i = i + 1){
+        countAvailable = countAvailable + shufIsAvailablePub[i];
+    }
 
-	D T[[2]] cutData ((uint64)countAvailable, columns);
-	uint indexCutData = 0;
+    D T[[2]] cutData ((uint64)countAvailable, columns);
+    uint indexCutData = 0;
 
-	for (uint i = 0; i < rows; i = i + 1){
-		if (shufIsAvailablePub [i] != 0){
-			cutData [indexCutData, :] = shufMat [i, 0 : columns];
-			indexCutData = indexCutData + 1;
-		}
-	}
+    for (uint i = 0; i < rows; i = i + 1){
+        if (shufIsAvailablePub [i] != 0){
+            cutData [indexCutData, :] = shufMat [i, 0 : columns];
+            indexCutData = indexCutData + 1;
+        }
+    }
 
-	return cutData;
+    return cutData;
 }
 /**
  * \endcond
@@ -214,8 +214,8 @@ D T _nthElement (D T[[1]] data, uint64 left, uint64 right, uint64 k, bool shuffl
     // Sometimes the data is already shuffled (like with shuffling and cutting)
     // Then reshuffling is unnecessary
     if (shuffle){
-    	data = shuffle (data);
-	}
+        data = shuffle (data);
+    }
 
     while (true) {
         uint pivotIndex = (left + right) / 2;
@@ -307,30 +307,30 @@ D T[[2]] _contingencyTable (D T[[1]] data, D bool[[1]] cases, D bool[[1]] contro
 
     assert (size (data) == size (cases) && size (data) == size (controls));
 
-	// Count the classes and check whether the codeBook contains zeroes
-	uint[[1]] shapeCodeBook = shape (codeBook);
-	uint codeCount = shapeCodeBook[1];
-	uint dataSize = size (data);
+    // Count the classes and check whether the codeBook contains zeroes
+    uint[[1]] shapeCodeBook = shape (codeBook);
+    uint codeCount = shapeCodeBook[1];
+    uint dataSize = size (data);
 
-	bool codeBookZeroes = false;
-	T classCount = 1;
-	for (uint i = 0; i < codeCount; i = i + 1) {
-		if (codeBook [0, i] == 0){
-			// codeBook contains zeroes, must be dealt with separately
-			codeBookZeroes = true;
-		}
-		if (classCount < codeBook[1, i]) {
-			classCount = codeBook[1, i];
-		}
-	}
+    bool codeBookZeroes = false;
+    T classCount = 1;
+    for (uint i = 0; i < codeCount; i = i + 1) {
+        if (codeBook [0, i] == 0){
+            // codeBook contains zeroes, must be dealt with separately
+            codeBookZeroes = true;
+        }
+        if (classCount < codeBook[1, i]) {
+            classCount = codeBook[1, i];
+        }
+    }
 
-	// If the codebook contains zeroes, add the value of the filter to every element
-	// This will increase the codes by 1 where the filter contains 1 and will not change the value otherwise
+    // If the codebook contains zeroes, add the value of the filter to every element
+    // This will increase the codes by 1 where the filter contains 1 and will not change the value otherwise
 
-	D T[[1]] dataCases = data;
+    D T[[1]] dataCases = data;
     D T[[1]] dataControls = data;
 
-	if (codeBookZeroes) {
+    if (codeBookZeroes) {
         dataCases = dataCases + (T)cases;
         dataControls = dataControls + (T)controls;
 		codeBook [0, :] = codeBook [0, :] + 1;

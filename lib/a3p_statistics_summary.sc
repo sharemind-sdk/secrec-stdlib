@@ -56,13 +56,13 @@ import stdlib;
  */
 template <domain D : additive3pp>
 D int32 minimum (D int32[[1]] data, D bool[[1]] isAvailable) {
-	D int32[[1]] cutDatabase = cut (data, isAvailable);
-	return nthElement (cutDatabase, 0 :: uint, true);
+    D int32[[1]] cutDatabase = cut (data, isAvailable);
+    return nthElement (cutDatabase, 0 :: uint, true);
 }
 template <domain D : additive3pp>
 D int64 minimum (D int64[[1]] data, D bool[[1]] isAvailable) {
-	D int64[[1]] cutDatabase = cut (data, isAvailable);
-	return nthElement (cutDatabase, 0 :: uint, true);
+    D int64[[1]] cutDatabase = cut (data, isAvailable);
+    return nthElement (cutDatabase, 0 :: uint, true);
 }
 /** @} */
 
@@ -78,14 +78,14 @@ D int64 minimum (D int64[[1]] data, D bool[[1]] isAvailable) {
  */
 template <domain D : additive3pp>
 D int32 maximum (D int32[[1]] data, D bool[[1]] isAvailable) {
-	D int32[[1]] cutDatabase = cut (data, isAvailable);
-	return nthElement (cutDatabase, size(cutDatabase) - 1, true);
+    D int32[[1]] cutDatabase = cut (data, isAvailable);
+    return nthElement (cutDatabase, size(cutDatabase) - 1, true);
 }
 
 template <domain D : additive3pp>
 D int64 maximum (D int64[[1]] data, D bool[[1]] isAvailable) {
-	D int64[[1]] cutDatabase = cut (data, isAvailable);
-	return nthElement (cutDatabase, size(cutDatabase) - 1, true);
+    D int64[[1]] cutDatabase = cut (data, isAvailable);
+    return nthElement (cutDatabase, size(cutDatabase) - 1, true);
 }
 /** @} */
 
@@ -106,13 +106,13 @@ D int64 maximum (D int64[[1]] data, D bool[[1]] isAvailable) {
  */
 template <domain D : additive3pp>
 D int32 minimum (D int32[[1]] data, D bool[[1]] isAvailable, bool shuffle) {
-	D int32[[1]] cutDatabase = cut (data, isAvailable);
-	return nthElement (cutDatabase, 0 :: uint, shuffle);
+    D int32[[1]] cutDatabase = cut (data, isAvailable);
+    return nthElement (cutDatabase, 0 :: uint, shuffle);
 }
 template <domain D : additive3pp>
 D int64 minimum (D int64[[1]] data, D bool[[1]] isAvailable, bool shuffle) {
-	D int64[[1]] cutDatabase = cut (data, isAvailable);
-	return nthElement (cutDatabase, 0 :: uint, shuffle);
+    D int64[[1]] cutDatabase = cut (data, isAvailable);
+    return nthElement (cutDatabase, 0 :: uint, shuffle);
 }
 /** @} */
 
@@ -133,14 +133,14 @@ D int64 minimum (D int64[[1]] data, D bool[[1]] isAvailable, bool shuffle) {
  */
 template <domain D : additive3pp>
 D int32 maximum (D int32[[1]] data, D bool[[1]] isAvailable, bool shuffle) {
-	D int32[[1]] cutDatabase = cut (data, isAvailable);
-	return nthElement (cutDatabase, size(cutDatabase) - 1, shuffle);
+    D int32[[1]] cutDatabase = cut (data, isAvailable);
+    return nthElement (cutDatabase, size(cutDatabase) - 1, shuffle);
 }
 
 template <domain D : additive3pp>
 D int64 maximum (D int64[[1]] data, D bool[[1]] isAvailable, bool shuffle) {
-	D int64[[1]] cutDatabase = cut (data, isAvailable);
-	return nthElement (cutDatabase, size(cutDatabase) - 1, shuffle);
+    D int64[[1]] cutDatabase = cut (data, isAvailable);
+    return nthElement (cutDatabase, size(cutDatabase) - 1, shuffle);
 }
 /** @} */
 

@@ -37,27 +37,27 @@ import stdlib;
 template<domain D : additive3pp, type T, type FT>
 D FT _tTest (D T[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool variancesEqual) {
 
-	assert (size (data) == size (cases) && size (data) == size (controls));
-	uint sizeData = size (data);
-	D T[[1]] dataCases (sizeData), dataControls (sizeData);
-	D uint32 countCases, countControls;
-	D FT varCases, varControls, meanCases, meanControls;
-	D FT[[1]] varAndMean (2);
+    assert (size (data) == size (cases) && size (data) == size (controls));
+    uint sizeData = size (data);
+    D T[[1]] dataCases (sizeData), dataControls (sizeData);
+    D uint32 countCases, countControls;
+    D FT varCases, varControls, meanCases, meanControls;
+    D FT[[1]] varAndMean (2);
 
-	D T[[1]] mulAPar (sizeData * 2), mulBPar (sizeData * 2), mulRes (sizeData * 2);
-	mulAPar[0 : sizeData] = data;
-	mulAPar[sizeData : sizeData * 2] = data;
-	mulBPar[0 : sizeData] = (T)cases;
-	mulBPar[sizeData : sizeData * 2] = (T)controls;
+    D T[[1]] mulAPar (sizeData * 2), mulBPar (sizeData * 2), mulRes (sizeData * 2);
+    mulAPar[0 : sizeData] = data;
+    mulAPar[sizeData : sizeData * 2] = data;
+    mulBPar[0 : sizeData] = (T)cases;
+    mulBPar[sizeData : sizeData * 2] = (T)controls;
 
-	mulRes = mulAPar * mulBPar;
-	dataCases = mulRes[0 : sizeData];
-	dataControls = mulRes[sizeData : sizeData * 2];
+    mulRes = mulAPar * mulBPar;
+    dataCases = mulRes[0 : sizeData];
+    dataControls = mulRes[sizeData : sizeData * 2];
 
-	countCases = sum ((uint32) cases);
-	countControls = sum ((uint32) controls);
+    countCases = sum ((uint32) cases);
+    countControls = sum ((uint32) controls);
 
-	// TODO: many variances and means in parallel?
+    // TODO: many variances and means in parallel?
     meanCases = mean (dataCases, cases);
     varCases = _variance (dataCases, cases, meanCases);
 
