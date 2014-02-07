@@ -110,8 +110,9 @@ D bool[[1]] _outlierDetectionMAD (D T[[1]] data,
         return result;
 
     D FT m = _median (cutData);
-    D FT mad = _MAD (cutData);
-    D FT[[1]] dist = abs ((FT) cutData - m);
+    FT constant = 1.0;
+    D FT mad = _MAD (cutData, constant);
+    D FT[[1]] dist = abs ((FT) data - m);
 
     return (dist < lambda * mad) && isAvailable;
 }
@@ -122,6 +123,7 @@ D bool[[1]] _outlierDetectionMAD (D T[[1]] data,
  *  @brief Outlier detection (using median absolute deviation)
  *  @note **D** - additive3pp protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Constant 1.0 is used as the parameter for median absolute deviation.
  *  @param data - input vector
  *  @param isAvailable - vector indicating which elements of the input
  *  vector are available
