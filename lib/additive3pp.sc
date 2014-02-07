@@ -118,7 +118,7 @@ D int[[N]] sign (D int[[N]] x) {
  *  @{
  *  @brief Function for finding absolute values
  *  @note **D** - additive3pp protection domain
- *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
+ *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" \ref float32 "float32" / \ref float64 "float64"
  *  @param x - an array of any dimension
  *  @return returns an array of equal shape, size and dimension, where all values are the absolute values of the input array at that position
  */
@@ -153,6 +153,20 @@ D uint[[N]] abs (D int[[N]] x) {
     y = (uint) x;
     __syscall ("additive3pp::abs_int64_vec", __domainid (D), x, y);
     return y;
+}
+
+template<domain D : additive3pp, dim N>
+D float32[[N]] abs (D float32[[N]] value) {
+    D float32[[N]] out = value;
+    __syscall("additive3pp::abs_float32_vec", __domainid (D), value, out);
+    return out;
+}
+
+template<domain D : additive3pp, dim N>
+D float64[[N]] abs (D float64[[N]] value) {
+    D float64[[N]] out = value;
+    __syscall("additive3pp::abs_float64_vec", __domainid (D), value, out);
+    return out;
 }
 /** @}*/
 
