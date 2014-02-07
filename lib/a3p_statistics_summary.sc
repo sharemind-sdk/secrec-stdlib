@@ -35,6 +35,10 @@ import stdlib;
  * \defgroup variance_filter variance(filter)
  * \defgroup standard_dev standardDev
  * \defgroup standard_dev_filter standardDev(filter)
+ * \defgroup mad MAD
+ * \defgroup mad_constant MAD(constant)
+ * \defgroup mad_filter MAD(filter)
+ * \defgroup mad_filter_constant MAD(filter, constant)
  * \defgroup five_number_summary_sn fiveNumberSummarySn
  * \defgroup five_number_summary_nth fiveNumberSummaryNth
  */
@@ -303,6 +307,91 @@ D float64 standardDev (D int64[[1]] data, D bool[[1]] mask){
 /** @} */
 
 
+/** \addtogroup <mad>
+ *  @{
+ *  @brief Find the median absolute deviation of a sample
+ *  @note **D** - additive3pp protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @param data - input sample
+ *  @return returns the median absolute deviation of the input multiplied by 1.4826
+ */
+template<domain D : additive3pp>
+D float32 MAD (D int32[[1]] data) {
+    return _MAD (data);
+}
+
+template<domain D : additive3pp>
+D float64 MAD (D int64[[1]] data) {
+    return _MAD (data);
+}
+/** @} */
+
+/** \addtogroup <mad_constant>
+ *  @{
+ *  @brief Find the median absolute deviation of a sample
+ *  @note **D** - additive3pp protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @param data - input sample
+ *  @param constant - scale factor
+ *  @return returns the median absolute deviation of the input
+ *  multiplied by the scale factor
+ */
+template<domain D : additive3pp>
+D float32 MAD (D int32[[1]] data, float32 constant) {
+    return _MAD (data, constant);
+}
+
+template<domain D : additive3pp>
+D float64 MAD (D int64[[1]] data, float64 constant) {
+    return _MAD (data, constant);
+}
+/** @} */
+
+/** \addtogroup <mad_filter>
+ *  @{
+ *  @brief Find the median absolute deviation of a filtered sample
+ *  @note **D** - additive3pp protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @param data - input sample
+ *  @param mask - mask vector indicating which elements of the input
+ *  sample to include when computing MAD
+ *  @return returns the median absolute deviation of the filtered
+ *  input multiplied by 1.4826
+ */
+template<domain D : additive3pp>
+D float32 MAD (D int32[[1]] data, D bool[[1]] mask) {
+    return _MAD (data, mask);
+}
+
+template<domain D : additive3pp>
+D float64 MAD (D int64[[1]] data, D bool[[1]] mask) {
+    return _MAD (data, mask);
+}
+/** @} */
+
+/** \addtogroup <mad_filter_constant>
+ *  @{
+ *  @brief Find the median absolute deviation of a filtered sample
+ *  @note **D** - additive3pp protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @param data - input sample
+ *  @param mask - mask vector indicating which elements of the input
+ *  sample to include when computing MAD
+ *  @param constant - scale factor
+ *  @return returns the median absolute deviation of the filtered
+ *  input multiplied by the scale factor
+ */
+template<domain D : additive3pp>
+D float32 MAD (D int32[[1]] data, D bool[[1]] mask, float32 constant) {
+    return _MAD (data, mask, constant);
+}
+
+template<domain D : additive3pp>
+D float64 MAD (D int64[[1]] data, D bool[[1]] mask, float64 constant) {
+    return _MAD (data, mask, constant);
+}
+/** @} */
+
 /** \cond */
 // This algorithm is Q7 from the article Sample Quantiles in Statistical Packages
 // Uses sorting networks for sorting
@@ -538,4 +627,49 @@ D FT _variance (D T[[1]] data, D bool[[1]] mask, D FT meanValue) {
 	D FT result = diffSum / (FT) (sum((uint32)mask) - 1);
 
 	return result;
+}
+
+/* Data must be shuffled! */
+template<domain D : additive3pp, type T, type FT>
+D FT _median (D T[[1]] data) {
+    uint dataSize = size (data);
+    D T[[1]] sortedData = sortingNetworkSort(data);
+
+    if (dataSize % 2 == 0) {
+        uint j = dataSize / 2;
+        return (FT) (sortedData[j - 1] + sortedData[j]) / 2.0;
+    } else {
+        return (FT) sortedData[dataSize / 2];
+    }
+}
+
+template<domain D : additive3pp, type T, type FT>
+D FT _median (D T[[1]] data, D bool[[1]] isAvailable) {
+    D T[[1]] cutData = cut (data, isAvailable);
+    return _median (cutData);
+}
+
+template<domain D : additive3pp, type T, type FT>
+D FT _MAD (D T[[1]] data) {
+    FT constant = 1.4826;
+    return _MAD (data, constant);
+}
+
+template<domain D : additive3pp, type T, type FT>
+D FT _MAD (D T[[1]] data, FT constant) {
+    D FT x = _median (data);
+    D FT[[1]] deviation = abs ((FT) data - x);
+    return _median (deviation) * constant;
+}
+
+template<domain D : additive3pp, type T, type FT>
+D FT _MAD (D T[[1]] data, D bool[[1]] isAvailable) {
+    FT constant = 1.4826;
+    return _MAD (data, isAvailable, constant);
+}
+
+template<domain D : additive3pp, type T, type FT>
+D FT _MAD (D T[[1]] data, D bool[[1]] isAvailable, FT constant) {
+    D T[[1]] cutData = cut (data, isAvailable);
+    return _MAD (cutData, constant);
 }
