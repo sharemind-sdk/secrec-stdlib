@@ -14,6 +14,7 @@ module a3p_statistics_outliers;
 
 import a3p_sort;
 import a3p_statistics_common;
+import a3p_statistics_summary;
 import additive3pp;
 /**
  * \endcond
@@ -22,7 +23,8 @@ import additive3pp;
 /**
  * @file
  * \defgroup a3p_statistics_outliers a3p_statistics_outliers.sc
- * \defgroup quantiles outlierDetectionQuantiles
+ * \defgroup outliers_quantiles outlierDetectionQuantiles
+ * \defgroup outliers_mad outlierDetectionMAD
  */
 
 /** \addtogroup <a3p_statistics_outliers>
@@ -30,9 +32,7 @@ import additive3pp;
  *  @brief Module with functions for detecting unexpected elements in a dataset.
  */
 
-/**
- * \cond
- */
+/** \cond */
 template<domain D : additive3pp, type T, type FT>
 D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvailable) {
     assert (0 < p);
@@ -68,14 +68,13 @@ D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvail
 
     return lowFilter && highFilter && isAvailable;
 }
-/*
- * \endcond
- */
+/** \endcond */
 
-/** \addtogroup <quantiles>
+/** \addtogroup <outliers_quantiles>
  *  @{
  *  @brief Outlier detection (using quantiles)
  *  @note **D** - additive3pp protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @param p - quantile probability (between 0 and 1). Quantile Q<sub>p</sub> is
  *  a value such that a random variable with the same distribution as
  *  the sample points will be less than Q<sub>p</sub> with probability p.
@@ -95,6 +94,60 @@ template<domain D : additive3pp>
 D bool[[1]] outlierDetectionQuantiles (float32 p, D int32[[1]] data, D bool[[1]] isAvailable) {
     return _outlierDetectionQuantiles (p, data, isAvailable);
 }
-/**
- * @}
+/** @} */
+
+/** \cond */
+template<domain D : additive3pp, type T, type FT>
+D bool[[1]] _outlierDetectionMAD (D T[[1]] data,
+                                  D bool[[1]] isAvailable,
+                                  FT lambda)
+{
+    D T[[1]] cutData = cut (data, isAvailable);
+    uint cutSize = size (cutData);
+    D bool[[1]] result;
+
+    if (cutSize < 5)
+        return result;
+
+    D FT m = _median (cutData);
+    D FT mad = _MAD (cutData);
+    D FT[[1]] dist = abs ((FT) cutData - m);
+
+    return (dist < lambda * mad) && isAvailable;
+}
+/** \endcond */
+
+/** \addtogroup <outliers_mad>
+ *  @{
+ *  @brief Outlier detection (using median absolute deviation)
+ *  @note **D** - additive3pp protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @param data - input vector
+ *  @param isAvailable - vector indicating which elements of the input
+ *  vector are available
+ *  @param lambda - constant. The value of lambda depends on the
+ *  dataset. Anything from 3 to 5 can be used as a starting value.
+ *  @return returns a boolean mask vector. For each sample point x,
+ *  the corresponding mask element is true if the corresponding
+ *  isAvailable element is true and its absolute deviation from the
+ *  median of the sample does not exceed lambda · MAD where MAD is the
+ *  median absolute deviation of the sample.
  */
+template<domain D : additive3pp>
+D bool[[1]] outlierDetectionMAD (D int32[[1]] data,
+                                 D bool[[1]] isAvailable,
+                                 float32 lambda)
+{
+    return _outlierDetectionMAD (data, isAvailable, lambda);
+}
+
+template<domain D : additive3pp>
+D bool[[1]] outlierDetectionMAD (D int64[[1]] data,
+                                 D bool[[1]] isAvailable,
+                                 float64 lambda)
+{
+    return _outlierDetectionMAD (data, isAvailable, lambda);
+}
+/** @} */
+
+/** @} */
