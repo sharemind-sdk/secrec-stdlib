@@ -33,14 +33,11 @@ import additive3pp;
 /**
  * \cond
  */
-
-/*
- * TODO: instead of floor and ceiling, use floats and compare directly
- * to Q_p and Q_(1-p)
- * TODO: check that 0 < p < 1
- */
 template<domain D : additive3pp, type T, type FT>
 D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvailable) {
+    assert (0 < p);
+    assert (p < 1);
+
     D T[[1]] cutData = cut (data, isAvailable);
     D T[[1]] sortedData = sortingNetworkSort (cutData);
     uint cutSize = size (cutData);
@@ -52,21 +49,22 @@ D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvail
 
     // Look at fiveNumberSummary if you want to understand what's going on
     FT[[1]] p2 = {p, 1 - p};
-    FT[[1]] pSize = (FT) (cutSize - 1) * p2;
+    FT[[1]] pSize = p2 * ((FT) cutSize - 1);
     uint[[1]] floorP = (uint64) (pSize - 0.5);
     uint[[1]] j = floorP;
     FT[[1]] gamma = pSize - (FT) floorP;
 
-    D T q = floor ((1 - gamma[0]) * (FT) sortedData[j[0]] +
-                    gamma[0] * (FT) sortedData[j[0] + 1]);
-    D T[[1]] quantiles (dataSize) = q;
+    D FT q = (1 - gamma[0]) * (FT) sortedData[j[0]] +
+              gamma[0] * (FT) sortedData[j[0] + 1];
+    D FT[[1]] quantiles (dataSize) = q;
 
-    D bool[[1]] lowFilter = data > quantiles;
+    D bool[[1]] lowFilter = (FT) data > quantiles;
 
-    q = ceiling ((1 - gamma[1]) * (FT) sortedData[j[1]] +
-                  gamma[1] * (FT) sortedData[j[1] + 1]);
+    q = (1 - gamma[1]) * (FT) sortedData[j[1]] +
+         gamma[1] * (FT) sortedData[j[1] + 1];
     quantiles = q;
-    D bool[[1]] highFilter = data < quantiles;
+
+    D bool[[1]] highFilter = (FT) data < quantiles;
 
     return lowFilter && highFilter && isAvailable;
 }
