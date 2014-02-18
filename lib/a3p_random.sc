@@ -23,10 +23,13 @@ import matrix;
 * \defgroup shuffle shuffle
 * \defgroup shuffle1 shuffle
 * \defgroup shuffle2 shuffle(key)
+* \defgroup shuffle3 inverseShuffle(key)
 * \defgroup shufflerows1 shuffleRows
 * \defgroup shufflerows2 shuffleRows(key)
+* \defgroup shufflerows3 inverseShuffleRows(key)
 * \defgroup shufflecols1 shuffleColumns
 * \defgroup shufflecols2 shuffleColumns(key)
+* \defgroup shufflecols3 inverseShuffleColumns(key)
 * \defgroup randomize randomize
 */
 
@@ -107,6 +110,45 @@ D T[[1]] shuffle (D T[[1]] vec, D uint8[[1]] key) {
     __syscall ("additive3pp::vecshufkey_$T\_vec", __domainid (D), vec, key);
     return vec;
 }
+
+/** @}*/
+/** \addtogroup <shuffle3> 
+ *  @{
+ *  @brief Protocols to undo the shuffle of an array with given key.
+ *  @note **D** - additive3pp protection domain
+ *  @pre the key is exactly 32 bytes long
+ *  @returns the inverse of the permutation of the input array, defined by the key
+ *  @post the output is a permutation of the input
+ *  @note the declassified value of the key does not matter, internally only the shares are used.
+ *   If two vectors are shuffled using the same key the permutation applied is the same as long
+ *   as the vectors are of the same length, and the key does not get reshared.
+ */
+
+/**
+* @note Supported types - \ref bool "bool"
+*  @param vec - boolean input array to shuffle
+*  @param key - an \ref uint8 "uint8" type key that specifies the permutation
+*/
+template <domain D : additive3pp>
+D bool[[1]] inverseShuffle (D bool[[1]] vec, D uint8[[1]] key) {
+    assert (size (key) == 32);
+     D uint8[[1]] vec_uint8 = (uint8) vec;
+    __syscall ("additive3pp::vecshufinv_uint8_vec", __domainid (D), vec_uint8, key);
+    return (bool) vec_uint8;
+}
+
+/**
+*  @note **T** - any \ref data_types "data" type
+*  @param vec - input array to shuffle
+*  @param key - an \ref uint8 "uint8" type key that specifies the permutation
+*/
+template <domain D : additive3pp, type T>
+D T[[1]] inverseShuffle (D T[[1]] vec, D uint8[[1]] key) {
+    assert (size (key) == 32);
+    __syscall ("additive3pp::vecshufinv_$T\_vec", __domainid (D), vec, key);
+    return vec;
+}
+
 /** @}*/
 /** \addtogroup <shufflerows1> 
 *  @{
@@ -173,6 +215,43 @@ D T[[2]] shuffleRows (D T[[2]] mat, D uint8[[1]] key) {
 }
 
 /** @}*/
+/** \addtogroup <shufflerows3> 
+ *  @{
+ *  @brief Protocols to undo the shuffling of rows in a matrix with given key.
+ *  @note **D** - additive3pp protection domain
+ *  @pre the key is exactly 32 bytes long
+ *  @returns the inverse of the permutation of the input matrix, defined by the key
+ *  @post the output matrices rows are a permutation of the input
+ *  @note the declassified value of the key does not matter, internally only the shares are used.
+ *   If two vectors are shuffled using the same key the permutation applied is the same as long
+ *   as the vectors are of the same length, and the key does not get reshared.
+ */
+
+/**
+*  @note Supported types - \ref bool "bool"
+*  @param mat - input matrix of type boolean to shuffle
+*  @param key - an \ref uint8 "uint8" type key that specifies the permutation
+*/
+template <domain D : additive3pp>
+D bool[[2]] inverseShuffleRows (D bool[[2]] mat, D uint8[[1]] key) {
+    assert (size (key) == 32);
+    D uint8[[2]] mat_uint8 = (uint8) mat;
+    __syscall ("additive3pp::matshufinv_uint8_vec", __domainid (D), mat_uint8, shape (mat)[1], key);
+    return (bool) mat_uint8;
+}
+/**
+*  @note **T** - any \ref data_types "data" type
+*  @param mat - input matrix to shuffle
+*  @param key - an \ref uint8 "uint8" type key that specifies the permutation
+*/
+template <domain D : additive3pp, type T>
+D T[[2]] inverseShuffleRows (D T[[2]] mat, D uint8[[1]] key) {
+    assert (size (key) == 32);
+    __syscall ("additive3pp::matshufinv_$T\_vec", __domainid (D), mat, shape (mat)[1], key);
+    return mat;
+}
+
+/** @}*/
 /** \addtogroup <shufflecols1> 
 *  @{
 *  @brief Function for shuffling columns in a matrix
@@ -231,6 +310,41 @@ template <domain D : additive3pp, type T>
 D T[[2]] shuffleColumns (D T[[2]] mat, D uint8[[1]] key) {
     assert (size (key) == 32);
     return transpose(shuffleRows(transpose(mat), key));
+}
+
+/** @}*/
+/** \addtogroup <shufflecols3> 
+ *  @{
+ *  @brief Protocols to undo the shuffle of columns in a matrix with given key.
+ *  @note **D** - additive3pp protection domain
+ *  @pre the key is exactly 32 bytes long
+ *  @returns the inverse of the permutation of the input matrix, defined by the key
+ *  @post the output matrixes columns are a permutation of the input
+ *  @note the declassified value of the key does not matter, internally only the shares are used.
+ *   If two vectors are shuffled using the same key the permutation applied is the same as long
+ *   as the vectors are of the same length, and the key does not get reshared.
+ */
+
+/**
+*  @note Supported types - \ref bool "bool"
+*  @param mat - input matrix of type boolean to shuffle
+*  @param key - an \ref uint8 "uint8" type key that specifies the permutation
+*/
+template <domain D : additive3pp>
+D bool[[2]] inverseShuffleColumns (D bool[[2]] mat, D uint8[[1]] key) {
+    assert (size (key) == 32);
+    return (bool)transpose(inverseShuffleRows(transpose((uint8)mat), key));
+}
+
+/**
+*  @note **T** - any \ref data_types "data" type
+*  @param mat - input matrix to shuffle
+*  @param key - an \ref uint8 "uint8" type key that specifies the permutation
+*/
+template <domain D : additive3pp, type T>
+D T[[2]] inverseShuffleColumns (D T[[2]] mat, D uint8[[1]] key) {
+    assert (size (key) == 32);
+    return transpose(inverseShuffleRows(transpose(mat), key));
 }
 
 /** @}*/
