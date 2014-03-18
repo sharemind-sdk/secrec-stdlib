@@ -80,12 +80,12 @@ uint64 tdbVmapCount (uint64 id, string paramname) {
  *  @brief Remove a vector from a vector map
  *  @param id - vector map id
  *  @param paramname - name of the removed vector
- *  @return returns a non-zero if a vector was removed, otherwise returns zero
+ *  @return returns true if a vector was removed, false otherwise
  */
-uint64 tdbVmapErase (uint64 id, string paramname) {
+bool tdbVmapErase (uint64 id, string paramname) {
     uint64 rv = 0;
     __syscall ("tdb_vmap_erase", id, __cref paramname, __return rv);
-    return rv;
+    return rv != 0;
 }
 /** @} */
 
