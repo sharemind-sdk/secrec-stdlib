@@ -16,8 +16,13 @@ module table_database;
  * \defgroup table_database table_database.sc
  * \defgroup tdb_vmap_new tdbVmapNew
  * \defgroup tdb_vmap_delete tdbVmapDelete
+ * \defgroup tdb_vmap_count tdbVmapCount
+ * \defgroup tdb_vmap_erase tdbVmapErase
  * \defgroup tdb_vmap_add_string tdbVmapAddString
+ * \defgroup tdb_vmap_clear tdbVmapClear
+ * \defgroup tdb_vmap_reset tdbVmapReset
  * \defgroup tdb_vmap_add_batch tdbVmapAddBatch
+ * \defgroup tdb_vmap_set_batch tdbVmapSetBatch
  * \defgroup tdb_vmap_get_batch_count tdbVmapGetBatchCount
  * \defgroup tdb_open_connection tdbOpenConnection
  * \defgroup tdb_close_connection tdbCloseConnection
@@ -56,6 +61,32 @@ void tdbVmapDelete (uint64 id) {
 }
 /** @} */
 
+/** \addtogroup <tdb_vmap_count>
+ * @brief Get the number of values in vector of a vector map
+ * @param id - vector map id
+ * @param paramname - name of the vector to count
+ * @return returns the number of values in the vector
+ */
+uint64 tdbVmapCount (uint64 id, string paramname) {
+    uint64 rv = 0;
+    __syscall ("tdb_vmap_count", id, __cref paramname, __return rv);
+    return rv;
+}
+/** @} */
+
+/** \addtogroup <tdb_vmap_erase>
+ * @brief Remove a vector from a vector map
+ * @param id - vector map id
+ * @param paramname - name of the removed vector
+ * @return returns a non-zero if a vector was removed, otherwise returns zero
+ */
+void tdbVmapErase (uint64 id, string paramname) {
+    uint64 rv = 0;
+    __syscall ("tdb_vmap_erase", id, __cref paramname, __return rv);
+    return rv;
+}
+/** @} */
+
 /** \addtogroup <tdb_vmap_add_string>
  *  @{
  *  @brief Add a string to a vector in a vector map
@@ -64,7 +95,26 @@ void tdbVmapDelete (uint64 id) {
  *  @param str - string to be added
  */
 void tdbVmapAddString (uint64 id, string paramname, string str) {
-    __syscall("tdb_vmap_push_back_string", id, __cref paramname, __cref str);
+    __syscall ("tdb_vmap_push_back_string", id, __cref paramname, __cref str);
+}
+/** @} */
+
+/** \addtogroup <tdb_vmap_clear>
+ * @brief Clears the current batch in a vector map
+ * @param id -vector map id
+ */
+void tdbVmapClear (uint64 id) {
+    __syscall ("tdb_vmap_clear", id);
+}
+/** @} */
+
+/** \addtogroup <tdb_vmap_reset>
+ * @{
+ * @brief Resets the vector map to the initial state
+ * @param id 0vector map id
+ */
+void tdbVmapReset (uint64 id) {
+    __syscall ("tdb_vmap_reset", id);
 }
 /** @} */
 
@@ -79,15 +129,22 @@ void tdbVmapAddString (uint64 id, string paramname, string str) {
  *  @param id - vector map id
  */
 void tdbVmapAddBatch (uint64 id) {
-    __syscall("tdb_vmap_add_batch", id);
+    __syscall ("tdb_vmap_add_batch", id);
 }
 /** @} */
 
-/*
-void tdbVmapSetBatch () {
-    //TODO
+/** \addtogroup <tdb_vmap_set_batch>
+ * @{
+ * @brief Sets the current active batch
+ * @note Useful for iterating through the batches of the result returned by a
+ * database operation.
+ * @param id - vector map id
+ * @param index - index of the batch in the vector map
+ */
+void tdbVmapSetBatch (uint64 id, uint64 index) {
+    __syscall ("tdb_vmap_set_batch", id, index);
 }
-*/
+/** @} */
 
 /** \addtogroup <tdb_vmap_get_batch_count>
  *  @{
@@ -97,7 +154,7 @@ void tdbVmapSetBatch () {
  */
 uint64 tdbVmapGetBatchCount (uint64 id) {
     uint64 out;
-    __syscall("tdb_vmap_batch_count", id, __return out);
+    __syscall ("tdb_vmap_batch_count", id, __return out);
     return out;
 }
 /** @} */
@@ -107,7 +164,7 @@ uint64 tdbVmapGetBatchCount (uint64 id) {
  *  @brief Open connection to a data source
  *  @param datasource - data source name
  */
-void tdbOpenConnection(string datasource) {
+void tdbOpenConnection (string datasource) {
     __syscall ("tdb_open", __cref datasource);
 }
 /** @} */
@@ -117,7 +174,7 @@ void tdbOpenConnection(string datasource) {
  *  @brief Close connection to a data source
  *  @param datasource - data source name
  */
-void tdbCloseConnection(string datasource) {
+void tdbCloseConnection (string datasource) {
     __syscall ("tdb_close", __cref datasource);
 }
 /** @} */
@@ -132,7 +189,7 @@ void tdbCloseConnection(string datasource) {
  *  the types and names of the columns.
  */
 void tdbTableCreate (string datasource, string table, uint64 parameters) {
-    __syscall("tdb_stmt_exec", __cref datasource, __cref table, __cref "tbl_create", parameters);
+    __syscall ("tdb_stmt_exec", __cref datasource, __cref table, __cref "tbl_create", parameters);
 }
 /** @} */
 
@@ -171,7 +228,7 @@ bool tdbTableExists (string datasource, string table) {
  *  column.
  */
 void tdbInsertRow (string datasource, string table, uint64 parameters) {
-    __syscall("tdb_stmt_exec", __cref datasource, __cref table, __cref "insert_row", parameters);
+    __syscall ("tdb_stmt_exec", __cref datasource, __cref table, __cref "insert_row", parameters);
 }
 /** @} */
 
@@ -184,7 +241,7 @@ void tdbInsertRow (string datasource, string table, uint64 parameters) {
  */
 uint64 tdbGetRowCount (string datasource, string table) {
     uint64 count = 0;
-    __syscall ("tdb_tbl_row_count", __cref datasource, __cref(table), __return count);
+    __syscall ("tdb_tbl_row_count", __cref datasource, __cref table, __return count);
     return count;
 }
 /** @} */
