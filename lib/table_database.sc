@@ -62,10 +62,11 @@ void tdbVmapDelete (uint64 id) {
 /** @} */
 
 /** \addtogroup <tdb_vmap_count>
- * @brief Get the number of values in vector of a vector map
- * @param id - vector map id
- * @param paramname - name of the vector to count
- * @return returns the number of values in the vector
+ *  @{
+ *  @brief Get the number of values in vector of a vector map
+ *  @param id - vector map id
+ *  @param paramname - name of the vector to count
+ *  @return returns the number of values in the vector
  */
 uint64 tdbVmapCount (uint64 id, string paramname) {
     uint64 rv = 0;
@@ -75,10 +76,11 @@ uint64 tdbVmapCount (uint64 id, string paramname) {
 /** @} */
 
 /** \addtogroup <tdb_vmap_erase>
- * @brief Remove a vector from a vector map
- * @param id - vector map id
- * @param paramname - name of the removed vector
- * @return returns a non-zero if a vector was removed, otherwise returns zero
+ *  @{
+ *  @brief Remove a vector from a vector map
+ *  @param id - vector map id
+ *  @param paramname - name of the removed vector
+ *  @return returns a non-zero if a vector was removed, otherwise returns zero
  */
 void tdbVmapErase (uint64 id, string paramname) {
     uint64 rv = 0;
@@ -100,8 +102,9 @@ void tdbVmapAddString (uint64 id, string paramname, string str) {
 /** @} */
 
 /** \addtogroup <tdb_vmap_clear>
- * @brief Clears the current batch in a vector map
- * @param id -vector map id
+ *  @{
+ *  @brief Clears the current batch in a vector map
+ *  @param id - vector map id
  */
 void tdbVmapClear (uint64 id) {
     __syscall ("tdb_vmap_clear", id);
@@ -109,9 +112,9 @@ void tdbVmapClear (uint64 id) {
 /** @} */
 
 /** \addtogroup <tdb_vmap_reset>
- * @{
- * @brief Resets the vector map to the initial state
- * @param id 0vector map id
+ *  @{
+ *  @brief Resets the vector map to the initial state
+ *  @param id - vector map id
  */
 void tdbVmapReset (uint64 id) {
     __syscall ("tdb_vmap_reset", id);
@@ -134,12 +137,12 @@ void tdbVmapAddBatch (uint64 id) {
 /** @} */
 
 /** \addtogroup <tdb_vmap_set_batch>
- * @{
- * @brief Sets the current active batch
- * @note Useful for iterating through the batches of the result returned by a
- * database operation.
- * @param id - vector map id
- * @param index - index of the batch in the vector map
+ *  @{
+ *  @brief Sets the current active batch
+ *  @note Useful for iterating through the batches of the result returned by a
+ *  database operation.
+ *  @param id - vector map id
+ *  @param index - index of the batch in the vector map
  */
 void tdbVmapSetBatch (uint64 id, uint64 index) {
     __syscall ("tdb_vmap_set_batch", id, index);
