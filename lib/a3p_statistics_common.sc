@@ -83,12 +83,42 @@ D T[[1]] _cut (D T[[1]] data, D bool[[1]] isAvailable){
  *  @{
  *  @brief Remove unavailable elements
  *  @note **D** - additive3pp protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @param data - input vector
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns a vector where elements of the input vector have
  *   been removed if the corresponding element in isAvailable is zero.
  */
+template <domain D : additive3pp>
+D uint8[[1]] cut (D uint8[[1]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : additive3pp>
+D uint16[[1]] cut (D uint16[[1]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : additive3pp>
+D uint32[[1]] cut (D uint32[[1]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : additive3pp>
+D uint64[[1]] cut (D uint64[[1]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : additive3pp>
+D int8[[1]] cut (D int8[[1]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : additive3pp>
+D int16[[1]] cut (D int16[[1]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
 template <domain D : additive3pp>
 D int32[[1]] cut (D int32[[1]] data, D bool[[1]] isAvailable) {
     return _cut (data, isAvailable);
