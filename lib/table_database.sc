@@ -31,6 +31,9 @@ module table_database;
  * \defgroup tdb_table_exists tdbTableExists
  * \defgroup tdb_insert_row tdbInsertRow
  * \defgroup tdb_get_row_count tdbGetRowCount
+ * \defgroup tdb_vmap_value_vector_size tdbVmapValueVectorSize
+ * \defgroup tdb_read_column tdbReadColumn
+ * \defgroup tdb_get_value_string tdbVmapGetValue(string)
  */
 
 /** \addtogroup <table_database>
@@ -63,15 +66,29 @@ void tdbVmapDelete (uint64 id) {
 
 /** \addtogroup <tdb_vmap_count>
  *  @{
- *  @brief Get the number of values in vector of a vector map
+ *  @brief Get the number of vectors in a vector map
  *  @param id - vector map id
  *  @param paramname - name of the vector to count
- *  @return returns the number of values in the vector
+ *  @return returns the number of vectors with the name paramname in the vector map (one or zero)
  */
 uint64 tdbVmapCount (uint64 id, string paramname) {
     uint64 rv = 0;
     __syscall ("tdb_vmap_count", id, __cref paramname, __return rv);
     return rv;
+}
+/** @} */
+
+/** \addtogroup <tdb_vmap_value_vector_size>
+ *  @{
+ *  @brief Get the size of a vector in a vector map
+ *  @param id - vector map id
+ *  @param paramname - name of the vector in the vector map
+ *  @return returns the number of values in the vector
+ */
+uint64 tdbVmapValueVectorSize(uint64 id, string paramname) {
+    uint64 rsize = 0;
+    __syscall("tdb_vmap_size_value", id, __cref paramname, __return rsize);
+    return rsize;
 }
 /** @} */
 
@@ -246,6 +263,57 @@ uint64 tdbGetRowCount (string datasource, string table) {
     uint64 count = 0;
     __syscall ("tdb_tbl_row_count", __cref datasource, __cref table, __return count);
     return count;
+}
+/** @} */
+
+/** \addtogroup <tdb_read_column>
+ *  @{
+ *  @brief Read a column from a table
+ *  @param datasource - name of the data source containing the table
+ *  @param table - table name
+ *  @param index - index of the column in the table
+ *  @return Returns a vector map id. The first value of the "values"
+ *  vector in the vector map contains the values in the column.
+ */
+uint64 tdbReadColumn(string datasource, string table, uint64 index) {
+    uint64 rv = 0;
+    __syscall("tdb_read_col", __cref datasource, __cref table, index, __return rv);
+    return rv;
+}
+/** @} */
+
+/** \addtogroup <tdb_get_value_string>
+ *  @{
+ *  @brief Read a string from a vector in a vector map
+ *  @param id - id of the vector map
+ *  @param paramname - name of the vector
+ *  @param index - index of the element in the vector
+ *  @return returns the string in the vector at the specified index
+ */
+string tdbVmapGetValue(uint64 id, string paramname, uint64 index) {
+    uint64 isvec = 0;
+    __syscall("tdb_vmap_is_value_vector", id, __cref paramname, __return isvec);
+    assert(isvec != 0);
+
+    uint64 vsize = 0;
+    __syscall("tdb_vmap_size_value", id, __cref paramname, __return vsize);
+    assert(index < vsize);
+
+    string rt_name;
+    __syscall("tdb_vmap_at_value_type_name", id, __cref paramname, index, __return rt_name);
+    assert(rt_name == "string");
+
+    string rt_dom;
+    __syscall("tdb_vmap_at_value_type_domain", id, __cref paramname, index, __return rt_dom);
+    assert(rt_dom == "public");
+
+    uint64 rt_num_bytes = 0;
+    __syscall("tdb_vmap_at_value", id, __cref paramname, index, __return rt_num_bytes);
+
+    uint8[[1]] rt_bytes(rt_num_bytes);
+    __syscall("tdb_vmap_at_value", id, __cref paramname, index, __ref rt_bytes);
+
+    return __string_from_bytes(rt_bytes[:rt_num_bytes]); // exclude null-terminator byte
 }
 /** @} */
 

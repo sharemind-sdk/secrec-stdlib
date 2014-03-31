@@ -147,6 +147,7 @@ void tdbVmapAddVlenValue (uint64 id, string paramname, D T [[1]] values) {
  *  @param id - vector map id
  *  @param paramname - name of the vector from which to retrieve the value
  *  @param index - index of the value in the vector
+ *  @return returns the value in the vector at the specified index
  */
 template <domain D : additive3pp, type T>
 D T[[1]] tdbVmapGetValue (uint64 id, string paramname, uint64 index) {
