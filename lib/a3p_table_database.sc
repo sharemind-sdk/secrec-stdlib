@@ -26,7 +26,8 @@ import table_database;
  * \defgroup a3p_tdb_vmap_get_vlen_value tdbVmapGetVlenValue
  * \defgroup a3p_tdb_table_create tdbTableCreate
  * \defgroup a3p_tdb_insert_row tdbInsertRow
- * \defgroup a3p_tdb_read_column tdbReadColumn
+ * \defgroup a3p_tdb_read_column_index tdbReadColumn(index)
+ * \defgroup a3p_tdb_read_column_string tdbReadColumn(string)
  */
 
 /** \addtogroup <a3p_table_database>
@@ -295,7 +296,7 @@ void tdbInsertRow (string datasource, string table, D T[[1]] values) {
 }
 /** @} */
 
-/** \addtogroup <a3p_tdb_read_column>
+/** \addtogroup <a3p_tdb_read_column_index>
  *  @{
  *  @brief Read a column from a table
  *  @note **D** - additive3pp protection domain
@@ -309,6 +310,26 @@ template <domain D : additive3pp, type T>
 D T[[1]] tdbReadColumn (string datasource, string table, uint64 index) {
     uint64 rv = 0;
     __syscall ("tdb_read_col", __cref datasource, __cref table, index, __return rv);
+    D T[[1]] out = tdbVmapGetValue(rv, "values", 0::uint64);
+    tdbVmapDelete(rv);
+    return out;
+}
+/** @} */
+
+/** \addtogroup <a3p_tdb_read_column_string>
+ *  @{
+ *  @brief Read a column from a table
+ *  @note **D** - additive3pp protection domain
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param datasource - name of the data source
+ *  @param table - name of the table
+ *  @param column - name of the column
+ *  @return returns a vector with the values in the column
+ */
+template <domain D : additive3pp, type T>
+D T[[1]] tdbReadColumn (string datasource, string table, string column) {
+    uint64 rv = 0;
+    __syscall ("tdb_read_col", __cref datasource, __cref table, __cref column, __return rv);
     D T[[1]] out = tdbVmapGetValue(rv, "values", 0::uint64);
     tdbVmapDelete(rv);
     return out;
