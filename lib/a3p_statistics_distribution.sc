@@ -126,14 +126,14 @@ T _power(T x, uint e) {
 }
 
 template<type T>
-uint _niceStep (T min, T max, uint idealTervalCount) {
-    assert (idealTervalCount > 1);
+uint _niceStep (T min, T max, uint idealIntervalCount) {
+    assert (idealIntervalCount > 1);
     assert (max > min);
 
     uint[[1]] niceSmall = {1, 2, 5};
     uint[[1]] niceBig = {10, 20, 25, 50};
     uint range = (uint) (max - min);
-    float64 stepF = max ((float64) range / (float64) idealTervalCount, 1 :: float64);
+    float64 stepF = max ((float64) range / (float64) idealIntervalCount, 1 :: float64);
     uint exp = 0;
     bool found = false;
     uint step = niceSmall[0];
@@ -191,11 +191,11 @@ T _roundToMultiple (T x, uint to) {
 }
 
 template<type T>
-T[[1]] _niceTics (T min, T max, uint idealTervalCount) {
-    assert (idealTervalCount > 1);
+T[[1]] _niceTics (T min, T max, uint idealIntervalCount) {
+    assert (idealIntervalCount > 1);
     assert (max > min);
 
-    uint step = _niceStep (min, max, idealTervalCount);
+    uint step = _niceStep (min, max, idealIntervalCount);
     min = _roundToMultiple (min, step);
 
     T[[1]] tics;
