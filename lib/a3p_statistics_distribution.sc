@@ -111,6 +111,107 @@ D T[[1]] _countElementsHist (D T[[1]] data, T[[1]] breaks) {
     return sum (compRes1 * compRes2, sizeBreaks - 1);
 }
 
+template <type T>
+T _power(T x, uint e) {
+    if (e == 0)
+        return 1;
+
+    T pow = x;
+    while (e > 1) {
+        pow = pow * x;
+        e--;
+    }
+
+    return pow;
+}
+
+template<type T>
+uint _niceStep (T min, T max, uint idealTervalCount) {
+    assert (idealTervalCount > 1);
+    assert (max > min);
+
+    uint[[1]] niceSmall = {1, 2, 5};
+    uint[[1]] niceBig = {10, 20, 25, 50};
+    uint range = (uint) (max - min);
+    float64 stepF = max ((float64) range / (float64) idealTervalCount, 1 :: float64);
+    uint exp = 0;
+    bool found = false;
+    uint step = niceSmall[0];
+    uint next_step;
+
+    // Find a 'nice' step size closest to stepF
+
+    // First search small steps
+    for (uint i = 0; i < size (niceSmall); i++) {
+        if ((float64) niceSmall[i] < stepF) {
+            step = niceSmall[i];
+            if (i == size (niceSmall) - 1)
+                next_step = niceBig[0];
+            else
+                next_step = niceSmall[i + 1];
+        } else {
+            found = true;
+            break;
+        }
+    }
+
+    // Now search among {x * 10^z, x <- niceBig, z <- 0, 1, ...}
+    while (!found) {
+        for (uint i = 0; i < size (niceBig); i++) {
+            uint cur_step = niceBig[i] * _power (10 :: uint, exp);
+            if ((float64) cur_step < stepF) {
+                step = cur_step;
+                if (i != size (niceBig) - 1)
+                    next_step = niceBig[i] * _power (10 :: uint, exp);
+                else
+                    next_step = niceBig[0] * _power (10 :: uint, exp + 1);
+            } else {
+                found = true;
+                break;
+            }
+        }
+        exp++;
+    }
+
+    if (abs ((float64) next_step - stepF) < abs ((float64) step - stepF))
+        step = next_step;
+
+    return step;
+}
+
+template<type T>
+T _roundToMultiple (T x, uint to) {
+    // Integer division is rounded towards zero so we need to handle
+    // the case when 'min' is negative separately. If 'min' can be
+    // represented as a multiple of 'step' then everything is fine.
+    if (x >= 0 || x % (T) to == 0)
+        return (x / (T) to) * (T) to;
+    else
+        return ((x / (T) to) - 1) * (T) to;
+}
+
+template<type T>
+T[[1]] _niceTics (T min, T max, uint idealTervalCount) {
+    assert (idealTervalCount > 1);
+    assert (max > min);
+
+    uint step = _niceStep (min, max, idealTervalCount);
+    min = _roundToMultiple (min, step);
+
+    T[[1]] tics;
+    T val = min;
+    while (true) {
+        T[[1]] singleton = {val};
+        tics = cat (tics, singleton);
+        val += (T) step;
+
+        if (singleton[0] >= max)
+            break;
+    }
+
+    return tics;
+}
+
 template<domain D, type T>
 D T[[2]] _histogram (D T[[1]] data, D bool[[1]] isAvailable) {
 
@@ -122,18 +223,18 @@ D T[[2]] _histogram (D T[[1]] data, D bool[[1]] isAvailable) {
         return result;
     }
 
-    uint64 noBreaks = _getNoOfBreaks (sizeData);
-    D T min = min (cutData);
-    D T max = max (cutData);
-
     // Declassify min and max because you will see them on the histogram anyway
-    T[[1]] breaks = _getApproximateBreaksHist (declassify (min), declassify (max), noBreaks);
+    T min = declassify (min (cutData));
+    T max = declassify (max (cutData));
+
+    uint noBreaks = _getNoOfBreaks (size (data));
+    T[[1]] breaks = _niceTics (min, max, noBreaks);
 
     // Count the elements according to the breaks
-    D T[[1]] counts = _countElementsHist(cutData, breaks);
-    D T[[2]] result (2, size(breaks));
+    D T[[1]] counts = _countElementsHist (cutData, breaks);
+    D T[[2]] result (2, size (breaks));
     result[0,:] = breaks;
-    result[1, : size(breaks) - 1] = counts;
+    result[1, : size (breaks) - 1] = counts;
 
     return result;
 }
@@ -221,13 +322,10 @@ D T[[2]] _heatmap (D T[[1]] x,
     T ymax = declassify (max (mat[:,1]));
 
     uint s = _getNoOfBreaks (dataSize);
-    /* max (1, (xmax - xmin) / s) will hopefully give us such a step
-     * size that we'll have s steps but if the data range is too small
-     * (classifiers for example) then we'll have as many steps as there
-     * are possible values.
-     */
-    uint xstep = max (1 :: uint, (uint) (xmax - xmin) / s);
-    uint ystep = max (1 :: uint, (uint) (ymax - ymin) / s);
+    uint xstep = _niceStep (xmin, xmax, s);
+    uint ystep = _niceStep (ymin, ymax, s);
+    xmin = _roundToMultiple (xmin, xstep);
+    ymin = _roundToMultiple (ymin, ystep);
 
     // z will be a matrix where each element counts the number of
     // points falling in a specific bin. The bins are sequential, ie
@@ -275,7 +373,8 @@ D T[[2]] _heatmap (D T[[1]] x,
     T zmax = declassify (max (zflat));
     s = _getNoOfBreaks ((uint) (zmax - zmin));
     // TODO: z = 1 is bad.
-    uint zstep = max (1 :: uint, (uint) (zmax - zmin) / s);
+    uint zstep = _niceStep (zmin, zmax, s);
+    zmin = _roundToMultiple (zmin, zstep);
     // TODO: remove casts when we can divide Ts.
     D T[[2]] gradient = (T) ((UT) (z - zmin) / (UT) zstep);
 
