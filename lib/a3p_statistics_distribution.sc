@@ -193,7 +193,10 @@ T _roundToMultiple (T x, uint to) {
 template<type T>
 T[[1]] _niceTics (T min, T max, uint idealIntervalCount) {
     assert (idealIntervalCount > 1);
-    assert (max > min);
+    assert (max >= min);
+
+    if (max == min)
+        max++;
 
     uint step = _niceStep (min, max, idealIntervalCount);
     min = _roundToMultiple (min, step);
