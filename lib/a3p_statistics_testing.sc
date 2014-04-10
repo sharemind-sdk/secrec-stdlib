@@ -254,7 +254,7 @@ D FT _chiSquaredXClasses (D UT[[2]] contTable, T dummy) {
 
 /** \addtogroup <chisq>
  *  @{
- *  @brief Perform Pearson's chi-squared test
+ *  @brief Perform Pearson's chi-squared test of independence
  *  @note **D** - any protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @note This version does not do any correction so the R equivalent
@@ -300,7 +300,7 @@ D float64 chiSquared (D uint64[[2]] contTable) {
 
 /** \addtogroup <chisq_cb>
  *  @{
- *  @brief Perform Pearson's chi-squared test
+ *  @brief Perform Pearson's chi-squared test of independence
  *  @note **D** - any protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @note This version does not do any correction so the R equivalent
