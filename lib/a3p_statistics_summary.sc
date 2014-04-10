@@ -27,8 +27,6 @@ import stdlib;
  * \defgroup a3p_statistics_summary a3p_statistics_summary.sc
  * \defgroup minimum minimum
  * \defgroup maximum maximum
- * \defgroup minimum_shuffle minimum(optional shuffling)
- * \defgroup maximum_shuffle maximum(optional shuffling)
  * \defgroup mean mean
  * \defgroup mean_filter mean(filter)
  * \defgroup variance variance
@@ -60,13 +58,14 @@ import stdlib;
  */
 template <domain D : additive3pp>
 D int32 minimum (D int32[[1]] data, D bool[[1]] isAvailable) {
-    D int32[[1]] cutDatabase = cut (data, isAvailable);
-    return nthElement (cutDatabase, 0 :: uint, true);
+    data = cut (data, isAvailable);
+    return min (data);
 }
+
 template <domain D : additive3pp>
 D int64 minimum (D int64[[1]] data, D bool[[1]] isAvailable) {
-    D int64[[1]] cutDatabase = cut (data, isAvailable);
-    return nthElement (cutDatabase, 0 :: uint, true);
+    data = cut (data, isAvailable);
+    return min (data);
 }
 /** @} */
 
@@ -82,69 +81,14 @@ D int64 minimum (D int64[[1]] data, D bool[[1]] isAvailable) {
  */
 template <domain D : additive3pp>
 D int32 maximum (D int32[[1]] data, D bool[[1]] isAvailable) {
-    D int32[[1]] cutDatabase = cut (data, isAvailable);
-    return nthElement (cutDatabase, size(cutDatabase) - 1, true);
+    data = cut (data, isAvailable);
+    return max (data);
 }
 
 template <domain D : additive3pp>
 D int64 maximum (D int64[[1]] data, D bool[[1]] isAvailable) {
-    D int64[[1]] cutDatabase = cut (data, isAvailable);
-    return nthElement (cutDatabase, size(cutDatabase) - 1, true);
-}
-/** @} */
-
-
-/** \addtogroup <minimum_shuffle>
- *  @{
- *  @brief Find the smallest element of a vector
- *  @note **D** - additive3pp protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @param data - input vector
- *  @param isAvailable - vector indicating which elements of the input
- *  vector are available
- *  @param shuffle - indicates if the input vector should be shuffled
- *  before running the algorithm. Shuffling is necessary to hide the
- *  execution flow but if the input vector has already been shuffled
- *  it's unnecessary.
- *  @return returns the smallest element of the input vector
- */
-template <domain D : additive3pp>
-D int32 minimum (D int32[[1]] data, D bool[[1]] isAvailable, bool shuffle) {
-    D int32[[1]] cutDatabase = cut (data, isAvailable);
-    return nthElement (cutDatabase, 0 :: uint, shuffle);
-}
-template <domain D : additive3pp>
-D int64 minimum (D int64[[1]] data, D bool[[1]] isAvailable, bool shuffle) {
-    D int64[[1]] cutDatabase = cut (data, isAvailable);
-    return nthElement (cutDatabase, 0 :: uint, shuffle);
-}
-/** @} */
-
-
-/** \addtogroup <maximum_shuffle>
- *  @{
- *  @brief Find the largest element of a vector
- *  @note **D** - additive3pp protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @param data - input vector
- *  @param isAvailable - vector indicating which elements of the input
- *  vector are available
- *  @param shuffle - indicates if the input vector should be shuffled
- *  before running the algorithm. Shuffling is necessary to hide the
- *  execution flow but if the input vector has already been shuffled
- *  it's unnecessary.
- *  @return returns the largest element of the input vector
- */
-template <domain D : additive3pp>
-D int32 maximum (D int32[[1]] data, D bool[[1]] isAvailable, bool shuffle) {
-    D int32[[1]] cutDatabase = cut (data, isAvailable);
-    return nthElement (cutDatabase, size(cutDatabase) - 1, shuffle);
-}
-
-template <domain D : additive3pp>
-D int64 maximum (D int64[[1]] data, D bool[[1]] isAvailable, bool shuffle) {
-    D int64[[1]] cutDatabase = cut (data, isAvailable);
-    return nthElement (cutDatabase, size(cutDatabase) - 1, shuffle);
+    data = cut (data, isAvailable);
+    return max (data);
 }
 /** @} */
 
