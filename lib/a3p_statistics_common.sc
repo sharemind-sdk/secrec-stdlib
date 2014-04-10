@@ -59,9 +59,6 @@ D T[[1]] _cut (D T[[1]] data, D bool[[1]] isAvailable){
     T countAvailable = 0;
 
     countAvailable = sum (shufIsAvailablePub);
-    /*for (uint i = 0; i < s; i = i + 1){
-        countAvailable = countAvailable + shufIsAvailablePub[i];
-    }*/
 
     D T[[1]] cutData ((uint)countAvailable);
     uint indexCutData = 0;
