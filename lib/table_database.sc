@@ -9,6 +9,8 @@
 
 /** \cond */
 module table_database;
+
+import stdlib;
 /** \endcond */
 
 /**
@@ -40,6 +42,9 @@ module table_database;
  * \defgroup tdb_vmap_get_string tdbVmapGetString
  * \defgroup tdb_get_column_types tdbGetColumnTypes
  * \defgroup tdb_vmap_get_type_name tdbVmapGetTypeName
+ * \defgroup tdb_vmap_add_type tdbVmapAddType
+ * \defgroup tdb_vmap_add_value_scalar tdbVmapAddValue(scalar)
+ * \defgroup tdb_vmap_add_value_vector tdbVmapAddValue(vector)
  */
 
 /** \addtogroup <table_database>
@@ -427,6 +432,55 @@ string tdbVmapGetTypeName(uint id, string paramname, uint index) {
     string ret;
     __syscall("tdb_vmap_at_type_name", id, index, __cref paramname, __return ret);
     return ret;
+}
+/** @} */
+
+/** \addtogroup <tdb_vmap_add_type>
+ *  @{
+ *  @brief Add a type to a vector in a vector map
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param id - vector map id
+ *  @param paramname - name of the vector to which the type is added
+ *  @param t - a value of the type that's added to the vector
+ */
+template<type T>
+void tdbVmapAddType(uint id, string paramname, T t) {
+    string t_dom = "public";
+    uint t_size = sizeof(t);
+    __syscall("tdb_vmap_push_back_type", id, __cref paramname, __cref t_dom, __cref "$T", t_size);
+}
+/** @} */
+
+/** \addtogroup <tdb_vmap_add_value_scalar>
+ *  @{
+ *  @brief Add a scalar value to a vector in a vector map
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param id - vector map id
+ *  @param paramname - name of the vector to which the value is added
+ *  @param value - value to be added
+ */
+template<type T>
+void tdbVmapAddValue(uint64 id, string paramname, T value) {
+    string t_dom = "public";
+    uint64 t_size = sizeof(value);
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", t_size, __cref value);
+}
+/** @} */
+
+/** \addtogroup <tdb_vmap_add_value_vector>
+ *  @{
+ *  @brief Add a vector to a vector in a vector map
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param id - vector map id
+ *  @param paramname - name of the vector to which the argument vector is added
+ *  @param values - vector to be added
+ */
+template<type T>
+void tdbVmapAddValue (uint64 id, string paramname, T[[1]] values) {
+    T dummy;
+    string t_dom = "public";
+    uint64 t_size = sizeof(dummy);
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", t_size, __cref value);
 }
 /** @} */
 
