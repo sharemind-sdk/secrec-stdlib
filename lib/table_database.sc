@@ -34,8 +34,10 @@ import stdlib;
  * \defgroup tdb_insert_row tdbInsertRow
  * \defgroup tdb_get_row_count tdbGetRowCount
  * \defgroup tdb_vmap_value_vector_size tdbVmapValueVectorSize
- * \defgroup tdb_read_column_index tdbReadColumn(index)
- * \defgroup tdb_read_column_string tdbReadColumn(string)
+ * \defgroup tdb_read_column_index_vmap tdbReadColumn(index, vector map)
+ * \defgroup tdb_read_column_string_vmap tdbReadColumn(string, vector map)
+ * \defgroup tdb_read_column_index_vec tdbReadColumn(index, value vector)
+ * \defgroup tdb_read_column_string_vec tdbReadColumn(string, value vector)
  * \defgroup tdb_get_value_string tdbVmapGetValue(string)
  * \defgroup tdb_get_column_count tdbGetColumnCount
  * \defgroup tdb_get_column_names tdbGetColumnNames
@@ -45,6 +47,7 @@ import stdlib;
  * \defgroup tdb_vmap_add_type tdbVmapAddType
  * \defgroup tdb_vmap_add_value_scalar tdbVmapAddValue(scalar)
  * \defgroup tdb_vmap_add_value_vector tdbVmapAddValue(vector)
+ * \defgroup tdb_vmap_get_value tdbVmapGetValue
  */
 
 /** \addtogroup <table_database>
@@ -277,7 +280,7 @@ uint64 tdbGetRowCount (string datasource, string table) {
 }
 /** @} */
 
-/** \addtogroup <tdb_read_column_index>
+/** \addtogroup <tdb_read_column_index_vmap>
  *  @{
  *  @brief Read a column from a table
  *  @param datasource - data source name
@@ -293,7 +296,7 @@ uint64 tdbReadColumn(string datasource, string table, uint64 index) {
 }
 /** @} */
 
-/** \addtogroup <tdb_read_column_string>
+/** \addtogroup <tdb_read_column_string_vmap>
  *  @{
  *  @brief Read a column from a table
  *  @param datasource - data source name
@@ -306,6 +309,42 @@ uint tdbReadColumn(string datasource, string table, string column) {
     uint rv = 0;
     __syscall("tdb_read_col", __cref datasource, __cref table, __cref column, __return rv);
     return rv;
+}
+/** @} */
+
+/** \addtogroup <tdb_read_column_index_vec>
+ *  @{
+ *  @brief Read a column from a table
+ *  @param datasource - data source name
+ *  @param table - table name
+ *  @param index - index of the column in the table
+ *  @return returns a vector with the values in the column
+ */
+template<type T>
+T[[1]] tdbReadColumn(string datasource, string table, uint64 index) {
+    uint64 rv = 0;
+    __syscall("tdb_read_col", __cref datasource, __cref table, index, __return rv);
+    T [[1]] out = tdbVmapGetValue(rv, "values", 0 :: uint);
+    tdbVmapDelete(rv);
+    return out;
+}
+/** @} */
+
+/** \addtogroup <tdb_read_column_string_vec>
+ *  @{
+ *  @brief Read a column from a table
+ *  @param datasource - data source name
+ *  @param table - table name
+ *  @param column - column name
+ *  @return returns a vector with the values in the column
+ */
+template<type T>
+T[[1]] tdbReadColumn(string datasource, string table, string column) {
+    uint rv = 0;
+    __syscall("tdb_read_col", __cref datasource, __cref table, __cref column, __return rv);
+    T [[1]] out = tdbVmapGetValue(rv, "values", 0 :: uint);
+    tdbVmapDelete(rv);
+    return out;
 }
 /** @} */
 
@@ -481,6 +520,53 @@ void tdbVmapAddValue (uint64 id, string paramname, T[[1]] values) {
     string t_dom = "public";
     uint64 t_size = sizeof(dummy);
     __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", t_size, __cref value);
+}
+/** @} */
+
+/** \addtogroup <tdb_vmap_get_value>
+ *  @{
+ *  @brief Get a value from a vector in a vector map
+ *  @param id - vector map id
+ *  @param paramname - name of the vector from which to retrieve the value
+ *  @param index - index of the value in the vector
+ *  @return returns the value in the vector at the specified index
+ */
+template<type T>
+T[[1]] tdbVmapGetValue (uint id, string paramname, uint index) {
+    T dummy;
+    string t_dom = "public";
+    uint t_size = sizeof(dummy);
+
+    print("is_value_vector");
+    uint isvalue = 0;
+    __syscall("tdb_vmap_is_value_vector", id, __cref paramname, __return isvalue);
+    assert(isvalue != 0);
+
+    print("size_value");
+    uint64 pvsize = 0;
+    __syscall("tdb_vmap_size_value", id, __cref paramname, __return pvsize);
+    assert(index < pvsize);
+
+    print("at_value_type_domain");
+    string rt_dom;
+    __syscall("tdb_vmap_at_value_type_domain", id, __cref paramname, index, __return rt_dom);
+    assert(rt_dom == t_dom);
+
+    print("at_value_type_name");
+    string rt_name;
+    __syscall("tdb_vmap_at_value_type_name", id, __cref paramname, index, __return rt_name);
+    assert(rt_name == "$T");
+
+    print("at_value_type_size");
+    uint64 rt_size = 0;
+    __syscall("tdb_vmap_at_value_type_size", id, __cref paramname, index, __return rt_size);
+    assert(rt_size == t_size);
+
+    print("vmap_at_value");
+    T[[1]] out(pvsize);
+    __syscall("tdb_vmap_at_value", id, __cref paramname, index, __ref out);
+
+    return out;
 }
 /** @} */
 
