@@ -537,32 +537,26 @@ T[[1]] tdbVmapGetValue (uint id, string paramname, uint index) {
     string t_dom = "public";
     uint t_size = sizeof(dummy);
 
-    print("is_value_vector");
     uint isvalue = 0;
     __syscall("tdb_vmap_is_value_vector", id, __cref paramname, __return isvalue);
     assert(isvalue != 0);
 
-    print("size_value");
     uint64 pvsize = 0;
     __syscall("tdb_vmap_size_value", id, __cref paramname, __return pvsize);
     assert(index < pvsize);
 
-    print("at_value_type_domain");
     string rt_dom;
     __syscall("tdb_vmap_at_value_type_domain", id, __cref paramname, index, __return rt_dom);
     assert(rt_dom == t_dom);
 
-    print("at_value_type_name");
     string rt_name;
     __syscall("tdb_vmap_at_value_type_name", id, __cref paramname, index, __return rt_name);
     assert(rt_name == "$T");
 
-    print("at_value_type_size");
     uint64 rt_size = 0;
     __syscall("tdb_vmap_at_value_type_size", id, __cref paramname, index, __return rt_size);
     assert(rt_size == t_size);
 
-    print("vmap_at_value");
     T[[1]] out(pvsize);
     __syscall("tdb_vmap_at_value", id, __cref paramname, index, __ref out);
 
