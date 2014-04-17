@@ -519,7 +519,7 @@ void tdbVmapAddValue (uint64 id, string paramname, T[[1]] values) {
     T dummy;
     string t_dom = "public";
     uint64 t_size = sizeof(dummy);
-    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", t_size, __cref value);
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", t_size, __cref values);
 }
 /** @} */
 
