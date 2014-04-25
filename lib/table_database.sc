@@ -16,6 +16,7 @@ import stdlib;
 /**
  * @file
  * \defgroup table_database table_database.sc
+ * \defgroup SharemindTdbError Error codes
  * \defgroup tdb_vmap_new tdbVmapNew
  * \defgroup tdb_vmap_delete tdbVmapDelete
  * \defgroup tdb_vmap_count tdbVmapCount
@@ -54,6 +55,20 @@ import stdlib;
  *  @{
  *  @brief Module for working with table databases.
  */
+
+/** \addtogroup <SharemindTdbError>
+ *  @{
+ *  @brief Table database error codes.
+ */
+int64 SHAREMIND_TDB_OK = 0;
+int64 SHAREMIND_TDB_UNKNOWN_ERROR = 1;
+int64 SHAREMIND_TDB_GENERAL_ERROR = 2;
+int64 SHAREMIND_TDB_CONSENSUS_ERROR = 3;
+int64 SHAREMIND_TDB_IO_ERROR = 4;
+int64 SHAREMIND_TDB_INVALID_ARGUMENT = 5;
+int64 SHAREMIND_TDB_TABLE_NOT_FOUND = 6;
+int64 SHAREMIND_TDB_TABLE_ALREADY_EXISTS = 7;
+/** @} */
 
 /** \addtogroup <tdb_vmap_new>
  *  @{
