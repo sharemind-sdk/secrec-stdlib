@@ -33,13 +33,13 @@ import stdlib;
 * \defgroup matrixupdate matrixUpdate
 */
 
-/** \addtogroup <oblivious> 
+/** \addtogroup <oblivious>
 *@{
 * @brief Module with functions for oblivious tasks
 */
 
 
-/** 
+/**
  * \todo
  *    NB!!
  * Functions for float32 and float64 do not guarantee precise results!!!
@@ -56,20 +56,20 @@ import stdlib;
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <choose> 
+/** \addtogroup <choose>
  *  @{
  *  @brief Function for obliviously choosing one of the inputs
  *  @note **D** - all protection domains
  *  @return returns one of the input arrays that was obliviously chosen with the condition
  */
 
-/** \addtogroup <choose1> 
+/** \addtogroup <choose1>
  *  @{
  *  @brief Function for obliviously choosing one of the inputs
  *  @note **D** - all protection domains
  *  @note **T** - any \ref data_types "data" type
  *  @param cond - a boolean scalar.
- *  @return returns one of the input arrays that was obliviously chosen with the condition. if **true**, array **first** is returned else **second** is returned 
+ *  @return returns one of the input arrays that was obliviously chosen with the condition. if **true**, array **first** is returned else **second** is returned
  */
 
 template <domain D, type T, dim N>
@@ -145,7 +145,7 @@ D float64[[N]] choose(D bool cond, D float64[[N]] first, D float64[[N]] second) 
 
 /** @}*/
 
-/** \addtogroup <choose2> 
+/** \addtogroup <choose2>
  *  @{
  *  @brief Function for obliviously choosing pointwise from the inputs
  *  @note **D** - all protection domains
@@ -248,7 +248,7 @@ D bool[[1]] vectorLookupBitmask(uint elems, D uint index) {
 * \endcond
 */
 
-/** \addtogroup <vectorlookup> 
+/** \addtogroup <vectorlookup>
  *  @{
  *  @brief Function for obliviously looking up an element in a vector
  *  @note **D** - all protection domains
@@ -428,7 +428,7 @@ D bool[[2]] matrixLookupRowBitmask(uint rows, uint cols, D uint rowIndex) {
 * \endcond
 */
 
-/** \addtogroup <matrixlookuprow> 
+/** \addtogroup <matrixlookuprow>
  *  @{
  *  @brief Function for obliviously looking up a row in a matrix
  *  @note **D** - all protection domains
@@ -663,7 +663,7 @@ D bool[[2]] matrixLookupColumnBitmask(uint rows, uint cols, D uint colIndex) {
 * \endcond
 */
 
-/** \addtogroup <matrixlookupcolumn> 
+/** \addtogroup <matrixlookupcolumn>
  *  @{
  *  @brief Function for obliviously looking up a column in a matrix
  *  @note **D** - all protection domains
@@ -909,7 +909,7 @@ D bool[[2]] matrixLookupBitmask(uint rows, uint cols, D uint rowIndex, D uint co
 * \endcond
 */
 
-/** \addtogroup <matrixlookup> 
+/** \addtogroup <matrixlookup>
  *  @{
  *  @brief Function for obliviously looking up an element in the input matrix
  *  @note **D** - all protection domains
@@ -917,7 +917,7 @@ D bool[[2]] matrixLookupBitmask(uint rows, uint cols, D uint rowIndex, D uint co
  *  @param mat - a 2-dimensional matrix of supported type
  *  @param rowIndex - an \ref uint64 "uint" type scalar for specifying the row in the input matrix
  *  @param colIndex - an \ref uint64 "uint" type scalar for specifying the column in the input matrix
- *  @return returns the element from the input matrix specified by **rowIndex** and **colIndex**  
+ *  @return returns the element from the input matrix specified by **rowIndex** and **colIndex**
  */
 
 template <domain D>
@@ -1139,7 +1139,7 @@ D float64 matrixLookup(D float64[[2]] mat, D uint rowIndex, D uint columnIndex) 
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <vectorupdate> 
+/** \addtogroup <vectorupdate>
  *  @{
  *  @brief Function for obliviously updating an element in the input vector
  *  @note **D** - all protection domains
@@ -1226,7 +1226,7 @@ D uint[[1]] vectorUpdate(D uint64[[1]] vec, D uint index, D uint64 newValue) {
  *  @return returns a matrix where the row at **rowIndex** has been replaced with **newRow**
  */
 
-template <domain D : additive3pp>
+template <domain D>
 D bool[[2]] matrixUpdateRow(D bool[[2]] mat, D uint rowIndex, D bool[[1]] newRow) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1243,7 +1243,7 @@ D bool[[2]] matrixUpdateRow(D bool[[2]] mat, D uint rowIndex, D bool[[1]] newRow
     return choose(mask, newRows, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D uint8[[2]] matrixUpdateRow(D uint8[[2]] mat, D uint rowIndex, D uint8[[1]] newRow) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1260,7 +1260,7 @@ D uint8[[2]] matrixUpdateRow(D uint8[[2]] mat, D uint rowIndex, D uint8[[1]] new
     return choose(mask, newRows, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D uint16[[2]] matrixUpdateRow(D uint16[[2]] mat, D uint rowIndex, D uint16[[1]] newRow) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1277,7 +1277,7 @@ D uint16[[2]] matrixUpdateRow(D uint16[[2]] mat, D uint rowIndex, D uint16[[1]] 
     return choose(mask, newRows, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D uint32[[2]] matrixUpdateRow(D uint32[[2]] mat, D uint rowIndex, D uint32[[1]] newRow) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1294,7 +1294,7 @@ D uint32[[2]] matrixUpdateRow(D uint32[[2]] mat, D uint rowIndex, D uint32[[1]] 
     return choose(mask, newRows, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D uint[[2]] matrixUpdateRow(D uint[[2]] mat, D uint rowIndex, D uint[[1]] newRow) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1311,7 +1311,7 @@ D uint[[2]] matrixUpdateRow(D uint[[2]] mat, D uint rowIndex, D uint[[1]] newRow
     return choose(mask, newRows, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D int8[[2]] matrixUpdateRow(D int8[[2]] mat, D uint rowIndex, D int8[[1]] newRow) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1328,7 +1328,7 @@ D int8[[2]] matrixUpdateRow(D int8[[2]] mat, D uint rowIndex, D int8[[1]] newRow
     return choose(mask, newRows, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D int16[[2]] matrixUpdateRow(D int16[[2]] mat, D uint rowIndex, D int16[[1]] newRow) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1345,7 +1345,7 @@ D int16[[2]] matrixUpdateRow(D int16[[2]] mat, D uint rowIndex, D int16[[1]] new
     return choose(mask, newRows, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D int32[[2]] matrixUpdateRow(D int32[[2]] mat, D uint rowIndex, D int32[[1]] newRow) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1362,7 +1362,7 @@ D int32[[2]] matrixUpdateRow(D int32[[2]] mat, D uint rowIndex, D int32[[1]] new
     return choose(mask, newRows, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D int[[2]] matrixUpdateRow(D int[[2]] mat, D uint rowIndex, D int[[1]] newRow) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1402,7 +1402,7 @@ D int[[2]] matrixUpdateRow(D int[[2]] mat, D uint rowIndex, D int[[1]] newRow) {
  *  @return returns a matrix where the column at **colIndex** has been replaced with **newCol**
  */
 
-template <domain D : additive3pp>
+template <domain D>
 D bool[[2]] matrixUpdateColumn(D bool[[2]] mat, D uint colIndex, D bool[[1]] newCol) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1419,7 +1419,7 @@ D bool[[2]] matrixUpdateColumn(D bool[[2]] mat, D uint colIndex, D bool[[1]] new
     return choose(mask, newCols, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D uint8[[2]] matrixUpdateColumn(D uint8[[2]] mat, D uint colIndex, D uint8[[1]] newCol) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1436,7 +1436,7 @@ D uint8[[2]] matrixUpdateColumn(D uint8[[2]] mat, D uint colIndex, D uint8[[1]] 
     return choose(mask, newCols, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D uint16[[2]] matrixUpdateColumn(D uint16[[2]] mat, D uint colIndex, D uint16[[1]] newCol) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1453,7 +1453,7 @@ D uint16[[2]] matrixUpdateColumn(D uint16[[2]] mat, D uint colIndex, D uint16[[1
     return choose(mask, newCols, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D uint32[[2]] matrixUpdateColumn(D uint32[[2]] mat, D uint colIndex, D uint32[[1]] newCol) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1470,7 +1470,7 @@ D uint32[[2]] matrixUpdateColumn(D uint32[[2]] mat, D uint colIndex, D uint32[[1
     return choose(mask, newCols, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D uint[[2]] matrixUpdateColumn(D uint[[2]] mat, D uint colIndex, D uint[[1]] newCol) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1487,7 +1487,7 @@ D uint[[2]] matrixUpdateColumn(D uint[[2]] mat, D uint colIndex, D uint[[1]] new
     return choose(mask, newCols, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D int8[[2]] matrixUpdateColumn(D int8[[2]] mat, D uint colIndex, D int8[[1]] newCol) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1504,7 +1504,7 @@ D int8[[2]] matrixUpdateColumn(D int8[[2]] mat, D uint colIndex, D int8[[1]] new
     return choose(mask, newCols, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D int16[[2]] matrixUpdateColumn(D int16[[2]] mat, D uint colIndex, D int16[[1]] newCol) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1521,7 +1521,7 @@ D int16[[2]] matrixUpdateColumn(D int16[[2]] mat, D uint colIndex, D int16[[1]] 
     return choose(mask, newCols, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D int32[[2]] matrixUpdateColumn(D int32[[2]] mat, D uint colIndex, D int32[[1]] newCol) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1538,7 +1538,7 @@ D int32[[2]] matrixUpdateColumn(D int32[[2]] mat, D uint colIndex, D int32[[1]] 
     return choose(mask, newCols, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D int[[2]] matrixUpdateColumn(D int[[2]] mat, D uint colIndex, D int[[1]] newCol) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1577,7 +1577,7 @@ D int[[2]] matrixUpdateColumn(D int[[2]] mat, D uint colIndex, D int[[1]] newCol
  *  @return returns a matrix where the element at row **rowIndex** and column **colIndex** has been replaced with **newValue**
  */
 
-template <domain D : additive3pp>
+template <domain D>
 D bool[[2]] matrixUpdate(D bool[[2]] mat, D uint rowIndex, D uint columnIndex, D bool newValue) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1589,7 +1589,7 @@ D bool[[2]] matrixUpdate(D bool[[2]] mat, D uint rowIndex, D uint columnIndex, D
     return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D uint8[[2]] matrixUpdate(D uint8[[2]] mat, D uint rowIndex, D uint columnIndex, D uint8 newValue) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1601,7 +1601,7 @@ D uint8[[2]] matrixUpdate(D uint8[[2]] mat, D uint rowIndex, D uint columnIndex,
     return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D uint16[[2]] matrixUpdate(D uint16[[2]] mat, D uint rowIndex, D uint columnIndex, D uint16 newValue) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1613,7 +1613,7 @@ D uint16[[2]] matrixUpdate(D uint16[[2]] mat, D uint rowIndex, D uint columnInde
     return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D uint32[[2]] matrixUpdate(D uint32[[2]] mat, D uint rowIndex, D uint columnIndex, D uint32 newValue) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1625,7 +1625,7 @@ D uint32[[2]] matrixUpdate(D uint32[[2]] mat, D uint rowIndex, D uint columnInde
     return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D uint[[2]] matrixUpdate(D uint[[2]] mat, D uint rowIndex, D uint columnIndex, D uint newValue) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1637,7 +1637,7 @@ D uint[[2]] matrixUpdate(D uint[[2]] mat, D uint rowIndex, D uint columnIndex, D
     return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D int8[[2]] matrixUpdate(D int8[[2]] mat, D uint rowIndex, D uint columnIndex, D int8 newValue) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1649,7 +1649,7 @@ D int8[[2]] matrixUpdate(D int8[[2]] mat, D uint rowIndex, D uint columnIndex, D
     return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D int16[[2]] matrixUpdate(D int16[[2]] mat, D uint rowIndex, D uint columnIndex, D int16 newValue) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1661,7 +1661,7 @@ D int16[[2]] matrixUpdate(D int16[[2]] mat, D uint rowIndex, D uint columnIndex,
     return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D int32[[2]] matrixUpdate(D int32[[2]] mat, D uint rowIndex, D uint columnIndex, D int32 newValue) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
@@ -1673,7 +1673,7 @@ D int32[[2]] matrixUpdate(D int32[[2]] mat, D uint rowIndex, D uint columnIndex,
     return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
 }
 
-template <domain D : additive3pp>
+template <domain D>
 D int[[2]] matrixUpdate(D int[[2]] mat, D uint rowIndex, D uint columnIndex, D int newValue) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
