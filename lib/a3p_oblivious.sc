@@ -12,6 +12,7 @@
 */
 module a3p_oblivious;
 
+import additive3pp;
 import oblivious;
 import stdlib;
 /**
