@@ -36,7 +36,7 @@ T random_float(T data){
     pd_a3p int8 temp2;
     T scalar;
     T scalar2;
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar = 0;
         while(scalar == 0 || scalar2 == 0){
             scalar = (T) declassify(randomize(temp));
@@ -62,7 +62,7 @@ D T[[1]] random(D T[[1]] data){
     pd_a3p int8[[1]] temp2 (x_shape);
     T[[1]] scalar (x_shape);
     T[[1]] scalar2 (x_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -90,7 +90,7 @@ D T[[2]] random(D T[[2]] data){
     pd_a3p int8[[2]] temp2 (x_shape,y_shape);
     T[[2]] scalar (x_shape,y_shape);
     T[[2]] scalar2 (x_shape,y_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -119,7 +119,7 @@ D T[[3]] random(D T[[3]] data){
     pd_a3p int8[[3]] temp2 (x_shape,y_shape,z_shape);
     T[[3]] scalar (x_shape,y_shape,z_shape);
     T[[3]] scalar2 (x_shape,y_shape,z_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -155,7 +155,7 @@ void test_transpose(D T data){
 	for(uint i = 0; i < 3; ++i){
 		if(!all(declassify(mat[:,i]) == declassify(mat2[i,:]))){
 			result = false;
-		}	
+		}
 	}
 	if(result){
  		succeeded_tests = succeeded_tests + 1;
@@ -327,9 +327,9 @@ void cross_product_matrix(T data){
 	T[[2]] y = declassify(mat2);
 	T[[2]] mat3 = crossProduct(declassify(mat),declassify(mat2));
 	T[[2]] control (3,3);
-	
+
 	for (uint i = 0; i < 3; ++i){
-		control[i,:] = crossProduct(x[i,:], y[i,:]);		
+		control[i,:] = crossProduct(x[i,:], y[i,:]);
 	}
 
 	if(all(mat3 == control)){
@@ -505,9 +505,9 @@ void a3p_cross_product_matrix(T data){
 	T[[2]] y = declassify(mat2);
 	pd_a3p T[[2]] mat3 = crossProduct(mat,mat2);
 	T[[2]] control (3,3);
-	
+
 	for (uint i = 0; i < 3; ++i){
-		control[i,:] = crossProduct(x[i,:], y[i,:]);		
+		control[i,:] = crossProduct(x[i,:], y[i,:]);
 	}
 
 	if(all((declassify(mat3) / control) >= 0.99) && all((declassify(mat3) / control) <= 1.01) ){
@@ -715,10 +715,10 @@ void a3p_vec_length(T data){
 
 template<type T>
 void a3p_unit_vec(T data){
-	{
-		pd_a3p T[[1]] vec (0);
-		pd_a3p T[[1]] unit_vector = unitVector(vec);
-	}
+//	{
+//		pd_a3p T[[1]] vec (0);
+//		pd_a3p T[[1]] unit_vector = unitVector(vec);
+//	}
 	pd_a3p T[[1]] vec (3);
 	vec = random(vec);
 	T[[1]] vec2 = declassify(vec);
@@ -733,7 +733,7 @@ void a3p_unit_vec(T data){
     }
     else{
     	all_tests = all_tests +1;
-    	print("FAILURE! Expected: "); 
+    	print("FAILURE! Expected: ");
     	printVector(control);
     	print("but got: ");
     	printVector(unit_vec);
@@ -743,18 +743,18 @@ void a3p_unit_vec(T data){
 template<type T>
 void a3p_vec_length2D(T data){
 	{
-		pd_a3p T[[2]] vec (0,0);
-		pd_a3p T[[1]] length = vecLength(vec);
+//		pd_a3p T[[2]] vec (0,0);
+//		pd_a3p T[[1]] length = vecLength(vec);
 		pd_a3p T[[2]] vec2 (2,0);
-		length = vecLength(vec2);
-		pd_a3p T[[2]] vec3 (0,2);
-		length = vecLength(vec3);
+		pd_a3p T[[1]] length = vecLength(vec2);
+//		pd_a3p T[[2]] vec3 (0,2);
+//		length = vecLength(vec3);
 	}
 	pd_a3p T[[2]] vec (3,3);
 	vec = random(vec);
 	T[[2]] vec2 = declassify(vec);
 	T[[1]] unit_vec = declassify(vecLength(vec));
-	pd_a3p T[[1]] temp2 (3); 
+	pd_a3p T[[1]] temp2 (3);
 	temp2[0] = (vec2[0,0]*vec2[0,0]) + (vec2[0,1]*vec2[0,1]) + (vec2[0,2]*vec2[0,2]);
 	temp2[1] = (vec2[1,0]*vec2[1,0]) + (vec2[1,1]*vec2[1,1]) + (vec2[1,2]*vec2[1,2]);
 	temp2[2] = (vec2[2,0]*vec2[2,0]) + (vec2[2,1]*vec2[2,1]) + (vec2[2,2]*vec2[2,2]);
@@ -766,7 +766,7 @@ void a3p_vec_length2D(T data){
     }
     else{
     	all_tests = all_tests +1;
-    	print("FAILURE! Expected: "); 
+    	print("FAILURE! Expected: ");
     	printVector(control);
     	print("but got: ");
     	printVector(unit_vec);
@@ -775,21 +775,21 @@ void a3p_vec_length2D(T data){
 
 template<type T>
 void a3p_unit_vec2D(T data){
-	{
-		pd_a3p T[[2]] vec (0,0);
-		pd_a3p T[[2]] unit_vector = unitVector(vec);
-		pd_a3p T[[2]] vec2 (2,0);
-		unit_vector = unitVector(vec2);
-		pd_a3p T[[2]] vec3 (0,2);
-		unit_vector = unitVector(vec3);
-	}
+//	{
+//		pd_a3p T[[2]] vec (0,0);
+//		pd_a3p T[[2]] unit_vector = unitVector(vec);
+//		pd_a3p T[[2]] vec2 (2,0);
+//		pd_a3p T[[2]] unit_vector = unitVector(vec2);
+//		pd_a3p T[[2]] vec3 (0,2);
+//		unit_vector = unitVector(vec3);
+//	}
 	pd_a3p T[[2]] vec (3,3);
 	vec = random(vec);
 	T[[2]] vec2 = declassify(vec);
 
 	T[[1]] unit_vec = flatten(declassify(unitVector(vec)));
 
-	pd_a3p T[[1]] temp3 (3); 
+	pd_a3p T[[1]] temp3 (3);
 	temp3[0] = (vec2[0,0]*vec2[0,0]) + (vec2[0,1]*vec2[0,1]) + (vec2[0,2]*vec2[0,2]);
 	temp3[1] = (vec2[1,0]*vec2[1,0]) + (vec2[1,1]*vec2[1,1]) + (vec2[1,2]*vec2[1,2]);
 	temp3[2] = (vec2[2,0]*vec2[2,0]) + (vec2[2,1]*vec2[2,1]) + (vec2[2,2]*vec2[2,2]);
@@ -808,7 +808,7 @@ void a3p_unit_vec2D(T data){
     }
     else{
     	all_tests = all_tests +1;
-    	print("FAILURE! Expected: "); 
+    	print("FAILURE! Expected: ");
     	printVector(control);
     	print("but got: ");
     	printVector(unit_vec);
@@ -820,10 +820,10 @@ void determinant_test(T data){
 	{
 		T[[2]] mat (0,0);
 		T result = determinant(mat);
-		T[[2]] mat2 (2,0);
-		result = determinant(mat2);
-		T[[2]] mat3 (0,2);
-		result = determinant(mat3);		
+//		T[[2]] mat2 (2,0);
+//		result = determinant(mat2);
+//		T[[2]] mat3 (0,2);
+//		result = determinant(mat3);
 	}
 	T[[2]] mat (3,3);
     T[[1]] vec1 (3) = {1,2,3};

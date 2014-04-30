@@ -36,7 +36,7 @@ T random_float(T data){
     pd_a3p int8 temp2;
     T scalar;
     T scalar2;
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar = 0;
         while(scalar == 0 || scalar2 == 0){
             scalar = (T) declassify(randomize(temp));
@@ -62,7 +62,7 @@ D T[[1]] random(D T[[1]] data){
     pd_a3p int8[[1]] temp2 (x_shape);
     T[[1]] scalar (x_shape);
     T[[1]] scalar2 (x_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -90,7 +90,7 @@ D T[[2]] random(D T[[2]] data){
     pd_a3p int8[[2]] temp2 (x_shape,y_shape);
     T[[2]] scalar (x_shape,y_shape);
     T[[2]] scalar2 (x_shape,y_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -119,7 +119,7 @@ D T[[3]] random(D T[[3]] data){
     pd_a3p int8[[3]] temp2 (x_shape,y_shape,z_shape);
     T[[3]] scalar (x_shape,y_shape,z_shape);
     T[[3]] scalar2 (x_shape,y_shape,z_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -145,12 +145,12 @@ void choice_test1(T data){
         pd_a3p T[[2]] mat (0,0);
         pd_a3p T[[2]] mat2 (0,0);
         pd_a3p T[[2]] mat3 = choose(cond,mat,mat2);
-        pd_a3p T[[2]] mat4 (0,2);
-        pd_a3p T[[2]] mat5 (0,2);
-        mat3 = choose(cond,mat4,mat5);
-        pd_a3p T[[2]] mat6 (2,0);
-        pd_a3p T[[2]] mat7 (2,0);
-        mat3 = choose(cond,mat6,mat7);
+//        pd_a3p T[[2]] mat4 (0,2);
+//        pd_a3p T[[2]] mat5 (0,2);
+//        mat3 = choose(cond,mat4,mat5);
+//        pd_a3p T[[2]] mat6 (2,0);
+//        pd_a3p T[[2]] mat7 (2,0);
+//        mat3 = choose(cond,mat6,mat7);
     }
     pd_a3p bool cond = true;
     pd_a3p T[[2]] mat (3,3);
@@ -379,7 +379,7 @@ void matrix_lookup(T data){
         }
         if(!result){
             break;
-        }   
+        }
     }
     if(!result){
         print("FAILURE! Matrix lookup failed. Expected: ", control, " Got: ", declassify(nr));
@@ -428,7 +428,7 @@ void vector_update(T data){
             all_tests = all_tests +1;
             print("SUCCESS!");
         }
-    } 
+    }
 }
 
 template<type T>
@@ -534,7 +534,7 @@ void matrix_update(T data){
 void main(){
 
     print("Oblivious test: start");
-    
+
     print("TEST 1a: Oblivious choice scalar condition");
     {
         print("float32");
