@@ -27,7 +27,7 @@ import test_utility;
 /****************************************************
 *****************************************************
 *****************************************************
-*****/   	public uint test_amount = 10;  	    /****
+*****/      public uint test_amount = 10;       /****
 ******  increase for more accurate percentages  *****
 *****************************************************
 *****************************************************
@@ -43,7 +43,7 @@ T random_float(T data){
     pd_a3p int8 temp2;
     T scalar;
     T scalar2;
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar = 0;
         while(scalar == 0 || scalar2 == 0){
             scalar = (T) declassify(randomize(temp));
@@ -69,7 +69,7 @@ D T[[1]] random(D T[[1]] data){
     pd_a3p int8[[1]] temp2 (x_shape);
     T[[1]] scalar (x_shape);
     T[[1]] scalar2 (x_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -97,7 +97,7 @@ D T[[2]] random(D T[[2]] data){
     pd_a3p int8[[2]] temp2 (x_shape,y_shape);
     T[[2]] scalar (x_shape,y_shape);
     T[[2]] scalar2 (x_shape,y_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -126,7 +126,7 @@ D T[[3]] random(D T[[3]] data){
     pd_a3p int8[[3]] temp2 (x_shape,y_shape,z_shape);
     T[[3]] scalar (x_shape,y_shape,z_shape);
     T[[3]] scalar2 (x_shape,y_shape,z_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -147,59 +147,61 @@ D T[[3]] random(D T[[3]] data){
 
 template<type T>
 void test_sqrt(T data){
-	T percentage;
-	pd_a3p T[[1]] a (8) = {
-		14.1566418266453,
-		2.353240445436502,
-		1.101880541351803,
-		26.80217700594072,
-		2.461238153504522,
-		0.6487119793399101,
-		3.497798862860427,
-		1.757030089475017
-	};
-	T[[1]] b (8) = {
-		3.7625313057362459638668630134746153084776989341461835,
-		1.534027524341236192801048418712285670612360413934362466077706,
-		1.049704978244746155686088076871481282485641505974230593725993,
-		5.177081900640622471086424463319686255349670851106896530423644,
-		1.568833373403473336501112685959116159596509349282887846858288,
-		0.805426582215852930437182611153055291564735094770495012808766,
-		1.870240322220763959112005305796522349151384344661816065940105,
-		1.325530116396838793454662999150389473000883666573902051199777
-	};
-	pd_a3p T[[1]] c (8);
-	c = sqrt(a);
+    T max_absolute = 0, max_relative = 0;
+    pd_a3p T[[1]] a (8) = {
+        14.1566418266453,
+        2.353240445436502,
+        1.101880541351803,
+        26.80217700594072,
+        2.461238153504522,
+        0.6487119793399101,
+        3.497798862860427,
+        1.757030089475017
+    };
+    T[[1]] b (8) = {
+        3.7625313057362459638668630134746153084776989341461835,
+        1.534027524341236192801048418712285670612360413934362466077706,
+        1.049704978244746155686088076871481282485641505974230593725993,
+        5.177081900640622471086424463319686255349670851106896530423644,
+        1.568833373403473336501112685959116159596509349282887846858288,
+        0.805426582215852930437182611153055291564735094770495012808766,
+        1.870240322220763959112005305796522349151384344661816065940105,
+        1.325530116396838793454662999150389473000883666573902051199777
+    };
+    pd_a3p T[[1]] c (8);
+    c = sqrt(a);
 
-	T[[1]] d (8);
-	T[[1]] temp(8) = declassify(a);
-	
-	d = declassify(c) - b;
+    T[[1]] d (8);
+    T[[1]] temp(8) = b;
 
-	for(uint i = 0; i < 8;++i){
-		if(d[i] < 0){d[i] = -d[i];}
-		if(temp[i] < 0){temp[i] = -temp[i];}
-	}
-	percentage = sum(d / temp);
-    percentage = (percentage / 8) * 100;
-	print("TEST completed");
-	print("Square root vs. hardcoded answers is imprecise by: ", percentage, " %");
-    test_report_error(percentage);
+    d = declassify(c) - b;
+
+    for(uint i = 0; i < 8;++i){
+        if(d[i] < 0){d[i] = -d[i];}
+        if(temp[i] < 0){temp[i] = -temp[i];}
+    }
+    max_absolute = max(d);
+    max_relative = max(d / temp);
+
+    print("TEST completed");
+    print("Max absolute error: ", max_absolute);
+    print("Max relative error: ", max_relative);
+    test_report_error(max_relative);
 }
 
 void main(){
 
-	print("Precision test: start");
+    print("Precision test: start");
 
-	print("TEST 7: Float32/64 sqrt precision");
-	{
-		print("Float32");
-		test_sqrt(0::float32);
-	}
-	{
-		print("Float64");
-		test_sqrt(0::float64);
-	}
+    print("TEST 7: Float32/64 sqrt precision");
+    {
+        print("Float32");
+        test_sqrt(0::float32);
+    }
+    {
+        print("Float64");
+        test_sqrt(0::float64);
+    }
 
     print("Test finished!");
 }

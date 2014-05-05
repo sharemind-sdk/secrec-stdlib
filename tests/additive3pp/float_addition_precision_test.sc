@@ -27,7 +27,7 @@ import test_utility;
 /****************************************************
 *****************************************************
 *****************************************************
-*****/   	public uint test_amount = 10;  	    /****
+*****/      public uint test_amount = 10;       /****
 ******  increase for more accurate percentages  *****
 *****************************************************
 *****************************************************
@@ -43,7 +43,7 @@ T random_float(T data){
     pd_a3p int8 temp2;
     T scalar;
     T scalar2;
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar = 0;
         while(scalar == 0 || scalar2 == 0){
             scalar = (T) declassify(randomize(temp));
@@ -69,7 +69,7 @@ D T[[1]] random(D T[[1]] data){
     pd_a3p int8[[1]] temp2 (x_shape);
     T[[1]] scalar (x_shape);
     T[[1]] scalar2 (x_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -97,7 +97,7 @@ D T[[2]] random(D T[[2]] data){
     pd_a3p int8[[2]] temp2 (x_shape,y_shape);
     T[[2]] scalar (x_shape,y_shape);
     T[[2]] scalar2 (x_shape,y_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -126,7 +126,7 @@ D T[[3]] random(D T[[3]] data){
     pd_a3p int8[[3]] temp2 (x_shape,y_shape,z_shape);
     T[[3]] scalar (x_shape,y_shape,z_shape);
     T[[3]] scalar2 (x_shape,y_shape,z_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -147,39 +147,43 @@ D T[[3]] random(D T[[3]] data){
 
 template<type T>
 void test_addition(T data){
-	T percentage;
-	T temp; T temp2;
-	pd_a3p T a;
-	pd_a3p T b;
-	T sum; T sum2;
-	for(uint i = 0; i < test_amount; ++i){
-		print("test: ",i+1);
-		a = classify(random_float(0::T)); b = classify(random_float(0::T));
-		sum = declassify(a+b); sum2 = declassify(a) + declassify(b);
-		temp = sum-sum2; temp2 = sum2;
-		if(temp < 0){temp = -temp};
-		if(temp2 < 0){temp2 = -temp2};
-		percentage += (temp / temp2);
-	}
-    percentage = (percentage / (T)test_amount) * 100;
-	print("TEST completed");
-	print("Addition is imprecise by: ", percentage, " %");
-    test_report_error(percentage);
+    T max_absolute = 0, max_relative = 0;
+    T temp; T temp2;
+    pd_a3p T a;
+    pd_a3p T b;
+    T sum; T sum2;
+    for(uint i = 0; i < test_amount; ++i){
+        print("test: ",i+1);
+        a = classify(random_float(0::T)); b = classify(random_float(0::T));
+        sum = declassify(a+b); sum2 = declassify(a) + declassify(b);
+        temp = sum-sum2; temp2 = sum2;
+        if(temp < 0){temp = -temp};
+        if(temp2 < 0){temp2 = -temp2};
+        if (max_absolute < temp)
+            max_absolute = temp;
+        if (max_relative < temp / temp2)
+            max_relative = temp / temp2;
+    }
+
+    print("TEST completed");
+    print("Max absolute error: ", max_absolute);
+    print("Max relative error: ", max_relative);
+    test_report_error(max_relative);
 }
 
 void main(){
 
-	print("Precision test: start");
+    print("Precision test: start");
 
-	print("TEST 1: Float32/64 Addition precision");
-	{
-		print("Float32");
-		test_addition(0::float32);
-	}
-	{
-		print("Float64");
-		test_addition(0::float64);
-	}
+    print("TEST 1: Float32/64 Addition precision");
+    {
+        print("Float32");
+        test_addition(0::float32);
+    }
+    {
+        print("Float64");
+        test_addition(0::float64);
+    }
 
     print("Test finished!");
 }

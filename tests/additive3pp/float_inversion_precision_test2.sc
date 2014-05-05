@@ -27,7 +27,7 @@ import test_utility;
 /****************************************************
 *****************************************************
 *****************************************************
-*****/   	public uint test_amount = 10;  	    /****
+*****/      public uint test_amount = 10;       /****
 ******  increase for more accurate percentages  *****
 *****************************************************
 *****************************************************
@@ -43,7 +43,7 @@ T random_float(T data){
     pd_a3p int8 temp2;
     T scalar;
     T scalar2;
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar = 0;
         while(scalar == 0 || scalar2 == 0){
             scalar = (T) declassify(randomize(temp));
@@ -69,7 +69,7 @@ D T[[1]] random(D T[[1]] data){
     pd_a3p int8[[1]] temp2 (x_shape);
     T[[1]] scalar (x_shape);
     T[[1]] scalar2 (x_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -97,7 +97,7 @@ D T[[2]] random(D T[[2]] data){
     pd_a3p int8[[2]] temp2 (x_shape,y_shape);
     T[[2]] scalar (x_shape,y_shape);
     T[[2]] scalar2 (x_shape,y_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -126,7 +126,7 @@ D T[[3]] random(D T[[3]] data){
     pd_a3p int8[[3]] temp2 (x_shape,y_shape,z_shape);
     T[[3]] scalar (x_shape,y_shape,z_shape);
     T[[3]] scalar2 (x_shape,y_shape,z_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -147,73 +147,47 @@ D T[[3]] random(D T[[3]] data){
 
 template<type T>
 void test_inversion(T data){
-	T percentage;
-	pd_a3p T[[1]] a (8) = {
-		10.49934588656477,
-		58.83904325241103,
-		6.459133708592741,
-		12.30305849067902,
-		5.672880010454444,
-		0.5154542504192215,
-		-33.07334086055091,
-		-8.146960136185919
-	};
-	T[[1]] b (8) = {
-		0.095244028609403699186052996064777215723445856946584784926884,
-		0.016995517682198601980202808696548131280981723968423205692767,
-		0.154819523037536122962576052147431363914115676938109787699726,
-		0.081280601954190079255736827142709095552187175689689325695726,
-		0.176277305029741292975640471523912602826018007231098313451172,
-		1.940036383804566626673218567731497610520720266582510220379170,
-		-0.03023583266705227484615820064040857182654732612020244551028,
-		-0.12274516915313642586555771859977852412995381036589904796001
-	};
-	pd_a3p T[[1]] c (8);
+    T max_absolute = 0, max_relative = 0;
+    pd_a3p T[[1]] a (8);
+    T[[1]] b (8);
+    pd_a3p T[[1]] c (8);
 
-	c = inv(a);
-	T[[1]] d (8);
-	T[[1]] temp(8) = declassify(a);
+    T[[1]] d (8);
 
-	d = declassify(c) - b;
+    a = random(a);
+    T[[1]] temp(8) = declassify(a);
+    for(uint i = 0; i < 8; ++i){
+        b[i] = 1/temp[i];
+        c[i] = inv(a[i]);
+    }
+    d = declassify(c) - b;
+    temp = b;
+    for(uint i = 0; i < 8;++i){
+        if(d[i] < 0){d[i] = -d[i];}
+        if(temp[i] < 0){temp[i] = -temp[i];}
+    }
+    max_absolute = max(d);
+    max_relative = max(d / temp);
 
-	for(uint i = 0; i < 8;++i){
-		if(d[i] < 0){d[i] = -d[i];}
-		if(temp[i] < 0){temp[i] = -temp[i];}
-	}
-
-	T sum; T sum2;
-	a = random(a);
-	temp = declassify(a);
-	for(uint i = 0; i < 8; ++i){
-		b[i] = 1/temp[i];
-		c[i] = inv(a[i]);
-	}
-	d = declassify(c) - b;
-	for(uint i = 0; i < 8;++i){
-		if(d[i] < 0){d[i] = -d[i];}
-		if(temp[i] < 0){temp[i] = -temp[i];}
-	}
-
-	percentage = sum(d / temp);
-    percentage = (percentage / 8) * 100;
-	print("TEST completed");
-	print("Inversion vs. internal arithmetic unit answers is imprecise by: ", percentage, " %");
-    test_report_error(percentage);
+    print("TEST completed");
+    print("Max absolute error: ", max_absolute);
+    print("Max relative error: ", max_relative);
+    test_report_error(max_relative);
 }
 
 void main(){
 
-	print("Precision test: start");
+    print("Precision test: start");
 
-	print("TEST 5: Float32/64 inversion precision");
-	{
-		print("Float32");
-		test_inversion(0::float32);
-	}
-	{
-		print("Float64");
-		test_inversion(0::float64);
-	}
+    print("TEST 5: Float32/64 inversion precision");
+    {
+        print("Float32");
+        test_inversion(0::float32);
+    }
+    {
+        print("Float64");
+        test_inversion(0::float64);
+    }
 
     print("Test finished!");
 }

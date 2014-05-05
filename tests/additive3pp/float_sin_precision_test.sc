@@ -27,7 +27,7 @@ import test_utility;
 /****************************************************
 *****************************************************
 *****************************************************
-*****/   	public uint test_amount = 10;  	    /****
+*****/      public uint test_amount = 10;       /****
 ******  increase for more accurate percentages  *****
 *****************************************************
 *****************************************************
@@ -43,7 +43,7 @@ T random_float(T data){
     pd_a3p int8 temp2;
     T scalar;
     T scalar2;
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar = 0;
         while(scalar == 0 || scalar2 == 0){
             scalar = (T) declassify(randomize(temp));
@@ -69,7 +69,7 @@ D T[[1]] random(D T[[1]] data){
     pd_a3p int8[[1]] temp2 (x_shape);
     T[[1]] scalar (x_shape);
     T[[1]] scalar2 (x_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -97,7 +97,7 @@ D T[[2]] random(D T[[2]] data){
     pd_a3p int8[[2]] temp2 (x_shape,y_shape);
     T[[2]] scalar (x_shape,y_shape);
     T[[2]] scalar2 (x_shape,y_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -126,7 +126,7 @@ D T[[3]] random(D T[[3]] data){
     pd_a3p int8[[3]] temp2 (x_shape,y_shape,z_shape);
     T[[3]] scalar (x_shape,y_shape,z_shape);
     T[[3]] scalar2 (x_shape,y_shape,z_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -147,65 +147,67 @@ D T[[3]] random(D T[[3]] data){
 
 template<type T>
 void test_sin(T data){
-	T percentage;
-	pd_a3p T[[1]] a (6) = {
-		1.535359689017609,
-		-3.691520454030958,
-		0.3645205550492913,
-		3.670053129892183,
-		3.565277562294547,
-		//-48.42696016247228,
-		5.411167505765563
-		//22.58281807201601
-		// cannot use those values otherwise imprecision is over a billion percent
-		// VM probably has an issue with angles bigger than 2*pi
-	};
+    T max_absolute = 0, max_relative = 0;
+    pd_a3p T[[1]] a (6) = {
+        1.535359689017609,
+        -3.691520454030958,
+        0.3645205550492913,
+        3.670053129892183,
+        3.565277562294547,
+        //-48.42696016247228,
+        5.411167505765563
+        //22.58281807201601
+        // cannot use those values otherwise imprecision is over a billion percent
+        // VM probably has an issue with angles bigger than 2*pi
+    };
 
 
-	//radians
-	T[[1]] b (6) = {
-		0.999372188053827311880116625789242387997100157445729730841003,
-		0.522625675673997926990697591852093392812491496336474491601758,
-		0.356501392547928893588299460365806303984370739148059352783049,
-		-0.50420443070747302192901476609516032397872513906068697502028,
-		-0.41112232643427713072343386894534779652674092407078421997585,
-		//0.964374959685377044826710393641436229248997196381340521352072,
-		-0.76562851207067262638835876030431734777683517527272468681800
-		//-0.55774749979570813840005801495922364317703842299950389372550
-	};
+    //radians
+    T[[1]] b (6) = {
+        0.999372188053827311880116625789242387997100157445729730841003,
+        0.522625675673997926990697591852093392812491496336474491601758,
+        0.356501392547928893588299460365806303984370739148059352783049,
+        -0.50420443070747302192901476609516032397872513906068697502028,
+        -0.41112232643427713072343386894534779652674092407078421997585,
+        //0.964374959685377044826710393641436229248997196381340521352072,
+        -0.76562851207067262638835876030431734777683517527272468681800
+        //-0.55774749979570813840005801495922364317703842299950389372550
+    };
 
-	pd_a3p T[[1]] c (6);
+    pd_a3p T[[1]] c (6);
 
-	c = sin(a);
-	T[[1]] d (6);
-	T[[1]] temp(6) = declassify(a);
-	
-	d = declassify(c) - b;
+    c = sin(a);
+    T[[1]] d (6);
+    T[[1]] temp(6) = b;
 
-	for(uint i = 0; i < 6;++i){
-		if(d[i] < 0){d[i] = -d[i];}
-		if(temp[i] < 0){temp[i] = -temp[i];}
-	}
-	percentage = sum(d / temp);
-    percentage = (percentage / 6) * 100;
-	print("TEST completed");
-	print("Sin vs. hardcoded answers is imprecise by: ", percentage, " %");
-    test_report_error(percentage);
+    d = declassify(c) - b;
+
+    for(uint i = 0; i < 6;++i){
+        if(d[i] < 0){d[i] = -d[i];}
+        if(temp[i] < 0){temp[i] = -temp[i];}
+    }
+    max_absolute = max(d);
+    max_relative = max(d / temp);
+
+    print("TEST completed");
+    print("Max absolute error: ", max_absolute);
+    print("Max relative error: ", max_relative);
+    test_report_error(max_relative);
 }
 
 void main(){
 
-	print("Precision test: start");
+    print("Precision test: start");
 
-	print("TEST 9: Float32/64 sin precision");
-	{
-		print("Float32");
-		test_sin(0::float32);
-	}
-	{
-		print("Float64");
-		test_sin(0::float64);
-	}
+    print("TEST 9: Float32/64 sin precision");
+    {
+        print("Float32");
+        test_sin(0::float32);
+    }
+    {
+        print("Float64");
+        test_sin(0::float64);
+    }
 
     print("Test finished!");
 }
