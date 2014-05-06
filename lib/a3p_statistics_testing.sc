@@ -20,6 +20,7 @@ import stdlib;
  * @file
  * \defgroup a3p_statistics_testing a3p_statistics_testing.sc
  * \defgroup t_test tTest
+ * \defgroup t_test_samples tTest(two sample vectors)
  * \defgroup paired_t_test pairedTTest
  * \defgroup chisq chiSquared
  * \defgroup chisq_cb chiSquared(with codebook)
@@ -104,6 +105,59 @@ D FT _tTest (D T[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool varian
 
 	return result;
 }
+
+template<domain D : additive3pp, type T, type FT>
+D FT _tTestSamples (D T[[1]] data1,
+                    D bool[[1]] ia1,
+                    D T[[1]] data2,
+                    D bool[[1]] ia2,
+                    bool variancesEqual)
+{
+    assert (size (data1) == size (ia1));
+    assert (size (data2) == size (ia2));
+
+    uint size1 = size (data1);
+    uint size2 = size (data2);
+
+    D T[[1]] datas (size1 + size2);
+    D bool[[1]] ias (size1 + size2);
+    datas[:size1] = data1;
+    datas[size1:] = data2;
+    ias[:size1] = ia1;
+    ias[size1:] = ia2;
+
+    datas = datas * (T) ias;
+    data1 = datas[:size1];
+    data2 = datas[size1:];
+
+    D FT mean1 = mean (data1, ia1);
+    D FT mean2 = mean (data2, ia2);
+    D FT var1 = _variance (data1, ia1, mean1);
+    D FT var2 = _variance (data2, ia2, mean2);
+    D uint count1 = sum ((uint) ia1);
+    D uint count2 = sum ((uint) ia2);
+
+    if (variancesEqual) {
+        D FT[[1]] mulL = {(FT) count1 - 1, (FT) count2 - 1};
+        D FT[[1]] mulR = {var1, var2};
+        D FT[[1]] mulRes = mulL * mulR;
+
+        D FT[[1]] inversed = {(FT) count1, (FT) count2};
+        inversed = inv (inversed);
+
+        D FT[[1]] roots = {(mulRes[0] + mulRes[1]) / (FT) (count1 + count2 - 2),
+                           inversed[0] + inversed[1]};
+        roots = sqrt (roots);
+
+        return (mean1 - mean2) / (roots[0] * roots[1]);
+    } else {
+        D FT[[1]] divL = {var1, var2};
+        D FT[[1]] divR = {(FT) count1, (FT) count2};
+        D FT[[1]] divRes = divL / divR;
+        D FT commonStDev = sqrt (divRes[0] + divRes[1]);
+        return (mean1 - mean2) / commonStDev;
+    }
+}
 /** \endcond */
 
 
@@ -117,7 +171,9 @@ D FT _tTest (D T[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool varian
  *  vector belong to the first sample
  *  @param controls - vector indicating which elements of the input
  *  vector belong to the second sample
- *  @return returns the t value
+ *  @param variancesEqual - indicates if the variances of the two
+ *  samples should be treated as equal
+ *  @return returns the test statistic
  */
 template<domain D : additive3pp>
 D float32 tTest (D int32[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool variancesEqual) {
@@ -130,6 +186,39 @@ D float64 tTest (D int64[[1]] data, D bool[[1]] cases, D bool[[1]] controls, boo
 }
 /** @} */
 
+/** \addtogroup <t_test_samples>
+ *  @{
+ *  @brief Perform t-tests
+ *  @note **D** - additive3pp protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @param data1 - first sample
+ *  @param ia1 - vector indicating which elements of the first sample are available
+ *  @param data2 - second sample
+ *  @param ia2 - vector indicating which elements of the second sample are available
+ *  @param variancesEqual - indicates if the variances of the two
+ *  samples should be treated as equal
+ *  @return returns the test statistic
+ */
+template<domain D : additive3pp>
+D float32 tTest (D int32[[1]] data1,
+                 D bool[[1]] ia1,
+                 D int32[[1]] data2,
+                 D bool[[1]] ia2,
+                 bool variancesEqual)
+{
+    return _tTestSamples (data1, ia1, data2, ia2, variancesEqual);
+}
+
+template<domain D : additive3pp>
+D float64 tTest (D int64[[1]] data1,
+                 D bool[[1]] ia1,
+                 D int64[[1]] data2,
+                 D bool[[1]] ia2,
+                 bool variancesEqual)
+{
+    return _tTestSamples (data1, ia1, data2, ia2, variancesEqual);
+}
+/** @} */
 
 /** \cond */
 template <domain D : additive3pp, type T, type FT>
