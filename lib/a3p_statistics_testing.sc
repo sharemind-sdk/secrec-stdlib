@@ -107,11 +107,11 @@ D FT _tTest (D T[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool varian
 }
 
 template<domain D : additive3pp, type T, type FT>
-D FT _tTest (D T[[1]] data1,
-             D bool[[1]] ia1,
-             D T[[1]] data2,
-             D bool[[1]] ia2,
-             bool variancesEqual)
+D FT[[1]] _tTest (D T[[1]] data1,
+                  D bool[[1]] ia1,
+                  D T[[1]] data2,
+                  D bool[[1]] ia2,
+                  bool variancesEqual)
 {
     assert (size (data1) == size (ia1));
     assert (size (data2) == size (ia2));
@@ -137,6 +137,9 @@ D FT _tTest (D T[[1]] data1,
     D uint32 count1 = sum ((uint32) ia1);
     D uint32 count2 = sum ((uint32) ia2);
 
+    /* degrees of freedom and test statistic */
+    D FT[[1]] result(2);
+
     if (variancesEqual) {
         D FT[[1]] mulL = {(FT) count1 - 1, (FT) count2 - 1};
         D FT[[1]] mulR = {var1, var2};
@@ -149,14 +152,32 @@ D FT _tTest (D T[[1]] data1,
                            inversed[0] + inversed[1]};
         roots = sqrt (roots);
 
-        return (mean1 - mean2) / (roots[0] * roots[1]);
+        result[0] = (FT) (count1 + count2 - 2);
+        result[1] = (mean1 - mean2) / (roots[0] * roots[1]);
     } else {
         D FT[[1]] divL = {var1, var2};
         D FT[[1]] divR = {(FT) count1, (FT) count2};
         D FT[[1]] divRes = divL / divR;
         D FT commonStDev = sqrt (divRes[0] + divRes[1]);
-        return (mean1 - mean2) / commonStDev;
+
+        result[1] = (mean1 - mean2) / commonStDev;
+
+        /*
+        df = (abs(var1 / count1) + abs(var2 / count2))**2
+        /
+        ((var1 / count1)**2 / (count1 - 1) +
+        (var2 / count2)**2 / (count2 - 1))
+        */
+
+        D FT[[1]] absDiv = abs (divRes);
+        D FT[[1]] sqrDiv = _power (divRes, 2 :: uint);
+        divR = {(FT) count1 - 1, (FT) count2 - 1};
+        divRes = sqrDiv / divR;
+
+        result[0] = _power (absDiv[0] + absDiv[1], 2 :: uint) / (divRes[0] + divRes[1]);
     }
+
+    return result;
 }
 /** \endcond */
 
@@ -197,24 +218,25 @@ D float64 tTest (D int64[[1]] data, D bool[[1]] cases, D bool[[1]] controls, boo
  *  @param ia2 - vector indicating which elements of the second sample are available
  *  @param variancesEqual - indicates if the variances of the two
  *  samples should be treated as equal
- *  @return returns the test statistic
+ *  @return returns a two element vector. The first element is the
+ *  degrees of freedom and the second is the test statistic.
  */
 template<domain D : additive3pp>
-D float32 tTest (D int32[[1]] data1,
-                 D bool[[1]] ia1,
-                 D int32[[1]] data2,
-                 D bool[[1]] ia2,
-                 bool variancesEqual)
+D float32[[1]] tTest (D int32[[1]] data1,
+                      D bool[[1]] ia1,
+                      D int32[[1]] data2,
+                      D bool[[1]] ia2,
+                      bool variancesEqual)
 {
     return _tTest (data1, ia1, data2, ia2, variancesEqual);
 }
 
 template<domain D : additive3pp>
-D float64 tTest (D int64[[1]] data1,
-                 D bool[[1]] ia1,
-                 D int64[[1]] data2,
-                 D bool[[1]] ia2,
-                 bool variancesEqual)
+D float64[[1]] tTest (D int64[[1]] data1,
+                      D bool[[1]] ia1,
+                      D int64[[1]] data2,
+                      D bool[[1]] ia2,
+                      bool variancesEqual)
 {
     return _tTest (data1, ia1, data2, ia2, variancesEqual);
 }

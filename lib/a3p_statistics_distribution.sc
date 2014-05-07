@@ -111,20 +111,6 @@ D T[[1]] _countElementsHist (D T[[1]] data, T[[1]] breaks) {
     return sum (compRes1 * compRes2, sizeBreaks - 1);
 }
 
-template <type T>
-T _power(T x, uint e) {
-    if (e == 0)
-        return 1;
-
-    T pow = x;
-    while (e > 1) {
-        pow = pow * x;
-        e--;
-    }
-
-    return pow;
-}
-
 template<type T>
 uint _niceStep (T min, T max, uint idealIntervalCount) {
     assert (idealIntervalCount > 1);

@@ -39,6 +39,37 @@ import stdlib;
 /**
  * \cond
  */
+
+template <type T, dim N, domain D>
+D T[[N]] _power(D T[[N]] x, uint e) {
+    if (e == 0) {
+        D T[[N]] one = 1;
+        return one;
+    }
+
+    D T[[N]] pow = x;
+    while (e > 1) {
+        pow = pow * x;
+        e--;
+    }
+
+    return pow;
+}
+
+template <type T, dim N>
+T[[N]] _power(T[[N]] x, uint e) {
+    if (e == 0)
+        return 1;
+
+    T[[N]] pow = x;
+    while (e > 1) {
+        pow = pow * x;
+        e--;
+    }
+
+    return pow;
+}
+
 template <domain D : additive3pp, type T>
 D T[[1]] _cut (D T[[1]] data, D bool[[1]] isAvailable){
     // Shuffle, open isAvailable, remove all where isAvailable = 0
