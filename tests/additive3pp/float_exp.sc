@@ -90,7 +90,7 @@ void test_exp(T data){
         if(d[i] < 0){d[i] = -d[i];}
         if(temp[i] < 0){temp[i] = -temp[i];}
         print("absolute difference: ",d[i]);
-        print("relative difference: ",d[i] / b[i]);
+        print("relative difference: ",d[i] / temp[i]);
         print("---------------------------");
     }
     max_absolute = max(d);
