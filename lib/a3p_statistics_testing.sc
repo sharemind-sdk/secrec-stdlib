@@ -107,11 +107,11 @@ D FT _tTest (D T[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool varian
 }
 
 template<domain D : additive3pp, type T, type FT>
-D FT _tTestSamples (D T[[1]] data1,
-                    D bool[[1]] ia1,
-                    D T[[1]] data2,
-                    D bool[[1]] ia2,
-                    bool variancesEqual)
+D FT _tTest (D T[[1]] data1,
+             D bool[[1]] ia1,
+             D T[[1]] data2,
+             D bool[[1]] ia2,
+             bool variancesEqual)
 {
     assert (size (data1) == size (ia1));
     assert (size (data2) == size (ia2));
@@ -134,8 +134,8 @@ D FT _tTestSamples (D T[[1]] data1,
     D FT mean2 = mean (data2, ia2);
     D FT var1 = _variance (data1, ia1, mean1);
     D FT var2 = _variance (data2, ia2, mean2);
-    D uint count1 = sum ((uint) ia1);
-    D uint count2 = sum ((uint) ia2);
+    D uint32 count1 = sum ((uint32) ia1);
+    D uint32 count2 = sum ((uint32) ia2);
 
     if (variancesEqual) {
         D FT[[1]] mulL = {(FT) count1 - 1, (FT) count2 - 1};
@@ -206,7 +206,7 @@ D float32 tTest (D int32[[1]] data1,
                  D bool[[1]] ia2,
                  bool variancesEqual)
 {
-    return _tTestSamples (data1, ia1, data2, ia2, variancesEqual);
+    return _tTest (data1, ia1, data2, ia2, variancesEqual);
 }
 
 template<domain D : additive3pp>
@@ -216,7 +216,7 @@ D float64 tTest (D int64[[1]] data1,
                  D bool[[1]] ia2,
                  bool variancesEqual)
 {
-    return _tTestSamples (data1, ia1, data2, ia2, variancesEqual);
+    return _tTest (data1, ia1, data2, ia2, variancesEqual);
 }
 /** @} */
 
