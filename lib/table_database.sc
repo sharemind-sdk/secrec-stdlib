@@ -572,7 +572,9 @@ T[[1]] tdbVmapGetValue (uint id, string paramname, uint index) {
     __syscall("tdb_vmap_at_value_type_size", id, __cref paramname, index, __return rt_size);
     assert(rt_size == t_size);
 
-    T[[1]] out(pvsize);
+    uint64 num_bytes = 0;
+    __syscall ("tdb_vmap_at_value", id, __cref paramname, index, __return num_bytes);
+    T[[1]] out(num_bytes / t_size);
     __syscall("tdb_vmap_at_value", id, __cref paramname, index, __ref out);
 
     return out;
