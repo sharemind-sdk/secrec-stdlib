@@ -539,7 +539,8 @@ D int64 wilcoxonRankSum (D int64[[1]] data, D bool[[1]] cases, D bool[[1]] contr
 template <domain D : additive3pp, type T, type FT>
 D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
                                D T[[1]] sample2,
-                               D bool[[1]] filter)
+                               D bool[[1]] filter,
+                               int64 alternative)
 {
     assert (size (sample1) == size (sample2) && size (sample1) == size (filter));
 
@@ -569,10 +570,25 @@ D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
     D T[[1]] signedRanks = ranks * sortedSigns;
     D T signedRankSum = sum (signedRanks);
 
+    // Calculate z
     D FT zScore;
     D uint32 n = sum ((uint32) filter);
     D FT divisor = (FT) (n * (n + 1) * (2 * n + 1)) / (FT) 6;
-    zScore = (FT) signedRankSum / sqrt (divisor);
+    zScore = (FT) signedRankSum;
+
+    // Continuity correction
+    assert (alternative == ALTERNATIVE_LESSER ||
+            alternative == ALTERNATIVE_GREATER ||
+            alternative == ALTERNATIVE_TWO_SIDED);
+
+    if (alternative == ALTERNATIVE_LESSER)
+        zScore += 0.5;
+    else if (alternative == ALTERNATIVE_GREATER)
+        zScore -= 0.5;
+    else if (alternative == ALTERNATIVE_TWO_SIDED)
+        zScore -= 0.5;
+
+    zScore = zScore / divisor;
 
     D FT[[1]] res = {(FT) signedRankSum, zScore};
 
@@ -684,17 +700,24 @@ D T[[1]] _sortBySigns (D T[[1]] valueToBeSortedBy, D T[[1]] signs) {
  *  @param sample2 - second sample
  *  @param filter - vector indicating which elements of the sample to
  *  include in computing the t value
+ *  @param alternative - the type of alternative hypothesis. Lesser -
+ *  mean of sample1 is less than mean of sample2, greater - mean of
+ *  sample1 is greater than mean of sample2, two-sided - means of
+ *  sample1 and sample2 are different
  *  @return returns a vector where the first element is the test
- *  statistic and the second element is the z score
+ *  statistic and the second element is the z score. The z score is
+ *  continuity corrected. The z score is an approximation and when
+ *  there's less than 10 pairs with non-zero difference, it's
+ *  incorrect.
  */
 template <domain D : additive3pp>
-D float32[[1]] wilcoxonSignedRank (D int32[[1]] sample1, D int32[[1]] sample2, D bool[[1]] filter) {
-    return _wilcoxonSignedRank (sample1, sample2, filter);
+D float32[[1]] wilcoxonSignedRank (D int32[[1]] sample1, D int32[[1]] sample2, D bool[[1]] filter, int64 alternative) {
+    return _wilcoxonSignedRank (sample1, sample2, filter, alternative);
 }
 
 template <domain D : additive3pp>
-D float64[[1]] wilcoxonSignedRank (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] filter) {
-    return _wilcoxonSignedRank (sample1, sample2, filter);
+D float64[[1]] wilcoxonSignedRank (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] filter, int64 alternative) {
+    return _wilcoxonSignedRank (sample1, sample2, filter, alternative);
 }
 /** @} */
 /** @} */
