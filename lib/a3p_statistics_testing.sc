@@ -26,6 +26,7 @@ import stdlib;
  * \defgroup chisq_cb chiSquared(with codebook)
  * \defgroup wilcoxon_rank_sum wilcoxonRankSum
  * \defgroup wilcoxon_signed_rank wilcoxonSignedRank
+ * \defgroup constants constants
  */
 
 /**
@@ -65,45 +66,45 @@ D FT _tTest (D T[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool varian
     meanControls = mean (dataControls, controls);
     varControls = _variance (dataControls, controls, meanControls);
 
-	D FT commonStDev, subMean;
-	D FT result;
+    D FT commonStDev, subMean;
+    D FT result;
 
-	subMean = meanCases - meanControls;
+    subMean = meanCases - meanControls;
 
-	if (variancesEqual) {
-		D FT[[1]] mulA2 (2), mulB2 (2), mulRes2 (2);
-		mulA2[0] = (FT) (countCases - 1);
-		mulA2[1] = (FT) (countControls - 1);
-		mulB2[0] = varCases;
-		mulB2[1] = varControls;
-		mulRes2 = mulA2 * mulB2;
+    if (variancesEqual) {
+        D FT[[1]] mulA2 (2), mulB2 (2), mulRes2 (2);
+        mulA2[0] = (FT) (countCases - 1);
+        mulA2[1] = (FT) (countControls - 1);
+        mulB2[0] = varCases;
+        mulB2[1] = varControls;
+        mulRes2 = mulA2 * mulB2;
 
-		D FT[[1]] invPar (2), resInvPar (2);
-		invPar[0] = (FT) countCases;
-		invPar[1] = (FT) countControls;
-		resInvPar = inv (invPar);
+        D FT[[1]] invPar (2), resInvPar (2);
+        invPar[0] = (FT) countCases;
+        invPar[1] = (FT) countControls;
+        resInvPar = inv (invPar);
 
-		D FT[[1]] sqrtPar (2), resSqrtPar (2);
-		sqrtPar[0] = (mulRes2[0] + mulRes2[1]) / (FT) (countCases + countControls - 2);
-		sqrtPar[1] = resInvPar[0] + resInvPar[1];
-		resSqrtPar = sqrt (sqrtPar);
+        D FT[[1]] sqrtPar (2), resSqrtPar (2);
+        sqrtPar[0] = (mulRes2[0] + mulRes2[1]) / (FT) (countCases + countControls - 2);
+        sqrtPar[1] = resInvPar[0] + resInvPar[1];
+        resSqrtPar = sqrt (sqrtPar);
 
-		result = subMean / (resSqrtPar[0] * resSqrtPar[1]);
+        result = subMean / (resSqrtPar[0] * resSqrtPar[1]);
 
-	} else {
-		D FT[[1]] divAPar (2), divBPar (2), resDivPar (2);
-		divAPar[0] = varCases;
-		divAPar[1] = varControls;
-		divBPar[0] = (FT) countCases;
-		divBPar[1] = (FT) countControls;
+    } else {
+        D FT[[1]] divAPar (2), divBPar (2), resDivPar (2);
+        divAPar[0] = varCases;
+        divAPar[1] = varControls;
+        divBPar[0] = (FT) countCases;
+        divBPar[1] = (FT) countControls;
 
-		resDivPar = divAPar / divBPar;
+        resDivPar = divAPar / divBPar;
 
-		commonStDev = sqrt (resDivPar[0] + resDivPar[1]);
-		result = subMean / commonStDev;
-	}
+        commonStDev = sqrt (resDivPar[0] + resDivPar[1]);
+        result = subMean / commonStDev;
+    }
 
-	return result;
+    return result;
 }
 
 template<domain D : additive3pp, type T, type FT>
@@ -181,6 +182,16 @@ D FT[[1]] _tTest (D T[[1]] data1,
 }
 /** \endcond */
 
+/**
+ * \addtogroup <constants
+ * @{
+ * @brief Constants used for specifying the alternative hypothesis.
+ */
+int64 ALTERNATIVE_LESSER    = 0;
+int64 ALTERNATIVE_GREATER   = 1;
+int64 ALTERNATIVE_TWO_SIDED = 2;
+/** @} */
+
 
 /** \addtogroup <t_test>
  *  @{
@@ -246,28 +257,28 @@ D float64[[1]] tTest (D int64[[1]] data1,
 template <domain D : additive3pp, type T, type FT>
 D FT _pairedTTest (D T[[1]] sample1, D T[[1]] sample2, D bool[[1]] filter, FT constant) {
 
-	assert (size (sample1) == size (filter) && size (sample1) == size (sample2));
-	uint sizeData = size (sample1);
+    assert (size (sample1) == size (filter) && size (sample1) == size (sample2));
+    uint sizeData = size (sample1);
 
-	D T[[1]] differences = sample1 - sample2;
+    D T[[1]] differences = sample1 - sample2;
 
-	D uint32 count = sum ((uint32) filter);
-	D T[[1]] filteredData (sizeData);
-	filteredData = differences * (T) filter;
+    D uint32 count = sum ((uint32) filter);
+    D T[[1]] filteredData (sizeData);
+    filteredData = differences * (T) filter;
 
-	D FT mean = mean (filteredData, filter);
+    D FT mean = mean (filteredData, filter);
     D FT var = _variance (filteredData, filter, mean);
     D FT stDev = sqrt (var);
-	D FT sqrtN = sqrt ((FT) count);
+    D FT sqrtN = sqrt ((FT) count);
 
-	D FT result;
-	if (constant == 0) {
-		result = (mean * sqrtN) / stDev;
-	} else {
-		result = ((mean - constant) * sqrtN) / stDev;
-	}
+    D FT result;
+    if (constant == 0) {
+        result = (mean * sqrtN) / stDev;
+    } else {
+        result = ((mean - constant) * sqrtN) / stDev;
+    }
 
-	return result;
+    return result;
 }
 /** \endcond */
 
@@ -301,13 +312,13 @@ D float64 pairedTTest (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] f
 template <domain D, type T, type FT, type UT>
 D FT _chiSquared2Classes (D UT[[2]] contTable, T dummy)
 {
-	D FT result;
-	D UT a, b, c, d;
+    D FT result;
+    D UT a, b, c, d;
 
-	a = contTable[0, 0];
-	b = contTable[0, 1];
-	c = contTable[1, 0];
-	d = contTable[1, 1];
+    a = contTable[0, 0];
+    b = contTable[0, 1];
+    c = contTable[1, 0];
+    d = contTable[1, 1];
 
     D T x1;
     D UT y1;
@@ -320,46 +331,46 @@ D FT _chiSquared2Classes (D UT[[2]] contTable, T dummy)
 
     result = (FT) x1 / (FT) y1;
 
-	return result;
+    return result;
 }
 
 // For reference, see Test 43 in the book "100 Statistical Tests"
 template <domain D, type T, type FT, type UT>
 D FT _chiSquaredXClasses (D UT[[2]] contTable, T dummy) {
 
-	// Calculate expected frequencies as {(row subtotal x column subtotal) / total}
-	uint[[1]] shapeContingency = shape (contTable);
-	uint k = shapeContingency[0];
+    // Calculate expected frequencies as {(row subtotal x column subtotal) / total}
+    uint[[1]] shapeContingency = shape (contTable);
+    uint k = shapeContingency[0];
 
-	D UT[[1]] colSums (k), rowSums (2);
-	colSums = contTable[: , 0] + contTable[: , 1];
-	rowSums[0] = sum (contTable [: , 0]);
-	rowSums[1] = sum (contTable [: , 1]);
-	D UT total = rowSums[0] + rowSums[1];
-	D UT[[1]] mulParA (2 * k), mulParB (2 * k), mulParRes (2 * k);
+    D UT[[1]] colSums (k), rowSums (2);
+    colSums = contTable[: , 0] + contTable[: , 1];
+    rowSums[0] = sum (contTable [: , 0]);
+    rowSums[1] = sum (contTable [: , 1]);
+    D UT total = rowSums[0] + rowSums[1];
+    D UT[[1]] mulParA (2 * k), mulParB (2 * k), mulParRes (2 * k);
 
-	mulParA [0 : k] = colSums;
-	mulParA [k : 2 * k] = colSums;
-	mulParB [0 : k] = rowSums[0];
-	mulParB [k : 2 * k] = rowSums[1];
-	mulParRes = mulParA * mulParB;
+    mulParA [0 : k] = colSums;
+    mulParA [k : 2 * k] = colSums;
+    mulParB [0 : k] = rowSums[0];
+    mulParB [k : 2 * k] = rowSums[1];
+    mulParRes = mulParA * mulParB;
 
-	D FT[[1]] totals (k * 2) = (FT) total;
-	D FT[[1]] expectedFreq = (FT) mulParRes / totals;
+    D FT[[1]] totals (k * 2) = (FT) total;
+    D FT[[1]] expectedFreq = (FT) mulParRes / totals;
 
-	D FT[[1]] flatFreq (k * 2);
+    D FT[[1]] flatFreq (k * 2);
 
     flatFreq[0:k] = (FT)contTable [:, 0];
     flatFreq[k:k * 2] = (FT)contTable [:, 1];
 
-	// Calculate sum ((realFreq - expectedFreq)**2 / expectedFreq) in parallel as much as possible
-	D FT[[1]] diffs (k * 2), squares (k * 2), quotients (k * 2);
+    // Calculate sum ((realFreq - expectedFreq)**2 / expectedFreq) in parallel as much as possible
+    D FT[[1]] diffs (k * 2), squares (k * 2), quotients (k * 2);
 
-	diffs = flatFreq - expectedFreq;
-	squares = diffs * diffs;
-	quotients = squares / expectedFreq;
+    diffs = flatFreq - expectedFreq;
+    squares = diffs * diffs;
+    quotients = squares / expectedFreq;
 
-	return sum (quotients);
+    return sum (quotients);
 }
 /** \endcond */
 
@@ -453,45 +464,45 @@ D float64 chiSquared (D int64[[1]] data,
 /** \cond */
 template <domain D : additive3pp, type T>
 D T _wilcoxonRankSum (D T[[1]] data, D bool[[1]] cases, D bool[[1]] controls) {
-	// We assume that the case and control filters are mutually exclusive.
-	// The following fixes the filter if they are not.
-	D bool[[1]] combinedFilter = cases || controls;
-	D T[[2]] dataAndFilters (size(data), 3);
-	dataAndFilters[:, 0] = data;
-	dataAndFilters[:, 1] = (T)cases;
-	dataAndFilters[:, 2] = (T)controls;
+    // We assume that the case and control filters are mutually exclusive.
+    // The following fixes the filter if they are not.
+    D bool[[1]] combinedFilter = cases || controls;
+    D T[[2]] dataAndFilters (size(data), 3);
+    dataAndFilters[:, 0] = data;
+    dataAndFilters[:, 1] = (T)cases;
+    dataAndFilters[:, 2] = (T)controls;
 
-	// Remove all values that are neither in the case nor the control groups
-	D T[[2]] cutDatabase = cut (dataAndFilters, combinedFilter);
+    // Remove all values that are neither in the case nor the control groups
+    D T[[2]] cutDatabase = cut (dataAndFilters, combinedFilter);
 
-	D T[[2]] sortedDatabase = sortingNetworkSort (cutDatabase, 0 :: uint);
+    D T[[2]] sortedDatabase = sortingNetworkSort (cutDatabase, 0 :: uint);
 
-	uint64[[1]] shapeSorted = shape(sortedDatabase);
-	T[[1]] ranks (shapeSorted[0]);
+    uint64[[1]] shapeSorted = shape(sortedDatabase);
+    T[[1]] ranks (shapeSorted[0]);
 
-	for (uint64 i = 0; i < shapeSorted[0]; i = i + 1){
-		ranks[i] = (T)i + 1;
-	}
+    for (uint64 i = 0; i < shapeSorted[0]; i = i + 1){
+        ranks[i] = (T)i + 1;
+    }
 
-	D T[[1]] rankCases (shapeSorted[0]), rankControls (shapeSorted[0]);
-	rankCases = ranks * sortedDatabase[:, 1];
-	rankControls = ranks * sortedDatabase[:, 2];
+    D T[[1]] rankCases (shapeSorted[0]), rankControls (shapeSorted[0]);
+    rankCases = ranks * sortedDatabase[:, 1];
+    rankControls = ranks * sortedDatabase[:, 2];
 
-	D T rankSumCases, rankSumControls;
-	rankSumCases = sum (rankCases);
-	rankSumControls = sum (rankControls);
-	D uint32 nCases, nControls;
-	nCases = sum ((uint32) cases);
-	nControls = sum ((uint32) controls);
+    D T rankSumCases, rankSumControls;
+    rankSumCases = sum (rankCases);
+    rankSumControls = sum (rankControls);
+    D uint32 nCases, nControls;
+    nCases = sum ((uint32) cases);
+    nControls = sum ((uint32) controls);
 
     D T uCases = rankSumCases - (T)((nCases * (nCases + 1)) / 2);
     D T uControls = (T)nCases * (T)nControls - uCases;
     D T casesFewer = (T) (uCases < uControls);
 
-	// Obliviously choose the one with fewer elements
-	D T w = casesFewer * uCases + ((1 :: T) - casesFewer) * uControls;
+    // Obliviously choose the one with fewer elements
+    D T w = casesFewer * uCases + ((1 :: T) - casesFewer) * uControls;
 
-	return w;
+    return w;
 }
 /** \endcond */
 
@@ -526,44 +537,46 @@ D int64 wilcoxonRankSum (D int64[[1]] data, D bool[[1]] cases, D bool[[1]] contr
 
 /** \cond */
 template <domain D : additive3pp, type T, type FT>
-D FT _wilcoxonSignedRank (D T[[1]] sample1, D T[[1]] sample2, D bool[[1]] filter) {
+D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
+                               D T[[1]] sample2,
+                               D bool[[1]] filter)
+{
+    assert (size (sample1) == size (sample2) && size (sample1) == size (filter));
 
-	assert (size (sample1) == size (sample2) && size (sample1) == size (filter));
-
-	D T[[2]] unCutSamples (size (sample1), 2);
-	unCutSamples[:, 0] = sample1;
-	unCutSamples[:, 1] = sample2;
-	D T[[2]] cutSamples (size (sample1), 2);
+    D T[[2]] unCutSamples (size (sample1), 2);
+    unCutSamples[:, 0] = sample1;
+    unCutSamples[:, 1] = sample2;
+    D T[[2]] cutSamples (size (sample1), 2);
     cutSamples = cut (unCutSamples, filter);
 
-	D T[[1]] cutSample1, cutSample2;
-	cutSample1 = cutSamples[:, 0];
-	cutSample2 = cutSamples[:, 1];
-	uint sizeCut = size (cutSample1);
+    D T[[1]] cutSample1, cutSample2;
+    cutSample1 = cutSamples[:, 0];
+    cutSample2 = cutSamples[:, 1];
+    uint sizeCut = size (cutSample1);
 
-	D T[[1]] differences = cutSample1 - cutSample2;
-	D T[[1]] signs = sign (differences);
-	D T[[1]] absDiffs = (T)abs (differences);
+    D T[[1]] differences = cutSample1 - cutSample2;
+    D T[[1]] signs = sign (differences);
+    D T[[1]] absDiffs = (T)abs (differences);
 
-	D T[[1]] sortedSigns = _sortBySigns (absDiffs, signs);
-	D T countZeroes = sum ((T) (signs == 0));
+    D T[[1]] sortedSigns = _sortBySigns (absDiffs, signs);
+    D T countZeroes = sum ((T) (signs == 0));
 
-	D T[[1]] ranks (sizeCut);
-	for (uint64 i = 0; i < sizeCut; i = i + 1) {
-		ranks[i] = (T) i + 1 - countZeroes;
-	}
+    D T[[1]] ranks (sizeCut);
+    for (uint64 i = 0; i < sizeCut; i = i + 1) {
+        ranks[i] = (T) i + 1 - countZeroes;
+    }
 
-	D T[[1]] signedRanks = ranks * sortedSigns;
-	D T signedRankSum = sum (signedRanks);
+    D T[[1]] signedRanks = ranks * sortedSigns;
+    D T signedRankSum = sum (signedRanks);
 
-/*
-    // Currenty, we don't do z-score calculation
-	D float64 zScore;
-	D uint64 n = sum (filter);
-	D float64 divisor = (float64) (n * (n + 1) * (2 * n + 1)) / (float64) 6;
-	zScore = (float64) signedRankSum / sqrt (divisor);
-*/
-    return (FT)signedRankSum;
+    D FT zScore;
+    D uint32 n = sum ((uint32) filter);
+    D FT divisor = (FT) (n * (n + 1) * (2 * n + 1)) / (FT) 6;
+    zScore = (FT) signedRankSum / sqrt (divisor);
+
+    D FT[[1]] res = {(FT) signedRankSum, zScore};
+
+    return res;
 }
 
 // An internal helper function for Wilcoxon tests
@@ -671,15 +684,16 @@ D T[[1]] _sortBySigns (D T[[1]] valueToBeSortedBy, D T[[1]] signs) {
  *  @param sample2 - second sample
  *  @param filter - vector indicating which elements of the sample to
  *  include in computing the t value
- *  @return returns the test statistic
+ *  @return returns a vector where the first element is the test
+ *  statistic and the second element is the z score
  */
 template <domain D : additive3pp>
-D float32 wilcoxonSignedRank (D int32[[1]] sample1, D int32[[1]] sample2, D bool[[1]] filter) {
+D float32[[1]] wilcoxonSignedRank (D int32[[1]] sample1, D int32[[1]] sample2, D bool[[1]] filter) {
     return _wilcoxonSignedRank (sample1, sample2, filter);
 }
 
 template <domain D : additive3pp>
-D float64 wilcoxonSignedRank (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] filter) {
+D float64[[1]] wilcoxonSignedRank (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] filter) {
     return _wilcoxonSignedRank (sample1, sample2, filter);
 }
 /** @} */

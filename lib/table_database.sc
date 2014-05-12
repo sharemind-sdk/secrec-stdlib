@@ -339,7 +339,7 @@ template<type T>
 T[[1]] tdbReadColumn(string datasource, string table, uint64 index) {
     uint64 rv = 0;
     __syscall("tdb_read_col", __cref datasource, __cref table, index, __return rv);
-    T [[1]] out = tdbVmapGetValue(rv, "values", 0 :: uint);
+    T[[1]] out = tdbVmapGetValue(rv, "values", 0 :: uint);
     tdbVmapDelete(rv);
     return out;
 }
@@ -357,7 +357,7 @@ template<type T>
 T[[1]] tdbReadColumn(string datasource, string table, string column) {
     uint rv = 0;
     __syscall("tdb_read_col", __cref datasource, __cref table, __cref column, __return rv);
-    T [[1]] out = tdbVmapGetValue(rv, "values", 0 :: uint);
+    T[[1]] out = tdbVmapGetValue(rv, "values", 0 :: uint);
     tdbVmapDelete(rv);
     return out;
 }
