@@ -170,15 +170,16 @@ D T[[1]] sort(D T[[1]] vec) {
 /** @}*/
 /** \addtogroup <sort_mat>
  *  @{
- *  @brief Function for sorting columns in a matrix
+ *  @brief Function for sorting rows of a matrix based on values of a column
  *  @note **D** - additive3pp protection domain
- *  @return returns a matrix with the specified column sorted from smaller to bigger values
+ *  @return returns a matrix where the input matrix rows are sorted
+ *  based on values of the specified column
  */
 
 /**
  *  @note Supported types - \ref bool "bool"
  *  @note boolean values are sorted after their numerical value. **false** first then **true**
- *  @param column - an \ref uint64 "uint" type value for specifying the column to be sorted
+ *  @param column - index of the column used for ordering
  *  @param matrix - a matrix of supported type
 */
 template <domain D : additive3pp>
@@ -222,8 +223,7 @@ D bool[[2]] sort(D bool[[2]] matrix, uint column) {
 
 /**
  *  @note **T** - any \ref data_types "data" type
- *  @note boolean values are sorted after their numerical value. **false** first then **true**
- *  @param column - an \ref uint64 "uint" type value for specifying the column to be sorted
+ *  @param column - index of the column used for ordering
  *  @param matrix - a matrix of supported type
 */
 
@@ -315,7 +315,7 @@ uint[[1]] generateSortingNetwork(uint arraysize) {
 
 /** \addtogroup <sortingnetwork>
  *  @{
- *  @brief Functions for sorting values with sorting network
+ *  @brief Functions for sorting values with sorting networks
  *  @note **D** - all protection domains
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  */
@@ -483,12 +483,12 @@ D T[[1]] sortingNetworkSort (D T[[1]] array) {
 /** @}*/
 /** \addtogroup <sortingnetwork_mat>
  *  @{
- *  @brief Function for sorting a specified column in a matrix with sorting network
+ *  @brief Function for sorting rows of a matrix based on values of a column
  *  @note **D** - all protection domains
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
- *  @param column - an \ref uint64 "uint" type value specifying the column of the input matrix to be sorted
+ *  @param column - index of the column used for ordering rows of the matrix
  *  @param matrix - a matrix of supported type
- *  @return returns a matrix with the specified column of the input matrix sorted from smaller to bigger values
+ *  @return returns a matrix with sorted rows
  */
 template <domain D : additive3pp>
 D uint8[[2]] sortingNetworkSort (D uint8[[2]] matrix, uint column) {
@@ -779,13 +779,16 @@ D T[[1]] _sortingNetworkSort (D T[[1]] vector, D T[[1]] indices) {
 /** @}*/
 /** \addtogroup <sortingnetwork_mat2>
  *  @{
- *  @brief Function for sorting specified columns in a matrix with sorting network
+ *  @brief Function for sorting rows of a matrix based on values of two columns
  *  @note **D** - all protection domains
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
- *  @param column1 - an \ref uint64 "uint" type value specifying the column of the input matrix to be sorted
- *  @param column2 - an \ref uint64 "uint" type value specifying the column of the input matrix to be sorted as a secondary sort parameter
+ *  @param column1 - index of the first column used for ordering
+ *  @param column2 - index of the second column used for ordering
  *  @param matrix - a matrix of supported type
- *  @return returns a matrix with the specified column of the input matrix sorted from smaller to bigger values
+ *  @return returns a matrix where the rows of the input matrix have
+ *  been sorted. For ordering two rows, the values in column1 are
+ *  compared first, if they are equal then the values in column2 are
+ *  compared.
  */
 template <domain D : additive3pp>
 D uint8[[2]] sortingNetworkSort (D uint8[[2]] matrix, uint column1, uint column2) {
@@ -1090,14 +1093,18 @@ D T[[1]] _sortingNetworkSort2 (D T[[1]] vector, D T[[1]] indices) {
 /** @}*/
 /** \addtogroup <sortingnetwork_mat3>
  *  @{
- *  @brief Function for sorting specified columns in a matrix with sorting network
+ *  @brief Function for sorting rows of a matrix based on values of three columns
  *  @note **D** - all protection domains
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
- *  @param column1 - an \ref uint64 "uint" type value specifying the column of the input matrix to be sorted
- *  @param column2 - an \ref uint64 "uint" type value specifying the column of the input matrix to be sorted as a secondary sort parameter
- *  @param column3 - an \ref uint64 "uint" type value specifying the column of the input matrix to be sorted as a third sort parameter
+ *  @param column1 - index of the first column used for ordering
+ *  @param column2 - index of the second column used for ordering
+ *  @param column3 - index of the third column used for ordering
  *  @param matrix - a matrix of supported type
- *  @return returns a matrix with the specified column of the input matrix sorted from smaller to bigger values
+ *  @return returns a matrix where the rows of the input matrix have
+ *  been sorted. For ordering two rows, the values in column1 are
+ *  compared first, if they are equal then the values in column2 are
+ *  compared, if they are equal then the values in column3 are
+ *  compared.
  */
 template <domain D : additive3pp>
 D uint8[[2]] sortingNetworkSort (D uint8[[2]] matrix, uint column1, uint column2, uint column3) {
