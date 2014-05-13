@@ -81,6 +81,7 @@ int64 INT64_MIN = -9223372036854775808;
 * \defgroup min3 min(parts)
 * \defgroup abs abs
 * \defgroup round round
+* \defgroup sqrt sqrt
 */
 
 /** \addtogroup <stdlib>
@@ -1769,6 +1770,28 @@ int round (float64 x) {
 	float64 k = (float64)((int)x);
 	return x - k < 0.5 ? (int)k : ((int)k) + 1;
 }
-
 /** @}*/
+
+/** @} */
+/** \addtogroup <sqrt>
+ *  @{
+ *  @brief Function for finding the square root of a value
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @return returns a vector containing square roots of the input vector
+ */
+template<dim N>
+float32[[N]] sqrt(float32[[N]] x) {
+    float32[[N]] ret = x;
+    __syscall("public_float32_sqrt", __cref x, __ref ret);
+    return ret;
+}
+
+template<dim N>
+float64[[N]] sqrt(float64[[N]] x) {
+    float64[[N]] ret = x;
+    __syscall("public_float64_sqrt", __cref x, __ref ret);
+    return ret;
+}
+/** @} */
+
 /** @}*/
