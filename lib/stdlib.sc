@@ -1772,12 +1772,10 @@ int round (float64 x) {
 }
 /** @}*/
 
-/** @} */
 /** \addtogroup <sqrt>
  *  @{
- *  @brief Function for finding the square root of a value
+ *  @brief Function for finding square roots
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns a vector containing square roots of the input vector
  */
 template<dim N>
 float32[[N]] sqrt(float32[[N]] x) {
