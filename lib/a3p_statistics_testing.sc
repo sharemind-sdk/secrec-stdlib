@@ -11,6 +11,7 @@ module a3p_statistics_testing;
 
 import a3p_sort;
 import a3p_statistics_common;
+import a3p_matrix;
 import a3p_statistics_summary;
 import additive3pp;
 import stdlib;
@@ -187,7 +188,7 @@ D FT[[1]] _tTest (D T[[1]] data1,
  * @{
  * @brief Constants used for specifying the alternative hypothesis.
  */
-int64 ALTERNATIVE_LESSER    = 0;
+int64 ALTERNATIVE_LESS      = 0;
 int64 ALTERNATIVE_GREATER   = 1;
 int64 ALTERNATIVE_TWO_SIDED = 2;
 /** @} */
@@ -544,53 +545,65 @@ D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
 {
     assert (size (sample1) == size (sample2) && size (sample1) == size (filter));
 
-    D T[[2]] unCutSamples (size (sample1), 2);
-    unCutSamples[:, 0] = sample1;
-    unCutSamples[:, 1] = sample2;
-    D T[[2]] cutSamples (size (sample1), 2);
-    cutSamples = cut (unCutSamples, filter);
+    // Pairs whose difference is zero are dropped
+    D T[[1]] differences = sample1 - sample2;
+    filter = filter && (differences != 0);
 
-    D T[[1]] cutSample1, cutSample2;
-    cutSample1 = cutSamples[:, 0];
-    cutSample2 = cutSamples[:, 1];
-    uint sizeCut = size (cutSample1);
+    D T[[2]] bothSamples (size (sample1), 2);
+    bothSamples[:, 0] = sample1;
+    bothSamples[:, 1] = sample2;
+    bothSamples = cut (bothSamples, filter);
 
-    D T[[1]] differences = cutSample1 - cutSample2;
+    differences = bothSamples[:, 0] - bothSamples[:, 1];
+    uint n = size (differences);
     D T[[1]] signs = sign (differences);
-    D T[[1]] absDiffs = (T)abs (differences);
+    D T[[1]] absDiffs = (T) abs (differences);
 
-    D T[[1]] sortedSigns = _sortBySigns (absDiffs, signs);
-    D T countZeroes = sum ((T) (signs == 0));
+    // Sort a matrix with sign and absolute difference columns by the
+    // difference column
+    D T[[2]] signAndMagnitude (n, 2);
+    signAndMagnitude[:, 0] = signs;
+    signAndMagnitude[:, 1] = absDiffs;
+    signAndMagnitude = sortingNetworkSort(signAndMagnitude, 1 :: uint);
+    signs = signAndMagnitude[:, 0];
+    absDiffs = signAndMagnitude[:, 1];
 
-    D T[[1]] ranks (sizeCut);
-    for (uint64 i = 0; i < sizeCut; i = i + 1) {
-        ranks[i] = (T) i + 1 - countZeroes;
+    T[[1]] ranks (n);
+    for (uint i = 0; i < n; i++) {
+        ranks[i] = (T) i + 1;
     }
 
-    D T[[1]] signedRanks = ranks * sortedSigns;
-    D T signedRankSum = sum (signedRanks);
+    // Replace tied ranks with their average
+    D FT[[1]] ranksFixed (n);
+    D T[[2]] filtersMat(n, n);
+    D T[[2]] ranksMat(n, n);
+    for (uint i = 0; i < n; i++) {
+        filtersMat[i, :] = (T) (absDiffs == absDiffs[i]);
+        ranksMat[i, :] = ranks;
+    }
+    ranksFixed = (FT) rowSums(filtersMat * ranksMat) / (FT) rowSums(filtersMat);
 
-    // Calculate z
-    D FT zScore;
-    D uint32 n = sum ((uint32) filter);
-    D FT divisor = (FT) (n * (n + 1) * (2 * n + 1)) / (FT) 6;
-    zScore = (FT) signedRankSum;
+    // Calculate statistic and z-score
+    D FT w = sum ((FT) signs * ranksFixed);
+    D FT z = w;
+    FT sigma = sqrt ((FT) (n * (n + 1) * (2 * n + 1)) / 6);
+    FT correction;
 
     // Continuity correction
-    assert (alternative == ALTERNATIVE_LESSER ||
+    assert (alternative == ALTERNATIVE_LESS ||
             alternative == ALTERNATIVE_GREATER ||
             alternative == ALTERNATIVE_TWO_SIDED);
 
-    if (alternative == ALTERNATIVE_LESSER)
-        zScore += 0.5;
+    if (alternative == ALTERNATIVE_LESS)
+        correction = 0.5;
     else if (alternative == ALTERNATIVE_GREATER)
-        zScore -= 0.5;
+        correction = -0.5;
     else if (alternative == ALTERNATIVE_TWO_SIDED)
-        zScore -= 0.5;
+        correction = -0.5;
 
-    zScore = zScore / divisor;
+    z = (z + correction) / sigma;
 
-    D FT[[1]] res = {(FT) signedRankSum, zScore};
+    D FT[[1]] res = {w, z};
 
     return res;
 }
@@ -700,7 +713,7 @@ D T[[1]] _sortBySigns (D T[[1]] valueToBeSortedBy, D T[[1]] signs) {
  *  @param sample2 - second sample
  *  @param filter - vector indicating which elements of the sample to
  *  include in computing the t value
- *  @param alternative - the type of alternative hypothesis. Lesser -
+ *  @param alternative - the type of alternative hypothesis. Less -
  *  mean of sample1 is less than mean of sample2, greater - mean of
  *  sample1 is greater than mean of sample2, two-sided - means of
  *  sample1 and sample2 are different
