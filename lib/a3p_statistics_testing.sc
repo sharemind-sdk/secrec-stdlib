@@ -22,6 +22,7 @@ import stdlib;
  * \defgroup a3p_statistics_testing a3p_statistics_testing.sc
  * \defgroup t_test tTest
  * \defgroup t_test_samples tTest(two sample vectors)
+ * \defgroup combined_df combinedDegreesOfFreedom
  * \defgroup paired_t_test pairedTTest
  * \defgroup chisq chiSquared
  * \defgroup chisq_cb chiSquared(with codebook)
@@ -109,11 +110,11 @@ D FT _tTest (D T[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool varian
 }
 
 template<domain D : additive3pp, type T, type FT>
-D FT[[1]] _tTest (D T[[1]] data1,
-                  D bool[[1]] ia1,
-                  D T[[1]] data2,
-                  D bool[[1]] ia2,
-                  bool variancesEqual)
+D FT _tTest (D T[[1]] data1,
+             D bool[[1]] ia1,
+             D T[[1]] data2,
+             D bool[[1]] ia2,
+             bool variancesEqual)
 {
     assert (size (data1) == size (ia1));
     assert (size (data2) == size (ia2));
@@ -139,9 +140,6 @@ D FT[[1]] _tTest (D T[[1]] data1,
     D uint32 count1 = sum ((uint32) ia1);
     D uint32 count2 = sum ((uint32) ia2);
 
-    /* degrees of freedom and test statistic */
-    D FT[[1]] result(2);
-
     if (variancesEqual) {
         D FT[[1]] mulL = {(FT) count1 - 1, (FT) count2 - 1};
         D FT[[1]] mulR = {var1, var2};
@@ -154,32 +152,65 @@ D FT[[1]] _tTest (D T[[1]] data1,
                            inversed[0] + inversed[1]};
         roots = sqrt (roots);
 
-        result[0] = (FT) (count1 + count2 - 2);
-        result[1] = (mean1 - mean2) / (roots[0] * roots[1]);
+        return (mean1 - mean2) / (roots[0] * roots[1]);
     } else {
         D FT[[1]] divL = {var1, var2};
         D FT[[1]] divR = {(FT) count1, (FT) count2};
         D FT[[1]] divRes = divL / divR;
         D FT commonStDev = sqrt (divRes[0] + divRes[1]);
 
-        result[1] = (mean1 - mean2) / commonStDev;
-
-        /*
-        df = (abs(var1 / count1) + abs(var2 / count2))**2
-        /
-        ((var1 / count1)**2 / (count1 - 1) +
-        (var2 / count2)**2 / (count2 - 1))
-        */
-
-        D FT[[1]] absDiv = abs (divRes);
-        D FT[[1]] sqrDiv = _power (divRes, 2 :: uint);
-        divR = {(FT) count1 - 1, (FT) count2 - 1};
-        divRes = sqrDiv / divR;
-
-        result[0] = _power (absDiv[0] + absDiv[1], 2 :: uint) / (divRes[0] + divRes[1]);
+        return (mean1 - mean2) / commonStDev;
     }
+}
 
-    return result;
+template<domain D, type IT, type UT, type FT>
+D FT _combinedDegreesOfFreedom (D IT[[1]] data1,
+                                D bool[[1]] ia1,
+                                D IT[[1]] data2,
+                                D bool[[1]] ia2,
+                                UT proxy)
+{
+    /*
+     * Welch's t-test uses the following formula for approximating
+     * degrees of freedom:
+     *
+     * df = (variance1^2 / size1 + variance2^2 / size)^2 /
+     *      (variance1^4 / (size1^2 * df1) + variance2^4 / (size2^2 * df2))
+     */
+
+    D FT var1 = variance (data1, ia1);
+    D FT var2 = variance (data2, ia2);
+    D UT n1 = sum ((UT) ia1);
+    D UT n2 = sum ((UT) ia2);
+    D UT df1 = n1 - 1;
+    D UT df2 = n2 - 2;
+
+    D FT[[1]] sqr = {var1, var2};
+    sqr = sqr * sqr;
+
+    D FT var1Sqr = sqr[0];
+    D FT var2Sqr = sqr[1];
+
+    sqr = sqr * sqr;
+
+    D FT var1Quad = sqr[0];
+    D FT var2Quad = sqr[1];
+
+    D UT[[1]] nSqr = {n1, n2};
+    nSqr = nSqr * nSqr;
+
+    D UT[[1]] nSqrMulDf = {df1, df2};
+    nSqrMulDf = nSqr * nSqrMulDf;
+
+    D FT[[1]] divA = {var1Sqr, var2Sqr, var1Quad, var2Quad};
+    D FT[[1]] divB = {(FT) n1, (FT) n2,
+                                (FT) nSqrMulDf[0], (FT) nSqrMulDf[1]};
+    D FT[[1]] divRes = divA / divB;
+
+    D FT dividend = divRes[0] + divRes[1];
+    dividend = dividend * dividend;
+
+    return dividend / (divRes[2] + divRes[3]);
 }
 /** \endcond */
 
@@ -230,27 +261,64 @@ D float64 tTest (D int64[[1]] data, D bool[[1]] cases, D bool[[1]] controls, boo
  *  @param ia2 - vector indicating which elements of the second sample are available
  *  @param variancesEqual - indicates if the variances of the two
  *  samples should be treated as equal
- *  @return returns a two element vector. The first element is the
- *  degrees of freedom and the second is the test statistic.
+ *  @return returns the test statistic
  */
 template<domain D : additive3pp>
-D float32[[1]] tTest (D int32[[1]] data1,
-                      D bool[[1]] ia1,
-                      D int32[[1]] data2,
-                      D bool[[1]] ia2,
-                      bool variancesEqual)
+D float32 tTest (D int32[[1]] data1,
+                 D bool[[1]] ia1,
+                 D int32[[1]] data2,
+                 D bool[[1]] ia2,
+                 bool variancesEqual)
 {
     return _tTest (data1, ia1, data2, ia2, variancesEqual);
 }
 
 template<domain D : additive3pp>
-D float64[[1]] tTest (D int64[[1]] data1,
-                      D bool[[1]] ia1,
-                      D int64[[1]] data2,
-                      D bool[[1]] ia2,
-                      bool variancesEqual)
+D float64 tTest (D int64[[1]] data1,
+                 D bool[[1]] ia1,
+                 D int64[[1]] data2,
+                 D bool[[1]] ia2,
+                 bool variancesEqual)
 {
     return _tTest (data1, ia1, data2, ia2, variancesEqual);
+}
+/** @} */
+
+/** \addtogroup <combined_df>
+ *  @{
+ *  @brief Approximate the degrees of freedom of a linear combination
+ *  of independent sample variances
+ *  @note Uses the Welch-Satterthwaite equation. It's useful for
+ *  calculating the degrees of freedom when performing a t-test on
+ *  samples with unequal variances (Welch's t-test).
+ *  @note **D** - any protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @param data1 - first sample
+ *  @param ia1 - vector indicating which elements of the first sample
+ *  are available
+ *  @param data2 - second sample
+ *  @param ia2 - vector indicating which elements of the second sample
+ *  are available
+ *  @return returns the approximated number of degrees of freedom
+ */
+template<domain D>
+D float32 combinedDegreesOfFreedom (D int32[[1]] data1,
+                                    D bool[[1]] ia1,
+                                    D int32[[1]] data2,
+                                    D bool[[1]] ia2)
+{
+    uint32 proxy;
+    return _combinedDegreesOfFreedom (data1, ia1, data2, ia2, proxy);
+}
+
+template<domain D>
+D float64 combinedDegreesOfFreedom (D int64[[1]] data1,
+                                    D bool[[1]] ia1,
+                                    D int64[[1]] data2,
+                                    D bool[[1]] ia2)
+{
+    uint64 proxy;
+    return _combinedDegreesOfFreedom (data1, ia1, data2, ia2, proxy);
 }
 /** @} */
 
