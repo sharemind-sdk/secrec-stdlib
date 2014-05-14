@@ -380,8 +380,8 @@ D FT _chiSquaredXClasses (D UT[[2]] contTable, T dummy) {
  *  @brief Perform Pearson's chi-squared test of independence
  *  @note **D** - any protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @note This version does not do any correction so the R equivalent
- *  is chisq.test(contingencyTable, correct=FALSE)
+ *  @note This version does not do continuity correction so the R
+ *  equivalent is chisq.test(contingencyTable, correct=FALSE)
  *  @param contTable - contingency table in the format
  *  <table>
  *  <tr><td></td><td>Cases</td><td>Controls</td></tr>
@@ -425,9 +425,9 @@ D float64 chiSquared (D uint64[[2]] contTable) {
  *  @{
  *  @brief Perform Pearson's chi-squared test of independence
  *  @note **D** - any protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @note This version does not do any correction so the R equivalent
- *  is chisq.test(contingencyTable, correct=FALSE)
+ *  @note Supported types - \ref uint32 "uint32" / \ref uint64 "uint64"
+ *  @note This version does not do continuity correction so the R
+ *  equivalent is chisq.test(contingencyTable, correct=FALSE)
  *  @param data - input vector
  *  @param cases - vector indicating which elements of the input
  *  vector belong to the first sample
@@ -440,23 +440,23 @@ D float64 chiSquared (D uint64[[2]] contTable) {
  *  @return returns the test statistic
  */
 template <domain D>
-D float32 chiSquared (D int32[[1]] data,
+D float32 chiSquared (D uint32[[1]] data,
                       D bool[[1]] cases,
                       D bool[[1]] controls,
                       uint32[[2]] codeBook)
 {
 
-    D uint32[[2]] contTable = contingencyTable ((uint32) data, cases, controls, codeBook);
+    D uint32[[2]] contTable = contingencyTable (data, cases, controls, codeBook);
     return chiSquared (contTable);
 }
 
 template <domain D>
-D float64 chiSquared (D int64[[1]] data,
+D float64 chiSquared (D uint64[[1]] data,
                       D bool[[1]] cases,
                       D bool[[1]] controls,
                       uint64[[2]] codeBook)
 {
-    D uint64[[2]] contTable = contingencyTable ((uint64) data, cases, controls, codeBook);
+    D uint64[[2]] contTable = contingencyTable (data, cases, controls, codeBook);
     return chiSquared (contTable);
 }
 /** @} */
