@@ -9,9 +9,10 @@
 
 module a3p_statistics_testing;
 
+import a3p_matrix;
+import a3p_random;
 import a3p_sort;
 import a3p_statistics_common;
-import a3p_matrix;
 import a3p_statistics_summary;
 import additive3pp;
 import stdlib;
@@ -109,12 +110,13 @@ D FT _tTest (D T[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool varian
     return result;
 }
 
-template<domain D : additive3pp, type T, type FT>
+template<domain D : additive3pp, type T, type FT, type UT>
 D FT _tTest (D T[[1]] data1,
              D bool[[1]] ia1,
              D T[[1]] data2,
              D bool[[1]] ia2,
-             bool variancesEqual)
+             bool variancesEqual,
+             UT proxy)
 {
     assert (size (data1) == size (ia1));
     assert (size (data2) == size (ia2));
@@ -133,10 +135,11 @@ D FT _tTest (D T[[1]] data1,
     data1 = datas[:size1];
     data2 = datas[size1:];
 
-    D FT mean1 = mean (data1, ia1);
-    D FT mean2 = mean (data2, ia2);
-    D FT var1 = _variance (data1, ia1, mean1);
-    D FT var2 = _variance (data2, ia2, mean2);
+    D FT[[1]] meanVar = _parallelMeanVar (data1, ia1, data2, ia2, proxy);
+    D FT mean1 = meanVar[0];
+    D FT mean2 = meanVar[1];
+    D FT var1 = meanVar[2];
+    D FT var2 = meanVar[3];
     D uint32 count1 = sum ((uint32) ia1);
     D uint32 count2 = sum ((uint32) ia2);
 
@@ -163,6 +166,70 @@ D FT _tTest (D T[[1]] data1,
     }
 }
 
+// Returns {mean1, mean2, variance1, variance2}
+template<domain D, type IT, type UT, type FT>
+D FT[[1]] _parallelMeanVar (D IT[[1]] data1,
+                            D bool[[1]] ia1,
+                            D IT[[1]] data2,
+                            D bool[[1]] ia2,
+                            UT proxy)
+{
+    assert (size (data1) == size (ia1));
+    assert (size (data2) == size (ia2));
+
+    // Shuffle and cut both samples
+    D IT[[2]] mat (max (size (data1), size (data2)), 4);
+    mat[: size (data1), 0] = data1;
+    mat[: size (ia1), 1] = (IT) ia1;
+    mat[: size (data2), 2] = data2;
+    mat[: size (ia2), 3] = (IT) ia2;
+
+    mat = shuffleRows (mat);
+
+    IT[[1]] pubIA1 = declassify (mat[:, 1]);
+    IT[[1]] pubIA2 = declassify (mat[:, 3]);
+
+    UT n1 = sum ((UT) pubIA1);
+    UT n2 = sum ((UT) pubIA2);
+
+    D IT[[1]] data1Cut ((uint) n1);
+    D IT[[1]] data2Cut ((uint) n2);
+
+    uint idx = 0;
+    for (uint i = 0; i < (uint) n1; i++) {
+        if (pubIA1[i] == 1) {
+            data1Cut[idx] = mat[i, 0];
+            idx++;
+        }
+    }
+
+    idx = 0;
+    for (uint i = 0; i < (uint) n2; i++) {
+        if (pubIA2[i] == 1) {
+            data2Cut[idx] = mat[i, 2];
+            idx++;
+        }
+    }
+
+    D IT[[2]] cutMat ((uint) max (n1, n2) , 2);
+    cutMat[: (uint) n1, 0] = data1Cut;
+    cutMat[: (uint) n2, 1] = data2Cut;
+
+    D IT[[1]] sums = colSums (cutMat);
+    UT[[1]] ns = {n1, n2};
+
+    D FT[[1]] means = (FT) sums / (FT) ns;
+    D FT[[2]] meanMat ((uint) max (n1, n2), 2);
+    meanMat[:, 0] = means[0];
+    meanMat[:, 1] = means[1];
+    D FT[[2]] diffs = (FT) cutMat - meanMat;
+    diffs = diffs * diffs;
+    D FT[[1]] diffSum = colSums (diffs);
+    D FT[[1]] variances = diffSum / (FT) ns;
+
+    return cat(means, variances);
+}
+
 template<domain D, type IT, type UT, type FT>
 D FT _combinedDegreesOfFreedom (D IT[[1]] data1,
                                 D bool[[1]] ia1,
@@ -178,13 +245,17 @@ D FT _combinedDegreesOfFreedom (D IT[[1]] data1,
      *      (variance1^4 / (size1^2 * df1) + variance2^4 / (size2^2 * df2))
      */
 
-    D FT var1 = variance (data1, ia1);
-    D FT var2 = variance (data2, ia2);
-    D UT n1 = sum ((UT) ia1);
-    D UT n2 = sum ((UT) ia2);
-    D UT df1 = n1 - 1;
-    D UT df2 = n2 - 2;
+    D FT[[1]] meanVar = _parallelMeanVar (data1, ia1, data2, ia2, proxy);
 
+    // These are already declassified in _parallelMeanVar
+    UT n1 = declassify (sum ((UT) ia1));
+    UT n2 = declassify (sum ((UT) ia2));
+
+    D FT var1 = meanVar[2];
+    D FT var2 = meanVar[3];
+
+    UT df1 = n1 - 1;
+    UT df2 = n2 - 2;
     D FT[[1]] sqr = {var1, var2};
     sqr = sqr * sqr;
 
@@ -204,7 +275,7 @@ D FT _combinedDegreesOfFreedom (D IT[[1]] data1,
 
     D FT[[1]] divA = {var1Sqr, var2Sqr, var1Quad, var2Quad};
     D FT[[1]] divB = {(FT) n1, (FT) n2,
-                                (FT) nSqrMulDf[0], (FT) nSqrMulDf[1]};
+                      (FT) nSqrMulDf[0], (FT) nSqrMulDf[1]};
     D FT[[1]] divRes = divA / divB;
 
     D FT dividend = divRes[0] + divRes[1];
@@ -270,7 +341,8 @@ D float32 tTest (D int32[[1]] data1,
                  D bool[[1]] ia2,
                  bool variancesEqual)
 {
-    return _tTest (data1, ia1, data2, ia2, variancesEqual);
+    uint32 proxy;
+    return _tTest (data1, ia1, data2, ia2, variancesEqual, proxy);
 }
 
 template<domain D : additive3pp>
@@ -280,7 +352,8 @@ D float64 tTest (D int64[[1]] data1,
                  D bool[[1]] ia2,
                  bool variancesEqual)
 {
-    return _tTest (data1, ia1, data2, ia2, variancesEqual);
+    uint64 proxy;
+    return _tTest (data1, ia1, data2, ia2, variancesEqual, proxy);
 }
 /** @} */
 
