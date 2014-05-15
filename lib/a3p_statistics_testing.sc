@@ -196,7 +196,7 @@ D FT[[1]] _parallelMeanVar (D IT[[1]] data1,
     D IT[[1]] data2Cut ((uint) n2);
 
     uint idx = 0;
-    for (uint i = 0; i < (uint) n1; i++) {
+    for (uint i = 0; i < size (pubIA1); i++) {
         if (pubIA1[i] == 1) {
             data1Cut[idx] = mat[i, 0];
             idx++;
@@ -204,7 +204,7 @@ D FT[[1]] _parallelMeanVar (D IT[[1]] data1,
     }
 
     idx = 0;
-    for (uint i = 0; i < (uint) n2; i++) {
+    for (uint i = 0; i < size (pubIA2); i++) {
         if (pubIA2[i] == 1) {
             data2Cut[idx] = mat[i, 2];
             idx++;
