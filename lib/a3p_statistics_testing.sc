@@ -255,7 +255,7 @@ D FT _combinedDegreesOfFreedom (D IT[[1]] data1,
     D FT var2 = meanVar[3];
 
     UT df1 = n1 - 1;
-    UT df2 = n2 - 2;
+    UT df2 = n2 - 1;
     D FT[[1]] sqr = {var1, var2};
     sqr = sqr * sqr;
 
