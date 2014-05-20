@@ -604,47 +604,67 @@ D float64 chiSquared (D uint64[[1]] data,
 
 
 /** \cond */
-template <domain D : additive3pp, type T>
-D T _wilcoxonRankSum (D T[[1]] data, D bool[[1]] cases, D bool[[1]] controls) {
-    // We assume that the case and control filters are mutually exclusive.
-    // The following fixes the filter if they are not.
-    D bool[[1]] combinedFilter = cases || controls;
-    D T[[2]] dataAndFilters (size(data), 3);
-    dataAndFilters[:, 0] = data;
-    dataAndFilters[:, 1] = (T)cases;
-    dataAndFilters[:, 2] = (T)controls;
+template <domain D : additive3pp, type T, type FT>
+D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
+                            D bool[[1]] ia1,
+                            D T[[1]] sample2,
+                            D bool[[1]] ia2,
+                            int64 alternative)
+{
+    // Zero will indicate that the matrix row is from sample2, one
+    // indicates that it's from sample1.
+    D T[[2]] mat (size (sample1) + size (sample2), 2);
+    mat[: size (sample1), 0] = sample1;
+    mat[: size (sample1), 1] = 1;
+    mat[size (sample1) :, 0] = sample2;
+    mat[size (sample1) :, 1] = 0;
 
-    // Remove all values that are neither in the case nor the control groups
-    D T[[2]] cutDatabase = cut (dataAndFilters, combinedFilter);
+    // Remove unavailable elements and sort
+    mat = _cut (mat, cat (ia1, ia2));
+    mat = sortingNetworkSort (mat, 0 :: uint);
 
-    D T[[2]] sortedDatabase = sortingNetworkSort (cutDatabase, 0 :: uint);
-
-    uint64[[1]] shapeSorted = shape(sortedDatabase);
-    T[[1]] ranks (shapeSorted[0]);
-
-    for (uint64 i = 0; i < shapeSorted[0]; i = i + 1){
-        ranks[i] = (T)i + 1;
+    uint N = shape (mat)[0];
+    T[[1]] ranks (N);
+    for (uint i = 0; i < N; i++) {
+        ranks[i] = (T) i + 1;
     }
 
-    D T[[1]] rankCases (shapeSorted[0]), rankControls (shapeSorted[0]);
-    rankCases = ranks * sortedDatabase[:, 1];
-    rankControls = ranks * sortedDatabase[:, 2];
+    // Replace tied ranks with their average
+    D FT[[1]] ranksFixed (N);
+    D T[[2]] filtersMat(N, N);
+    D T[[2]] ranksMat(N, N);
+    for (uint i = 0; i < N; i++) {
+        filtersMat[i, :] = (T) (mat[:, 0] == mat[i, 0]);
+        ranksMat[i, :] = ranks;
+    }
+    ranksFixed = (FT) rowSums(filtersMat * ranksMat) / (FT) rowSums(filtersMat);
 
-    D T rankSumCases, rankSumControls;
-    rankSumCases = sum (rankCases);
-    rankSumControls = sum (rankControls);
-    D uint32 nCases, nControls;
-    nCases = sum ((uint32) cases);
-    nControls = sum ((uint32) controls);
+    // Use the rank sum of the first sample
+    D FT w = sum (ranksFixed * (FT) mat[:, 1]);
+    D FT n1 = (FT) sum ((T) ia1);
+    D FT n2 = (FT) sum ((T) ia2);
+    D FT meanW = n1 * ((FT) N + 1) / 2;
+    D FT sigma = sqrt (n1 * n2 * ((FT) N + 1) / 12);
+    D FT z;
+    FT correction;
 
-    D T uCases = rankSumCases - (T)((nCases * (nCases + 1)) / 2);
-    D T uControls = (T)nCases * (T)nControls - uCases;
-    D T casesFewer = (T) (uCases < uControls);
+    // Continuity correction
+    assert (alternative == ALTERNATIVE_LESS ||
+            alternative == ALTERNATIVE_GREATER ||
+            alternative == ALTERNATIVE_TWO_SIDED);
 
-    // Obliviously choose the one with fewer elements
-    D T w = casesFewer * uCases + ((1 :: T) - casesFewer) * uControls;
+    if (alternative == ALTERNATIVE_LESS)
+        correction = 0.5;
+    else if (alternative == ALTERNATIVE_GREATER)
+        correction = -0.5;
+    else if (alternative == ALTERNATIVE_TWO_SIDED)
+        correction = -0.5;
 
-    return w;
+    z = ((w - meanW) + correction) / sigma;
+
+    D FT[[1]] res = {w, z};
+
+    return res;
 }
 /** \endcond */
 
@@ -654,28 +674,46 @@ D T _wilcoxonRankSum (D T[[1]] data, D bool[[1]] cases, D bool[[1]] controls) {
  *  @brief Perform Wilcoxon rank sum tests
  *  @note **D** - additive3pp protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @note T-test requires the populations to be normally
- *  distributed. If the populations are not normally distributed but
- *  are ordinal or continuous then the Wilcoxon rank-sum test can be
+ *  @note The t-test requires the populations to be normally
+ *  distributed. If the populations cannot be assumed to be normally
+ *  distributed but are ordinal then the Wilcoxon rank-sum test can be
  *  used instead.
- *  @param data - input vector
- *  @param cases - vector indicating which elements of the input
- *  vector belong to the first sample
- *  @param controls - vector indicating which elements of the input
- *  vector belong to the second sample
- *  @return returns the test statistic
+ *  @param sample1 - first sample
+ *  @param ia1 - vector indicating which elements of the first sample
+ *  are available
+ *  @param sample2 - second sample
+ *  @param ia2 - vector indicating which elements of the second sample
+ *  are available
+ *  @param alternative - the type of alternative hypothesis. Less -
+ *  mean of sample1 is less than mean of sample2, greater - mean of
+ *  sample1 is greater than mean of sample2, two-sided - means of
+ *  sample1 and sample2 are different
+ *  @return returns a vector where the first element is the test
+ *  statistic and the second element is the z-score. The z-score is
+ *  continuity corrected. The z-score is an approximation and its
+ *  values are only correct when both samples have at least 5
+ *  elements.
  */
 template <domain D : additive3pp>
-D int32 wilcoxonRankSum (D int32[[1]] data, D bool[[1]] cases, D bool[[1]] controls) {
-    return _wilcoxonRankSum (data, cases, controls);
+D float32[[1]] wilcoxonRankSum (D int32[[1]] sample1,
+                                D bool[[1]] ia1,
+                                D int32[[1]] sample2,
+                                D bool[[1]] ia2,
+                                int64 alternative)
+{
+    return _wilcoxonRankSum (sample1, ia1, sample2, ia2, alternative);
 }
 
 template <domain D : additive3pp>
-D int64 wilcoxonRankSum (D int64[[1]] data, D bool[[1]] cases, D bool[[1]] controls) {
-    return _wilcoxonRankSum (data, cases, controls);
+D float64[[1]] wilcoxonRankSum (D int64[[1]] sample1,
+                                D bool[[1]] ia1,
+                                D int64[[1]] sample2,
+                                D bool[[1]] ia2,
+                                int64 alternative)
+{
+    return _wilcoxonRankSum (sample1, ia1, sample2, ia2, alternative);
 }
 /** @} */
-
 
 /** \cond */
 template <domain D : additive3pp, type T, type FT>
@@ -846,21 +884,25 @@ D T[[1]] _sortBySigns (D T[[1]] valueToBeSortedBy, D T[[1]] signs) {
 
 /** \addtogroup <wilcoxon_signed_rank>
  *  @{
- *  @brief Perform Wilcoxon signed rank tests
+ *  @brief Perform Wilcoxon signed rank tests.
+ *  @note The paired t-test requires the populations to be normally
+ *  distributed. If the populations cannot be assumed to be normally
+ *  distributed but are ordinal then the Wilcoxon signed rank test can
+ *  be used instead.
  *  @note **D** - additive3pp protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @note This function does not match the one in R.
  *  @param sample1 - first  sample
  *  @param sample2 - second sample
  *  @param filter - vector indicating which elements of the sample to
- *  include in computing the t value
+ *  include in computing the statistic
  *  @param alternative - the type of alternative hypothesis. Less -
  *  mean of sample1 is less than mean of sample2, greater - mean of
  *  sample1 is greater than mean of sample2, two-sided - means of
  *  sample1 and sample2 are different
  *  @return returns a vector where the first element is the test
- *  statistic and the second element is the z score. The z score is
- *  continuity corrected. The z score is an approximation and when
+ *  statistic and the second element is the z-score. The z-score is
+ *  continuity corrected. The z-score is an approximation and when
  *  there's less than 10 pairs with non-zero difference, it's
  *  incorrect.
  */
