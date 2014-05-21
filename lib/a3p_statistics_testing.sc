@@ -30,6 +30,7 @@ import stdlib;
  * \defgroup wilcoxon_rank_sum wilcoxonRankSum
  * \defgroup wilcoxon_signed_rank wilcoxonSignedRank
  * \defgroup constants constants
+ * \defgroup multiple_testing multipleTesting
  */
 
 /**
@@ -823,4 +824,62 @@ D float64[[1]] wilcoxonSignedRank (D int64[[1]] sample1, D int64[[1]] sample2, D
     return _wilcoxonSignedRank (sample1, sample2, filter, alternative);
 }
 /** @} */
+
+/** \cond */
+template <domain D : additive3pp, type IT, type FT>
+D IT[[1]] _benjaminiHochberg (D FT[[1]] statistics,
+                              FT[[1]] quantiles)
+{
+    assert (size (statistics) == size (quantiles));
+
+    // Columns: statistics, indices, quantiles
+    D FT[[2]] mat (size (statistics), 3);
+    mat[:, 0] = statistics;
+    mat[:, 2] = quantiles;
+
+    for (uint i = 0; i < size (statistics); i++) {
+        // Note: can't go from uIT to float32
+        // Note: indices start from zero not one
+        mat[i, 1] = (FT)(uint32) i;
+    }
+
+    mat = sort (mat, 0 :: uint);
+    D bool[[1]] comp = mat[:, 0] >= mat[:, 2];
+
+    for (uint i = 0; i < size (comp); i++) {
+        bool compPub = declassify (comp[(uint) i]);
+        if (compPub) {
+            return floor (mat[(uint) i :, 1]);
+        }
+    }
+
+    D IT[[1]] res;
+    return res;
+}
+/** \endcond */
+
+/** \addtogroup <multiple_testing>
+ *  @brief Perform the Benjamini-Hochberg procedure for false
+ *  discovery rate control.
+ *  @note If multiple variables of a dataset are used for testing a
+ *  hypothesis then this procedure will help avoid false discoveries
+ *  (incorrectly rejected null hypothesis). This procedure is only
+ *  correct when the alternative hypothesis is of the upper tail kind.
+ *  @note **D** - additive3pp protection domain
+ *  @param statistics - vector of calculated test statistics
+ *  @param quantiles - vector of critical values for the test statistics
+ *  @return returns the indices of the tests for which the null
+ *  hypothesis is rejected
+ */
+template <domain D : additive3pp>
+D int32[[1]] multipleTesting (D float32[[1]] statistics, float32[[1]] quantiles) {
+    return _benjaminiHochberg (statistics, quantiles);
+}
+
+template <domain D : additive3pp>
+D int64[[1]] multipleTesting (D float64[[1]] statistics, float64[[1]] quantiles) {
+    return _benjaminiHochberg (statistics, quantiles);
+}
+/** @} */
+
 /** @} */
