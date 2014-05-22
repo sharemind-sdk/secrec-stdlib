@@ -12,6 +12,7 @@
  */
 module a3p_statistics_summary;
 
+import a3p_matrix;
 import a3p_sort;
 import a3p_statistics_common;
 import additive3pp;
@@ -39,6 +40,7 @@ import stdlib;
  * \defgroup mad_filter_constant MAD(filter, constant)
  * \defgroup five_number_summary_sn fiveNumberSummarySn
  * \defgroup five_number_summary_nth fiveNumberSummaryNth
+ * \defgroup covariance covariance
  */
 
 /** \addtogroup <a3p_statistics_summary>
@@ -516,6 +518,29 @@ D float64[[1]] fiveNumberSummaryNth (D int64[[1]] data, D bool[[1]] isAvailable)
     return _fiveNumberSummaryNth (data, isAvailable);
 }
 /** @} */
+
+/** \addtogroup <covariance>
+ *  @{
+ *  @brief Find the covariance of two samples.
+ *  @note **D** - additive3pp protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @param sample1 - first sample
+ *  @param sample2 - second sample
+ *  @param filter - filter indicating which elements of the samples
+ *  are available
+ *  @return returns the covariance
+ */
+template<domain D : additive3pp>
+D float32 covariance (D int32[[1]] sample1, D int32[[1]] sample2, D bool[[1]] filter) {
+    return _covariance (sample1, sample2, filter);
+}
+
+template<domain D : additive3pp>
+D float64 covariance (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] filter) {
+    return _covariance (sample1, sample2, filter);
+}
+/** @} */
+
 /** @} */
 
 // Internal functions - not to be documented and exported
@@ -616,4 +641,39 @@ template<domain D : additive3pp, type T, type FT>
 D FT _MAD (D T[[1]] data, D bool[[1]] isAvailable, FT constant) {
     D T[[1]] cutData = cut (data, isAvailable);
     return _MAD (cutData, constant);
+}
+
+template<domain D : additive3pp, type T, type FT>
+D FT _covariance (D T[[1]] sample1,
+                  D T[[1]] sample2,
+                  D bool[[1]] filter)
+{
+    assert (size (sample1) == size (sample2));
+    assert (size (sample2) == size (filter));
+
+    uint n = size (sample1);
+
+    D T[[2]] mat (n, 2);
+    mat[:, 0] = sample1;
+    mat[:, 1] = sample2;
+    mat = _cut (mat, filter);
+    n = shape (mat)[0];
+
+    D FT[[1]] meanVec = (FT) colSums (mat);
+    D FT[[1]] divisor = {(FT) n, (FT) n};
+    meanVec = meanVec / divisor;
+
+    D FT[[1]] samples (n * 2);
+    D FT[[1]] means (n * 2);
+    samples[:n] = (FT) mat[:, 0];
+    samples[n:] = (FT) mat[:, 1];
+    means[:n] = meanVec[0];
+    means[n:] = meanVec[1];
+
+    D FT[[1]] diff (n * 2) = samples - means;
+    D FT[[1]] mulL = diff[:n];
+    D FT[[1]] mulR = diff[n:];
+    D FT[[1]] mul = mulL * mulR;
+
+    return sum (mul) / (FT) n;
 }
