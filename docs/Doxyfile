@@ -664,6 +664,7 @@ INPUT                  = ../lib/table_database.sc \
                          ../lib/a3p_statistics_summary.sc \
                          ../lib/a3p_statistics_common.sc \
                          ../lib/a3p_statistics_outliers.sc \
+                         ../lib/a3p_statistics_regression.sc \
                          ../lib/a3p_matrix.sc \
                          ../lib/a3p_random.sc \
                          ../lib/a3p_bloom.sc \
