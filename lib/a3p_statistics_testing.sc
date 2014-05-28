@@ -606,10 +606,35 @@ D float64 chiSquared (D uint64[[1]] data,
 
 /** \cond */
 template <domain D : additive3pp, type T, type FT>
+D FT[[1]] _rank (D T[[1]] data) {
+    uint N = size(data);
+    D T[[2]] matA (N, N);
+    D T[[2]] matB (N, N);
+    T[[1]] ranks(N);
+
+    // On row i of matA, we want a filter indicating which values of
+    // the data vector equal data[i]
+    for (uint i = 0; i < N; i++) {
+        matA[i, :] = data;
+        matB[i, :] = data[i];
+        ranks[i] = (T) (i + 1);
+    }
+    matA = (T) (matA == matB);
+
+    for (uint i = 0; i < N; i++) {
+        matB[i, :] = ranks;
+    }
+
+    // Calculate the average of the ranks where the data values are equal
+    return (FT) rowSums(matA * matB) / (FT) rowSums(matA);
+}
+
+template <domain D : additive3pp, type T, type FT>
 D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
                             D bool[[1]] ia1,
                             D T[[1]] sample2,
                             D bool[[1]] ia2,
+                            bool correctRanks,
                             int64 alternative)
 {
     // Zero will indicate that the matrix row is from sample2, one
@@ -625,23 +650,22 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
     mat = sortingNetworkSort (mat, 0 :: uint);
 
     uint N = shape (mat)[0];
-    T[[1]] ranks (N);
-    for (uint i = 0; i < N; i++) {
-        ranks[i] = (T) i + 1;
-    }
-
-    // Replace tied ranks with their average
-    D FT[[1]] ranksFixed (N);
-    D T[[2]] filtersMat(N, N);
-    D T[[2]] ranksMat(N, N);
-    for (uint i = 0; i < N; i++) {
-        filtersMat[i, :] = (T) (mat[:, 0] == mat[i, 0]);
-        ranksMat[i, :] = ranks;
-    }
-    ranksFixed = (FT) rowSums(filtersMat * ranksMat) / (FT) rowSums(filtersMat);
 
     // Use the rank sum of the first sample
-    D FT w = sum (ranksFixed * (FT) mat[:, 1]);
+    D FT w;
+    if (correctRanks) {
+        // Replace tied ranks with their average
+        D FT[[1]] ranksFixed = _rank (mat[:, 0]);
+        w = sum (ranksFixed * (FT) mat[:, 1]);
+    } else {
+        T[[1]] ranks (N);
+        for (uint i = 0; i < N; i++) {
+            ranks[i] = (T) i + 1;
+        }
+        w = (FT) sum (ranks * mat[:, 1]);
+    }
+
+    // Calculate z score
     D FT n1 = (FT) sum ((T) ia1);
     D FT n2 = (FT) sum ((T) ia2);
     D FT meanW = n1 * ((FT) N + 1) / 2;
@@ -685,6 +709,9 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
  *  @param sample2 - second sample
  *  @param ia2 - vector indicating which elements of the second sample
  *  are available
+ *  @param correctRanks - indicates if the equal sample values should
+ *  be ranked correctly. If they are not the test is more conservative
+ *  but faster.
  *  @param alternative - the type of alternative hypothesis. Less -
  *  mean of sample1 is less than mean of sample2, greater - mean of
  *  sample1 is greater than mean of sample2, two-sided - means of
@@ -700,9 +727,10 @@ D float32[[1]] wilcoxonRankSum (D int32[[1]] sample1,
                                 D bool[[1]] ia1,
                                 D int32[[1]] sample2,
                                 D bool[[1]] ia2,
+                                bool correctRanks,
                                 int64 alternative)
 {
-    return _wilcoxonRankSum (sample1, ia1, sample2, ia2, alternative);
+    return _wilcoxonRankSum (sample1, ia1, sample2, ia2, correctRanks, alternative);
 }
 
 template <domain D : additive3pp>
@@ -710,9 +738,10 @@ D float64[[1]] wilcoxonRankSum (D int64[[1]] sample1,
                                 D bool[[1]] ia1,
                                 D int64[[1]] sample2,
                                 D bool[[1]] ia2,
+                                bool correctRanks,
                                 int64 alternative)
 {
-    return _wilcoxonRankSum (sample1, ia1, sample2, ia2, alternative);
+    return _wilcoxonRankSum (sample1, ia1, sample2, ia2, correctRanks, alternative);
 }
 /** @} */
 
@@ -721,6 +750,7 @@ template <domain D : additive3pp, type T, type FT>
 D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
                                D T[[1]] sample2,
                                D bool[[1]] filter,
+                               bool correctRanks,
                                int64 alternative)
 {
     assert (size (sample1) == size (sample2) && size (sample1) == size (filter));
@@ -748,23 +778,21 @@ D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
     signs = signAndMagnitude[:, 0];
     absDiffs = signAndMagnitude[:, 1];
 
-    T[[1]] ranks (n);
-    for (uint i = 0; i < n; i++) {
-        ranks[i] = (T) i + 1;
-    }
-
+    // Calculate test statistic
+    D FT w;
+    if (correctRanks) {
     // Replace tied ranks with their average
-    D FT[[1]] ranksFixed (n);
-    D T[[2]] filtersMat(n, n);
-    D T[[2]] ranksMat(n, n);
-    for (uint i = 0; i < n; i++) {
-        filtersMat[i, :] = (T) (absDiffs == absDiffs[i]);
-        ranksMat[i, :] = ranks;
+        D FT[[1]] ranksFixed = _rank (absDiffs);
+        w = sum (ranksFixed * (FT) signs);
+    } else {
+        T[[1]] ranks (n);
+        for (uint i = 0; i < n; i++) {
+            ranks[i] = (T) i + 1;
+        }
+        w = (FT) sum (signs * ranks);
     }
-    ranksFixed = (FT) rowSums(filtersMat * ranksMat) / (FT) rowSums(filtersMat);
 
-    // Calculate statistic and z-score
-    D FT w = sum ((FT) signs * ranksFixed);
+    // Calculate z score
     D FT z = w;
     FT sigma = sqrt ((FT) (n * (n + 1) * (2 * n + 1)) / 6);
     FT correction;
@@ -804,6 +832,9 @@ D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
  *  @param sample2 - second sample
  *  @param filter - vector indicating which elements of the sample to
  *  include in computing the statistic
+ *  @param correctRanks - indicates if the equal sample values should
+ *  be ranked correctly. If they are not the test is more conservative
+ *  but faster.
  *  @param alternative - the type of alternative hypothesis. Less -
  *  mean of sample1 is less than mean of sample2, greater - mean of
  *  sample1 is greater than mean of sample2, two-sided - means of
@@ -815,13 +846,13 @@ D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
  *  incorrect.
  */
 template <domain D : additive3pp>
-D float32[[1]] wilcoxonSignedRank (D int32[[1]] sample1, D int32[[1]] sample2, D bool[[1]] filter, int64 alternative) {
-    return _wilcoxonSignedRank (sample1, sample2, filter, alternative);
+D float32[[1]] wilcoxonSignedRank (D int32[[1]] sample1, D int32[[1]] sample2, D bool[[1]] filter, bool correctRanks, int64 alternative) {
+    return _wilcoxonSignedRank (sample1, sample2, filter, correctRanks, alternative);
 }
 
 template <domain D : additive3pp>
-D float64[[1]] wilcoxonSignedRank (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] filter, int64 alternative) {
-    return _wilcoxonSignedRank (sample1, sample2, filter, alternative);
+D float64[[1]] wilcoxonSignedRank (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] filter, bool correctRanks, int64 alternative) {
+    return _wilcoxonSignedRank (sample1, sample2, filter, correctRanks, alternative);
 }
 /** @} */
 
@@ -839,7 +870,6 @@ D IT[[1]] _benjaminiHochberg (D FT[[1]] statistics,
 
     for (uint i = 0; i < size (statistics); i++) {
         // Note: can't go from uIT to float32
-        // Note: indices start from zero not one
         mat[i, 1] = (FT)(uint32) i;
     }
 
