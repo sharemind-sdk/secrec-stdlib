@@ -289,6 +289,7 @@ D T[[2]] _heatmap (D T[[1]] x,
                    D T[[1]] y,
                    D bool[[1]] xIsAvailable,
                    D bool[[1]] yIsAvailable,
+                   uint K,
                    UT unsignedBuddy)
 {
     assert (size (x) == size (y));
@@ -311,8 +312,8 @@ D T[[2]] _heatmap (D T[[1]] x,
     T ymax = declassify (max (mat[:,1]));
 
     uint s = _getNoOfBreaks (dataSize);
-    uint xstep = _niceStep (xmin, xmax, s);
-    uint ystep = _niceStep (ymin, ymax, s);
+    uint xstep = max (K, _niceStep (xmin, xmax, s));
+    uint ystep = max (K, _niceStep (ymin, ymax, s));
     xmin = _roundToMultiple (xmin, xstep);
     ymin = _roundToMultiple (ymin, ystep);
 
@@ -360,26 +361,21 @@ D T[[2]] _heatmap (D T[[1]] x,
     D T[[1]] zflat = reshape (z, size (z));
     T zmin = declassify (min (zflat));
     T zmax = declassify (max (zflat));
-    s = _getNoOfBreaks ((uint) (zmax - zmin));
-    // TODO: z = 1 is bad.
+    s = max (K, _getNoOfBreaks ((uint) (zmax - zmin)));
     uint zstep = _niceStep (zmin, zmax, s);
     zmin = _roundToMultiple (zmin, zstep);
     // TODO: remove casts when we can divide Ts.
     D T[[2]] gradient = (T) ((UT) (z - zmin) / (UT) zstep);
 
-    D T[[2]] res (2, max (11 :: uint, size (z)));
+    D T[[2]] res (2, max (8 :: uint, size (z)));
     res[0, 0] = xmin;
-    res[0, 1] = xmax;
-    res[0, 2] = ymin;
-    res[0, 3] = ymax;
-    res[0, 4] = zmin;
-    res[0, 5] = zmax;
-    res[0, 6] = (T) xstep;
-    res[0, 7] = (T) ystep;
-    res[0, 8] = (T) zstep;
-    res[0, 9] = (T) rows;
-    res[0, 10] = (T) columns;
-
+    res[0, 1] = ymin;
+    res[0, 2] = (T) xstep;
+    res[0, 3] = (T) ystep;
+    res[0, 4] = (T) zmin;
+    res[0, 5] = (T) zstep;
+    res[0, 6] = (T) rows;
+    res[0, 7] = (T) columns;
     res[1, : size (gradient)] = reshape (gradient, size (gradient));
 
     return res;
@@ -481,6 +477,7 @@ D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailab
  *  @param y - second sample
  *  @param xIsAvailable - vector indicating which elements of x are available
  *  @param yIsAvailable - vector indicating which elements of y are available
+ *  @param K - minimal length of bin side
 
  *  @note A heatmap (in this case) is a plot of two variables of a set
  *  of data. It can be used to visualise data in the same way as a
@@ -494,23 +491,20 @@ D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailab
  *  @return returns a matrix with two rows. The second row is a
  *  flattened matrix with as many elements as there are bins in the
  *  heatmap. The second row may actually be longer if there's less
- *  than 11 elements in the matrix. Each bin will contain a number,
+ *  than 8 elements in the matrix. Each bin will contain a number,
  *  starting from 1, which indicates the frequency range of the
  *  bin. When plotting, a bin with matrix coordinates (i, j) and value
  *  z will have its lower left point at (xmin + i · xstep, ymin + j ·
  *  ystep), will have dimensions (xstep, ystep) and will indicate a
  *  frequency count in the range [zmin + z · zstep, zmin + (z + 1) ·
- *  zstep).  The first 11 elements of the first row are
- *  <table><tr><td>xmin</td><td>minimum of
- *  x</td></tr><tr><td>xmax</td><td>maximum of
- *  x</td></tr><tr><td>ymin</td><td>minimum of
- *  y</td></tr><tr><td>ymax</td><td>maximum of
- *  y</td></tr><tr><td>zmin</td><td>minimum number of elements in a
- *  bin</td></tr><tr><td>zmax</td><td>maximum number of elements in a
- *  bin</td></tr><tr><td>xstep</td><td>width of a
- *  bin</td></tr><tr><td>ystep</td><td>height of a
- *  bin</td></tr><tr><td>zstep</td><td>range of a frequency
- *  class</td></tr><tr><td>rows</td><td>number of rows in the
+ *  zstep).  The first 8 elements of the first row are
+ *  <table><tr><td>xmin</td><td>beginning of
+ *  x-axis</td></tr><tr><td>ymin</td><td>beginning of
+ *  y-axis</td></tr><tr><td>xstep</td><td>difference of x-axis
+ *  tics</td></tr><tr><td>ystep</td><td>difference of y-axis
+ *  tics</td></tr><tr><td>zmin</td><td>beginning of
+ *  z-axis</td></tr><tr><td>zstep</td><td>difference of z-axis
+ *  tics</td></tr><tr><td>rows</td><td>number of rows in the
  *  matrix</td></tr><tr><td>columns</td><td>number of columns in the
  *  matrix</td></tr></table>
  */
@@ -518,20 +512,22 @@ template <domain D : additive3pp>
 D int32[[2]] heatmap (D int32[[1]] x,
                       D int32[[1]] y,
                       D bool[[1]] xIsAvailable,
-                      D bool[[1]] yIsAvailable)
+                      D bool[[1]] yIsAvailable,
+                      uint K)
 {
     uint32 buddy;
-    return _heatmap (x, y, xIsAvailable, yIsAvailable, buddy);
+    return _heatmap (x, y, xIsAvailable, yIsAvailable, K, buddy);
 }
 
 template <domain D : additive3pp>
 D int64[[2]] heatmap (D int64[[1]] x,
                       D int64[[1]] y,
                       D bool[[1]] xIsAvailable,
-                      D bool[[1]] yIsAvailable)
+                      D bool[[1]] yIsAvailable,
+                      uint K)
 {
     uint64 buddy;
-    return _heatmap (x, y, xIsAvailable, yIsAvailable, buddy);
+    return _heatmap (x, y, xIsAvailable, yIsAvailable, K, buddy);
 }
 /** @} */
 
