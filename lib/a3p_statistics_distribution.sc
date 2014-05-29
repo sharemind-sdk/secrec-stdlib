@@ -321,8 +321,15 @@ D T[[2]] _heatmap (D T[[1]] x,
     // points falling in a specific bin. The bins are sequential, ie
     // element (a, b) is the a-th bin on the x-axis and b-th bin on
     // the y-axis.
-    uint rows = (uint) (ymax - ymin) / ystep + 1;
-    uint columns = (uint) (xmax - xmin) / xstep + 1;
+    uint rows = (uint) (ymax - ymin) / ystep;
+    uint columns = (uint) (xmax - xmin) / xstep;
+
+    if ((uint) (ymax - ymin) % ystep != 0)
+        rows++;
+
+    if ((uint) (xmax - xmin) % xstep != 0)
+        columns++;
+
     D T[[2]] z (rows, columns);
 
     // For each data point we'll find coordinates of its bin in z
