@@ -857,9 +857,9 @@ D float64[[1]] wilcoxonSignedRank (D int64[[1]] sample1, D int64[[1]] sample2, D
 /** @} */
 
 /** \cond */
-template <domain D : additive3pp, type IT, type FT>
-D IT[[1]] _benjaminiHochberg (D FT[[1]] statistics,
-                              FT[[1]] quantiles)
+template <domain D : additive3pp, type FT>
+D uint[[1]] _benjaminiHochberg (D FT[[1]] statistics,
+                                FT[[1]] quantiles)
 {
     assert (size (statistics) == size (quantiles));
 
@@ -879,11 +879,11 @@ D IT[[1]] _benjaminiHochberg (D FT[[1]] statistics,
     for (uint i = 0; i < size (comp); i++) {
         bool compPub = declassify (comp[i]);
         if (compPub) {
-            return floor (mat[i :, 1]);
+            return (uint) floor (mat[i :, 1]);
         }
     }
 
-    D IT[[1]] res;
+    D uint[[1]] res;
     return res;
 }
 /** \endcond */
@@ -902,12 +902,12 @@ D IT[[1]] _benjaminiHochberg (D FT[[1]] statistics,
  *  hypothesis is rejected
  */
 template <domain D : additive3pp>
-D int32[[1]] multipleTesting (D float32[[1]] statistics, float32[[1]] quantiles) {
+D uint[[1]] multipleTesting (D float32[[1]] statistics, float32[[1]] quantiles) {
     return _benjaminiHochberg (statistics, quantiles);
 }
 
 template <domain D : additive3pp>
-D int64[[1]] multipleTesting (D float64[[1]] statistics, float64[[1]] quantiles) {
+D uint[[1]] multipleTesting (D float64[[1]] statistics, float64[[1]] quantiles) {
     return _benjaminiHochberg (statistics, quantiles);
 }
 /** @} */
