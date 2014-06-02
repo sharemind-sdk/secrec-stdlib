@@ -404,6 +404,9 @@ D int64[[1]] sortingNetworkSort (D int64[[1]] array) {
 template <domain D, type T>
 D T[[1]] sortingNetworkSort (D T[[1]] array) {
 
+    if (size(array) <= 1)
+        return array;
+
     // Generate sorting network
     uint[[1]] sortnet = generateSortingNetwork (size(array));
 
@@ -492,6 +495,9 @@ D T[[1]] sortingNetworkSort (D T[[1]] array) {
  */
 template <domain D : additive3pp>
 D uint8[[2]] sortingNetworkSort (D uint8[[2]] matrix, uint column) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D uint8[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint8[[1]] columnToSort = reshare(shuffledMatrix[:,column]);
 
@@ -511,6 +517,9 @@ D uint8[[2]] sortingNetworkSort (D uint8[[2]] matrix, uint column) {
 
 template <domain D : additive3pp>
 D uint16[[2]] sortingNetworkSort (D uint16[[2]] matrix, uint column) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D uint16[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint16[[1]] columnToSort = reshare(shuffledMatrix[:,column]);
 
@@ -530,6 +539,9 @@ D uint16[[2]] sortingNetworkSort (D uint16[[2]] matrix, uint column) {
 
 template <domain D : additive3pp>
 D uint32[[2]] sortingNetworkSort (D uint32[[2]] matrix, uint column) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D uint32[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint32[[1]] columnToSort = reshare(shuffledMatrix[:,column]);
 
@@ -549,6 +561,9 @@ D uint32[[2]] sortingNetworkSort (D uint32[[2]] matrix, uint column) {
 
 template <domain D : additive3pp>
 D uint64[[2]] sortingNetworkSort (D uint64[[2]] matrix, uint column) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D uint64[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint64[[1]] columnToSort = reshare(shuffledMatrix[:,column]);
 
@@ -568,6 +583,9 @@ D uint64[[2]] sortingNetworkSort (D uint64[[2]] matrix, uint column) {
 
 template <domain D : additive3pp>
 D int8[[2]] sortingNetworkSort (D int8[[2]] matrix, uint column) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D int8[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint8[[1]] columnToSort = reshare((uint8) shuffledMatrix[:,column] + 128);
 
@@ -587,6 +605,9 @@ D int8[[2]] sortingNetworkSort (D int8[[2]] matrix, uint column) {
 
 template <domain D : additive3pp>
 D int16[[2]] sortingNetworkSort (D int16[[2]] matrix, uint column) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D int16[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint16[[1]] columnToSort = reshare((uint16) shuffledMatrix[:,column] + 32768);
 
@@ -606,6 +627,9 @@ D int16[[2]] sortingNetworkSort (D int16[[2]] matrix, uint column) {
 
 template <domain D : additive3pp>
 D int32[[2]] sortingNetworkSort (D int32[[2]] matrix, uint column) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D int32[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint32[[1]] columnToSort = reshare((uint32) shuffledMatrix[:,column] + 2147483648);
 
@@ -625,6 +649,9 @@ D int32[[2]] sortingNetworkSort (D int32[[2]] matrix, uint column) {
 
 template <domain D : additive3pp>
 D int64[[2]] sortingNetworkSort (D int64[[2]] matrix, uint column) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D int64[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint64[[1]] columnToSort = reshare((uint64) shuffledMatrix[:,column] + 9223372036854775808);
 
@@ -644,6 +671,9 @@ D int64[[2]] sortingNetworkSort (D int64[[2]] matrix, uint column) {
 
 template <domain D : additive3pp>
 D xor_uint8[[2]] sortingNetworkSort (D xor_uint8[[2]] matrix, uint column) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D xor_uint8[[2]] shuffledMatrix = shuffleRows(matrix);
 
     uint[[1]] publicIndices = iota(shape(matrix)[0]);
@@ -662,6 +692,9 @@ D xor_uint8[[2]] sortingNetworkSort (D xor_uint8[[2]] matrix, uint column) {
 
 template <domain D : additive3pp>
 D xor_uint16[[2]] sortingNetworkSort (D xor_uint16[[2]] matrix, uint column) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D xor_uint16[[2]] shuffledMatrix = shuffleRows(matrix);
 
     uint[[1]] publicIndices = iota(shape(matrix)[0]);
@@ -680,6 +713,9 @@ D xor_uint16[[2]] sortingNetworkSort (D xor_uint16[[2]] matrix, uint column) {
 
 template <domain D : additive3pp>
 D xor_uint32[[2]] sortingNetworkSort (D xor_uint32[[2]] matrix, uint column) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D xor_uint32[[2]] shuffledMatrix = shuffleRows(matrix);
 
     uint[[1]] publicIndices = iota(shape(matrix)[0]);
@@ -698,6 +734,9 @@ D xor_uint32[[2]] sortingNetworkSort (D xor_uint32[[2]] matrix, uint column) {
 
 template <domain D : additive3pp>
 D xor_uint64[[2]] sortingNetworkSort (D xor_uint64[[2]] matrix, uint column) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D xor_uint64[[2]] shuffledMatrix = shuffleRows(matrix);
 
     uint[[1]] publicIndices = iota(shape(matrix)[0]);
@@ -792,6 +831,9 @@ D T[[1]] _sortingNetworkSort (D T[[1]] vector, D T[[1]] indices) {
  */
 template <domain D : additive3pp>
 D uint8[[2]] sortingNetworkSort (D uint8[[2]] matrix, uint column1, uint column2) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D uint8[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint8[[1]] columnToSort = reshare(cat(shuffledMatrix[:,column1],
                                                 shuffledMatrix[:,column2]));
@@ -812,6 +854,9 @@ D uint8[[2]] sortingNetworkSort (D uint8[[2]] matrix, uint column1, uint column2
 
 template <domain D : additive3pp>
 D uint16[[2]] sortingNetworkSort (D uint16[[2]] matrix, uint column1, uint column2) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D uint16[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint16[[1]] columnToSort = reshare(cat(shuffledMatrix[:,column1],
                                                  shuffledMatrix[:,column2]));
@@ -832,6 +877,9 @@ D uint16[[2]] sortingNetworkSort (D uint16[[2]] matrix, uint column1, uint colum
 
 template <domain D : additive3pp>
 D uint32[[2]] sortingNetworkSort (D uint32[[2]] matrix, uint column1, uint column2) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D uint32[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint32[[1]] columnToSort = reshare(cat(shuffledMatrix[:,column1],
                                                  shuffledMatrix[:,column2]));
@@ -852,6 +900,9 @@ D uint32[[2]] sortingNetworkSort (D uint32[[2]] matrix, uint column1, uint colum
 
 template <domain D : additive3pp>
 D uint64[[2]] sortingNetworkSort (D uint64[[2]] matrix, uint column1, uint column2) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D uint64[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint64[[1]] columnToSort = reshare(cat(shuffledMatrix[:,column1],
                                                  shuffledMatrix[:,column2]));
@@ -872,6 +923,9 @@ D uint64[[2]] sortingNetworkSort (D uint64[[2]] matrix, uint column1, uint colum
 
 template <domain D : additive3pp>
 D int8[[2]] sortingNetworkSort (D int8[[2]] matrix, uint column1, uint column2) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D int8[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint8[[1]] columnToSort = reshare(cat((uint8) shuffledMatrix[:,column1] + 128,
                                                 (uint8) shuffledMatrix[:,column2] + 128));
@@ -892,6 +946,9 @@ D int8[[2]] sortingNetworkSort (D int8[[2]] matrix, uint column1, uint column2) 
 
 template <domain D : additive3pp>
 D int16[[2]] sortingNetworkSort (D int16[[2]] matrix, uint column1, uint column2) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D int16[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint16[[1]] columnToSort = reshare(cat((uint16) shuffledMatrix[:,column1] + 32768,
                                                  (uint16) shuffledMatrix[:,column2] + 32768));
@@ -912,6 +969,9 @@ D int16[[2]] sortingNetworkSort (D int16[[2]] matrix, uint column1, uint column2
 
 template <domain D : additive3pp>
 D int32[[2]] sortingNetworkSort (D int32[[2]] matrix, uint column1, uint column2) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D int32[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint32[[1]] columnToSort = reshare(cat((uint32) shuffledMatrix[:,column1] + 2147483648,
                                                  (uint32) shuffledMatrix[:,column2] + 2147483648));
@@ -932,6 +992,9 @@ D int32[[2]] sortingNetworkSort (D int32[[2]] matrix, uint column1, uint column2
 
 template <domain D : additive3pp>
 D int64[[2]] sortingNetworkSort (D int64[[2]] matrix, uint column1, uint column2) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D int64[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint64[[1]] columnToSort = reshare(cat((uint64) shuffledMatrix[:,column1] + 9223372036854775808,
                                                  (uint64) shuffledMatrix[:,column2] + 9223372036854775808));
@@ -952,6 +1015,9 @@ D int64[[2]] sortingNetworkSort (D int64[[2]] matrix, uint column1, uint column2
 
 template <domain D : additive3pp>
 D xor_uint8[[2]] sortingNetworkSort (D xor_uint8[[2]] matrix, uint column1, uint column2) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D xor_uint8[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint8[[1]] columnToSort = cat(shuffledMatrix[:,column1],
                                         shuffledMatrix[:,column2]);
@@ -972,6 +1038,9 @@ D xor_uint8[[2]] sortingNetworkSort (D xor_uint8[[2]] matrix, uint column1, uint
 
 template <domain D : additive3pp>
 D xor_uint16[[2]] sortingNetworkSort (D xor_uint16[[2]] matrix, uint column1, uint column2) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D xor_uint16[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint16[[1]] columnToSort = cat(shuffledMatrix[:,column1],
                                          shuffledMatrix[:,column2]);
@@ -992,6 +1061,9 @@ D xor_uint16[[2]] sortingNetworkSort (D xor_uint16[[2]] matrix, uint column1, ui
 
 template <domain D : additive3pp>
 D xor_uint32[[2]] sortingNetworkSort (D xor_uint32[[2]] matrix, uint column1, uint column2) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D xor_uint32[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint32[[1]] columnToSort = cat(shuffledMatrix[:,column1],
                                          shuffledMatrix[:,column2]);
@@ -1012,6 +1084,9 @@ D xor_uint32[[2]] sortingNetworkSort (D xor_uint32[[2]] matrix, uint column1, ui
 
 template <domain D : additive3pp>
 D xor_uint64[[2]] sortingNetworkSort (D xor_uint64[[2]] matrix, uint column1, uint column2) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D xor_uint64[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint64[[1]] columnToSort = cat(shuffledMatrix[:,column1],
                                          shuffledMatrix[:,column2]);
@@ -1108,6 +1183,9 @@ D T[[1]] _sortingNetworkSort2 (D T[[1]] vector, D T[[1]] indices) {
  */
 template <domain D : additive3pp>
 D uint8[[2]] sortingNetworkSort (D uint8[[2]] matrix, uint column1, uint column2, uint column3) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D uint8[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint8[[1]] columnToSort = reshare(cat(cat(shuffledMatrix[:,column1],
                                                     shuffledMatrix[:,column2]),
@@ -1129,6 +1207,9 @@ D uint8[[2]] sortingNetworkSort (D uint8[[2]] matrix, uint column1, uint column2
 
 template <domain D : additive3pp>
 D uint16[[2]] sortingNetworkSort (D uint16[[2]] matrix, uint column1, uint column2, uint column3) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D uint16[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint16[[1]] columnToSort = reshare(cat(cat(shuffledMatrix[:,column1],
                                                      shuffledMatrix[:,column2]),
@@ -1150,6 +1231,9 @@ D uint16[[2]] sortingNetworkSort (D uint16[[2]] matrix, uint column1, uint colum
 
 template <domain D : additive3pp>
 D uint32[[2]] sortingNetworkSort (D uint32[[2]] matrix, uint column1, uint column2, uint column3) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D uint32[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint32[[1]] columnToSort = reshare(cat(cat(shuffledMatrix[:,column1],
                                                      shuffledMatrix[:,column2]),
@@ -1171,6 +1255,9 @@ D uint32[[2]] sortingNetworkSort (D uint32[[2]] matrix, uint column1, uint colum
 
 template <domain D : additive3pp>
 D uint64[[2]] sortingNetworkSort (D uint64[[2]] matrix, uint column1, uint column2, uint column3) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D uint64[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint64[[1]] columnToSort = reshare(cat(cat(shuffledMatrix[:,column1],
                                                      shuffledMatrix[:,column2]),
@@ -1192,6 +1279,9 @@ D uint64[[2]] sortingNetworkSort (D uint64[[2]] matrix, uint column1, uint colum
 
 template <domain D : additive3pp>
 D int8[[2]] sortingNetworkSort (D int8[[2]] matrix, uint column1, uint column2, uint column3) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D int8[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint8[[1]] columnToSort = reshare(cat(cat((uint8) shuffledMatrix[:,column1] + 128,
                                                     (uint8) shuffledMatrix[:,column2] + 128),
@@ -1213,6 +1303,9 @@ D int8[[2]] sortingNetworkSort (D int8[[2]] matrix, uint column1, uint column2, 
 
 template <domain D : additive3pp>
 D int16[[2]] sortingNetworkSort (D int16[[2]] matrix, uint column1, uint column2, uint column3) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D int16[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint16[[1]] columnToSort = reshare(cat(cat((uint16) shuffledMatrix[:,column1] + 32768,
                                                      (uint16) shuffledMatrix[:,column2] + 32768),
@@ -1234,6 +1327,9 @@ D int16[[2]] sortingNetworkSort (D int16[[2]] matrix, uint column1, uint column2
 
 template <domain D : additive3pp>
 D int32[[2]] sortingNetworkSort (D int32[[2]] matrix, uint column1, uint column2, uint column3) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D int32[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint32[[1]] columnToSort = reshare(cat(cat((uint32) shuffledMatrix[:,column1] + 2147483648,
                                                      (uint32) shuffledMatrix[:,column2] + 2147483648),
@@ -1255,6 +1351,9 @@ D int32[[2]] sortingNetworkSort (D int32[[2]] matrix, uint column1, uint column2
 
 template <domain D : additive3pp>
 D int64[[2]] sortingNetworkSort (D int64[[2]] matrix, uint column1, uint column2, uint column3) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D int64[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint64[[1]] columnToSort = reshare(cat(cat((uint64) shuffledMatrix[:,column1] + 9223372036854775808,
                                                      (uint64) shuffledMatrix[:,column2] + 9223372036854775808),
@@ -1276,6 +1375,9 @@ D int64[[2]] sortingNetworkSort (D int64[[2]] matrix, uint column1, uint column2
 
 template <domain D : additive3pp>
 D xor_uint8[[2]] sortingNetworkSort (D xor_uint8[[2]] matrix, uint column1, uint column2, uint column3) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D xor_uint8[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint8[[1]] columnToSort = cat(cat(shuffledMatrix[:,column1],
                                             shuffledMatrix[:,column2]),
@@ -1297,6 +1399,9 @@ D xor_uint8[[2]] sortingNetworkSort (D xor_uint8[[2]] matrix, uint column1, uint
 
 template <domain D : additive3pp>
 D xor_uint16[[2]] sortingNetworkSort (D xor_uint16[[2]] matrix, uint column1, uint column2, uint column3) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D xor_uint16[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint16[[1]] columnToSort = cat(cat(shuffledMatrix[:,column1],
                                              shuffledMatrix[:,column2]),
@@ -1318,6 +1423,9 @@ D xor_uint16[[2]] sortingNetworkSort (D xor_uint16[[2]] matrix, uint column1, ui
 
 template <domain D : additive3pp>
 D xor_uint32[[2]] sortingNetworkSort (D xor_uint32[[2]] matrix, uint column1, uint column2, uint column3) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D xor_uint32[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint32[[1]] columnToSort = cat(cat(shuffledMatrix[:,column1],
                                              shuffledMatrix[:,column2]),
@@ -1339,6 +1447,9 @@ D xor_uint32[[2]] sortingNetworkSort (D xor_uint32[[2]] matrix, uint column1, ui
 
 template <domain D : additive3pp>
 D xor_uint64[[2]] sortingNetworkSort (D xor_uint64[[2]] matrix, uint column1, uint column2, uint column3) {
+    if (shape(matrix)[0] <= 1)
+        return matrix;
+
     D xor_uint64[[2]] shuffledMatrix = shuffleRows(matrix);
     D xor_uint64[[1]] columnToSort = cat(cat(shuffledMatrix[:,column1],
                                              shuffledMatrix[:,column2]),
@@ -1446,6 +1557,8 @@ bool isPowerOfTwo (uint x) {
 
 uint[[1]] generateTopKSortingNetwork (uint n, uint k) {
     assert(isPowerOfTwo (n));
+    assert(k <= n);
+    assert(n > 0);
 
     uint snsize = 0;
     __syscall ("top_k_sorting_network_get_size", n, k, __return snsize);
