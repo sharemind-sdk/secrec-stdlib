@@ -868,10 +868,12 @@ D uint[[1]] _benjaminiHochberg (D FT[[1]] statistics,
     mat[:, 0] = statistics;
     mat[:, 2] = quantiles;
 
+    uint32[[1]] indices (size (statistics));
     for (uint i = 0; i < size (statistics); i++) {
-        // Note: can't go from uint to float32
-        mat[i, 1] = (FT)(uint32) i;
+        indices[i] = (uint32) i;
     }
+    // Note: can't go from uint to float32
+    mat[:, 1] = (FT) indices;
 
     mat = sort (mat, 0 :: uint);
     D bool[[1]] comp = mat[:, 0] >= mat[:, 2];
