@@ -653,27 +653,34 @@ D FT _covariance (D T[[1]] sample1,
 
     uint n = size (sample1);
 
+    D T[[1]] filter_ = (T) filter;
+    D T count = sum (filter_);
+    sample1 *= filter_;
+    sample2 *= filter_;
+
     D T[[2]] mat (n, 2);
     mat[:, 0] = sample1;
     mat[:, 1] = sample2;
-    mat = _cut (mat, filter);
-    n = shape (mat)[0];
 
     D FT[[1]] meanVec = (FT) colSums (mat);
-    D FT[[1]] divisor = {(FT) n, (FT) n};
+    D FT[[1]] divisor = {(FT) count, (FT) count};
     meanVec = meanVec / divisor;
 
     D FT[[1]] samples (n * 2);
     D FT[[1]] means (n * 2);
-    samples[:n] = (FT) mat[:, 0];
-    samples[n:] = (FT) mat[:, 1];
+    samples[:n] = (FT) sample1;
+    samples[n:] = (FT) sample2;
     means[:n] = meanVec[0];
     means[n:] = meanVec[1];
+    D FT[[1]] filterDouble (n * 2);
+    filterDouble[:n] = (FT) filter;
+    filterDouble[n:] = (FT) filter;
+    means *= filterDouble;
 
     D FT[[1]] diff (n * 2) = samples - means;
     D FT[[1]] mulL = diff[:n];
     D FT[[1]] mulR = diff[n:];
     D FT[[1]] mul = mulL * mulR;
 
-    return sum (mul) / (FT) n;
+    return sum (mul) / (FT) count;
 }
