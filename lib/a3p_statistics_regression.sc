@@ -178,25 +178,6 @@ D T[[2]] _invert4by4(D T[[2]] mat) {
 }
 
 template<domain D : additive3pp, type T>
-D T[[1]] _solveInvert(D T[[2]] a, D T[[1]] b) {
-    uint n = shape(a)[0];
-    assert(n > 1);
-    assert(n < 5);
-
-    D T[[2]] invA;
-
-    if (n == 2)
-        invA = _invert2by2(a);
-    else if (n == 3)
-        invA = _invert3by3(a);
-    else if (n == 4)
-        invA = _invert4by4(a);
-
-    D T[[2]] matB = reshape(b, size(b), 1);
-    return matrixMultiplication(invA, matB)[:, 0];
-}
-
-template<domain D : additive3pp, type T>
 uint _maxFirstLoc(D T[[1]] vec) {
     D T best = vec[0];
     D uint idx = 0;
@@ -403,8 +384,8 @@ D T[[1]] _conjugateGradient(D T[[2]] a, D T[[1]] b, uint iterations) {
 }
 
 // variable samples as columns
-template<domain D : additive3pp, type T>
-D T[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent) {
+template<domain D : additive3pp, type T, type FT>
+D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, FT floatProxy) {
     assert(shape(variables)[0] == size(dependent));
     uint vars = shape(variables)[1];
     assert(vars > 1);
@@ -414,14 +395,14 @@ D T[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent) {
     D T[[2]] b = matrixMultiplication(xt, reshape(dependent, size(dependent), 1));
 
     if (vars == 2) {
-        return matrixMultiplication(_invert2by2(a), b)[:, 0];
+        return matrixMultiplication(_invert2by2((FT) a), (FT) b)[:, 0];
     } else if (vars == 3) {
-        return matrixMultiplication(_invert3by3(a), b)[:, 0];
+        return matrixMultiplication(_invert3by3((FT) a), (FT) b)[:, 0];
     } else if (vars == 4) {
-        return matrixMultiplication(_invert4by4(a), b)[:, 0];
+        return matrixMultiplication(_invert4by4((FT) a), (FT) b)[:, 0];
     } else {
         D T[[1]] bvec = b[:, 0];
-        return _solveLU(a, bvec);
+        return _solveLU((FT) a, (FT) bvec);
     }
 }
 /** \endcond */
@@ -441,12 +422,14 @@ D T[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent) {
  */
 template<domain D : additive3pp>
 D float32[[1]] linearRegression(D int32[[2]] variables, D int32[[1]] dependent) {
-    return _linearRegression((float32) variables, (float32) dependent);
+    float32 proxy;
+    return _linearRegression(variables, dependent, proxy);
 }
 
 template<domain D : additive3pp>
 D float64[[1]] linearRegression(D int64[[2]] variables, D int64[[1]] dependent) {
-    return _linearRegression((float64) variables, (float64) dependent);
+    float64 proxy;
+    return _linearRegression(variables, dependent, proxy);
 }
 /** @} */
 
