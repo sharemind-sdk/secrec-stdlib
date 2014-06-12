@@ -10,6 +10,7 @@
 module a3p_statistics_testing;
 
 import a3p_matrix;
+import a3p_oblivious;
 import a3p_random;
 import a3p_sort;
 import a3p_statistics_common;
@@ -31,6 +32,7 @@ import stdlib;
  * \defgroup wilcoxon_signed_rank wilcoxonSignedRank
  * \defgroup constants constants
  * \defgroup multiple_testing multipleTesting
+ * \defgroup mann_whitney_u mannWhitneyU
  */
 
 /**
@@ -701,8 +703,8 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @note The t-test requires the populations to be normally
  *  distributed. If the populations cannot be assumed to be normally
- *  distributed but are ordinal then the Wilcoxon rank-sum test can be
- *  used instead.
+ *  distributed but are ordinal then the Mann-Whitney U or Wilcoxon
+ *  rank-sum test can be used instead.
  *  @param sample1 - first sample
  *  @param ia1 - vector indicating which elements of the first sample
  *  are available
@@ -742,6 +744,132 @@ D float64[[1]] wilcoxonRankSum (D int64[[1]] sample1,
                                 int64 alternative)
 {
     return _wilcoxonRankSum (sample1, ia1, sample2, ia2, correctRanks, alternative);
+}
+/** @} */
+
+/** \cond */
+
+/*
+ * Mann-Whitney U from "Nonparametric Statistical Methods". Z-score
+ * from "Biostatistical Analysis".
+ */
+template <domain D : additive3pp, type T, type FT>
+D FT[[1]] _mannWhitneyU (D T[[1]] sample1,
+                         D bool[[1]] ia1,
+                         D T[[1]] sample2,
+                         D bool[[1]] ia2,
+                         bool correctRanks,
+                         int64 alternative)
+{
+    // Zero will indicate that the matrix row is from sample2, one
+    // indicates that it's from sample1.
+    D T[[2]] mat (size (sample1) + size (sample2), 2);
+    mat[: size (sample1), 0] = sample1;
+    mat[: size (sample1), 1] = 1;
+    mat[size (sample1) :, 0] = sample2;
+    mat[size (sample1) :, 1] = 0;
+
+    // Remove unavailable elements and sort
+    mat = _cut (mat, cat (ia1, ia2));
+    mat = sortingNetworkSort (mat, 0 :: uint);
+
+    // Note: can't go from uint64 to float32
+    D uint32 n1 = sum ((uint32) ia1);
+    D uint32 n2 = sum ((uint32) ia2);
+    D FT n1n2 = (FT) (n1 * n2);
+    uint N = shape (mat)[0];
+
+    D FT sum1;
+    if (correctRanks) {
+        D FT[[1]] ranks = _rank (mat[:, 0]);
+        sum1 = sum (ranks * (FT) mat[:, 1]);
+    } else {
+        T[[1]] ranks (N);
+        for (uint64 i = 0; i < N; i = i + 1) {
+            ranks[i] = (T) i + 1;
+        }
+        sum1 = (FT) sum (ranks * mat[:, 1]);
+    }
+
+    D FT U1 = sum1 - ((FT) n1 * ((FT) n1 + 1)) / 2;
+    D FT U2 = n1n2 - U1;
+    D FT U = choose (U1 < U2, U1, U2);
+
+    // Calculate z-score from U1 (it doesn't matter which one we use).
+    FT correction;
+    D FT meanU = n1n2 / 2;
+    D FT sigmaU = sqrt (n1n2 * (FT) (N + 1) / 12);
+    D FT z;
+
+    // Continuity correction
+    assert (alternative == ALTERNATIVE_LESS ||
+            alternative == ALTERNATIVE_GREATER ||
+            alternative == ALTERNATIVE_TWO_SIDED);
+
+    if (alternative == ALTERNATIVE_LESS)
+        correction = 0.5;
+    else if (alternative == ALTERNATIVE_GREATER)
+        correction = -0.5;
+    else if (alternative == ALTERNATIVE_TWO_SIDED)
+        correction = -0.5;
+
+    z = ((U - meanU) + correction) / sigmaU;
+
+    D FT[[1]] res(2) = {U, z};
+
+    return res;
+}
+/** \endcond */
+
+/**
+ * \addtogroup <mann_whitney_u>
+ * @{
+ * @brief Perform Mann-Whitney U test
+ * @note **D** - additive3pp protection domain
+ * @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ * @note The t-test requires the populations to be normally
+ * distributed. If the populations cannot be assumed to be normally
+ * distributed but are ordinal then the Mann-Whitney U or Wilcoxon
+ * rank-sum test can be used instead.
+ * @param sample1 - first sample
+ * @param ia1 - vector indicating which elements of the first sample
+ * are available
+ * @param sample2 - second sample
+ * @param ia2 - vector indicating which elements of the second sample
+ * are available
+ * @param correctRanks - indicates if the equal sample values should
+ * be ranked correctly. If they are not the test is more conservative
+ * but faster.
+ * @param alternative - the type of alternative hypothesis. Less -
+ * mean of sample1 is less than mean of sample2, greater - mean of
+ * sample1 is greater than mean of sample2, two-sided - means of
+ * sample1 and sample2 are different
+ * @return returns a vector where the first element is the test
+ * statistic and the second element is the z-score. The z-score is
+ * continuity corrected. The z-score is an approximation and is only
+ * correct when the samples are large and the significance level is
+ * not very low.
+ */
+template <domain D : additive3pp>
+D float32[[1]] mannWhitneyU (D int32[[1]] sample1,
+                             D bool[[1]] ia1,
+                             D int32[[1]] sample2,
+                             D bool[[1]] ia2,
+                             bool correctRanks,
+                             int64 alternative)
+{
+    return _mannWhitneyU (sample1, ia1, sample2, ia2, correctRanks, ALTERNATIVE_TWO_SIDED);
+}
+
+template <domain D : additive3pp>
+D float64[[1]] mannWhitneyU (D int64[[1]] sample1,
+                             D bool[[1]] ia1,
+                             D int64[[1]] sample2,
+                             D bool[[1]] ia2,
+                             bool correctRanks,
+                             int64 alternative)
+{
+    return _mannWhitneyU (sample1, ia1, sample2, ia2, correctRanks, ALTERNATIVE_TWO_SIDED);
 }
 /** @} */
 
