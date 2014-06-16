@@ -383,26 +383,65 @@ D T[[1]] _conjugateGradient(D T[[2]] a, D T[[1]] b, uint iterations) {
     return x[:, 0];
 }
 
+// Multiples X^T * X
+template<domain D : additive3pp, type T>
+D T[[2]] _multTransposed(D T[[2]] x) {
+    uint n = shape(x)[1];
+    D T[[2]] res(n, n);
+
+    // Calculate upper triangle
+    for (uint j = 0; j < n; j++) {
+        for (uint i = 0; i <= j; i++) {
+            res[i, j] = dotProduct(x[:, i], x[:, j]);
+        }
+    }
+
+    // Mirror
+    for (uint i = 1; i < n; i++) {
+        for (uint j = 0; j < i; j++) {
+            res[i, j] = res[j, i];
+        }
+    }
+
+    return res;
+}
+
 // variable samples as columns
 template<domain D : additive3pp, type T, type FT>
-D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, FT floatProxy) {
+D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent) {
     assert(shape(variables)[0] == size(dependent));
     uint vars = shape(variables)[1];
     assert(vars > 1);
 
     D T[[2]] xt = transpose(variables);
-    D T[[2]] a = matrixMultiplication(xt, variables);
+    D T[[2]] a = _multTransposed(variables);
     D T[[2]] b = matrixMultiplication(xt, reshape(dependent, size(dependent), 1));
 
+    // Modify a and b to account for the constant term. To get the
+    // constant term, a column of ones should be added as the last
+    // column of variables. Instead, we can do multiplications without
+    // it and then extend a and b to account for the ones "variable".
+
+    D T[[2]] extendedA(vars + 1, vars + 1);
+    extendedA[:vars, :vars] = a;
+    extendedA[vars, vars] = (T) size(dependent);
+
+    for (uint i = 0; i < vars; i++) {
+        extendedA[vars, i] = sum(variables[:, i]);
+        extendedA[i, vars] = sum(variables[:, i]);
+    }
+
+    D T[[2]] depSum(1, 1);
+    depSum[0, 0] = sum(dependent);
+    D T[[2]] extendedB = cat(b, depSum, 0);
+
     if (vars == 2) {
-        return matrixMultiplication(_invert2by2((FT) a), (FT) b)[:, 0];
+        return matrixMultiplication(_invert3by3((FT) extendedA), (FT) extendedB)[:, 0];
     } else if (vars == 3) {
-        return matrixMultiplication(_invert3by3((FT) a), (FT) b)[:, 0];
-    } else if (vars == 4) {
-        return matrixMultiplication(_invert4by4((FT) a), (FT) b)[:, 0];
+        return matrixMultiplication(_invert4by4((FT) extendedA), (FT) extendedB)[:, 0];
     } else {
-        D T[[1]] bvec = b[:, 0];
-        return _solveLU((FT) a, (FT) bvec);
+        D T[[1]] bvec = extendedB[:, 0];
+        return _solveLU((FT) extendedA, (FT) bvec);
     }
 }
 /** \endcond */
@@ -422,14 +461,13 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, FT floatProx
  */
 template<domain D : additive3pp>
 D float32[[1]] linearRegression(D int32[[2]] variables, D int32[[1]] dependent) {
-    float32 proxy;
-    return _linearRegression(variables, dependent, proxy);
+    return _linearRegression(variables, dependent);
 }
 
 template<domain D : additive3pp>
 D float64[[1]] linearRegression(D int64[[2]] variables, D int64[[1]] dependent) {
     float64 proxy;
-    return _linearRegression(variables, dependent, proxy);
+    return _linearRegression(variables, dependent);
 }
 /** @} */
 
