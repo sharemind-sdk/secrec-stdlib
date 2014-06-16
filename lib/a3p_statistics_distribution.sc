@@ -363,6 +363,9 @@ D T[[2]] _heatmap (D T[[1]] x,
         }
     }
 
+    // Remove counts <3.
+    z *= (T) (z >= 3);
+
     // We can't publish exact counts. So we will find ranges for z as
     // well and replace counts with bin numbers.
     D T[[1]] zflat = reshape (z, size (z));
