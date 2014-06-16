@@ -350,9 +350,6 @@ D FT[[1]] _fiveNumberSummarySn (D T[[1]] data, D bool[[1]] isAvailable) {
  	uint sortedSize = size (sortedDatabase);
 
 	if (sortedSize < 5){
-		for (uint i = 0; i < 5; i=i+1){
-			result[i] = (FT) 0;
-		}
 		return result;
 	}
 
