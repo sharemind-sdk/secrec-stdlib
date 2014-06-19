@@ -30,7 +30,7 @@ import stdlib;
  * \defgroup chisq_cb chiSquared(with codebook)
  * \defgroup wilcoxon_rank_sum wilcoxonRankSum
  * \defgroup wilcoxon_signed_rank wilcoxonSignedRank
- * \defgroup constants constants
+ * \defgroup hypothesis_testing_constants constants
  * \defgroup multiple_testing multipleTesting
  * \defgroup mann_whitney_u mannWhitneyU
  */
@@ -289,7 +289,7 @@ D FT _combinedDegreesOfFreedom (D IT[[1]] data1,
 /** \endcond */
 
 /**
- * \addtogroup <constants
+ * \addtogroup <hypothesis_testing_constants>
  * @{
  * @brief Constants used for specifying the alternative hypothesis.
  */
