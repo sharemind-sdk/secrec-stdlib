@@ -25,6 +25,8 @@ import oblivious;
  * \defgroup a3p_statistics_regression a3p_statistics_regression.sc
  * \defgroup a3p_simple_linear_regression simpleLinearRegression
  * \defgroup a3p_linear_regression linearRegression
+ * \defgroup a3p_linear_regression_cg linearRegressionCG
+ * \defgroup a3p_regression_method constants
  */
 
 /** \addtogroup <a3p_statistics_regression>
@@ -32,23 +34,53 @@ import oblivious;
  *  @brief Module for performing regression analysis
  */
 
+/**
+ * \addtogroup <a3p_regression_method>
+ * @{
+ * @brief Constants used for specifying the method used in linear
+ * regression modeling with multiple explanatory variables.
+ */
+int64 LINEAR_REGRESSION_INVERT             = 0;
+int64 LINEAR_REGRESSION_LU_DECOMPOSITION   = 1;
+int64 LINEAR_REGRESSION_GAUSS              = 2;
+int64 LINEAR_REGRESSION_CONJUGATE_GRADIENT = 3;
+/** @} */
+
 /** \cond */
 template<domain D : additive3pp, type FT, type T>
 D FT[[1]] _simpleLinear(D T[[1]] x, D T[[1]] y, D bool[[1]] filter) {
     assert(size(x) == size(y));
     assert(size(x) == size(filter));
 
-    D T[[2]] mat (size(x), 2);
+    D T[[2]] mat(size(x), 2);
     mat[:, 0] = x;
     mat[:, 1] = y;
     mat = _cut(mat, filter);
+
+    uint n = shape(mat)[0];
+
+    // Calculate means
     D T[[1]] sums = colSums(mat);
-    D FT[[1]] lens = {(FT)(uint32) shape(mat)[0], (FT)(uint32) shape(mat)[0]};
-    D FT[[1]] means = (FT) sums / lens;
+    D FT[[1]] lens = {(FT)(uint32) n, (FT)(uint32) n};
+    D FT[[1]] meanVec = (FT) sums / lens;
 
-    D FT beta = covariance(x, y, filter) / _variance(mat[:, 0], means[0]);
+    // Calculate covariance
+    D FT[[1]] samples(n * 2);
+    D FT[[1]] means(n * 2);
+    samples[:n] = (FT) x;
+    samples[n:] = (FT) y;
+    means[:n] = meanVec[0];
+    means[n:] = meanVec[1];
 
-    D FT alpha = means[1] - beta * means[0];
+    D FT[[1]] diff(n * 2) = samples - means;
+    D FT[[1]] mul = diff[:n] * diff[n:];
+    D FT cov = sum(mul) / (FT) n;
+
+    // Calculate variance of sample 1
+    D FT var1 = sum(diff[:n] * diff[:n]) / (FT) n;
+
+    D FT beta = cov / var1;
+    D FT alpha = meanVec[1] - beta * meanVec[0];
     D FT[[1]] res = {alpha, beta};
 
     return res;
@@ -408,7 +440,7 @@ D T[[2]] _multTransposed(D T[[2]] x) {
 
 // variable samples as columns
 template<domain D : additive3pp, type T, type FT>
-D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent) {
+D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method, uint iterations) {
     assert(shape(variables)[0] == size(dependent));
     uint vars = shape(variables)[1];
     assert(vars > 1);
@@ -417,10 +449,10 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent) {
     D T[[2]] a = _multTransposed(variables);
     D T[[2]] b = matrixMultiplication(xt, reshape(dependent, size(dependent), 1));
 
-    // Modify a and b to account for the constant term. To get the
-    // constant term, a column of ones should be added as the last
-    // column of variables. Instead, we can do multiplications without
-    // it and then extend a and b to account for the ones "variable".
+    // Modify a and b to account for the intercept. To get the
+    // intercept, a column of ones should be added as the last column
+    // of variables. Instead, we can do multiplications without it and
+    // then extend a and b to account for the ones "variable".
 
     D T[[2]] extendedA(vars + 1, vars + 1);
     extendedA[:vars, :vars] = a;
@@ -434,14 +466,30 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent) {
     D T[[2]] depSum(1, 1);
     depSum[0, 0] = sum(dependent);
     D T[[2]] extendedB = cat(b, depSum, 0);
+    D T[[1]] bvec = extendedB[:, 0];
 
-    if (vars == 2) {
-        return matrixMultiplication(_invert3by3((FT) extendedA), (FT) extendedB)[:, 0];
-    } else if (vars == 3) {
-        return matrixMultiplication(_invert4by4((FT) extendedA), (FT) extendedB)[:, 0];
-    } else {
-        D T[[1]] bvec = extendedB[:, 0];
+    if (method == LINEAR_REGRESSION_INVERT) {
+        assert(vars == 2 || vars == 3);
+
+        if (vars == 2) {
+            return matrixMultiplication(_invert3by3((FT) extendedA), (FT) extendedB)[:, 0];
+        } else if (vars == 3) {
+            return matrixMultiplication(_invert4by4((FT) extendedA), (FT) extendedB)[:, 0];
+        } else {
+            assert(false); // Can't use INVERT with more than 3 variables!
+            D FT[[1]] res;
+            return res;
+        }
+    } else if (method == LINEAR_REGRESSION_GAUSS) {
+        return _gaussianElimination((FT) extendedA, (FT) bvec);
+    } else if (method == LINEAR_REGRESSION_LU_DECOMPOSITION) {
         return _solveLU((FT) extendedA, (FT) bvec);
+    } else if (method == LINEAR_REGRESSION_CONJUGATE_GRADIENT) {
+        return _conjugateGradient((FT) extendedA, (FT) bvec, iterations);
+    } else {
+        assert(false); // Bad method argument!
+        D FT[[1]] res;
+        return res;
     }
 }
 /** \endcond */
@@ -455,21 +503,55 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent) {
  * @param variables - a matrix where each column is a sample of an
  * explanatory variable
  * @param dependent - sample vector of dependent variable
- * @return returns vector {β₁, β₂, …, βₙ} such that y ≈ β₁x₁ + β₂x₂ +
- * … + βₙxₙ where y is the dependent variable and xᵢ are the explanatory
- * variables.
+ * @param method - a constant indicating which algorithm to use
+ * (LINEAR_REGRESSION_INVERT, LINEAR_REGRESSION_LU_DECOMPOSITION or
+ * LINEAR_REGRESSION_GAUSS)
+ * @return returns vector {β_1, β_1, …, β_n} such that y ≈ β_1 * x_1 +
+ * β_2 * x_2 + … + β_(n-1) * x_(n-1) + β_n where y is the dependent
+ * variable and x_i are the explanatory variables.
  */
 template<domain D : additive3pp>
-D float32[[1]] linearRegression(D int32[[2]] variables, D int32[[1]] dependent) {
-    return _linearRegression(variables, dependent);
+D float32[[1]] linearRegression(D int32[[2]] variables, D int32[[1]] dependent, int64 method) {
+    assert(method == LINEAR_REGRESSION_GAUSS || method == LINEAR_REGRESSION_INVERT || method == LINEAR_REGRESSION_LU_DECOMPOSITION);
+    return _linearRegression(variables, dependent, method, 0 :: uint);
 }
 
 template<domain D : additive3pp>
-D float64[[1]] linearRegression(D int64[[2]] variables, D int64[[1]] dependent) {
-    float64 proxy;
-    return _linearRegression(variables, dependent);
+D float64[[1]] linearRegression(D int64[[2]] variables, D int64[[1]] dependent, int64 method) {
+    assert(method == LINEAR_REGRESSION_GAUSS || method == LINEAR_REGRESSION_INVERT || method == LINEAR_REGRESSION_LU_DECOMPOSITION);
+    return _linearRegression(variables, dependent, method, 0 :: uint);
 }
 /** @} */
 
+/**
+ * \addtogroup <a3p_linear_linear_regression_cg>
+ * @{
+ * @brief Linear regression analysis with multiple explanatory
+ * variables using the conjugate gradient method.
+ * @note **D** - additive3pp protection domain
+ * @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ * @param variables - a matrix where each column is a sample of an
+ * explanatory variable
+ * @param dependent - sample vector of dependent variable
+ * @param iterations - number of iterations to use. Empirical testing
+ * showed that 10 iterations provides better accuracy than LU
+ * decomposition and Gaussian elimination and with a high number of
+ * variables it is also faster.
+ * @return returns vector {β_1, β_1, …, β_n} such that y ≈ β_1 * x_1 +
+ * β_2 * x_2 + … + β_(n-1) * x_(n-1) + β_n where y is the dependent
+ * variable and x_i are the explanatory variables.
+ */
+template<domain D : additive3pp>
+D float32[[1]] linearRegressionCG(D int32[[2]] variables, D int32[[1]] dependent, uint iterations) {
+    assert(iterations > 0);
+    return _linearRegression(variables, dependent, LINEAR_REGRESSION_CONJUGATE_GRADIENT, iterations);
+}
+
+template<domain D : additive3pp>
+D float64[[1]] linearRegressionCG(D int64[[2]] variables, D int64[[1]] dependent, uint iterations) {
+    assert(iterations > 0);
+    return _linearRegression(variables, dependent, LINEAR_REGRESSION_CONJUGATE_GRADIENT, iterations);
+}
+/** @} */
 
 /** @} */
