@@ -41,6 +41,7 @@ import stdlib;
  * \defgroup five_number_summary_sn fiveNumberSummarySn
  * \defgroup five_number_summary_nth fiveNumberSummaryNth
  * \defgroup covariance covariance
+ * \defgroup covariance_filter covariance(filter)
  */
 
 /** \addtogroup <a3p_statistics_summary>
@@ -523,6 +524,27 @@ D float64[[1]] fiveNumberSummaryNth (D int64[[1]] data, D bool[[1]] isAvailable)
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @param sample1 - first sample
  *  @param sample2 - second sample
+ *  are available
+ *  @return returns the covariance
+ */
+template<domain D : additive3pp>
+D float32 covariance (D int32[[1]] sample1, D int32[[1]] sample2) {
+    return _covariance (sample1, sample2);
+}
+
+template<domain D : additive3pp>
+D float64 covariance (D int64[[1]] sample1, D int64[[1]] sample2) {
+    return _covariance (sample1, sample2);
+}
+/** @} */
+
+/** \addtogroup <covariance_filter>
+ *  @{
+ *  @brief Find the covariance of two samples.
+ *  @note **D** - additive3pp protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @param sample1 - first sample
+ *  @param sample2 - second sample
  *  @param filter - filter indicating which elements of the samples
  *  are available
  *  @return returns the covariance
@@ -675,9 +697,34 @@ D FT _covariance (D T[[1]] sample1,
     means *= filterDouble;
 
     D FT[[1]] diff (n * 2) = samples - means;
-    D FT[[1]] mulL = diff[:n];
-    D FT[[1]] mulR = diff[n:];
-    D FT[[1]] mul = mulL * mulR;
+    D FT[[1]] mul = diff[:n] * diff[n:];
 
     return sum (mul) / (FT) count;
+}
+
+template<domain D : additive3pp, type T, type FT>
+D FT _covariance (D T[[1]] sample1, D T[[1]] sample2) {
+    assert (size (sample1) == size (sample2));
+
+    uint n = size (sample1);
+
+    D T[[2]] mat (n, 2);
+    mat[:, 0] = sample1;
+    mat[:, 1] = sample2;
+
+    D FT[[1]] meanVec = (FT) colSums (mat);
+    FT[[1]] divisor = {(FT) n, (FT) n};
+    meanVec = meanVec / divisor;
+
+    D FT[[1]] samples (n * 2);
+    D FT[[1]] means (n * 2);
+    samples[:n] = (FT) sample1;
+    samples[n:] = (FT) sample2;
+    means[:n] = meanVec[0];
+    means[n:] = meanVec[1];
+
+    D FT[[1]] diff (n * 2) = samples - means;
+    D FT[[1]] mul = diff[:n] * diff[n:];
+
+    return sum (mul) / (FT) n;
 }
