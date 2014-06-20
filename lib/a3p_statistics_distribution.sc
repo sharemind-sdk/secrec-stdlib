@@ -10,6 +10,7 @@
 /** \cond */
 module a3p_statistics_distribution;
 
+import a3p_matrix;
 import a3p_sort;
 import a3p_statistics_common;
 import a3p_statistics_summary;
@@ -76,39 +77,6 @@ T[[1]] _getApproximateBreaksHist (T min, T max, uint64 noOfBreaks) {
     }
 
     return breaks;
-}
-
-template<domain D, type T>
-D T[[1]] _countElementsHist (D T[[1]] data, T[[1]] breaks) {
-    uint64 sizeBreaks = size (breaks);
-    uint64 sizeData = size (data);
-    assert (sizeBreaks > 1);
-    T stepSize = breaks[1] - breaks[0];
-
-    //Technically the value is last index + 1 (which is size of the vector).
-    //Move the variable here, because it's used already here and makes things more readable.
-    uint lastIndex = (sizeBreaks - 1) * sizeData;
-    D T[[1]] compA (lastIndex), compB (lastIndex), compC (lastIndex);
-    D T[[1]] compRes1 (lastIndex), compRes2 (lastIndex);
-
-    uint64 currentIndex;    //Again, for better readability.
-    for (uint i = 0; i < sizeBreaks - 1; i = i + 1){
-        for (uint j = 0; j < sizeData; j = j + 1){
-            currentIndex = i * sizeData + j;
-
-            compA[currentIndex] = data[j];
-            compB[currentIndex] = breaks[i];
-            compC[currentIndex] = breaks[i + 1];
-        }
-    }
-
-    compRes1[0:sizeData] = (T) (compA[0:sizeData] >= compB[0:sizeData]);
-    //This and next compRes2 are calculated exactly the same way. Why split it up?
-    compRes2[0:sizeData] = (T) (compA[0:sizeData] <= compC[0:sizeData]);
-    compRes1[sizeData:lastIndex] = (T) (compA[sizeData:lastIndex] > compB[sizeData:lastIndex]);
-    compRes2[sizeData:lastIndex] = (T) (compA[sizeData:lastIndex] <= compC[sizeData:lastIndex]);
-
-    return sum (compRes1 * compRes2, sizeBreaks - 1);
 }
 
 template<type T>
@@ -203,26 +171,38 @@ T[[1]] _niceTics (T min, T max, uint idealIntervalCount) {
 
 template<domain D, type T>
 D T[[2]] _histogram (D T[[1]] data, D bool[[1]] isAvailable) {
+    D T[[1]] data = cut (data, isAvailable);
+    uint dataSize = size (data);
 
-    D T[[1]] cutData = cut (data, isAvailable);
-    uint64 sizeData = size (cutData);
-
-    if (sizeData < 5) {
+    if (dataSize < 5) {
         D T[[2]] result;
         return result;
     }
 
-    // Declassify min and max because you will see them on the histogram anyway
-    T min = declassify (min (cutData));
-    T max = declassify (max (cutData));
+    T min = declassify (min (data));
+    T max = declassify (max (data));
 
-    uint noBreaks = _getNoOfBreaks (size (data));
+    uint noBreaks = _getNoOfBreaks (dataSize);
     T[[1]] breaks = _niceTics (min, max, noBreaks);
 
-    // Count the elements according to the breaks
-    D T[[1]] counts = _countElementsHist (cutData, breaks);
+    uint countsSize = size (breaks) - 1;
+    D T[[1]] counts (countsSize);
+    D T[[2]] dataMat (countsSize, dataSize);
+    D T[[2]] breakMat (countsSize, dataSize);
+
+    for (uint i = 0; i < countsSize; i++) {
+        dataMat[i, :] = data;
+        breakMat[i, :] = breaks[i + 1];
+    }
+
+    counts = rowSums ((T) (dataMat <= breakMat));
+
+    for (int i = (int) countsSize - 1; i > 0; i--) {
+        counts[(uint) i] -= counts[(uint) i - 1];
+    }
+
     D T[[2]] result (2, size (breaks));
-    result[0,:] = breaks;
+    result[0, :] = breaks;
     result[1, : size (breaks) - 1] = counts;
 
     return result;
