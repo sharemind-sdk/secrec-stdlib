@@ -674,32 +674,26 @@ D FT _covariance (D T[[1]] sample1,
 
     D T[[1]] filter_ = (T) filter;
     D T count = sum (filter_);
-    sample1 *= filter_;
-    sample2 *= filter_;
 
-    D T[[2]] mat (n, 2);
-    mat[:, 0] = sample1;
-    mat[:, 1] = sample2;
+    D T[[1]] mulL (n * 2);
+    D T[[1]] mulR (n * 2);
+    mulL[:n] = sample1;
+    mulL[n:] = sample2;
 
-    D FT[[1]] meanVec = (FT) colSums (mat);
-    D FT[[1]] divisor = {(FT) count, (FT) count};
-    meanVec = meanVec / divisor;
+    mulR[:n] = filter_;
+    mulR[n:] = filter_;
 
-    D FT[[1]] samples (n * 2);
-    D FT[[1]] means (n * 2);
-    samples[:n] = (FT) sample1;
-    samples[n:] = (FT) sample2;
-    means[:n] = meanVec[0];
-    means[n:] = meanVec[1];
-    D FT[[1]] filterDouble (n * 2);
-    filterDouble[:n] = (FT) filter;
-    filterDouble[n:] = (FT) filter;
-    means *= filterDouble;
+    mulL *= mulR;
 
-    D FT[[1]] diff (n * 2) = samples - means;
-    D FT[[1]] mul = diff[:n] * diff[n:];
+    D T[[2]] mat (n, 3);
+    mat[:, 0] = mulL[:n] * mulL[n:];
+    mat[:, 1] = mulL[:n];
+    mat[:, 2] = mulL[n:];
 
-    return sum (mul) / (FT) count;
+    D T[[1]] sums = colSums (mat);
+    D FT mult = 1 / (FT)(count * count);
+
+    return mult * (FT)(count * sums[0] - sums[1] * sums[2]);
 }
 
 template<domain D : additive3pp, type T, type FT>
@@ -708,23 +702,13 @@ D FT _covariance (D T[[1]] sample1, D T[[1]] sample2) {
 
     uint n = size (sample1);
 
-    D T[[2]] mat (n, 2);
-    mat[:, 0] = sample1;
-    mat[:, 1] = sample2;
+    D T[[2]] mat (n, 3);
+    mat[:, 0] = sample1 * sample2;
+    mat[:, 1] = sample1;
+    mat[:, 2] = sample2;
 
-    D FT[[1]] meanVec = (FT) colSums (mat);
-    FT[[1]] divisor = {(FT) n, (FT) n};
-    meanVec = meanVec / divisor;
+    D T[[1]] sums = colSums (mat);
+    FT mult = 1 / (FT)(n * n);
 
-    D FT[[1]] samples (n * 2);
-    D FT[[1]] means (n * 2);
-    samples[:n] = (FT) sample1;
-    samples[n:] = (FT) sample2;
-    means[:n] = meanVec[0];
-    means[n:] = meanVec[1];
-
-    D FT[[1]] diff (n * 2) = samples - means;
-    D FT[[1]] mul = diff[:n] * diff[n:];
-
-    return sum (mul) / (FT) n;
+    return mult * (FT)((T) n * sums[0] - sums[1] * sums[2]);
 }
