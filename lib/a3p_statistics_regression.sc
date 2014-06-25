@@ -524,7 +524,7 @@ D float64[[1]] linearRegression(D int64[[2]] variables, D int64[[1]] dependent, 
 /** @} */
 
 /**
- * \addtogroup <a3p_linear_linear_regression_cg>
+ * \addtogroup <a3p_linear_regression_cg>
  * @{
  * @brief Linear regression analysis with multiple explanatory
  * variables using the conjugate gradient method.
