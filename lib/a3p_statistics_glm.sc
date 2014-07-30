@@ -194,8 +194,7 @@ D FT[[2]] _linkInverse(D FT[[2]] eta, int64 family) {
     return res;
 }
 
-// mu = g^-1(eta). This is d(mu) / d(eta) evaluated at the eta
-// parameter.
+// mu = g^-1(eta). This is d(mu) / d(eta) evaluated at the given eta.
 template<domain D, type FT>
 D FT[[2]] _derivative(D FT[[2]] eta, int64 family) {
     D FT[[2]] res(size(eta), 1);
@@ -322,4 +321,3 @@ D float64[[1]] generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] v
 /** @} */
 
 /** @} */
-

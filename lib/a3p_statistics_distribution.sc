@@ -30,7 +30,7 @@ import stdlib;
 
 /** \addtogroup <a3p_statistics_distribution>
  *  @{
- *  @brief Functions for visualising the distribution of data.
+ *  @brief Module for visualising distribution of data.
  */
 
 

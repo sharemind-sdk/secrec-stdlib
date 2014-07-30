@@ -90,7 +90,7 @@ D FT[[1]] _simpleLinear(D T[[1]] x, D T[[1]] y, D bool[[1]] filter) {
 /**
  * \addtogroup <a3p_simple_linear_regression>
  * @{
- * @brief Simple linear regression analysis
+ * @brief Fitting of simple linear models
  * @note **D** - additive3pp protection domain
  * @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  * @param x - explanatory variable sample
@@ -497,7 +497,7 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method
 /**
  * \addtogroup <a3p_linear_regression>
  * @{
- * @brief Linear regression analysis with multiple explanatory variables
+ * @brief Fitting of linear models with multiple explanatory variables
  * @note **D** - additive3pp protection domain
  * @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  * @param variables - a matrix where each column is a sample of an
@@ -526,8 +526,8 @@ D float64[[1]] linearRegression(D int64[[2]] variables, D int64[[1]] dependent, 
 /**
  * \addtogroup <a3p_linear_regression_cg>
  * @{
- * @brief Linear regression analysis with multiple explanatory
- * variables using the conjugate gradient method.
+ * @brief Fitting of linear models with multiple explanatory variables
+ * using the conjugate gradient method
  * @note **D** - additive3pp protection domain
  * @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  * @param variables - a matrix where each column is a sample of an
