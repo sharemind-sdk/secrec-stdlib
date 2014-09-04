@@ -251,8 +251,8 @@ D T[[1]] _dispatch(D T[[1]] dependent,
  * @{
  * @brief Fitting of generalized linear models
  * @note **D** - additive3pp protection domain
- * @note Supported types - \ref int32 "int32" \ /ref int64 "int64" \
- * /ref float32 "float32" / \ref float64 "float64"
+ * @note Supported types - \ref int32 "int32" / \ref int64 "int64" /
+ * \ref float32 "float32" / \ref float64 "float64"
  * @param dependent - sample vector of the dependent variable
  * @param variables - a matrix where each column is a sample of an
  * explanatory variable
@@ -286,8 +286,8 @@ D float64[[1]] generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] v
  * @{
  * @brief Fitting of generalized linear models
  * @note **D** - additive3pp protection domain
- * @note Supported types - \ref int32 "int32" \ /ref int64 "int64" \
- * /ref float32 "float32" / \ref float64 "float64"
+ * @note Supported types - \ref int32 "int32" / \ref int64 "int64" /
+ * \ref float32 "float32" / \ref float64 "float64"
  * @param dependent - sample vector of the dependent variable
  * @param variables - a matrix where each column is a sample of an
  * explanatory variable
