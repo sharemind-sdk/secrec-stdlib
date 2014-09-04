@@ -443,7 +443,6 @@ template<domain D : additive3pp, type T, type FT>
 D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method, uint iterations) {
     assert(shape(variables)[0] == size(dependent));
     uint vars = shape(variables)[1];
-    assert(vars > 1);
 
     D T[[2]] xt = transpose(variables);
     D T[[2]] a = _multTransposed(variables);
@@ -469,9 +468,11 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method
     D T[[1]] bvec = extendedB[:, 0];
 
     if (method == LINEAR_REGRESSION_INVERT) {
-        assert(vars == 2 || vars == 3);
+        assert(vars <= 3);
 
-        if (vars == 2) {
+        if (vars == 1) {
+            return matrixMultiplication(_invert2by2((FT) extendedA), (FT) extendedB)[:, 0];
+        } else if (vars == 2) {
             return matrixMultiplication(_invert3by3((FT) extendedA), (FT) extendedB)[:, 0];
         } else if (vars == 3) {
             return matrixMultiplication(_invert4by4((FT) extendedA), (FT) extendedB)[:, 0];
