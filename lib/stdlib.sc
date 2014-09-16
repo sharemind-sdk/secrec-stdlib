@@ -132,11 +132,10 @@ uint sizeof (float64 x)  { return 8; }
 string argument (string name) {
     uint num_bytes;
     __syscall ("process_get_argument", __cref name, __return num_bytes);
-    assert (num_bytes > 0);
     uint8[[1]] bytes (num_bytes);
-    __syscall ("process_get_argument", __cref name, __ref bytes, __return num_bytes);
-    assert (bytes[num_bytes - 1] == 0);
-    return __string_from_bytes (bytes[:num_bytes - 1]); // exclude null-terminator byte
+    if (num_bytes > 0)
+        __syscall ("process_get_argument", __cref name, __ref bytes, __return num_bytes);
+    return __string_from_bytes (bytes);
 }
 
 /** 
@@ -195,7 +194,7 @@ void publish (string name, T[[N]] val) {
 void publish (string name, string val) {
     uint strsize = 0;
     __syscall ("miner_string_get_size", __cref val, __return strsize);
-    __syscall ("process_set_result", __cref name, __cref "", __cref "string", __cref val, strsize + 1::uint, 0::uint, strsize + 1::uint);
+    __syscall ("process_set_result", __cref name, __cref "", __cref "string", __cref val, 1::uint, 0::uint, strsize);
 }
 
 /** @}*/
