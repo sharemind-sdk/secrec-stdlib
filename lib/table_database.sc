@@ -34,6 +34,7 @@ import stdlib;
  * \defgroup tdb_table_exists tdbTableExists
  * \defgroup tdb_insert_row tdbInsertRow
  * \defgroup tdb_get_row_count tdbGetRowCount
+ * \defgroup tdb_vmap_string_vector_size tdbVmapStringVectorSize
  * \defgroup tdb_vmap_value_vector_size tdbVmapValueVectorSize
  * \defgroup tdb_read_column_index_vmap tdbReadColumn(index, vector map)
  * \defgroup tdb_read_column_string_vmap tdbReadColumn(string, vector map)
@@ -104,6 +105,20 @@ uint64 tdbVmapCount (uint64 id, string paramname) {
     uint64 rv = 0;
     __syscall ("tdb_vmap_count", id, __cref paramname, __return rv);
     return rv;
+}
+/** @} */
+
+/** \addtogroup <tdb_vmap_string_vector_size>
+ *  @{
+ *  @brief Get the size of a vector in a vector map
+ *  @param id - vector map id
+ *  @param paramname - name of the vector in the vector map
+ *  @return returns the number of values in the vector
+ */
+uint64 tdbVmapStringVectorSize(uint64 id, string paramname) {
+    uint64 rsize = 0;
+    __syscall("tdb_vmap_size_string", id, __cref paramname, __return rsize);
+    return rsize;
 }
 /** @} */
 
