@@ -546,8 +546,6 @@ void tdbVmapAddValue(uint64 id, string paramname, T value) {
  */
 template<type T>
 void tdbVmapAddValue (uint64 id, string paramname, T[[1]] values) {
-    assert(size(values) > 0);
-
     T dummy;
     string t_dom = "public";
     uint64 t_size = sizeof(dummy);
