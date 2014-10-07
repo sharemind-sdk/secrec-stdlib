@@ -303,9 +303,9 @@ D T[[2]] sort(D T[[2]] matrix, uint column) {
 */
 uint[[1]] generateSortingNetwork(uint arraysize) {
     uint snsize = 0;
-    __syscall("sorting_network_get_size", arraysize, __return snsize);
+    __syscall("SortingNetwork_serializedSize", arraysize, __return snsize);
     uint[[1]] sn (snsize);
-    __syscall("sorting_network_get", arraysize, __ref sn);
+    __syscall("SortingNetwork_serialize", arraysize, __ref sn);
     return sn;
 }
 /**
@@ -1561,9 +1561,9 @@ uint[[1]] generateTopKSortingNetwork (uint n, uint k) {
     assert(n > 0);
 
     uint snsize = 0;
-    __syscall ("top_k_sorting_network_get_size", n, k, __return snsize);
+    __syscall ("TopKSortingNetwork_serializedSize", n, k, __return snsize);
     uint[[1]] sn(snsize);
-    __syscall ("top_k_sorting_network_get", n, k, __ref sn);
+    __syscall ("TopKSortingNetwork_serialize", n, k, __ref sn);
     return sn;
 }
 /**
