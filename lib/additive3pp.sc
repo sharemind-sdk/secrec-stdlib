@@ -2317,10 +2317,10 @@ D int64[[1]] ceiling (D float64[[1]] arr) {
 template <domain D : additive3pp, type T>
 D T argument (string name) {
     uint num_bytes;
-    __syscall ("process_get_argument", __cref name, __return num_bytes);
+    __syscall("Process_argument", __cref name, __return num_bytes);
     uint8 [[1]] bytes (num_bytes);
     D T out;
-    __syscall ("process_get_argument", __cref name, __ref bytes, __return num_bytes);
+    __syscall("Process_argument", __cref name, __ref bytes, __return num_bytes);
     __syscall ("additive3pp::set_shares_$T\_vec", __domainid(D), out, __cref bytes);
     return out;
 }
@@ -2331,9 +2331,9 @@ D T argument (string name) {
 template <domain D : additive3pp, type T>
 D T[[1]] argument (string name) {
     uint num_bytes, vector_size;
-    __syscall ("process_get_argument", __cref name, __return num_bytes);
+    __syscall("Process_argument", __cref name, __return num_bytes);
     uint8 [[1]] bytes (num_bytes);
-    __syscall ("process_get_argument", __cref name, __ref bytes, __return num_bytes);
+    __syscall("Process_argument", __cref name, __ref bytes, __return num_bytes);
     __syscall ("additive3pp::set_shares_$T\_vec", __domainid(D), __cref bytes, __return vector_size);
     D T [[1]] out (vector_size);
     __syscall ("additive3pp::set_shares_$T\_vec", __domainid(D), out, __cref bytes);
@@ -2358,7 +2358,7 @@ void publish (string name, D T[[N]] val) {
     __syscall ("additive3pp::get_shares_$T\_vec", __domainid(D), val, __ref bytes);
     uint type_size;
     __syscall ("additive3pp::get_type_size_$T", __domainid(D), __return type_size);
-    __syscall ("process_set_result", __cref name, __cref "$D", __cref "$T", __cref bytes, type_size, 0::uint, num_bytes);
+    __syscall("Process_setResult", __cref name, __cref "$D", __cref "$T", __cref bytes, type_size, 0::uint, num_bytes);
 }
 /** @}*/
 /** @}*/

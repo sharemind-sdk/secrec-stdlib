@@ -131,10 +131,10 @@ uint sizeof (float64 x)  { return 8; }
 */
 string argument (string name) {
     uint num_bytes;
-    __syscall ("process_get_argument", __cref name, __return num_bytes);
+    __syscall("Process_argument", __cref name, __return num_bytes);
     uint8[[1]] bytes (num_bytes);
     if (num_bytes > 0)
-        __syscall ("process_get_argument", __cref name, __ref bytes, __return num_bytes);
+        __syscall("Process_argument", __cref name, __ref bytes, __return num_bytes);
     return __string_from_bytes (bytes);
 }
 
@@ -144,10 +144,10 @@ string argument (string name) {
 template <type T>
 T argument (string name) {
     uint num_bytes;
-    __syscall ("process_get_argument", __cref name, __return num_bytes);
+    __syscall("Process_argument", __cref name, __return num_bytes);
     assert (num_bytes == sizeof((T)0));
     T out;
-    __syscall ("process_get_argument", __cref name, __ref out, __return num_bytes);
+    __syscall("Process_argument", __cref name, __ref out, __return num_bytes);
     return out;
 }
 
@@ -157,11 +157,11 @@ T argument (string name) {
 template <type T>
 T[[1]] argument (string name) {
     uint num_bytes, vector_size;
-    __syscall ("process_get_argument", __cref name, __return num_bytes);
+    __syscall("Process_argument", __cref name, __return num_bytes);
     assert (num_bytes % sizeof((T)0) == 0);
     vector_size = num_bytes / sizeof((T)0);
     T [[1]] out (vector_size);
-    __syscall ("process_get_argument", __cref name, __ref out, __return num_bytes);
+    __syscall("Process_argument", __cref name, __ref out, __return num_bytes);
     return out;
 }
 
@@ -182,7 +182,7 @@ T[[1]] argument (string name) {
 
 template <type T, dim N>
 void publish (string name, T[[N]] val) {
-    __syscall ("process_set_result", __cref name, __cref "", __cref "$T", __cref val, sizeof((T)0), 0::uint, size(val) * sizeof((T)0));
+    __syscall("Process_setResult", __cref name, __cref "", __cref "$T", __cref val, sizeof((T)0), 0::uint, size(val) * sizeof((T)0));
 }
 
 /** \addtogroup <publish>
@@ -192,7 +192,7 @@ void publish (string name, T[[N]] val) {
  */
 
 void publish (string name, string val) {
-    __syscall ("process_set_result", __cref name, __cref "", __cref "string", __cref val, 1::uint, 0::uint, size(__bytes_from_string(val)));
+    __syscall("Process_setResult", __cref name, __cref "", __cref "string", __cref val, 1::uint, 0::uint, size(__bytes_from_string(val)));
 }
 
 /** @}*/
