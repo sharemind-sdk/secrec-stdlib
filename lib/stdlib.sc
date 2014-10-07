@@ -1777,14 +1777,14 @@ int round (float64 x) {
 template<dim N>
 float32[[N]] sqrt(float32[[N]] x) {
     float32[[N]] ret = x;
-    __syscall("public_float32_sqrt", __cref x, __ref ret);
+    __syscall("float32_sqrt", __cref x, __ref ret);
     return ret;
 }
 
 template<dim N>
 float64[[N]] sqrt(float64[[N]] x) {
     float64[[N]] ret = x;
-    __syscall("public_float64_sqrt", __cref x, __ref ret);
+    __syscall("float64_sqrt", __cref x, __ref ret);
     return ret;
 }
 /** @} */
