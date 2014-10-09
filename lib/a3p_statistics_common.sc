@@ -84,18 +84,16 @@ D T[[1]] _cut (D T[[1]] data, D bool[[1]] isAvailable){
 
     shufMat = shuffleRows (matrix);
 
-    T[[1]] shufIsAvailablePub (s);
-    shufIsAvailablePub = declassify (shufMat[:, 1]);
+    bool[[1]] shufIsAvailablePub (s);
+    shufIsAvailablePub = (bool)declassify (shufMat[:, 1]);
 
-    T countAvailable = 0;
+    uint countAvailable = (uint)sum (shufIsAvailablePub);
 
-    countAvailable = sum (shufIsAvailablePub);
-
-    D T[[1]] cutData ((uint)countAvailable);
+    D T[[1]] cutData (countAvailable);
     uint indexCutData = 0;
 
     for (uint i = 0; i < s; i = i + 1){
-        if (shufIsAvailablePub [i] == 1){
+        if (shufIsAvailablePub [i]){
             cutData [indexCutData] = shufMat [i, 0];
             indexCutData = indexCutData + 1;
         }
@@ -111,12 +109,17 @@ D T[[1]] _cut (D T[[1]] data, D bool[[1]] isAvailable){
  *  @{
  *  @brief Remove unavailable elements
  *  @note **D** - additive3pp protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input vector
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns a vector where elements of the input vector have
  *   been removed if the corresponding element in isAvailable is zero.
  */
+template <domain D : additive3pp>
+D bool[[1]] cut (D bool[[1]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
 template <domain D : additive3pp>
 D uint8[[1]] cut (D uint8[[1]] data, D bool[[1]] isAvailable) {
     return _cut (data, isAvailable);
@@ -190,20 +193,16 @@ D T[[2]] _cut (D T[[2]] data, D bool[[1]] isAvailable) {
 
     shufMat = shuffleRows (matrix);
 
-    T[[1]] shufIsAvailablePub (rows);
-    shufIsAvailablePub = declassify (shufMat[:, columns]);
+    bool[[1]] shufIsAvailablePub (rows);
+    shufIsAvailablePub = (bool)declassify (shufMat[:, columns]);
 
-    T countAvailable = 0;
-
-    for (uint i = 0; i < rows; i = i + 1){
-        countAvailable = countAvailable + shufIsAvailablePub[i];
-    }
+    uint countAvailable = (uint)sum (shufIsAvailablePub);
 
     D T[[2]] cutData ((uint64)countAvailable, columns);
     uint indexCutData = 0;
 
     for (uint i = 0; i < rows; i = i + 1){
-        if (shufIsAvailablePub [i] != 0){
+        if (shufIsAvailablePub [i]){
             cutData [indexCutData, :] = shufMat [i, 0 : columns];
             indexCutData = indexCutData + 1;
         }
