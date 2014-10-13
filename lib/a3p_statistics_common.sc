@@ -87,7 +87,7 @@ D T[[1]] _cut (D T[[1]] data, D bool[[1]] isAvailable){
     bool[[1]] shufIsAvailablePub (s);
     shufIsAvailablePub = (bool)declassify (shufMat[:, 1]);
 
-    uint countAvailable = (uint)sum (shufIsAvailablePub);
+    uint countAvailable = sum ((uint) shufIsAvailablePub);
 
     D T[[1]] cutData (countAvailable);
     uint indexCutData = 0;
