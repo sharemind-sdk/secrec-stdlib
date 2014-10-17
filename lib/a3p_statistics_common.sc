@@ -109,7 +109,7 @@ D T[[1]] _cut (D T[[1]] data, D bool[[1]] isAvailable){
  *  @{
  *  @brief Remove unavailable elements
  *  @note **D** - additive3pp protection domain
- *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param data - input vector
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns a vector where elements of the input vector have
@@ -167,6 +167,26 @@ D float32[[1]] cut (D float32[[1]] data, D bool[[1]] isAvailable) {
 
 template <domain D : additive3pp>
 D float64[[1]] cut (D float64[[1]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : additive3pp>
+D xor_uint8[[1]] cut (D xor_uint8[[1]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : additive3pp>
+D xor_uint16[[1]] cut (D xor_uint16[[1]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : additive3pp>
+D xor_uint32[[1]] cut (D xor_uint32[[1]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : additive3pp>
+D xor_uint64[[1]] cut (D xor_uint64[[1]] data, D bool[[1]] isAvailable) {
     return _cut (data, isAvailable);
 }
 /**
