@@ -182,7 +182,7 @@ T[[1]] argument (string name) {
 
 template <type T, dim N>
 void publish (string name, T[[N]] val) {
-    __syscall("Process_setResult", __cref name, __cref "", __cref "$T", __cref val, sizeof((T)0), 0::uint, size(val) * sizeof((T)0));
+    __syscall("Process_setResult", __cref name, __cref "", __cref "$T", __cref val, 0::uint, size(val) * sizeof((T)0));
 }
 
 /** \addtogroup <publish>
@@ -192,7 +192,7 @@ void publish (string name, T[[N]] val) {
  */
 
 void publish (string name, string val) {
-    __syscall("Process_setResult", __cref name, __cref "", __cref "string", __cref val, 1::uint, 0::uint, size(__bytes_from_string(val)));
+    __syscall("Process_setResult", __cref name, __cref "", __cref "string", __cref val, 0::uint, size(__bytes_from_string(val)));
 }
 
 /** @}*/
