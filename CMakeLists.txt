@@ -14,6 +14,14 @@ INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
 
 FIND_PACKAGE(Doxygen REQUIRED)
 
+FILE(GLOB_RECURSE SharemindStdlib_ALLFILES
+     "${CMAKE_CURRENT_SOURCE_DIR}/lib/*.sc"
+     "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sc"
+     "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sh"
+)
+ADD_CUSTOM_TARGET("include_SharemindStdlib_ALLFILES_in_IDE" SOURCES
+                  ${SharemindStdlib_ALLFILES})
+
 # Stdlib:
 
 # Note that this globbing is done by cmake, not by make, hence sometimes clean might be required.
