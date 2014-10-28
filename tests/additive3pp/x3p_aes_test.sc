@@ -97,6 +97,7 @@ void main(){
             all_tests = all_tests +1;
         }
     }
+    /*
     print("TEST 4: aes192 key generation");
     {
         for(uint i = 50; i < 300; i = i + 50){
@@ -233,6 +234,7 @@ void main(){
             all_tests = all_tests +1;
         }
     }
+    */
 
     print("Test finished!");
     print("Succeeded tests: ", succeeded_tests);

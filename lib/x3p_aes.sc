@@ -119,6 +119,7 @@ D xor_uint32[[1]] aes128EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
 /**
 *  @pre ( \ref uint64 "uint" max value ) / 6 >= blocks
 */
+/*
 template <domain D : additive3pp>
 D xor_uint32[[1]] aes192Genkey(uint blocks) {
     assert(UINT64_MAX / 6 >= blocks); // Check for overflow
@@ -126,6 +127,7 @@ D xor_uint32[[1]] aes192Genkey(uint blocks) {
     r = randomize(r);
     return r;
 }
+*/
 /** @}*/
 /** \addtogroup <aes_expandkey>
  *  @{
@@ -134,6 +136,7 @@ D xor_uint32[[1]] aes192Genkey(uint blocks) {
 /**
 *  @pre the size of **aeskey** has to be dividable by 6
 */
+/*
 template <domain D : additive3pp>
 D xor_uint32[[1]] aes192ExpandKey(D xor_uint32[[1]] aeskey) {
     assert((size(aeskey) % 6) == 0);
@@ -141,7 +144,7 @@ D xor_uint32[[1]] aes192ExpandKey(D xor_uint32[[1]] aeskey) {
     __syscall("additive3pp::aes192_xor_uint32_vec_expand_key", __domainid(D), aeskey, expandedKey);
     return expandedKey;
 }
-
+*/
 /** @}*/
 /** \addtogroup <aes_encrypt>
  *  @{
@@ -155,6 +158,7 @@ D xor_uint32[[1]] aes192ExpandKey(D xor_uint32[[1]] aeskey) {
 * @pre the size of **plainText** has to be dividable by 4
 * @pre ( **plainText** / 4 ) == ( size of **expandedKey** ) / (4 * 13)
 */
+/*
 template <domain D : additive3pp>
 D xor_uint32[[1]] aes192EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {
     assert(size(plainText) > 0);
@@ -165,7 +169,7 @@ D xor_uint32[[1]] aes192EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
     __syscall("additive3pp::aes192_xor_uint32_vec", __domainid(D), plainText, expandedKey, cipherText);
     return cipherText;
 }
-
+*/
 /** @}*/
 
 /*******************************************************************************
@@ -183,6 +187,7 @@ D xor_uint32[[1]] aes192EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
 /**
 *  @pre ( \ref uint64 "uint" max value ) / 8 >= blocks
 */
+/*
 template <domain D : additive3pp>
 D xor_uint32[[1]] aes256Genkey(uint blocks) {
     assert(UINT64_MAX / 8 >= blocks); // Check for overflow
@@ -190,6 +195,7 @@ D xor_uint32[[1]] aes256Genkey(uint blocks) {
     r = randomize(r);
     return r;
 }
+*/
 /** @}*/
 /** \addtogroup <aes_expandkey>
  *  @{
@@ -198,6 +204,7 @@ D xor_uint32[[1]] aes256Genkey(uint blocks) {
 /**
 *  @pre the size of **aeskey** has to be dividable by 8
 */
+/*
 template <domain D : additive3pp>
 D xor_uint32[[1]] aes256ExpandKey(D xor_uint32[[1]] aeskey) {
     assert((size(aeskey) % 8) == 0);
@@ -205,6 +212,7 @@ D xor_uint32[[1]] aes256ExpandKey(D xor_uint32[[1]] aeskey) {
     __syscall("additive3pp::aes256_xor_uint32_vec_expand_key", __domainid(D), aeskey, expandedKey);
     return expandedKey;
 }
+*/
 /** @}*/
 /** \addtogroup <aes_encrypt>
  *  @{
@@ -218,6 +226,7 @@ D xor_uint32[[1]] aes256ExpandKey(D xor_uint32[[1]] aeskey) {
 * @pre the size of **plainText** has to be dividable by 4
 * @pre ( **plainText** / 4 ) == ( size of **expandedKey** ) / (4 * 15)
 */
+/*
 template <domain D : additive3pp>
 D xor_uint32[[1]] aes256EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {
     assert(size(plainText) > 0);
@@ -228,5 +237,6 @@ D xor_uint32[[1]] aes256EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
     __syscall("additive3pp::aes256_xor_uint32_vec", __domainid(D), plainText, expandedKey, cipherText);
     return cipherText;
 }
+*/
 /** @}*/
 /** @}*/
