@@ -23,10 +23,9 @@ import a3p_random;
 * \defgroup aes_genkey aesGenkey
 * \defgroup aes_expandkey aesExpandKey
 * \defgroup aes_encrypt aesEncryptEcb
-* \defgroup aes_decrypt aesDecryptEcb
 */
 
-/** \addtogroup <x3p_aes> 
+/** \addtogroup <x3p_aes>
 *@{
 * @brief Module with AES128/192/256 functions
 */
@@ -39,7 +38,7 @@ import a3p_random;
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <aes_genkey> 
+/** \addtogroup <aes_genkey>
  *  @{
  *  @brief Function for generating a key for AES encryption
  *  @param blocks - an \ref uint64 "uint" type value
@@ -47,7 +46,7 @@ import a3p_random;
  */
 
 /**
-*  @pre ( \ref uint64 "uint" max value ) / 4 >= blocks 
+*  @pre ( \ref uint64 "uint" max value ) / 4 >= blocks
 */
 template <domain D : additive3pp>
 D xor_uint32[[1]] aes128Genkey(uint blocks) {
@@ -58,7 +57,7 @@ D xor_uint32[[1]] aes128Genkey(uint blocks) {
 }
 
 /** @}*/
-/** \addtogroup <aes_expandkey> 
+/** \addtogroup <aes_expandkey>
  *  @{
  *  @brief Function for expanding a randomly generated AES key
  *  @param aeskey - a 1-dimensional array of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey"
@@ -77,7 +76,7 @@ D xor_uint32[[1]] aes128ExpandKey(D xor_uint32[[1]] aeskey) {
 }
 
 /** @}*/
-/** \addtogroup <aes_encrypt> 
+/** \addtogroup <aes_encrypt>
  *  @{
  *  @brief Function for encrypting with AES algorithm
  *  @return returns a vector of type \ref xor_uint32 "xor_uint32" with the encrypted values
@@ -103,22 +102,6 @@ D xor_uint32[[1]] aes128EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
 }
 
 /** @}*/
-/** \addtogroup <aes_decrypt> 
- *  @{
- *  @brief Function for decrypting with AES algorithm
- *  @return returns a \ref xor_uint32 "xor_uint32" type vector with the decrypted values
- */
-
-/**
-* @param expandedKey - an aes128 expanded key of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey" and \ref aes_expandkey "aesExpandKey"
-* @param cipherText - an encrypted aes128 cipher of type \ref xor_uint32 "xor_uint32"
-*/
-template <domain D : additive3pp>
-D xor_uint32[[1]] aes128DecryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] cipherText) {
-    return aes128EncryptEcb(expandedKey, cipherText);
-}
-
-/** @}*/
 
 /*******************************************************************************
 ********************************************************************************
@@ -129,12 +112,12 @@ D xor_uint32[[1]] aes128DecryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
 *******************************************************************************/
 
 
-/** \addtogroup <aes_genkey> 
+/** \addtogroup <aes_genkey>
  *  @{
  */
 
 /**
-*  @pre ( \ref uint64 "uint" max value ) / 6 >= blocks 
+*  @pre ( \ref uint64 "uint" max value ) / 6 >= blocks
 */
 template <domain D : additive3pp>
 D xor_uint32[[1]] aes192Genkey(uint blocks) {
@@ -144,7 +127,7 @@ D xor_uint32[[1]] aes192Genkey(uint blocks) {
     return r;
 }
 /** @}*/
-/** \addtogroup <aes_expandkey> 
+/** \addtogroup <aes_expandkey>
  *  @{
  */
 
@@ -160,7 +143,7 @@ D xor_uint32[[1]] aes192ExpandKey(D xor_uint32[[1]] aeskey) {
 }
 
 /** @}*/
-/** \addtogroup <aes_encrypt> 
+/** \addtogroup <aes_encrypt>
  *  @{
  */
 
@@ -184,20 +167,6 @@ D xor_uint32[[1]] aes192EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
 }
 
 /** @}*/
-/** \addtogroup <aes_decrypt> 
- *  @{
- */
-
-/**
-* @param expandedKey - an aes192 expanded key of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey" and \ref aes_expandkey "aesExpandKey"
-* @param cipherText - an encrypted aes192 cipher of type \ref xor_uint32 "xor_uint32"
-*/
-template <domain D : additive3pp>
-D xor_uint32[[1]] aes192DecryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] cipherText) {
-    return aes192EncryptEcb(expandedKey, cipherText);
-}
-
-/** @}*/
 
 /*******************************************************************************
 ********************************************************************************
@@ -207,12 +176,12 @@ D xor_uint32[[1]] aes192DecryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <aes_genkey> 
+/** \addtogroup <aes_genkey>
  *  @{
  */
 
 /**
-*  @pre ( \ref uint64 "uint" max value ) / 8 >= blocks 
+*  @pre ( \ref uint64 "uint" max value ) / 8 >= blocks
 */
 template <domain D : additive3pp>
 D xor_uint32[[1]] aes256Genkey(uint blocks) {
@@ -222,7 +191,7 @@ D xor_uint32[[1]] aes256Genkey(uint blocks) {
     return r;
 }
 /** @}*/
-/** \addtogroup <aes_expandkey> 
+/** \addtogroup <aes_expandkey>
  *  @{
  */
 
@@ -237,7 +206,7 @@ D xor_uint32[[1]] aes256ExpandKey(D xor_uint32[[1]] aeskey) {
     return expandedKey;
 }
 /** @}*/
-/** \addtogroup <aes_encrypt> 
+/** \addtogroup <aes_encrypt>
  *  @{
  */
 
@@ -258,19 +227,6 @@ D xor_uint32[[1]] aes256EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
     D xor_uint32[[1]] cipherText (size(plainText));
     __syscall("additive3pp::aes256_xor_uint32_vec", __domainid(D), plainText, expandedKey, cipherText);
     return cipherText;
-}
-/** @}*/
-/** \addtogroup <aes_decrypt> 
- *  @{
- */
-
-/**
-* @param expandedKey - an aes256 expanded key of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey" and \ref aes_expandkey "aesExpandKey"
-* @param cipherText - an encrypted aes256 cipher of type \ref xor_uint32 "xor_uint32"
-*/
-template <domain D : additive3pp>
-D xor_uint32[[1]] aes256DecryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] cipherText) {
-    return aes256EncryptEcb(expandedKey, cipherText);
 }
 /** @}*/
 /** @}*/
