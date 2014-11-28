@@ -8,7 +8,7 @@ SecreC supports very simple module system. A module name can be declared with **
 
 Listing 6.33: Module syntax
 \code
-module additive3pp;
+module shared3p;
 import common;
 ...
 \endcode

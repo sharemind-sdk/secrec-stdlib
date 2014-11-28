@@ -11,19 +11,19 @@ module matrix_test;
 
 import stdlib;
 import matrix;
-import additive3pp;
-import a3p_matrix;
+import shared3p;
+import shared3p_matrix;
 import oblivious;
-import a3p_random;
-import a3p_sort;
-import a3p_bloom;
-import x3p_string;
-import x3p_aes;
-import x3p_join;
+import shared3p_random;
+import shared3p_sort;
+import shared3p_bloom;
+import shared3p_string;
+import shared3p_aes;
+import shared3p_join;
 import profiling;
 import test_utility;
 
-domain pd_a3p additive3pp;
+domain pd_shared3p shared3p;
 
 public uint all_tests;
 public uint succeeded_tests;
@@ -64,7 +64,7 @@ void row_sum_test(T data){
 		T[[2]] mat (3,0);
 		T[[1]] result = rowSums(mat);
 	}
-	pd_a3p T[[2]] mat (5,5);
+	pd_shared3p T[[2]] mat (5,5);
 	T[[1]] control (5);
 	mat = randomize(mat);
 	T[[1]] row_sums = rowSums(declassify(mat));
@@ -91,8 +91,8 @@ void dot_product(T data){
 		T[[1]] vec2 (0);
 		T scalar = dotProduct(vec,vec2);
 	}
-	pd_a3p T[[1]] vec (15);
-	pd_a3p T[[1]] vec2 (15);
+	pd_shared3p T[[1]] vec (15);
+	pd_shared3p T[[1]] vec2 (15);
 	vec = randomize(vec); vec2 = randomize(vec2);
 	T scalar = dotProduct(declassify(vec),declassify(vec2));
 	T control = sum(declassify(vec) * declassify(vec2));
@@ -117,8 +117,8 @@ void dot_product_matrix(T data){
 		T[[2]] mat2 (3,0);
 		T[[1]] result = dotProduct(mat,mat2);
 	}
-	pd_a3p T[[2]] mat (10,10);
-	pd_a3p T[[2]] mat2 (10,10);
+	pd_shared3p T[[2]] mat (10,10);
+	pd_shared3p T[[2]] mat2 (10,10);
 	mat = randomize(mat); mat2 = randomize(mat2);
 	T[[1]] vec = dotProduct(declassify(mat),declassify(mat2));
 	T[[1]] control = rowSums(declassify(mat) * declassify(mat2));
@@ -138,8 +138,8 @@ void dot_product_matrix(T data){
 
 template<type T>
 void cross_product(T data){
-	pd_a3p T[[1]] vec (3);
-	pd_a3p T[[1]] vec2 (3);
+	pd_shared3p T[[1]] vec (3);
+	pd_shared3p T[[1]] vec2 (3);
 	vec = randomize(vec); vec2 = randomize(vec2);
 	T[[1]] x = declassify(vec);
 	T[[1]] y = declassify(vec2);
@@ -170,8 +170,8 @@ void cross_product_matrix(T data){
 		T[[2]] mat2 (0,3);
 		T[[2]] result = crossProduct(mat,mat2);
 	}
-	pd_a3p T[[2]] mat (3,3);
-	pd_a3p T[[2]] mat2 (3,3);
+	pd_shared3p T[[2]] mat (3,3);
+	pd_shared3p T[[2]] mat2 (3,3);
 	mat = randomize(mat); mat2 = randomize(mat2);
 	T[[2]] x = declassify(mat);
 	T[[2]] y = declassify(mat2);
@@ -206,8 +206,8 @@ void mat_multiplication(T data){
 	}
 	for(uint k = 3; k < 6;++k){
 		for(uint l = 5; l > 2;--l){
-			pd_a3p T[[2]] mat (k,l);
-			pd_a3p T[[2]] mat2 (l,k);
+			pd_shared3p T[[2]] mat (k,l);
+			pd_shared3p T[[2]] mat2 (l,k);
 			mat = randomize(mat); mat2 = randomize(mat2);
 			T[[2]] mat3 (k,k) = matrixMultiplication(declassify(mat),declassify(mat2));
 			T[[2]] control (k,k);

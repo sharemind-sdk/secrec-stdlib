@@ -11,19 +11,19 @@ module Arithmetic_test_scalar;
 
 import stdlib;
 import matrix;
-import additive3pp;
-import a3p_matrix;
+import shared3p;
+import shared3p_matrix;
 import oblivious;
-import a3p_random;
-import a3p_sort;
-import a3p_bloom;
-import x3p_string;
-import x3p_aes;
-import x3p_join;
+import shared3p_random;
+import shared3p_sort;
+import shared3p_bloom;
+import shared3p_string;
+import shared3p_aes;
+import shared3p_join;
 import profiling;
 import test_utility;
 
-domain pd_a3p additive3pp;
+domain pd_shared3p shared3p;
 
 public uint all_tests;
 public uint succeeded_tests;
@@ -34,7 +34,7 @@ void Success(){
 	print("SUCCESS!");
 }
 
-template<type T,domain D: additive3pp>
+template<type T,domain D: shared3p>
 void Failure(string s, D T c){
 	print("FAILURE! ",s);
 	print("got: ",declassify(c));

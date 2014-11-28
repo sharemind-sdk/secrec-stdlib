@@ -658,28 +658,28 @@ WARN_LOGFILE           =
 # with spaces.
 
 INPUT                  = ../lib/table_database.sc \
-                         ../lib/a3p_table_database.sc \
-                         ../lib/a3p_statistics_distribution.sc \
-                         ../lib/a3p_statistics_testing.sc \
-                         ../lib/a3p_statistics_summary.sc \
-                         ../lib/a3p_statistics_common.sc \
-                         ../lib/a3p_statistics_outliers.sc \
-                         ../lib/a3p_statistics_regression.sc \
-                         ../lib/a3p_statistics_glm.sc \
-                         ../lib/a3p_matrix.sc \
-                         ../lib/a3p_random.sc \
-                         ../lib/a3p_bloom.sc \
-                         ../lib/a3p_sort.sc \
-                         ../lib/additive3pp.sc \
+                         ../lib/shared3p_table_database.sc \
+                         ../lib/shared3p_statistics_distribution.sc \
+                         ../lib/shared3p_statistics_testing.sc \
+                         ../lib/shared3p_statistics_summary.sc \
+                         ../lib/shared3p_statistics_common.sc \
+                         ../lib/shared3p_statistics_outliers.sc \
+                         ../lib/shared3p_statistics_regression.sc \
+                         ../lib/shared3p_statistics_glm.sc \
+                         ../lib/shared3p_matrix.sc \
+                         ../lib/shared3p_random.sc \
+                         ../lib/shared3p_bloom.sc \
+                         ../lib/shared3p_sort.sc \
+                         ../lib/shared3p.sc \
                          ../lib/matrix.sc \
                          ../lib/oblivious.sc \
                          ../lib/profiling.sc \
                          ../lib/stdlib.sc \
-                         ../lib/x3p_aes.sc \
-                         ../lib/x3p_join.sc \
-                         ../lib/x3p_string.sc \
-                         ../lib/xor3pp.sc \
-                         ../lib/a3p_oblivious.sc \
+                         ../lib/shared3p_aes.sc \
+                         ../lib/shared3p_join.sc \
+                         ../lib/shared3p_string.sc \
+                         ../lib/shared3p.sc \
+                         ../lib/shared3p_oblivious.sc \
                          ../lib/doc/code_stucture.sc \
                          ../lib/doc/types.sc \
                          ../lib/doc/variables.sc \

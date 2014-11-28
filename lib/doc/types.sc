@@ -17,9 +17,9 @@ following in the global scope:
 
 Listing 6.2: Different protection domains of the same kind
 
-	kind additive3pp ;
-	domain sharemind_test_pd additive3pp ;
-	domain my_pd additive3pp ;
+	kind shared3p ;
+	domain sharemind_test_pd shared3p ;
+	domain my_pd shared3p ;
 
  We impose a lattice structure on the privacy types, and often call public security type looser than non-public security types.
  Privacy types are used to statically guarantee that information does not flow from the private memory space into the public one, if not otherwise specified with the declassify construct. There is no special construct for moving public data into the private space, as it’s allowed implicitly in many cases. As almost all operations on private data types can be significantly slower than same operations on public data we recommend to use private variables as sparingly as possible, and to keep operations on them to a minimum. The choice between public and private operations also allows the algorithm developer to balance between security and performance as required by the application.

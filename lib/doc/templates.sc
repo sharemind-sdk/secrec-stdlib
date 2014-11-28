@@ -16,8 +16,8 @@ Templates may restrict a domain variable to a protection kind.
 
 Listing 6.31: Simple template declaration
 \code
-	kind additive3pp ;
-	template <domain D : additive3pp,  type T>
+	kind shared3p ;
+	template <domain D : shared3p,  type T>
 	T declassify (D T x) { ... }
 \endcode
 
@@ -25,7 +25,7 @@ Code generation of concrete template instances (or instantiation for short) is p
 
 Listing 6.32: Reclassify
 \code
-	template <domain D : additive3pp , domain L : additive3pp >
+	template <domain D : shared3p , domain L : shared3p >
 	D int reclassify (L int x) { ... }
 	template <domain D>
 	D int reclassify (D int x) { return x; }

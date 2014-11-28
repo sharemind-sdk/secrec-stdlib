@@ -11,19 +11,19 @@ module stdlib_test;
 
 import stdlib;
 import matrix;
-import additive3pp;
-import a3p_matrix;
+import shared3p;
+import shared3p_matrix;
 import oblivious;
-import a3p_random;
-import a3p_sort;
-import a3p_bloom;
-import x3p_string;
-import x3p_aes;
-import x3p_join;
+import shared3p_random;
+import shared3p_sort;
+import shared3p_bloom;
+import shared3p_string;
+import shared3p_aes;
+import shared3p_join;
 import profiling;
 import test_utility;
 
-domain pd_a3p additive3pp;
+domain pd_shared3p shared3p;
 
 public uint all_tests;
 public uint succeeded_tests;
@@ -35,7 +35,7 @@ void test_flattening(T data){
 		T[[1]] vec = flatten(mat);
 	}
 	bool result = true;
-	pd_a3p T[[2]] temp (6,6);
+	pd_shared3p T[[2]] temp (6,6);
 	temp = randomize(temp);
 	T[[2]] object = declassify(temp);
 	T[[1]] vec = flatten(object);
@@ -196,7 +196,7 @@ void test_sum(T data){
 		T[[1]] vec (0);
 		T result = sum(vec);
 	}
-	pd_a3p T[[1]] temp (10);
+	pd_shared3p T[[1]] temp (10);
 	T[[1]] vec = declassify(randomize(temp));
 	T result = sum(vec);
 	T control = 0;
@@ -217,7 +217,7 @@ void test_sum(T data){
 
 template<type T>
 void test_sum2(T data){
-	pd_a3p T[[1]] temp (10);
+	pd_shared3p T[[1]] temp (10);
 	T[[1]] vec = declassify(randomize(temp));
 	T[[1]] result = sum(vec,2::uint);
 	uint startingIndex = 0;
@@ -247,7 +247,7 @@ void test_product(T data){
 		T[[1]] vec (0);
 		T result = product(vec);
 	}
-	pd_a3p T[[1]] temp (10);
+	pd_shared3p T[[1]] temp (10);
 	T[[1]] vec = declassify(randomize(temp));
 	T result = product(vec);
 	T control = 1;
@@ -267,7 +267,7 @@ void test_product(T data){
 
 template<type T>
 void test_product2(T data){
-	pd_a3p T[[1]] temp (10);
+	pd_shared3p T[[1]] temp (10);
 	T[[1]] vec = declassify(randomize(temp));
 	T[[1]] result = product(vec,2::uint);
 	T[[1]] control (2)= 1;
@@ -293,7 +293,7 @@ void test_product2(T data){
 
 template<type T>
 void test_min(T data){
-	pd_a3p T[[1]] temp (25);
+	pd_shared3p T[[1]] temp (25);
 	T[[1]] vec = declassify(randomize(temp));
 	T result = min(vec);
 	T control = 0;
@@ -325,7 +325,7 @@ void test_min2(T data){
 		T[[1]] vec2 (0);
 		T[[1]] result = min(vec,vec2);
 	}
-	pd_a3p T[[1]] temp (25);
+	pd_shared3p T[[1]] temp (25);
 	T[[1]] vec = declassify(randomize(temp));
 	T[[1]] vec2 = declassify(randomize(temp));
 	T[[1]] result = min(vec,vec2);
@@ -351,7 +351,7 @@ void test_min2(T data){
 
 template<type T>
 void test_min3(T data){
-	pd_a3p T[[1]] temp (20);
+	pd_shared3p T[[1]] temp (20);
 	T[[1]] vec = declassify(randomize(temp));
 	T[[1]] result = min(vec,2::uint);
 	T[[1]] control (2);
@@ -384,7 +384,7 @@ void test_min3(T data){
 
 template<type T>
 void test_max(T data){
-	pd_a3p T[[1]] temp (25);
+	pd_shared3p T[[1]] temp (25);
 	T[[1]] vec = declassify(randomize(temp));
 	T result = max(vec);
 	T control = 0;
@@ -411,7 +411,7 @@ void test_max2(T data){
 		T[[1]] vec2 (0);
 		T[[1]] result = max(vec,vec2);
 	}
-	pd_a3p T[[1]] temp (25);
+	pd_shared3p T[[1]] temp (25);
 	T[[1]] vec = declassify(randomize(temp));
 	T[[1]] vec2 = declassify(randomize(temp));
 	T[[1]] result = max(vec,vec2);
@@ -437,7 +437,7 @@ void test_max2(T data){
 
 template<type T>
 void test_max3(T data){
-	pd_a3p T[[1]] temp (20);
+	pd_shared3p T[[1]] temp (20);
 	T[[1]] vec = declassify(randomize(temp));
 	T[[1]] result = max(vec,2::uint);
 	T[[1]] control (2);
@@ -529,7 +529,7 @@ void main(){
 	print("TEST 5: Sum");
 	{
 		print("bool");
-		pd_a3p bool[[1]] temp (10);
+		pd_shared3p bool[[1]] temp (10);
 		bool[[1]] vec = declassify(randomize(temp));
 		uint result = sum(vec);
 		uint control = 0;
@@ -584,7 +584,7 @@ void main(){
 	print("TEST 6: Sum (2)");
 	{
 		print("bool");
-		pd_a3p bool[[1]] temp (10);
+		pd_shared3p bool[[1]] temp (10);
 		bool[[1]] vec = declassify(randomize(temp));
 		uint[[1]] result = sum(vec,2::uint);
 		uint[[1]] control (2) = 0;

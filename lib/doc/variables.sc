@@ -12,9 +12,9 @@ Variables are declared by writing a type annotation followed by one or more vari
 
 Listing 6.3: Some variable declarations
 \code
-	kind additive3pp ;
-	domain sharemind_test_pd additive3pp ;
-	domain private additive3pp ;
+	kind shared3p ;
+	domain sharemind_test_pd shared3p ;
+	domain private shared3p ;
 	void main () {
 		int x; // assigned default value
 		int y = 5;

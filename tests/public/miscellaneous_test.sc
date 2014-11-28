@@ -11,19 +11,19 @@ module miscellaneous_test;
 
 import stdlib;
 import matrix;
-import additive3pp;
-import a3p_matrix;
+import shared3p;
+import shared3p_matrix;
 import oblivious;
-import a3p_random;
-import a3p_sort;
-import a3p_bloom;
-import x3p_string;
-import x3p_aes;
-import x3p_join;
+import shared3p_random;
+import shared3p_sort;
+import shared3p_bloom;
+import shared3p_string;
+import shared3p_aes;
+import shared3p_join;
 import profiling;
 import test_utility;
 
-domain pd_a3p additive3pp;
+domain pd_shared3p shared3p;
 
 public uint all_tests;
 public uint succeeded_tests;
@@ -32,8 +32,8 @@ template<type T>
 T random_float(T data){
     T rand = 1;
     for(uint i = 0; i < 2; ++i){
-        pd_a3p uint32 temp;
-        pd_a3p int8 temp2;
+        pd_shared3p uint32 temp;
+        pd_shared3p int8 temp2;
         while(declassify(temp) == 0 || declassify(temp2) == 0){
             temp = randomize(temp);
             temp2 = randomize(temp2);
@@ -52,7 +52,7 @@ T random_float(T data){
     return rand;
 }
 
-template<domain D: additive3pp,type T>
+template<domain D: shared3p,type T>
 D T[[1]] random(D T[[1]] data){
     uint x_shape = shape(data)[0];
     T[[1]] temp (x_shape);
@@ -65,8 +65,8 @@ D T[[1]] random(D T[[1]] data){
 
 template<type T>
 void neg_values(T data){
-    pd_a3p T a;
-    pd_a3p T[[1]] b (5);
+    pd_shared3p T a;
+    pd_shared3p T[[1]] b (5);
     a = randomize(a); b = randomize(b);
     T c = declassify(-a);
     if((declassify(a) + c) == 0){
@@ -93,8 +93,8 @@ void neg_values(T data){
 
 template<type T>
 void neg_values_float(T data){
-    pd_a3p T a;
-    pd_a3p T[[1]] b (5);
+    pd_shared3p T a;
+    pd_shared3p T[[1]] b (5);
     a = classify(random_float(0::T)); b = random(b);
     T c = declassify(-a);
     if((declassify(a) + c) == 0){
@@ -123,7 +123,7 @@ template<type T>
 void cast_bool_uint(T data){
     //public
     bool result = true;
-    pd_a3p bool[[1]] temp (5);
+    pd_shared3p bool[[1]] temp (5);
     bool[[1]] a = declassify(randomize(temp));
     T[[1]] b (5) = (T)a;
     for(uint i = 0; i < 5; ++i){
@@ -149,7 +149,7 @@ template<type T>
 void cast_uint_bool(T data){
     // public
     bool result = true;
-    pd_a3p T[[1]] temp (5);
+    pd_shared3p T[[1]] temp (5);
     T[[1]] a = declassify(randomize(temp));
     T[[1]] c (5);
     for(uint i = 0; i < size(a);++i){

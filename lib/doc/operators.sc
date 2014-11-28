@@ -39,11 +39,11 @@ Supported types: \ref bool "bool" / \ref uint8 / \ref uint16 / \ref uint32 / \re
 | float32: | bool , uint8/16/32/64 , int8/16/32/64 , float64 |
 | float64: | bool , uint8/16/32/64 , int8/16/32/64 , float32 |
 
-@section additive3pp additive3pp protection domain
+@section shared3p shared3p protection domain
 
 Supported types: \ref bool "bool" / \ref uint8 / \ref uint16 / \ref uint32 / \ref uint64 "uint" / \ref int8 / \ref int16 / \ref int32 / \ref int64 "int" / \ref float32 "float32" / \ref float64 / \ref xor_uint8 / \ref xor_uint16 / \ref xor_uint32 / \ref xor_uint64 "xor_uint64"
 
-@subsection a3p_operators operators
+@subsection shared3p_operators operators
 
 | type        | operators              |
 | :---------: | :--------------------: |
@@ -63,7 +63,7 @@ Supported types: \ref bool "bool" / \ref uint8 / \ref uint16 / \ref uint32 / \re
 | xor_uint32: | > , < , >= , <= , == , != |
 | xor_uint64: | > , < , >= , <= , == , != |
 
-@subsection a3p_cast casting
+@subsection shared3p_cast casting
 
 | type     | castings               |
 | :------: | :--------------------: |
