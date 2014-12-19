@@ -103,6 +103,26 @@ D xor_uint32[[1]] aes128EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
 
 /** @}*/
 
+/**
+* @param expandedKey - an aes128 expanded key of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey" and \ref aes_expandkey "aesExpandKey"
+* @param plainText - a \ref string "string" converted to a \ref xor_uint32 "xor_uint32" vector
+* @pre the size of **expandedKey** has to be dividable by 4
+* @pre the size of **plainText** has to be dividable by 4
+* @pre the size of **expandedKey** has to be 4 * 11
+*/
+template <domain D : shared3p>
+D xor_uint32[[1]] aes128SingleKeyEncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {
+    assert(size(plainText) > 0);
+    assert((size(expandedKey) % 4) == 0);
+    assert((size(plainText) % 4) == 0);
+    assert(size(expandedKey) == (4 * 11));
+    D xor_uint32[[1]] cipherText (size(plainText));
+    __syscall("shared3p::aes128_single_key_xor_uint32_vec", __domainid(D), plainText, expandedKey, cipherText);
+    return cipherText;
+}
+
+/** @}*/
+
 /*******************************************************************************
 ********************************************************************************
 **                                                                            **
