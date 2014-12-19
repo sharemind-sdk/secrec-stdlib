@@ -17,6 +17,20 @@ import shared3p_random;
 /**
 * \endcond
 */
+
+uint AES128_Nk = 4;
+uint AES192_Nk = 6;
+uint AES256_Nk = 8;
+
+uint AES128_Nb = 4;
+uint AES192_Nb = 4;
+uint AES256_Nb = 4;
+
+uint AES128_Nr = 10;
+uint AES192_Nr = 12;
+uint AES256_Nr = 14;
+
+
 /**
 * @file
 * \defgroup shared3p_aes shared3p_aes.sc
@@ -46,12 +60,12 @@ import shared3p_random;
  */
 
 /**
-*  @pre ( \ref uint64 "uint" max value ) / 4 >= blocks
+*  @pre ( \ref uint64 "uint" max value ) / AES128_Nk >= blocks
 */
 template <domain D : shared3p>
 D xor_uint32[[1]] aes128Genkey(uint blocks) {
-    assert(UINT64_MAX / 4 >= blocks); // Check for overflow
-    D xor_uint32[[1]] r (blocks * 4);
+    assert(UINT64_MAX / AES128_Nk >= blocks); // Check for overflow
+    D xor_uint32[[1]] r (blocks * AES128_Nk);
     r = randomize(r);
     return r;
 }
@@ -65,12 +79,12 @@ D xor_uint32[[1]] aes128Genkey(uint blocks) {
  */
 
 /**
-*  @pre the size of **aeskey** has to be dividable by 4
+*  @pre the size of **aeskey** has to be dividable by AES128_Nk
 */
 template <domain D : shared3p>
 D xor_uint32[[1]] aes128ExpandKey(D xor_uint32[[1]] aeskey) {
-    assert((size(aeskey) % 4) == 0);
-    D xor_uint32[[1]] expandedKey (size(aeskey) * 11);
+    assert((size(aeskey) % AES128_Nk) == 0);
+    D xor_uint32[[1]] expandedKey (size(aeskey) * (AES128_Nr + 1));
     __syscall("shared3p::aes128_xor_uint32_vec_expand_key", __domainid(D), aeskey, expandedKey);
     return expandedKey;
 }
@@ -86,36 +100,32 @@ D xor_uint32[[1]] aes128ExpandKey(D xor_uint32[[1]] aeskey) {
 /**
 * @param expandedKey - an aes128 expanded key of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey" and \ref aes_expandkey "aesExpandKey"
 * @param plainText - a \ref string "string" converted to a \ref xor_uint32 "xor_uint32" vector
-* @pre the size of **expandedKey** has to be dividable by 4
-* @pre the size of **plainText** has to be dividable by 4
-* @pre ( **plainText** / 4 ) == ( size of **expandedKey** ) / (4 * 11)
+* @pre the size of **expandedKey** has to be dividable by (AES128_Nb * (AES128_Nr + 1))
+* @pre the size of **plainText** has to be dividable by AES128_Nb
+* @pre ( **plainText** / AES128_Nb ) == ( size of **expandedKey** ) / (AES128_Nb * (AES128_Nr + 1))
 */
 template <domain D : shared3p>
 D xor_uint32[[1]] aes128EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {
     assert(size(plainText) > 0);
-    assert((size(expandedKey) % 4) == 0);
-    assert((size(plainText) % 4) == 0);
-    assert((size(plainText) / 4) == (size(expandedKey) / (4 * 11)));
+    assert((size(expandedKey) % (AES128_Nb * (AES128_Nr + 1))) == 0);
+    assert((size(plainText) % AES128_Nb) == 0);
+    assert((size(plainText) / AES128_Nb) == (size(expandedKey) / (AES128_Nb * (AES128_Nr + 1))));
     D xor_uint32[[1]] cipherText (size(plainText));
     __syscall("shared3p::aes128_xor_uint32_vec", __domainid(D), plainText, expandedKey, cipherText);
     return cipherText;
 }
 
-/** @}*/
-
 /**
 * @param expandedKey - an aes128 expanded key of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey" and \ref aes_expandkey "aesExpandKey"
 * @param plainText - a \ref string "string" converted to a \ref xor_uint32 "xor_uint32" vector
-* @pre the size of **expandedKey** has to be dividable by 4
-* @pre the size of **plainText** has to be dividable by 4
-* @pre the size of **expandedKey** has to be 4 * 11
+* @pre the size of **plainText** has to be dividable by AES128_Nb
+* @pre the size of **expandedKey** has to be (AES128_Nb * (AES128_Nr + 1))
 */
 template <domain D : shared3p>
 D xor_uint32[[1]] aes128SingleKeyEncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {
     assert(size(plainText) > 0);
-    assert((size(expandedKey) % 4) == 0);
-    assert((size(plainText) % 4) == 0);
-    assert(size(expandedKey) == (4 * 11));
+    assert((size(plainText) % AES128_Nb) == 0);
+    assert(size(expandedKey) == (AES128_Nb * (AES128_Nr + 1)));
     D xor_uint32[[1]] cipherText (size(plainText));
     __syscall("shared3p::aes128_single_key_xor_uint32_vec", __domainid(D), plainText, expandedKey, cipherText);
     return cipherText;
@@ -137,34 +147,34 @@ D xor_uint32[[1]] aes128SingleKeyEncryptEcb(D xor_uint32[[1]] expandedKey, D xor
  */
 
 /**
-*  @pre ( \ref uint64 "uint" max value ) / 6 >= blocks
+*  @pre ( \ref uint64 "uint" max value ) / AES192_Nk >= blocks
 */
-/*
+
 template <domain D : shared3p>
 D xor_uint32[[1]] aes192Genkey(uint blocks) {
-    assert(UINT64_MAX / 6 >= blocks); // Check for overflow
-    D xor_uint32[[1]] r (blocks * 6);
+    assert(UINT64_MAX / AES192_Nk >= blocks); // Check for overflow
+    D xor_uint32[[1]] r (blocks * AES192_Nk);
     r = randomize(r);
     return r;
 }
-*/
+
 /** @}*/
 /** \addtogroup <aes_expandkey>
  *  @{
  */
 
 /**
-*  @pre the size of **aeskey** has to be dividable by 6
+*  @pre the size of **aeskey** has to be dividable by AES192_Nk
 */
-/*
+
 template <domain D : shared3p>
 D xor_uint32[[1]] aes192ExpandKey(D xor_uint32[[1]] aeskey) {
-    assert((size(aeskey) % 6) == 0);
-    D xor_uint32[[1]] expandedKey ((size(aeskey) / 6) * 4 * 13);
+    assert((size(aeskey) % AES192_Nk) == 0);
+    D xor_uint32[[1]] expandedKey ((size(aeskey) / AES192_Nk) * AES192_Nb * (AES192_Nr + 1));
     __syscall("shared3p::aes192_xor_uint32_vec_expand_key", __domainid(D), aeskey, expandedKey);
     return expandedKey;
 }
-*/
+
 /** @}*/
 /** \addtogroup <aes_encrypt>
  *  @{
@@ -174,22 +184,22 @@ D xor_uint32[[1]] aes192ExpandKey(D xor_uint32[[1]] aeskey) {
 /**
 * @param expandedKey - an aes192 expanded key of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey" and \ref aes_expandkey "aesExpandKey"
 * @param plainText - a \ref string "string" converted to a \ref xor_uint32 "xor_uint32" vector
-* @pre the size of **expandedKey** has to be dividable by 4
-* @pre the size of **plainText** has to be dividable by 4
-* @pre ( **plainText** / 4 ) == ( size of **expandedKey** ) / (4 * 13)
+* @pre the size of **expandedKey** has to be dividable by (AES192_Nb * (AES192_Nr + 1))
+* @pre the size of **plainText** has to be dividable by AES192_Nb
+* @pre ( **plainText** / AES192_Nb ) == ( size of **expandedKey** ) / (AES192_Nb * (AES192_Nr + 1))
 */
-/*
+
 template <domain D : shared3p>
 D xor_uint32[[1]] aes192EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {
     assert(size(plainText) > 0);
-    assert((size(expandedKey) % 4) == 0);
-    assert((size(plainText) % 4) == 0);
-    assert((size(plainText) / 4) == (size(expandedKey) / (4 * 13)));
+    assert((size(expandedKey) % (AES192_Nb * (AES192_Nr + 1))) == 0);
+    assert((size(plainText) % AES192_Nb) == 0);
+    assert((size(plainText) / AES192_Nb) == (size(expandedKey) / (AES192_Nb * (AES192_Nr + 1))));
     D xor_uint32[[1]] cipherText (size(plainText));
     __syscall("shared3p::aes192_xor_uint32_vec", __domainid(D), plainText, expandedKey, cipherText);
     return cipherText;
 }
-*/
+
 /** @}*/
 
 /*******************************************************************************
@@ -205,34 +215,34 @@ D xor_uint32[[1]] aes192EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
  */
 
 /**
-*  @pre ( \ref uint64 "uint" max value ) / 8 >= blocks
+*  @pre ( \ref uint64 "uint" max value ) / AES256_Nk >= blocks
 */
-/*
+
 template <domain D : shared3p>
 D xor_uint32[[1]] aes256Genkey(uint blocks) {
-    assert(UINT64_MAX / 8 >= blocks); // Check for overflow
-    D xor_uint32[[1]] r (blocks * 8);
+    assert(UINT64_MAX / AES256_Nk >= blocks); // Check for overflow
+    D xor_uint32[[1]] r (blocks * AES256_Nk);
     r = randomize(r);
     return r;
 }
-*/
+
 /** @}*/
 /** \addtogroup <aes_expandkey>
  *  @{
  */
 
 /**
-*  @pre the size of **aeskey** has to be dividable by 8
+*  @pre the size of **aeskey** has to be dividable by AES256_Nk
 */
-/*
+
 template <domain D : shared3p>
 D xor_uint32[[1]] aes256ExpandKey(D xor_uint32[[1]] aeskey) {
-    assert((size(aeskey) % 8) == 0);
-    D xor_uint32[[1]] expandedKey ((size(aeskey) / 8) * 4 * 15);
+    assert((size(aeskey) % AES256_Nk) == 0);
+    D xor_uint32[[1]] expandedKey ((size(aeskey) / AES256_Nk) * AES256_Nb * (AES256_Nr + 1));
     __syscall("shared3p::aes256_xor_uint32_vec_expand_key", __domainid(D), aeskey, expandedKey);
     return expandedKey;
 }
-*/
+
 /** @}*/
 /** \addtogroup <aes_encrypt>
  *  @{
@@ -242,21 +252,21 @@ D xor_uint32[[1]] aes256ExpandKey(D xor_uint32[[1]] aeskey) {
 /**
 * @param expandedKey - an aes256 expanded key of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey" and \ref aes_expandkey "aesExpandKey"
 * @param plainText - a \ref string "string" converted to a \ref xor_uint32 "xor_uint32" vector
-* @pre the size of **expandedKey** has to be dividable by 4
-* @pre the size of **plainText** has to be dividable by 4
-* @pre ( **plainText** / 4 ) == ( size of **expandedKey** ) / (4 * 15)
+* @pre the size of **expandedKey** has to be dividable by (AES256_Nb * (AES256_Nr + 1))
+* @pre the size of **plainText** has to be dividable by AES256_Nb
+* @pre ( **plainText** / AES256_Nb ) == ( size of **expandedKey** ) / (AES256_Nb * (AES256_Nr + 1))
 */
-/*
+
 template <domain D : shared3p>
 D xor_uint32[[1]] aes256EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {
     assert(size(plainText) > 0);
-    assert((size(expandedKey) % 4) == 0);
-    assert((size(plainText) % 4) == 0);
-    assert((size(plainText) / 4) == (size(expandedKey) / (4 * 15)));
+    assert((size(expandedKey) % (AES256_Nb * (AES256_Nr + 1))) == 0);
+    assert((size(plainText) % AES256_Nb) == 0);
+    assert((size(plainText) / AES256_Nb) == (size(expandedKey) / (AES256_Nb * (AES256_Nr + 1))));
     D xor_uint32[[1]] cipherText (size(plainText));
     __syscall("shared3p::aes256_xor_uint32_vec", __domainid(D), plainText, expandedKey, cipherText);
     return cipherText;
 }
-*/
+
 /** @}*/
 /** @}*/
