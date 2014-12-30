@@ -1185,9 +1185,142 @@ D float64[[N]] operator / (D float64[[N]] arr, float64[[N]] pubArr) {
     return arr;
 }
 
+
+/*******************************
+    modc
+********************************/
+
+// modc on uint8 and uint16 is unstable and produces wrong results. Worst case scenario results in a total crash of miners.
+/*
+template <domain D : shared3p>
+D uint8 operator % (D uint8 a, uint8 b) {
+    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] operator % (D uint8[[1]] a, uint8[[1]] b) {
+    assert(size(a) == size(b));
+    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
+}
+
+template <domain D : shared3p, dim N>
+D uint8[[N]] operator % (D uint8[[N]] arr, uint8 pubScalar) {
+    uint8[[1]] pubVec (size(arr)) = pubScalar;
+    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
+        arr, __cref pubVec, arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D uint8[[N]] operator % (D uint8[[N]] arr, uint8[[N]] pubArr) {
+    assert(shapesAreEqual(arr,pubArr));
+    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
+       arr, __cref pubArr, arr);
+    return arr;
+}
+
+template <domain D : shared3p>
+D uint16 operator % (D uint16 a, uint16 b) {
+    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] operator % (D uint16[[1]] a, uint16[[1]] b) {
+    assert(size(a) == size(b));
+    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
+}
+
+template <domain D : shared3p, dim N>
+D uint16[[N]] operator % (D uint16[[N]] arr, uint16 pubScalar) {
+    uint16[[1]] pubVec (size(arr)) = pubScalar;
+    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
+        arr, __cref pubVec, arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D uint16[[N]] operator % (D uint16[[N]] arr, uint16[[N]] pubArr) {
+    assert(shapesAreEqual(arr,pubArr));
+    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
+       arr, __cref pubArr, arr);
+    return arr;
+}
+*/
+
+template <domain D : shared3p>
+D uint32 operator % (D uint32 a, uint32 b) {
+    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] operator % (D uint32[[1]] a, uint32[[1]] b) {
+    assert(size(a) == size(b));
+    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
+}
+
+template <domain D : shared3p, dim N>
+D uint32[[N]] operator % (D uint32[[N]] arr, uint32 pubScalar) {
+    uint32[[1]] pubVec (size(arr)) = pubScalar;
+    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
+        arr, __cref pubVec, arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D uint32[[N]] operator % (D uint32[[N]] arr, uint32[[N]] pubArr) {
+    assert(shapesAreEqual(arr,pubArr));
+    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
+       arr, __cref pubArr, arr);
+    return arr;
+}
+
+template <domain D : shared3p>
+D uint operator % (D uint a, uint b) {
+    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
+}
+
+template <domain D : shared3p>
+D uint[[1]] operator % (D uint[[1]] a, uint[[1]] b) {
+    assert(size(a) == size(b));
+    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
+}
+
+template <domain D : shared3p, dim N>
+D uint[[N]] operator % (D uint[[N]] arr, uint pubScalar) {
+    uint[[1]] pubVec (size(arr)) = pubScalar;
+    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
+        arr, __cref pubVec, arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D uint[[N]] operator % (D uint[[N]] arr, uint[[N]] pubArr) {
+    assert(shapesAreEqual(arr,pubArr));
+    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
+       arr, __cref pubArr, arr);
+    return arr;
+}
+
 /**
 * \endcond
 */
+
 
 /*****************************************************
     inv, sqrt, sin, ln, exp, erf, isNegligible
