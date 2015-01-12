@@ -680,7 +680,7 @@ INPUT                  = ../lib/table_database.sc \
                          ../lib/shared3p_string.sc \
                          ../lib/shared3p.sc \
                          ../lib/shared3p_oblivious.sc \
-                         ../lib/doc/code_stucture.sc \
+                         ../lib/doc/code_structure.sc \
                          ../lib/doc/types.sc \
                          ../lib/doc/variables.sc \
                          ../lib/doc/expressions.sc \
