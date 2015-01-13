@@ -7,6 +7,9 @@
  * code is subject to the appropriate license agreement.
  */
 
+/**
+ * \cond
+ */
 module shared3p_statistics_testing;
 
 import shared3p_matrix;
@@ -17,7 +20,9 @@ import shared3p_statistics_common;
 import shared3p_statistics_summary;
 import shared3p;
 import stdlib;
-
+/**
+ * \endcond
+ */
 
 /**
  * @file

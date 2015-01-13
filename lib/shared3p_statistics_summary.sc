@@ -564,6 +564,10 @@ D float64 covariance (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] fi
 
 // Internal functions - not to be documented and exported
 
+/**
+ * \cond
+ */
+
 // This INTERNAL version of mean assumes that the data is already filtered
 template <domain D, type T, type FT, type UT>
 D FT _mean (D T[[1]] data, D UT count){
@@ -712,3 +716,6 @@ D FT _covariance (D T[[1]] sample1, D T[[1]] sample2) {
 
     return mult * (FT)((T) n * sums[0] - sums[1] * sums[2]);
 }
+/**
+ * \endcond
+ */

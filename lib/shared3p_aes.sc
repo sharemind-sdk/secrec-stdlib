@@ -18,6 +18,9 @@ import shared3p_random;
 * \endcond
 */
 
+/**
+ * \cond
+ */
 uint AES128_Nk = 4;
 uint AES192_Nk = 6;
 uint AES256_Nk = 8;
@@ -29,6 +32,9 @@ uint AES256_Nb = 4;
 uint AES128_Nr = 10;
 uint AES192_Nr = 12;
 uint AES256_Nr = 14;
+/**
+ * \endcond
+ */
 
 
 /**
