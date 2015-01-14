@@ -178,7 +178,7 @@ void test_product(T data){
 	}
 	else{
 		all_tests = all_tests +1;
-		print("FAILURE! Sum failed");
+		print("FAILURE! Product failed");
 	}
 }
 

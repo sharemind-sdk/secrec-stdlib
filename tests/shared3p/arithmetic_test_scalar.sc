@@ -596,14 +596,20 @@ void main(){
 	****************************************************************************/
 	print("TEST 22: Division with two private values");
 	{
+        /*
 		print("uint8");
 		pd_shared3p uint8 a = 15; pd_shared3p uint8 b = 174; pd_shared3p uint8 c = b/a;
 		if(declassify(c) == 11){Success();}else{Failure("Expected 11",c);}
+        */
+        Failure("No div_uint8", 0);
 	}
 	{
+        /*
 		print("uint16");
 		pd_shared3p uint16 a = 175; pd_shared3p uint16 b = 45876; pd_shared3p uint16 c = b/a;
 		if(declassify(c) == 262){Success();}else{Failure("Expected 262",c);}
+        */
+        Failure("No div_uint16", 0);
 	}
 	{
 		print("uint32");
@@ -611,20 +617,29 @@ void main(){
 		if(declassify(c) == 9090){Success();}else{Failure("Expected 9090",c);}
 	}
 	{
+        /*
 		print("uint");
 		pd_shared3p uint a = 2578953; pd_shared3p uint b = 1872698523698; pd_shared3p uint c = b/a;
 		if(declassify(c) == 726146){Success();}else{Failure("Expected 726146",c);}
+        */
+        Failure("No div_uint64", 0);
 	}
 	print("TEST 23: Division with one private one public value");
 	{
+        /*
 		print("uint8");
 		pd_shared3p uint8 a = 15; uint8 b = 174; pd_shared3p uint8 c = b/a;
 		if(declassify(c) == 11){Success();}else{Failure("Expected 11",c);}
+        */
+        Failure("No div_uint8", 0);
 	}
 	{
+        /*
 		print("uint16");
 		pd_shared3p uint16 a = 175; uint16 b = 45876; pd_shared3p uint16 c = b/a;
 		if(declassify(c) == 262){Success();}else{Failure("Expected 262",c);}
+        */
+        Failure("No div_uint16", 0);
 	}
 	{
 		print("uint32");
@@ -632,20 +647,29 @@ void main(){
 		if(declassify(c) == 9090){Success();}else{Failure("Expected 9090",c);}
 	}
 	{
+        /*
 		print("uint");
 		pd_shared3p uint a = 2578953; uint b = 1872698523698; pd_shared3p uint c = b/a;
 		if(declassify(c) == 726146){Success();}else{Failure("Expected 726146",c);}
+        */
+        Failure("No div_uint64", 0);
 	}
 	print("TEST 24: Division with one private one public value(2)");
 	{
+        /*
 		print("uint8");
 		pd_shared3p uint8 a = 15; uint8 b = 174; pd_shared3p uint8 c = a/b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_uint8", 0);
 	}
 	{
+        /*
 		print("uint16");
 		pd_shared3p uint16 a = 175; uint16 b = 45876; pd_shared3p uint16 c = a/b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_uint16", 0);
 	}
 	{
 		print("uint32");
@@ -653,20 +677,29 @@ void main(){
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
 	}
 	{
+        /*
 		print("uint");
 		pd_shared3p uint a = 2578953; uint b = 1872698523698; pd_shared3p uint c = a/b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_uint64", 0);
 	}
 	print("TEST 26: 0 divided with random private values");
 	{
+        /*
 		print("uint8");
 		pd_shared3p uint8 a = 15; pd_shared3p uint8 b = 0; pd_shared3p uint8 c = b/a;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_uint8", 0);
 	}
 	{
+        /*
 		print("uint16");
 		pd_shared3p uint16 a = 175; pd_shared3p uint16 b = 0; pd_shared3p uint16 c = b/a;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_uint16", 0);
 	}
 	{
 		print("uint32");
@@ -674,20 +707,29 @@ void main(){
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
 	}
 	{
+        /*
 		print("uint");
 		pd_shared3p uint a = 2578953; pd_shared3p uint b = 0; pd_shared3p uint c = b/a;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_uint64", 0);
 	}
 	print("TEST 29: Division accuracy private");
 	{
+        /*
 		print("uint8");
 		pd_shared3p uint8 a = UINT8_MAX; pd_shared3p uint8 b = UINT8_MAX -1 ; pd_shared3p uint8 c = b/a;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_uint8", 0);
 	}
 	{
+        /*
 		print("uint16");
 		pd_shared3p uint16 a = UINT16_MAX; pd_shared3p uint16 b = UINT16_MAX -1; pd_shared3p uint16 c = b/a;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_uint16", 0);
 	}
 	{
 		print("uint32");
@@ -695,29 +737,44 @@ void main(){
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
 	}
 	{
+        /*
 		print("uint");
 		pd_shared3p uint a = UINT64_MAX; pd_shared3p uint b = UINT64_MAX-1; pd_shared3p uint c = b/a;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_uint64", 0);
 	}
 	{
+        /*
 		print("int8");
 		pd_shared3p int8 a = INT8_MAX; pd_shared3p int8 b = INT8_MAX-1; pd_shared3p int8 c = b/a;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_int8", 0);
 	}
 	{
+        /*
 		print("int16");
 		pd_shared3p int16 a = INT16_MAX; pd_shared3p int16 b = INT16_MAX-1; pd_shared3p int16 c = b/a;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_int16", 0);
 	}
 	{
+        /*
 		print("int32");
 		pd_shared3p int32 a = INT32_MAX; pd_shared3p int32 b = INT32_MAX-1; pd_shared3p int32 c = b/a;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_int32", 0);
 	}
 	{
+        /*
 		print("int");
 		pd_shared3p int a = INT64_MAX; pd_shared3p int b = INT64_MAX-1; pd_shared3p int c = b/a;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No div_int64", 0);
 	}
 	/****************************************************************************
     *****************************************************************************
@@ -730,14 +787,20 @@ void main(){
 	// as for uint32, it will give a SHAREMIND_VM_PROCESS_GENERAL_SYSCALL_FAILURE
 	print("TEST 31: Modulo private values");
 	{
+        /*
 		print("uint8");
 		pd_shared3p uint8 b = 15; pd_shared3p uint8 a = 174; pd_shared3p uint8 c = a%b;
 		if(declassify(c) == 9){Success();}else{Failure("Expected 9",c);}
+        */
+        Failure("No mod_uint8", 0);
 	}
 	{
+        /*
 		print("uint16");
 		pd_shared3p uint16 b = 175; pd_shared3p uint16 a = 45876; pd_shared3p uint16 c = a%b;
 		if(declassify(c) == 26){Success();}else{Failure("Expected 26",c);}
+        */
+        Failure("No mod_uint16", 0);
 	}
 	{
 		// unlike other data types, uint32 throws SHAREMIND_VM_PROCESS_GENERAL_SYSCALL_FAILURE
@@ -747,40 +810,61 @@ void main(){
 		if(declassify(c) == 537){Success();}else{Failure("Expected 537",c);}
 	}
 	{
+        /*
 		print("uint");
 		pd_shared3p uint b = 2578953; pd_shared3p uint a = 1872698523698; pd_shared3p uint c = a%b;
 		if(declassify(c) == 2118560){Success();}else{Failure("Expected 2118560",c);}
+        */
+        Failure("No mod_uint64", 0);
 	}
 	{
+        /*
 		print("int8");
 		pd_shared3p int8 b = -25; pd_shared3p int8 a = 50; pd_shared3p int8 c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int8", 0);
 	}
 	{
+        /*
 		print("int16");
 		pd_shared3p int16 b = -2264; pd_shared3p int16 a = 22468; pd_shared3p int16 c = a%b;
 		if(declassify(c) == 2092){Success();}else{Failure("Expected 2092",c);}
+        */
+        Failure("No mod_int16", 0);
 	}
 	{
+        /*
 		print("int32");
 		pd_shared3p int32 b = -12549; pd_shared3p int32 a = 21485747; pd_shared3p int32 c = a%b;
 		if(declassify(c) == 1859){Success();}else{Failure("Expected 1859",c);}
+        */
+        Failure("No mod_int32", 0);
 	}
 	{
+        /*
 		print("int");
 		pd_shared3p int b = 2954; pd_shared3p int a = 93214654775807; pd_shared3p int c = a%b;
 		if(declassify(c) == 257){Success();}else{Failure("Expected 257",c);}
+        */
+        Failure("No mod_int64", 0);
 	}
 	print("TEST 32: Modulo with private and public values");
 	{
+        /*
 		print("uint8");
 		pd_shared3p uint8 b = 15; uint8 a = 174; pd_shared3p uint8 c = a%b;
 		if(declassify(c) == 9){Success();}else{Failure("Expected 9",c);}
+        */
+        Failure("No mod_uint8", 0);
 	}
 	{
+        /*
 		print("uint16");
 		pd_shared3p uint16 b = 175; uint16 a = 45876; pd_shared3p uint16 c = a%b;
 		if(declassify(c) == 26){Success();}else{Failure("Expected 26",c);}
+        */
+        Failure("No mod_uint16", 0);
 	}
 	{
 		// unlike other data types, uint32 throws SHAREMIND_VM_PROCESS_GENERAL_SYSCALL_FAILURE
@@ -790,29 +874,44 @@ void main(){
 		if(declassify(c) == 537){Success();}else{Failure("Expected 537",c);}
 	}
 	{
+        /*
 		print("uint");
 		pd_shared3p uint b = 2578953; uint a = 1872698523698; pd_shared3p uint c = a%b;
 		if(declassify(c) == 2118560){Success();}else{Failure("Expected 2118560",c);}
+        */
+        Failure("No mod_uint64", 0);
 	}
 	{
+        /*
 		print("int8");
 		pd_shared3p int8 b = -25; int8 a = 50; pd_shared3p int8 c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int8", 0);
 	}
 	{
+        /*
 		print("int16");
 		pd_shared3p int16 b = -2264; int16 a = 22468; pd_shared3p int16 c = a%b;
 		if(declassify(c) == 2092){Success();}else{Failure("Expected 2092",c);}
+        */
+        Failure("No mod_int16", 0);
 	}
 	{
+        /*
 		print("int32");
 		pd_shared3p int32 b = -12549; int32 a = 21485747; pd_shared3p int32 c = a%b;
 		if(declassify(c) == 1859){Success();}else{Failure("Expected 1859",c);}
+        */
+        Failure("No mod_int32", 0);
 	}
 	{
+        /*
 		print("int");
 		pd_shared3p int b = 2954; int a = 93214654775807; pd_shared3p int c = a%b;
 		if(declassify(c) == 257){Success();}else{Failure("Expected 257",c);}
+        */
+        Failure("No mod_int64", 0);
 	}
 	print("TEST 33: Modulo with private and public values(2)");
 	{
@@ -838,47 +937,77 @@ void main(){
 		if(declassify(c) == 2118560){Success();}else{Failure("Expected 2118560",c);}
 	}
 	{
+        /*
 		print("int8");
 		pd_shared3p int8 b = 50; int8 a = -25; pd_shared3p int8 c = b%a;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int8", 0);
 	}
 	{
+        /*
 		print("int16");
 		pd_shared3p int16 b = 22468; int16 a = -2264; pd_shared3p int16 c = b%a;
 		if(declassify(c) == 2092){Success();}else{Failure("Expected 2092",c);}
+        */
+        Failure("No mod_int16", 0);
 	}
 	{
+        /*
 		print("int32");
 		pd_shared3p int32 b = 21485747; int32 a = -12549; pd_shared3p int32 c = b%a;
 		if(declassify(c) == 1859){Success();}else{Failure("Expected 1859",c);}
+        */
+        Failure("No mod_int32", 0);
 	}
 	{
+        /*
 		print("int");
 		pd_shared3p int b = 93214654775807; int a = 2954; pd_shared3p int c = b%a;
 		if(declassify(c) == 257){Success();}else{Failure("Expected 257",c);}
+        */
+        Failure("No mod_int64", 0);
 	}
 	print("TEST 34: Modulo with important private values");
 	{
+        /*
 		print("uint8");
 		pd_shared3p uint8 b = 1; pd_shared3p uint8 a = 0; pd_shared3p uint8 c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_uint8", 0);
 
-		b = 1;  a = 1;  c = a%b;
+		/*
+        b = 1;  a = 1;  c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_uint8", 0);
 
-		b = UINT8_MAX;  a = UINT8_MAX;  c = a%b;
+		/*
+        b = UINT8_MAX;  a = UINT8_MAX;  c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_uint8", 0);
 	}
 	{
+        /*
 		print("uint16");
 		pd_shared3p uint16 b = 1; pd_shared3p uint16 a = 0; pd_shared3p uint16 c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_uint16", 0);
 
-		b = 1;  a = 1; c = a%b;
+		/*
+        b = 1;  a = 1; c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_uint16", 0);
 
-		b = UINT16_MAX;a = UINT16_MAX;c = a%b;
+		/*
+        b = UINT16_MAX;a = UINT16_MAX;c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_uint16", 0);
 	}
 	{
 		// unlike other data types, uint32 throws SHAREMIND_VM_PROCESS_GENERAL_SYSCALL_FAILURE
@@ -894,59 +1023,104 @@ void main(){
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
 	}
 	{
+        /*
 		print("uint");
 		pd_shared3p uint b = 1; pd_shared3p uint a = 0; pd_shared3p uint c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_uint64", 0);
 
-		b = 1; a = 1;c = a%b;
+		/*
+        b = 1; a = 1;c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_uint64", 0);
 
-		b = UINT64_MAX; a = UINT64_MAX;  c = a%b;
+		/*
+        b = UINT64_MAX; a = UINT64_MAX;  c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_uint64", 0);
 	}
 	{
+        /*
 		print("int8");
 		pd_shared3p int8 b = 1; pd_shared3p int8 a = 0; pd_shared3p int8 c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int8", 0);
 
-		b = 1;  a = 1;  c = a%b;
+		/*
+        b = 1;  a = 1;  c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int8", 0);
 
-		b = INT8_MAX;  a = INT8_MAX;  c = a%b;
+		/*
+        b = INT8_MAX;  a = INT8_MAX;  c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int8", 0);
 	}
 	{
+        /*
 		print("int16");
 		pd_shared3p int16 b = 1; pd_shared3p int16 a = 0; pd_shared3p int16 c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int16", 0);
 
-		b = 1;a = 1;c = a%b;
+		/*
+        b = 1;a = 1;c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int16", 0);
 
-		b = INT16_MAX;a = INT16_MAX;c = a%b;
+		/*
+        b = INT16_MAX;a = INT16_MAX;c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int16", 0);
 	}
 	{
+        /*
 		print("int32");
 		pd_shared3p int32 b = 1; pd_shared3p int32 a = 0; pd_shared3p int32 c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        Failure("No mod_int32", 0);
+        */
 
-		b = 1;a = 1;c = a%b;
+		/*
+        b = 1;a = 1;c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int32", 0);
 
-		b = INT32_MAX;a = INT32_MAX;c = a%b;
+		/*
+        b = INT32_MAX;a = INT32_MAX;c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int32", 0);
 	}
 	{
+        /*
 		print("int");
 		pd_shared3p int b = 1; pd_shared3p int a = 0; pd_shared3p int c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int64", 0);
 
-		b = 1;a = 1;c = a%b;
+		/*
+        b = 1;a = 1;c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int64", 0);
 
-		b = INT64_MAX;a = INT64_MAX;c = a%b;
+		/*
+        b = INT64_MAX;a = INT64_MAX;c = a%b;
 		if(declassify(c) == 0){Success();}else{Failure("Expected 0",c);}
+        */
+        Failure("No mod_int64", 0);
 	}
 	print("TEST 38: private boolean negation (!)");
 	{
