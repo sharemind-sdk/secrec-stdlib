@@ -887,9 +887,13 @@ void main(){
 		bool result = true;
 		pd_shared3p int[[1]] c = {-9223372036854775808,-7036854775808,9223372036854,9223372036854775807};
 		{
+            /*
 			pd_shared3p float32[[1]] b = (float32)(c::int);
 			pd_shared3p float32[[1]] control = {-9223372036854775808,-7036854775808,9223372036854,9223372036854775807};
 			if(!all(declassify(isNegligible(control - b)))){result = false;}
+            */
+            print("FAILURE! casting failed");
+            all_tests += 1;
 		}
 		{
 			pd_shared3p float64[[1]] b = (float64)(c::int);

@@ -915,14 +915,20 @@ void main(){
 	}
 	print("TEST 33: Modulo with private and public values(2)");
 	{
+        /*
 		print("uint8");
 		pd_shared3p uint8 b = 174; uint8 a = 15; pd_shared3p uint8 c = b%a;
 		if(declassify(c) == 9){Success();}else{Failure("Expected 9",c);}
+        */
+        Failure("No mod_uint8", 0);
 	}
 	{
+        /*
 		print("uint16");
 		pd_shared3p uint16 b = 45876; uint16 a = 175 ; pd_shared3p uint16 c = b%a;
 		if(declassify(c) == 26){Success();}else{Failure("Expected 26",c);}
+        */
+        Failure("No mod_uint16", 0);
 	}
 	{
 		// unlike other data types, uint32 throws SHAREMIND_VM_PROCESS_GENERAL_SYSCALL_FAILURE
@@ -932,9 +938,12 @@ void main(){
 		if(declassify(c) == 537){Success();}else{Failure("Expected 537",c);}
 	}
 	{
+        /*
 		print("uint");
 		pd_shared3p uint b = 1872698523698; uint a = 2578953; pd_shared3p uint c = b%a;
 		if(declassify(c) == 2118560){Success();}else{Failure("Expected 2118560",c);}
+        */
+        Failure("No mod_uint64", 0);
 	}
 	{
         /*
