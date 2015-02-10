@@ -39,6 +39,10 @@ void endSection (uint32 section_id) {
     __syscall("ProcessProfiler_endSection", section_id);
 }
 
+void flushProfileLog () {
+    __syscall("ProcessProfiler_flushLog");
+}
+
 
 /**
 * \endcond
