@@ -93,6 +93,7 @@ int64 INT64_MIN = -9223372036854775808;
 * \defgroup abs abs
 * \defgroup round round
 * \defgroup sqrt sqrt
+* \defgroup sin sin
 */
 
 /** \addtogroup <stdlib>
@@ -1796,6 +1797,26 @@ template<dim N>
 float64[[N]] sqrt(float64[[N]] x) {
     float64[[N]] ret = x;
     __syscall("float64_sqrt", __cref x, __ref ret);
+    return ret;
+}
+/** @} */
+
+/** \addtogroup <sin>
+ *  @{
+ *  @brief Function for finding sine.
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ */
+template<dim N>
+float32[[N]] sin(float32[[N]] x) {
+    float32[[N]] ret = x;
+    __syscall("float32_sin", __cref x, __ref ret);
+    return ret;
+}
+
+template<dim N>
+float64[[N]] sin(float64[[N]] x) {
+    float64[[N]] ret = x;
+    __syscall("float64_sin", __cref x, __ref ret);
     return ret;
 }
 /** @} */
