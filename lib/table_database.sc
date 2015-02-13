@@ -57,8 +57,10 @@ import stdlib;
  * \defgroup tdb_get_column_types tdbGetColumnTypes
  * \defgroup tdb_vmap_get_type_name tdbVmapGetTypeName
  * \defgroup tdb_vmap_add_type tdbVmapAddType
+ * \defgroup tdb_vmap_add_vlen_type tdbVmapAddVlenType
  * \defgroup tdb_vmap_add_value_scalar tdbVmapAddValue(scalar)
  * \defgroup tdb_vmap_add_value_vector tdbVmapAddValue(vector)
+ * \defgroup tdb_vmap_add_vlen_value tdbVmapAddVlenValue
  * \defgroup tdb_vmap_get_value tdbVmapGetValue
  */
 
@@ -530,6 +532,23 @@ void tdbVmapAddType(uint id, string paramname, T t) {
 }
 /** @} */
 
+/** \addtogroup <tdb_vmap_add_vlen_type>
+ *  @{
+ *  @brief Add a variable length type to a vector in a vector map
+ *  @note This is used to create a table with a column that contains
+ *  vectors with arbitrary length.
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref string "string"
+ *  @param id - vector map id
+ *  @param paramname - name of the vector to which the type is added
+ *  @param t - a value of the type that's added to the vector
+ */
+template<type T>
+void tdbVmapAddVlenType(uint64 id, string paramname, T t) {
+    string t_dom = "public";
+    __syscall("tdb_vmap_push_back_type", id, __cref paramname, __cref t_dom, __cref "$T", 0::uint64);
+}
+/** @} */
+
 /** \addtogroup <tdb_vmap_add_value_scalar>
  *  @{
  *  @brief Add a scalar value to a vector in a vector map
@@ -543,6 +562,21 @@ void tdbVmapAddValue(uint64 id, string paramname, T value) {
     string t_dom = "public";
     uint64 t_size = sizeof(value);
     __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", t_size, __cref value);
+}
+/** @} */
+
+/** \addtogroup <tdb_vmap_add_vlen_value>
+ *  @{
+ *  @brief Add a string to a vector in a vector map
+ *  @note Supported types - \ref string "string"
+ *  @param id - vector map id
+ *  @paramname - name of the vector to which the value is added
+ *  @param values - vector to be added
+ */
+void tdbVmapAddVlenValue (uint64 id, string paramname, string value) {
+    string t_dom = "public";
+    uint8 [[1]] bytes = __bytes_from_string (value);
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "string", 0::uint64, __cref bytes);
 }
 /** @} */
 
