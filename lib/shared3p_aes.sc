@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -56,7 +56,7 @@ uint AES256_Nr = 14;
 * \defgroup aes_encrypt aesEncryptEcb
 */
 
-/** \addtogroup <shared3p_aes>
+/** \addtogroup shared3p_aes
 *@{
 * @brief Module with AES128/192/256 functions
 */
@@ -69,7 +69,7 @@ uint AES256_Nr = 14;
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <aes_genkey>
+/** \addtogroup aes_genkey
  *  @{
  *  @brief Function for generating a key for AES encryption
  *  @param blocks - an \ref uint64 "uint" type value
@@ -88,7 +88,7 @@ D xor_uint32[[1]] aes128Genkey(uint blocks) {
 }
 
 /** @}*/
-/** \addtogroup <aes_expandkey>
+/** \addtogroup aes_expandkey
  *  @{
  *  @brief Function for expanding a randomly generated AES key
  *  @param aeskey - a 1-dimensional array of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey"
@@ -107,7 +107,7 @@ D xor_uint32[[1]] aes128ExpandKey(D xor_uint32[[1]] aeskey) {
 }
 
 /** @}*/
-/** \addtogroup <aes_encrypt>
+/** \addtogroup aes_encrypt
  *  @{
  *  @brief Function for encrypting with AES algorithm
  *  @return returns a vector of type \ref xor_uint32 "xor_uint32" with the encrypted values
@@ -159,7 +159,7 @@ D xor_uint32[[1]] aes128SingleKeyEncryptEcb(D xor_uint32[[1]] expandedKey, D xor
 *******************************************************************************/
 
 
-/** \addtogroup <aes_genkey>
+/** \addtogroup aes_genkey
  *  @{
  */
 
@@ -176,7 +176,7 @@ D xor_uint32[[1]] aes192Genkey(uint blocks) {
 }
 
 /** @}*/
-/** \addtogroup <aes_expandkey>
+/** \addtogroup aes_expandkey
  *  @{
  */
 
@@ -193,7 +193,7 @@ D xor_uint32[[1]] aes192ExpandKey(D xor_uint32[[1]] aeskey) {
 }
 
 /** @}*/
-/** \addtogroup <aes_encrypt>
+/** \addtogroup aes_encrypt
  *  @{
  */
 
@@ -227,7 +227,7 @@ D xor_uint32[[1]] aes192EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <aes_genkey>
+/** \addtogroup aes_genkey
  *  @{
  */
 
@@ -244,7 +244,7 @@ D xor_uint32[[1]] aes256Genkey(uint blocks) {
 }
 
 /** @}*/
-/** \addtogroup <aes_expandkey>
+/** \addtogroup aes_expandkey
  *  @{
  */
 
@@ -261,7 +261,7 @@ D xor_uint32[[1]] aes256ExpandKey(D xor_uint32[[1]] aeskey) {
 }
 
 /** @}*/
-/** \addtogroup <aes_encrypt>
+/** \addtogroup aes_encrypt
  *  @{
  */
 

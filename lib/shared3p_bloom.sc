@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -36,7 +36,7 @@ import shared3p_string;
 * \defgroup bloomquerymany bloomQueryMany
 */
 
-/** \addtogroup <shared3p_bloom> 
+/** \addtogroup shared3p_bloom
 *@{
 * @brief Module with bloom filter functions
 */
@@ -151,7 +151,7 @@ D xor_uint32 [[2]] dupCols (D xor_uint32[[1]] col, uint n) {
 /**
 * \endcond
 */
-/** \addtogroup <bloominsertmany> 
+/** \addtogroup bloominsertmany
 *@{
 * @brief function for inserting into the bloom filter
 * @note **D** - shared3p protection domain
@@ -175,7 +175,7 @@ D bool[[1]] bloomInsertMany (D xor_uint32[[1]] elem, D bool[[1]] filter, uint32[
 }
 
 /** @}*/
-/** \addtogroup <bloomquerymany> 
+/** \addtogroup bloomquerymany
 *@{
 * @brief function for querying from the bloom filter
 * @note **D** - shared3p protection domain

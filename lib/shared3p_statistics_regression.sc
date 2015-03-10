@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -39,13 +39,13 @@ import oblivious;
  * \defgroup shared3p_regression_method constants
  */
 
-/** \addtogroup <shared3p_statistics_regression>
+/** \addtogroup shared3p_statistics_regression
  *  @{
  *  @brief Module for performing regression analysis
  */
 
 /**
- * \addtogroup <shared3p_regression_method>
+ * \addtogroup shared3p_regression_method
  * @{
  * @brief Constants used for specifying the method used in linear
  * regression modeling with multiple explanatory variables.
@@ -98,7 +98,7 @@ D FT[[1]] _simpleLinear(D T[[1]] x, D T[[1]] y, D bool[[1]] filter) {
 /** \endcond */
 
 /**
- * \addtogroup <shared3p_simple_linear_regression>
+ * \addtogroup shared3p_simple_linear_regression
  * @{
  * @brief Fitting of simple linear models
  * @note **D** - shared3p protection domain
@@ -506,7 +506,7 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method
 /** \endcond */
 
 /**
- * \addtogroup <shared3p_linear_regression>
+ * \addtogroup shared3p_linear_regression
  * @{
  * @brief Fitting of linear models with multiple explanatory variables
  * @note **D** - shared3p protection domain
@@ -535,7 +535,7 @@ D float64[[1]] linearRegression(D int64[[2]] variables, D int64[[1]] dependent, 
 /** @} */
 
 /**
- * \addtogroup <shared3p_linear_regression_cg>
+ * \addtogroup shared3p_linear_regression_cg
  * @{
  * @brief Fitting of linear models with multiple explanatory variables
  * using the conjugate gradient method

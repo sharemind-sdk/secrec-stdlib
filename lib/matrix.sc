@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -52,13 +52,13 @@ import stdlib;
 	transpose
 ********************************/
 
-/** \addtogroup <matrix> 
+/** \addtogroup matrix
 *@{
 *
 * @brief Module with functions for manipulating matrices and vectors
 */
 
-/** \addtogroup <transpose> 
+/** \addtogroup transpose
  *  @{
  *  @brief Function for transposing matrices
  *  @note **D** - all protection domains
@@ -84,9 +84,9 @@ D T[[2]] transpose (D T[[2]] mat) {
 * @param arr - a 3-dimensional array
 * @note Transposes across the last two dimensions
 * @return returns a 2-dimensional array transposed across the last two dimension
-*/ 
+*/
 template <domain D, type T>
-D T[[3]] transpose (D T[[3]] arr) {	
+D T[[3]] transpose (D T[[3]] arr) {
 	uint[[1]] matShape = shape (arr);
 	D T[[3]] result (matShape[0], matShape[2], matShape[1]);
 
@@ -104,12 +104,12 @@ D T[[3]] transpose (D T[[3]] arr) {
       Unit matrix
 ********************************/
 
-/** \addtogroup <unitmatrix> 
+/** \addtogroup unitmatrix
  *  @{
  *  @brief Function for creating a unit matrix
  *  @note **D** - all protection domains
  *  @param x - an \ref uint64 "uint64"/\ref uint64 "uint" type parameter, for specifying the size of the unit matrix
- *  @return returns an uint64/uint type unit matrix of size x  
+ *  @return returns an uint64/uint type unit matrix of size x
  */
 
 template <domain D>
@@ -121,13 +121,13 @@ D uint[[2]] unitMatrix(D uint x){
 	return mat;
 }
 
-/** @}*/	
+/** @}*/
 
 /*******************************
 	rowSums, colSums
 ********************************/
 
-/** \addtogroup <rowsums> 
+/** \addtogroup rowsums
  *  @{
  *  @brief Function for summarizing the rows of a matrix
  *  @note **D** - all protection domains
@@ -214,7 +214,7 @@ D float64[[1]] rowSums (D float64[[2]] mat) {
 }
 
 /** @}*/
-/** \addtogroup <colsums> 
+/** \addtogroup colsums
  *  @{
  *  @brief Function for summarizing the columns of a matrix
  *  @note **D** - all protection domains
@@ -284,20 +284,20 @@ D float64[[1]] colSums (D float64[[2]] mat) {
 	dotProduct
 ********************************/
 
-/** \addtogroup <dotproduct> 
+/** \addtogroup dotproduct
  *  @{
  *  @brief Function for finding the dot product of two vectors/matrices
  *  @note **D** - all protection domains
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  */
 
-/** \addtogroup <dotproduct_vec> 
+/** \addtogroup dotproduct_vec
  *  @{
  *  @brief Function for finding the dot product of two vectors
  *  @note **D** - all protection domains
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @return returns a scalar with the dot product of the two input vectors
- */ 
+ */
 
 template <domain D>
 D uint8 dotProduct (D uint8[[1]] x, D uint8[[1]] y) {
@@ -370,14 +370,14 @@ D float64 dotProduct (D float64[[1]] x, D float64[[1]] y) {
 }
 
 /** @}*/
-/** \addtogroup <dotproduct_mat> 
+/** \addtogroup dotproduct_mat
  *  @{
  *  @brief Function for finding the dot product of two matrices
  *  @note **D** - all protection domains
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x,y - matrices of supported type
  *  @return returns a vector with the dot product of each row of the two input matrices
- */ 
+ */
 
 template <domain D>
 D uint8[[1]] dotProduct (D uint8[[2]] x, D uint8[[2]] y) {
@@ -486,7 +486,7 @@ D float64[[1]] dotProduct (D float64[[2]] x, D float64[[2]] y) {
 	crossProduct
 ********************************/
 
-/** \addtogroup <crossproduct> 
+/** \addtogroup crossproduct
  *  @{
  *  @brief Function for finding the cross product of two vectors/matrices
  *  @note **D** - all protection domains
@@ -494,14 +494,14 @@ D float64[[1]] dotProduct (D float64[[2]] x, D float64[[2]] y) {
  */
 
 
- /** \addtogroup <crossproduct_vec> 
+ /** \addtogroup crossproduct_vec
  *  @{
  *  @brief Function for finding the cross product of two vectors
  *  @note **D** - all protection domains
  *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x,y - vectors of supported type
  *  @return returns a vector with the cross product of the two input vectors
- */ 
+ */
 
 template <domain D>
 D int8[[1]] crossProduct (D int8[[1]] x, D int8[[1]] y) {
@@ -576,14 +576,14 @@ D float64[[1]] crossProduct (D float64[[1]] x, D float64[[1]] y) {
 }
 
 /** @}*/
-/** \addtogroup <crossproduct_mat> 
+/** \addtogroup crossproduct_mat
  *  @{
  *  @brief Function for finding the cross product of two matrices
  *  @note **D** - all protection domains
  *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x,y - matrices of supported type
  *  @return returns a matrix with the cross product of each row of the two input matrices
- */ 
+ */
 
 
 template <domain D>
@@ -593,7 +593,7 @@ D int8[[2]] crossProduct (D int8[[2]] x, D int8[[2]] y) {
 	D int8[[2]] result (xShape[0], xShape[1]);
 
 	for (uint i = 0; i < xShape[0]; ++i){
-		result[i,:] = crossProduct (x[i,:], y[i,:]);		
+		result[i,:] = crossProduct (x[i,:], y[i,:]);
 	}
 
 	return result;
@@ -672,7 +672,7 @@ D float64[[2]] crossProduct (D float64[[2]] x, D float64[[2]] y) {
 	matrixMultiplication
 ********************************/
 
-/** \addtogroup <matrixmultiplication> 
+/** \addtogroup matrixmultiplication
  *  @{
  *  @brief Function for multiplying two matrices
  *  @note **D** - all protection domains
@@ -892,7 +892,7 @@ D float64[[2]] matrixMultiplication (D float64[[2]] x, D float64[[2]] y) {
 }
 
 /** @}*/
-/** \addtogroup <determinant> 
+/** \addtogroup determinant
  *  @{
  *  @brief Function for finding the determinant of a matrix
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
@@ -915,12 +915,12 @@ float32 determinant (float32[[2]] mat) {
    			if (abs(mat[i,k]) > p) {
    				p = abs(mat[i,k]);
    				kprim = i;
-   			} 
+   			}
    		}
    		if (p == 0) {
    			return 0;
    		}
-   		
+
    		if (k != kprim) {
    			++exchanges;
 
@@ -935,18 +935,18 @@ float32 determinant (float32[[2]] mat) {
    				mat[i,j] -= mat[i,k]*mat[k,j];
    			}
    		}
-   		
+
    	}
 
-   	float32 det = 1;   	
+   	float32 det = 1;
 
    	for (uint i = 0; i < n; ++i) {
-   		det *= mat[i,i];   		
+   		det *= mat[i,i];
    	}
 
    	if (exchanges % 2 == 1) {
    		det = -det;
-   	}   	
+   	}
 
    	return det;
 }
@@ -965,12 +965,12 @@ float64 determinant (float64[[2]] mat) {
    			if (abs(mat[i,k]) > p) {
    				p = abs(mat[i,k]);
    				kprim = i;
-   			} 
+   			}
    		}
    		if (p == 0) {
    			return 0;
    		}
-   		
+
    		if (k != kprim) {
    			++exchanges;
 
@@ -985,18 +985,18 @@ float64 determinant (float64[[2]] mat) {
    				mat[i,j] -= mat[i,k]*mat[k,j];
    			}
    		}
-   		
+
    	}
 
-   	float64 det = 1;   	
+   	float64 det = 1;
 
    	for (uint i = 0; i < n; ++i) {
-   		det *= mat[i,i];   		
+   		det *= mat[i,i];
    	}
 
    	if (exchanges % 2 == 1) {
    		det = -det;
-   	}   	
+   	}
 
    	return det;
 }
@@ -1021,7 +1021,7 @@ D float64 determinant(D float32[[2]] mat) {
 	  	det = mat[0,0] * mat[1,1] - mat[1,0] * mat[0,1];
 	} else {
 		D float64[[2]] minor (n-1, n-1);
-	  	for (uint j1 = 0; j1 < n; ++j1) {		     	
+	  	for (uint j1 = 0; j1 < n; ++j1) {
 	     	for (uint i = 1; i < n; ++i) {
 	        	uint j2 = 0;
 	        	for (uint j = 0; j < n; ++j) {
@@ -1032,7 +1032,7 @@ D float64 determinant(D float32[[2]] mat) {
 	        	}
 	     	}
 	     	bool isEven = j1 % 2 == 0;
-	    	det += isEven ? mat[0, j1] * determinant(minor) : -1 * mat[0, j1] * determinant(minor);	     
+	    	det += isEven ? mat[0, j1] * determinant(minor) : -1 * mat[0, j1] * determinant(minor);
 	    }
 	}
 	return det;
@@ -1057,7 +1057,7 @@ D float64 determinant(D float64[[2]] mat) {
 	  	det = mat[0,0] * mat[1,1] - mat[1,0] * mat[0,1];
 	} else {
 		D float64[[2]] minor (n-1, n-1);
-	  	for (uint j1 = 0; j1 < n; ++j1) {		     	
+	  	for (uint j1 = 0; j1 < n; ++j1) {
 	     	for (uint i = 1; i < n; ++i) {
 	        	uint j2 = 0;
 	        	for (uint j = 0; j < n; ++j) {
@@ -1068,7 +1068,7 @@ D float64 determinant(D float64[[2]] mat) {
 	        	}
 	     	}
 	     	bool isEven = j1 % 2 == 0;
-	    	det += isEven ? mat[0, j1] * determinant(minor) : -1 * mat[0, j1] * determinant(minor);	     
+	    	det += isEven ? mat[0, j1] * determinant(minor) : -1 * mat[0, j1] * determinant(minor);
 	    }
 	}
 	return det;
@@ -1101,13 +1101,13 @@ float64[[2]] LupDecomposition (float64[[2]] mat) {
    			if (abs(mat[i,k]) > p) {
    				p = abs(mat[i,k]);
    				kprim = i;
-   			} 
+   			}
    		}
    		if (p == 0) {
    			print("error singular mat");
    			return mat;
    		}
-   		
+
    		if (k != kprim) {
    			uint tmp = perm[k];
 	   		perm[k] = perm[kprim];
@@ -1124,9 +1124,9 @@ float64[[2]] LupDecomposition (float64[[2]] mat) {
    				mat[i,j] -= mat[i,k]*mat[k,j];
    			}
    		}
-   		
+
    	}
-   	
+
    	return mat;
 }
 

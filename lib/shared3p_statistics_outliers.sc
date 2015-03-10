@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -37,7 +37,7 @@ import shared3p;
  * \defgroup outliers_mad outlierDetectionMAD
  */
 
-/** \addtogroup <shared3p_statistics_outliers>
+/** \addtogroup shared3p_statistics_outliers
  *  @{
  *  @brief Module with functions for detecting unexpected elements in a dataset.
  */
@@ -80,7 +80,7 @@ D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvail
 }
 /** \endcond */
 
-/** \addtogroup <outliers_quantiles>
+/** \addtogroup outliers_quantiles
  *  @{
  *  @brief Outlier detection (using quantiles)
  *  @note **D** - shared3p protection domain
@@ -128,7 +128,7 @@ D bool[[1]] _outlierDetectionMAD (D T[[1]] data,
 }
 /** \endcond */
 
-/** \addtogroup <outliers_mad>
+/** \addtogroup outliers_mad
  *  @{
  *  @brief Outlier detection (using median absolute deviation)
  *  @note **D** - shared3p protection domain

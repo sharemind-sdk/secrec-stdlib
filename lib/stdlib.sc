@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -99,7 +99,7 @@ int64 INT64_MIN = -9223372036854775808;
 * \defgroup log log
 */
 
-/** \addtogroup <stdlib>
+/** \addtogroup stdlib
 *@{
 * @brief Module with standard general functions
 */
@@ -108,7 +108,7 @@ int64 INT64_MIN = -9223372036854775808;
     Sizes of public VM types
 ********************************/
 
-/** \addtogroup <sizeof>
+/** \addtogroup sizeof
  *  @{
  *  @brief Function for getting the size of a public value in bytes based on its type.
  *  @param x the value of public type.
@@ -133,7 +133,7 @@ uint sizeof (float64 x)  { return 8; }
     Arguments
 ********************************/
 
-/** \addtogroup <argument>
+/** \addtogroup argument
  *  @{
  *  @brief Function for accessing the named program arguments of public types.
  *  @note **T** - any \ref data_types "data" type
@@ -141,7 +141,7 @@ uint sizeof (float64 x)  { return 8; }
  *  @return returns the value associated with the argument specified by parameter name.
  */
 
-/** 
+/**
 *  @return An argument of string type.
 */
 string argument (string name) {
@@ -153,7 +153,7 @@ string argument (string name) {
     return __string_from_bytes (bytes);
 }
 
-/** 
+/**
 *  @return An argument of scalar type.
 */
 template <type T>
@@ -169,6 +169,7 @@ T argument (string name) {
 /**
 *  @return An argument of 1-dimensional array type.
 */
+/** \cond Doxygen_Suppress */
 template <type T>
 T[[1]] argument (string name) {
     uint num_bytes, vector_size;
@@ -179,20 +180,21 @@ T[[1]] argument (string name) {
     __syscall("Process_argument", __cref name, __ref out, __return num_bytes);
     return out;
 }
-
+/** \endcond */
 /** @}*/
 
 /*******************************
     Publishing results
 ********************************/
 
-/** \addtogroup <publish>
+/** \addtogroup publish
  *  @{
  *  @brief Function for publishing the named values of public types.
  *  @note **N** - any array size of any dimension
  *  @note **T** - any \ref data_types "data" type
  *  @param name The name of the argument.
  *  @param val the value to publish under the given name. Accepts scalars as well as arrays.
+ *  @param str the string value to publish under the given name.
  */
 
 template <type T, dim N>
@@ -200,14 +202,8 @@ void publish (string name, T[[N]] val) {
     __syscall("Process_setResult", __cref name, __cref "", __cref "$T", __cref val, 0::uint, size(val) * sizeof((T)0));
 }
 
-/** \addtogroup <publish>
- *  @brief Function for publishing the named public strings.
- *  @param name The name of the argument.
- *  @param val the string value to publish under the given name.
- */
-
-void publish (string name, string val) {
-    __syscall("Process_setResult", __cref name, __cref "", __cref "string", __cref val, 0::uint, size(__bytes_from_string(val)));
+void publish (string name, string str) {
+    __syscall("Process_setResult", __cref name, __cref "", __cref "string", __cref str, 0::uint, size(__bytes_from_string(str)));
 }
 
 /** @}*/
@@ -216,7 +212,7 @@ void publish (string name, string val) {
 	Utility - flattening
 ********************************/
 
-/** \addtogroup <flatten>
+/** \addtogroup flatten
  *  @{
  *  @brief Function for converting arrays to 1 dimensional
  *  @note **D** - all protection domains
@@ -237,7 +233,7 @@ D T[[1]] flatten (D T[[N]] arr) {
 	Utility - shapes are equal
 ********************************/
 
-/** \addtogroup <shapesareequal>
+/** \addtogroup shapesareequal
  *  @{
  *  @brief Function for checking the shape equality of two arrays
  *  @note **D1** - all protection domains
@@ -289,7 +285,7 @@ string _vectorToString (T[[1]] vec) {
 * \endcond
 */
 
-/** \addtogroup <arraytostring>
+/** \addtogroup arraytostring
  *  @{
  *  @brief Function for converting an array to a string
  *  @note **D** - all protection domains
@@ -332,7 +328,7 @@ string arrayToString (T[[N]] arr) {
 
 /** @}*/
 
-/** \addtogroup <printvector>
+/** \addtogroup printvector
  *  @{
  *  @brief Function for printing out vectors
  *  @note **T** - any \ref data_types "data" type
@@ -348,7 +344,7 @@ void printVector (T[[1]] vec) {
 
 /** @}*/
 
-/** \addtogroup <printmatrix>
+/** \addtogroup printmatrix
  *  @{
  *  @brief Function for printing out matrices
  *  @note **T** - any \ref data_types "data" type
@@ -378,7 +374,7 @@ void printMatrix (T[[2]] mat) {
 }
 
 /** @}*/
-/** \addtogroup <print3darray>
+/** \addtogroup print3darray
  *  @{
  *  @brief Function for printing out 3-dimensional arrays
  *  @note **T** - any \ref data_types "data" type
@@ -411,7 +407,7 @@ void print3dArray (T[[3]] arr) {
 }
 
 /** @}*/
-/** \addtogroup <printarray>
+/** \addtogroup printarray
  *  @{
  *  @brief Function for printing out any dimension arrays
  *  @note **T** - any \ref data_types "data" type
@@ -432,13 +428,13 @@ void printArray (T[[N]] arr) {
 ********************************/
 
 
-/** \addtogroup <any>
+/** \addtogroup any
  *  @{
  *  @brief Function for checking if any element in a boolean vector is true
  *  @note **D** - all protection domains
  */
 
-/** \addtogroup <any1>
+/** \addtogroup any1
  *  @{
  *  @brief Function for checking if any element in a boolean vector is true
  *  @note **D** - all protection domains
@@ -493,7 +489,7 @@ D bool any (D bool[[N]] arr) {
 
 
 /** @}*/
-/** \addtogroup <any2>
+/** \addtogroup any2
  *  @{
  *  @brief Function for checking if any element in a boolean vector is true in specified parts
  *  @note **D** - all protection domains
@@ -544,13 +540,13 @@ D bool[[1]] any (D bool[[1]] vec, uint k) {
 
 /** @}*/
 /** @}*/
-/** \addtogroup <all>
+/** \addtogroup all
  *  @{
  *  @brief Function for checking if all elements in a boolean vector are true
  *  @note **D** - all protection domains
  */
 
-/** \addtogroup <all1>
+/** \addtogroup all1
  *  @{
  *  @brief Function for checking if all elements in a boolean vector are true
  *  @note **D** - all protection domains
@@ -604,7 +600,7 @@ D bool all (D bool[[N]] arr) {
 }
 
 /** @}*/
-/** \addtogroup <all2>
+/** \addtogroup all2
  *  @{
  *  @brief Function for checking if all elements in a boolean vector are true in specified parts
  *  @note **D** - all protection domains
@@ -663,14 +659,14 @@ D bool[[1]] all (D bool[[1]] vec, uint k) {
 ********************************/
 
 
-/** \addtogroup <sum>
+/** \addtogroup sum
  *  @{
  *  @brief Function for finding the sum of all elements in the input vector
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  */
 
-/** \addtogroup <sum1>
+/** \addtogroup sum1
  *  @{
  *  @brief Function for finding the sum of all elements in the input vector
  *  @note **D** - all protection domains
@@ -790,7 +786,7 @@ D float64 sum (D float64[[1]] vec) {
 }
 
 /** @}*/
-/** \addtogroup <sum2>
+/** \addtogroup sum2
  *  @{
  *  @brief Function for finding the sum of all elements in the input vector in specified parts
  *  @note **D** - all protection domains
@@ -962,14 +958,14 @@ D float64[[1]] sum (D float64[[1]] vec, uint k) {
 	Product
 ********************************/
 
-/** \addtogroup <product>
+/** \addtogroup product
  *  @{
  *  @brief Function for finding the product of all elements in the input vector
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  */
 
-/** \addtogroup <product1>
+/** \addtogroup product1
  *  @{
  *  @brief Function for finding the product of the input vector
  *  @note **D** - all protection domains
@@ -1124,7 +1120,7 @@ D float64 product (D float64[[1]] vec) {
 }
 
 /** @}*/
-/** \addtogroup <product2>
+/** \addtogroup product2
  *  @{
  *  @brief Function for finding the product of the input vector in parts
  *  @note **D** - all protection domains
@@ -1292,12 +1288,12 @@ D float64[[1]] product (D float64[[1]] vec, uint k) {
 
 
 
-/** \addtogroup <min>
+/** \addtogroup min
  *  @{
  *  @brief Function for finding the minimum values
  */
 
- /** \addtogroup <min1>
+ /** \addtogroup min1
  *  @{
  *  @brief Function for finding the minimum value of the input
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
@@ -1383,7 +1379,7 @@ T min (T[[N]] arr) {
 }
 
 /** @}*/
- /** \addtogroup <min2>
+ /** \addtogroup min2
  *  @{
  *  @brief Function for finding the pointwise minimum value of the two input vectors
  *  @note **D** - all protection domains
@@ -1443,7 +1439,7 @@ D T[[1]] min (D T[[1]] x, D T[[1]] y) {
 
 
  /** @}*/
- /** \addtogroup <min3>
+ /** \addtogroup min3
  *  @{
  *  @brief Function for finding the minimum value of the input in specified parts
  *  @note **D** - all protection domains
@@ -1505,12 +1501,12 @@ D T[[1]] min (D T[[1]] vec, uint k) {
 
 /** @}*/
 /** @}*/
-/** \addtogroup <max>
+/** \addtogroup max
  *  @{
  *  @brief Function for finding the maximum value of the input
  */
 
- /** \addtogroup <max1>
+ /** \addtogroup max1
  *  @{
  *  @brief Function for finding the maximum value of the input
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
@@ -1599,7 +1595,7 @@ bool max (bool[[1]] vec) {
 */
 
 /** @}*/
- /** \addtogroup <max2>
+ /** \addtogroup max2
  *  @{
  *  @brief Function for finding the pointwise maximum of two input vectors
  *  @note **D** - all protection domains
@@ -1661,7 +1657,7 @@ D T[[1]] max (D T[[1]] x, D T[[1]] y) {
 	return x;
 }
 /** @}*/
-/** \addtogroup <max3>
+/** \addtogroup max3
 *  @{
 *  @brief Function for finding the maximum value of the input in specified parts
 *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
@@ -1725,7 +1721,7 @@ D T[[1]] max (D T[[1]] vec, uint k) {
 
 /** @}*/
 /** @}*/
-/** \addtogroup <abs>
+/** \addtogroup abs
 *  @{
 *  @brief Function for finding the absolute value of the input
 *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
@@ -1765,7 +1761,7 @@ float64[[N]] abs (float64[[N]] x) {
 }
 
 /** @}*/
-/** \addtogroup <round>
+/** \addtogroup round
 *  @{
 *  @brief Function for rounding values
 *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
@@ -1784,7 +1780,7 @@ int round (float64 x) {
 }
 /** @}*/
 
-/** \addtogroup <sqrt>
+/** \addtogroup sqrt
  *  @{
  *  @brief Function for finding square roots
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
@@ -1804,7 +1800,7 @@ float64[[N]] sqrt(float64[[N]] x) {
 }
 /** @} */
 
-/** \addtogroup <sin>
+/** \addtogroup sin
  *  @{
  *  @brief Function for finding sine.
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
@@ -1824,7 +1820,7 @@ float64[[N]] sin(float64[[N]] x) {
 }
 /** @} */
 
-/** \addtogroup <erf>
+/** \addtogroup erf
  *  @{
  *  @brief Error function.
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
@@ -1844,7 +1840,7 @@ float64[[N]] erf(float64[[N]] x) {
 }
 /** @} */
 
-/** \addtogroup <exp>
+/** \addtogroup exp
  *  @{
  *  @brief Exponential function.
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
@@ -1864,7 +1860,7 @@ float64[[N]] exp(float64[[N]] x) {
 }
 /** @} */
 
-/** \addtogroup <log>
+/** \addtogroup log
  *  @{
  *  @brief Exponential function.
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"

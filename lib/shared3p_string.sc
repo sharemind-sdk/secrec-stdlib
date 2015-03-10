@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -67,7 +67,7 @@ import shared3p;
 * \defgroup kl_strlevenshtein kl_strLevenshtein
 */
 
-/** \addtogroup <shared3p_string>
+/** \addtogroup shared3p_string
 *@{
 * @brief Module with string functions
 */
@@ -80,7 +80,7 @@ import shared3p;
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <CRC>
+/** \addtogroup CRC
  *  @{
     @note **D** - shared3p protection domain
     @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -103,7 +103,7 @@ D xor_uint32 CRC32 (D xor_uint8 [[N]] input, D xor_uint32 hash) {
 }
 
 /** @}*/
-/** \addtogroup <CRC2>
+/** \addtogroup CRC2
  *  @{
     @note **D** - shared3p protection domain
     @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -173,7 +173,7 @@ D xor_uint32[[N]] shiftBitsRightVec (D xor_uint32[[N]] bits, int k) {
 *********************************************************
 ********************************************************/
 
-/** \addtogroup <murmurhashervec>
+/** \addtogroup murmurhashervec
 *@{
 * @brief murmurHash
 * @note **D** - shared3p protection domain
@@ -232,13 +232,13 @@ D xor_uint32[[1]] murmurHasherVec (D xor_uint32[[1]] hashee,  public uint32[[1]]
 **                                                                            **
 ********************************************************************************
 *******************************************************************************/
-/** \addtogroup <shared3p_bl_string>
+/** \addtogroup shared3p_bl_string
 *@{
 * @brief Module with functions for bounded length strings
 */
 
 
-/** \addtogroup <countzeroes>
+/** \addtogroup countzeroes
  *  @{
     @note **D** - shared3p protection domain
     @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -253,7 +253,7 @@ D uint countZeroes (D xor_uint8[[1]] s) {
     return sum ((uint) (s == 0));
 }
 /** @}*/
-/** \addtogroup <bl_str>
+/** \addtogroup bl_str
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -288,7 +288,7 @@ D xor_uint8[[1]] bl_str (string s) {
 }
 
 /** @}*/
-/** \addtogroup <bl_strisempty>
+/** \addtogroup bl_strisempty
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -304,7 +304,7 @@ D bool bl_strIsEmpty (D xor_uint8[[1]] s) {
 }
 
 /** @}*/
-/** \addtogroup <bl_strdeclassify>
+/** \addtogroup bl_strdeclassify
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -327,7 +327,7 @@ string bl_strDeclassify (D xor_uint8[[1]] ps) {
 
 
 /** @}*/
-/** \addtogroup <bl_strlength>
+/** \addtogroup bl_strlength
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -340,7 +340,7 @@ D uint bl_strLength (D xor_uint8[[1]] s) {
     return size (s) - countZeroes (s);
 }
 /** @}*/
-/** \addtogroup <bl_strtrim>
+/** \addtogroup bl_strtrim
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -356,7 +356,7 @@ D xor_uint8[[1]] bl_strTrim (D xor_uint8[[1]] s) {
 }
 
 /** @}*/
-/** \addtogroup <bl_strequals>
+/** \addtogroup bl_strequals
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -375,7 +375,7 @@ D bool bl_strEquals (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     return all (s == t[:n]) && bl_strIsEmpty (t[n:]);
 }
 /** @}*/
-/** \addtogroup <findsortingpermutation>
+/** \addtogroup findsortingpermutation
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref bool "bool"
@@ -408,7 +408,7 @@ D uint[[1]] findSortingPermutation (D bool[[1]] arr) {
     return vec * (pTrue - pFalse) + pFalse;
 }
 /** @}*/
-/** \addtogroup <bl_strcat>
+/** \addtogroup bl_strcat
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -438,7 +438,7 @@ D xor_uint8[[1]] bl_strCat (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
 }
 
 /** @}*/
-/** \addtogroup <zeroextend>
+/** \addtogroup zeroextend
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -446,10 +446,10 @@ D xor_uint8[[1]] bl_strCat (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @param s - an input string
  *  @param n - minimum size that we want the resulting string to be
  *  @return  returns a vector that was created by zeroextending **s**
- *  @postcondition size (output vector) >= **n**
- *  @postcondition **s** is a prefix of the output vector
- *  @postcondition only zeroes have been added to the output vector
- *  @postcondition if size ( **s** ) >= **n** then the output vector == **s**
+ *  @post size (output vector) >= **n**
+ *  @post **s** is a prefix of the output vector
+ *  @post only zeroes have been added to the output vector
+ *  @post if size ( **s** ) >= **n** then the output vector == **s**
  */
 template <domain D : shared3p>
 D xor_uint8[[1]] zeroExtend (D xor_uint8[[1]] s, uint n) {
@@ -462,7 +462,7 @@ D xor_uint8[[1]] zeroExtend (D xor_uint8[[1]] s, uint n) {
 }
 
 /** @}*/
-/** \addtogroup <bl_strislessthan>
+/** \addtogroup bl_strislessthan
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -482,7 +482,7 @@ D bool bl_strIsLessThan (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
 }
 
 /** @}*/
-/** \addtogroup <bl_strlevenshtein>
+/** \addtogroup bl_strlevenshtein
  *  @{
  *  @brief function for finding the edit distance of the two input strings
  *  @note **D** - shared3p protection domain
@@ -576,7 +576,7 @@ D uint bl_strLevenshtein (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     return result;
 }
 /** @}*/
-/** \addtogroup <bl_streqprefixes>
+/** \addtogroup bl_streqprefixes
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -617,7 +617,7 @@ D bool[[1]] bl_strEqPrefixes (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
 /** @}*/
 
 
-/** \addtogroup <bl_strcontains>
+/** \addtogroup bl_strcontains
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -635,7 +635,7 @@ D bool bl_strContains (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
     return any (bl_strEqPrefixes (str, pat));
 }
 /** @}*/
-/** \addtogroup <bl_strindexof>
+/** \addtogroup bl_strindexof
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -653,7 +653,7 @@ D uint bl_strIndexOf (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
 
 
 /** @}*/
-/** \addtogroup <bl_strhamming>
+/** \addtogroup bl_strhamming
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -680,12 +680,12 @@ D uint bl_strHamming (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <shared3p_kl_string>
+/** \addtogroup shared3p_kl_string
 *@{
 * @brief Module with functions for known length strings
 */
 
-/** \addtogroup <kl_str>
+/** \addtogroup kl_str
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Private strings are XOR shared to optimize for equality and comparison checks.
@@ -700,7 +700,7 @@ D xor_uint8[[1]] kl_str (string s) {
 }
 
 /** @}*/
-/** \addtogroup <kl_strdeclassify>
+/** \addtogroup kl_strdeclassify
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -716,7 +716,7 @@ string kl_strDeclassify (D xor_uint8[[1]] ps) {
 
 
 /** @}*/
-/** \addtogroup <kl_strlength>
+/** \addtogroup kl_strlength
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -731,7 +731,7 @@ uint kl_strLength (D xor_uint8[[1]] str) {
 }
 
 /** @}*/
-/** \addtogroup <kl_strequals>
+/** \addtogroup kl_strequals
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -751,7 +751,7 @@ D bool kl_strEquals (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
 }
 
 /** @}*/
-/** \addtogroup <kl_strislessthan>
+/** \addtogroup kl_strislessthan
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -784,7 +784,7 @@ D bool kl_strIsLessThan (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
 }
 
 /** @}*/
-/** \addtogroup <kl_strcat>
+/** \addtogroup kl_strcat
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -799,7 +799,7 @@ D xor_uint8[[1]] kl_strCat (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
 }
 
 /** @}*/
-/** \addtogroup <kl_streqprefixes>
+/** \addtogroup kl_streqprefixes
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -842,7 +842,7 @@ D bool[[1]] kl_strEqPrefixes (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
 }
 
 /** @}*/
-/** \addtogroup <kl_strcontains>
+/** \addtogroup kl_strcontains
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -859,7 +859,7 @@ D bool kl_strContains (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
 }
 
 /** @}*/
-/** \addtogroup <kl_strindexof>
+/** \addtogroup kl_strindexof
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -887,7 +887,7 @@ D uint kl_strIndexOf (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
 }
 
 /** @}*/
-/** \addtogroup <kl_strhamming>
+/** \addtogroup kl_strhamming
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
@@ -904,7 +904,7 @@ D uint kl_strHamming (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
 }
 
 /** @}*/
-/** \addtogroup <kl_strlevenshtein>
+/** \addtogroup kl_strlevenshtein
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"

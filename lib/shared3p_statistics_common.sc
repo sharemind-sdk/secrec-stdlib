@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -40,7 +40,7 @@ import stdlib;
  * \defgroup contingency contingencyTable
  */
 
-/** \addtogroup <shared3p_statistics_common>
+/** \addtogroup shared3p_statistics_common
  *  @{
  *  @brief Module with statistics support functions that are useful
  *  primarily in other statistics modules.
@@ -115,7 +115,7 @@ D T[[1]] _cut (D T[[1]] data, D bool[[1]] isAvailable){
  * \endcond
  */
 
-/** \addtogroup <cut>
+/** \addtogroup cut
  *  @{
  *  @brief Remove unavailable elements
  *  @note **D** - shared3p protection domain
@@ -244,7 +244,7 @@ D T[[2]] _cut (D T[[2]] data, D bool[[1]] isAvailable) {
  * \endcond
  */
 
-/** \addtogroup <cut_n>
+/** \addtogroup cut_n
  *  @{
  *  @brief Remove unavailable elements from N samples using the same
  *  shuffling key
@@ -346,7 +346,7 @@ D T _nthElement (D T[[1]] data, uint64 left, uint64 right, uint64 k, bool shuffl
  */
 
 
-/** \addtogroup <nth_element>
+/** \addtogroup nth_element
  *  @{
  *  @brief Find the nth element in size from a vector
  *  @note **D** - shared3p protection domain
@@ -371,7 +371,7 @@ D int64 nthElement (D int64[[1]] data, uint64 k, bool shuffle) {
 /** @} */
 
 
-/** \addtogroup <nth_element_indexes>
+/** \addtogroup nth_element_indexes
  *  @{
  *  @brief Find the nth element in size from a vector
  *  @note **D** - shared3p protection domain
@@ -461,7 +461,7 @@ D T[[2]] _contingencyTable (D T[[1]] data, D bool[[1]] cases, D bool[[1]] contro
 /** \endcond */
 
 
-/** \addtogroup <contingency>
+/** \addtogroup contingency
  *  @{
  *  @brief Create a contingency table
  *  @note **D** - all protection domains

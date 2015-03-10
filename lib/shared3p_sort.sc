@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -48,7 +48,7 @@ import shared3p;
 * \defgroup selectk_mat selectK[[2]]
 */
 
-/** \addtogroup <shared3p_sort>
+/** \addtogroup shared3p_sort
 *@{
 * @brief Module with functions for sorting values
 */
@@ -61,7 +61,7 @@ import shared3p;
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <sort>
+/** \addtogroup sort
  *  @{
  *  @brief Functions for sorting values
  *  @note **D** - shared3p protection domain
@@ -69,7 +69,7 @@ import shared3p;
  *  @note boolean values are sorted after their numerical value. **false** first then **true**
  */
 
-/** \addtogroup <sort_vec>
+/** \addtogroup sort_vec
  *  @{
  *  @brief Function for sorting values in a vector
  *  @note **D** - shared3p protection domain
@@ -179,7 +179,7 @@ D T[[1]] sort(D T[[1]] vec) {
     return sorted;
 }
 /** @}*/
-/** \addtogroup <sort_mat>
+/** \addtogroup sort_mat
  *  @{
  *  @brief Function for sorting rows of a matrix based on values of a column
  *  @note **D** - shared3p protection domain
@@ -324,14 +324,14 @@ uint[[1]] generateSortingNetwork(uint arraysize) {
 */
 
 
-/** \addtogroup <sortingnetwork>
+/** \addtogroup sortingnetwork
  *  @{
  *  @brief Functions for sorting values with sorting networks
  *  @note **D** - all protection domains
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  */
 
-/** \addtogroup <sortingnetwork_vec>
+/** \addtogroup sortingnetwork_vec
  *  @{
  *  @brief Function for sorting values in a vector with sorting network
  *  @note **D** - all protection domains
@@ -495,7 +495,7 @@ D T[[1]] sortingNetworkSort (D T[[1]] array) {
 
 
 /** @}*/
-/** \addtogroup <sortingnetwork_mat>
+/** \addtogroup sortingnetwork_mat
  *  @{
  *  @brief Function for sorting rows of a matrix based on values of a column
  *  @note **D** - all protection domains
@@ -827,7 +827,7 @@ D T[[1]] _sortingNetworkSort (D T[[1]] vector, D T[[1]] indices) {
  */
 
 /** @}*/
-/** \addtogroup <sortingnetwork_mat2>
+/** \addtogroup sortingnetwork_mat2
  *  @{
  *  @brief Function for sorting rows of a matrix based on values of two columns
  *  @note **D** - all protection domains
@@ -1177,7 +1177,7 @@ D T[[1]] _sortingNetworkSort2 (D T[[1]] vector, D T[[1]] indices) {
  * \endcond
  */
 /** @}*/
-/** \addtogroup <sortingnetwork_mat3>
+/** \addtogroup sortingnetwork_mat3
  *  @{
  *  @brief Function for sorting rows of a matrix based on values of three columns
  *  @note **D** - all protection domains
@@ -1581,14 +1581,14 @@ uint[[1]] generateTopKSortingNetwork (uint n, uint k) {
  *\endcond
  */
 
-/** \addtogroup <selectk>
+/** \addtogroup selectk
  *  @{
  *  @brief Functions for selecting k values from a vector/matrix according to an ordering.
  *  @note **D** - all protection domains
  *  @note Supported types \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
 */
 
-/** \addtogroup <selectk_vec>
+/** \addtogroup selectk_vec
  *  @{
  *  @brief Function for selecting the k smallest elements of a vector.
  *  @note **D** - all protection domains
@@ -1719,7 +1719,7 @@ D T[[1]] selectK (D T[[1]] vector, uint k) {
 /** @} */
 
 
-/** \addtogroup <selectk_mat>
+/** \addtogroup selectk_mat
  *  @{
  *  @brief Function for selecting k rows from a matrix ordered by a column
  *  @note **D** - all protection domains

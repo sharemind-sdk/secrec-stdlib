@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -54,13 +54,13 @@ import stdlib;
  * \defgroup covariance_filter covariance(filter)
  */
 
-/** \addtogroup <shared3p_statistics_summary>
+/** \addtogroup shared3p_statistics_summary
  *  @{
  *  @brief Module for finding the main percentiles in statistics.
  */
 
 
-/** \addtogroup <minimum>
+/** \addtogroup minimum
  *  @{
  *  @brief Find the smallest element of a vector
  *  @note **D** - shared3p protection domain
@@ -83,7 +83,7 @@ D int64 minimum (D int64[[1]] data, D bool[[1]] isAvailable) {
 /** @} */
 
 
-/** \addtogroup <maximum>
+/** \addtogroup maximum
  *  @{
  *  @brief Find the largest element of a vector
  *  @note **D** - shared3p protection domain
@@ -106,7 +106,7 @@ D int64 maximum (D int64[[1]] data, D bool[[1]] isAvailable) {
 /** @} */
 
 
-/** \addtogroup <mean>
+/** \addtogroup mean
  *  @{
  *  @brief Find the mean of a vector
  *  @note **D** - any protection domain
@@ -126,7 +126,7 @@ D float64 mean (D int64[[1]] data) {
 }
 /** @} */
 
-/** \addtogroup <mean_filter>
+/** \addtogroup mean_filter
  *  @{
  *  @brief Find the mean of a filtered vector
  *  @note **D** - any protection domain
@@ -149,7 +149,7 @@ D float64 mean (D int64[[1]] data, D bool[[1]] mask) {
 }
 /** @} */
 
-/** \addtogroup <variance>
+/** \addtogroup variance
  *  @{
  *  @brief Find the variance of a vector
  *  @note **D** - any protection domain
@@ -177,7 +177,7 @@ D float64 variance (D int64[[1]] data) {
 }
 /** @} */
 
-/** \addtogroup <variance_filter>
+/** \addtogroup variance_filter
  *  @{
  *  @brief Find the variance of a filtered vector
  *  @note **D** - any protection domain
@@ -216,7 +216,7 @@ D float64 variance (D int64[[1]] data, D bool[[1]] mask) {
 /** @} */
 
 
-/** \addtogroup <standard_dev>
+/** \addtogroup standard_dev
  *  @{
  *  @brief Find the standard deviation of a sample
  *  @note **D** - any protection domain
@@ -238,7 +238,7 @@ D float64 standardDev (D int64[[1]] data) {
 /** @} */
 
 
-/** \addtogroup <standard_dev_filter>
+/** \addtogroup standard_dev_filter
  *  @{
  *  @brief Find the standard deviation of a filtered sample
  *  @note **D** - any protection domain
@@ -264,7 +264,7 @@ D float64 standardDev (D int64[[1]] data, D bool[[1]] mask){
 /** @} */
 
 
-/** \addtogroup <mad>
+/** \addtogroup mad
  *  @{
  *  @brief Find the median absolute deviation of a sample
  *  @note **D** - shared3p protection domain
@@ -283,7 +283,7 @@ D float64 MAD (D int64[[1]] data) {
 }
 /** @} */
 
-/** \addtogroup <mad_constant>
+/** \addtogroup mad_constant
  *  @{
  *  @brief Find the median absolute deviation of a sample
  *  @note **D** - shared3p protection domain
@@ -304,7 +304,7 @@ D float64 MAD (D int64[[1]] data, float64 constant) {
 }
 /** @} */
 
-/** \addtogroup <mad_filter>
+/** \addtogroup mad_filter
  *  @{
  *  @brief Find the median absolute deviation of a filtered sample
  *  @note **D** - shared3p protection domain
@@ -326,7 +326,7 @@ D float64 MAD (D int64[[1]] data, D bool[[1]] mask) {
 }
 /** @} */
 
-/** \addtogroup <mad_filter_constant>
+/** \addtogroup mad_filter_constant
  *  @{
  *  @brief Find the median absolute deviation of a filtered sample
  *  @note **D** - shared3p protection domain
@@ -412,7 +412,7 @@ D FT[[1]] _fiveNumberSummarySn (D T[[1]] data, D bool[[1]] isAvailable) {
 }
 /** \endcond */
 
-/** \addtogroup <five_number_summary_sn>
+/** \addtogroup five_number_summary_sn
  *  @{
  *  @brief Find the minimum, lower quartile, median, upper quartile and maximum of a sample
  *  @note **D** - any protection domain
@@ -504,7 +504,7 @@ D FT[[1]] _fiveNumberSummaryNth (D T[[1]] data, D bool[[1]] isAvailable){
 }
 /** \endcond */
 
-/** \addtogroup <five_number_summary_nth>
+/** \addtogroup five_number_summary_nth
  *  @{
  *  @brief Find the minimum, lower quartile, median, upper quartile and maximum of a sample
  *  @note **D** - shared3p protection domain
@@ -527,7 +527,7 @@ D float64[[1]] fiveNumberSummaryNth (D int64[[1]] data, D bool[[1]] isAvailable)
 }
 /** @} */
 
-/** \addtogroup <covariance>
+/** \addtogroup covariance
  *  @{
  *  @brief Find the covariance of two samples.
  *  @note **D** - shared3p protection domain
@@ -548,7 +548,7 @@ D float64 covariance (D int64[[1]] sample1, D int64[[1]] sample2) {
 }
 /** @} */
 
-/** \addtogroup <covariance_filter>
+/** \addtogroup covariance_filter
  *  @{
  *  @brief Find the covariance of two samples.
  *  @note **D** - shared3p protection domain

@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -64,12 +64,12 @@ import stdlib;
  * \defgroup tdb_vmap_get_value tdbVmapGetValue
  */
 
-/** \addtogroup <table_database>
+/** \addtogroup table_database
  *  @{
  *  @brief Module for working with table databases.
  */
 
-/** \addtogroup <SharemindTdbError>
+/** \addtogroup SharemindTdbError
  *  @{
  *  @brief Table database error codes.
  */
@@ -83,7 +83,7 @@ int64 SHAREMIND_TDB_TABLE_NOT_FOUND = 6;
 int64 SHAREMIND_TDB_TABLE_ALREADY_EXISTS = 7;
 /** @} */
 
-/** \addtogroup <tdb_vmap_new>
+/** \addtogroup tdb_vmap_new
  *  @{
  *  @brief Create a vector map
  *  @return returns an identifier that can be used for working with
@@ -96,7 +96,7 @@ uint64 tdbVmapNew () {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_delete>
+/** \addtogroup tdb_vmap_delete
  *  @{
  *  @brief Delete a vector map
  *  @param id - vector map id
@@ -106,7 +106,7 @@ void tdbVmapDelete (uint64 id) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_count>
+/** \addtogroup tdb_vmap_count
  *  @{
  *  @brief Get the number of vectors in a vector map
  *  @param id - vector map id
@@ -120,7 +120,7 @@ uint64 tdbVmapCount (uint64 id, string paramname) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_string_vector_size>
+/** \addtogroup tdb_vmap_string_vector_size
  *  @{
  *  @brief Get the size of a vector in a vector map
  *  @param id - vector map id
@@ -134,7 +134,7 @@ uint64 tdbVmapStringVectorSize(uint64 id, string paramname) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_value_vector_size>
+/** \addtogroup tdb_vmap_value_vector_size
  *  @{
  *  @brief Get the size of a vector in a vector map
  *  @param id - vector map id
@@ -148,7 +148,7 @@ uint64 tdbVmapValueVectorSize(uint64 id, string paramname) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_erase>
+/** \addtogroup tdb_vmap_erase
  *  @{
  *  @brief Remove a vector from a vector map
  *  @param id - vector map id
@@ -162,7 +162,7 @@ bool tdbVmapErase (uint64 id, string paramname) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_add_string>
+/** \addtogroup tdb_vmap_add_string
  *  @{
  *  @brief Add a string to a vector in a vector map
  *  @param id - vector map id
@@ -174,7 +174,7 @@ void tdbVmapAddString (uint64 id, string paramname, string str) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_clear>
+/** \addtogroup tdb_vmap_clear
  *  @{
  *  @brief Clears the current batch in a vector map
  *  @param id - vector map id
@@ -184,7 +184,7 @@ void tdbVmapClear (uint64 id) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_reset>
+/** \addtogroup tdb_vmap_reset
  *  @{
  *  @brief Resets the vector map to the initial state
  *  @param id - vector map id
@@ -194,7 +194,7 @@ void tdbVmapReset (uint64 id) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_add_batch>
+/** \addtogroup tdb_vmap_add_batch
  *  @{
  *  @brief Add a batch to a vector map.
  *  @note A vector map always contains at least one batch. Batches are
@@ -209,7 +209,7 @@ void tdbVmapAddBatch (uint64 id) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_set_batch>
+/** \addtogroup tdb_vmap_set_batch
  *  @{
  *  @brief Sets the current active batch
  *  @note Useful for iterating through the batches of the result returned by a
@@ -222,7 +222,7 @@ void tdbVmapSetBatch (uint64 id, uint64 index) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_get_batch_count>
+/** \addtogroup tdb_vmap_get_batch_count
  *  @{
  *  @brief Get number of batches in a vector map
  *  @param id - vector map id
@@ -235,7 +235,7 @@ uint64 tdbVmapGetBatchCount (uint64 id) {
 }
 /** @} */
 
-/** \addtogroup <tdb_open_connection>
+/** \addtogroup tdb_open_connection
  *  @{
  *  @brief Open connection to a data source
  *  @param datasource - data source name
@@ -245,7 +245,7 @@ void tdbOpenConnection (string datasource) {
 }
 /** @} */
 
-/** \addtogroup <tdb_close_connection>
+/** \addtogroup tdb_close_connection
  *  @{
  *  @brief Close connection to a data source
  *  @param datasource - data source name
@@ -255,7 +255,7 @@ void tdbCloseConnection (string datasource) {
 }
 /** @} */
 
-/** \addtogroup <tdb_table_create>
+/** \addtogroup tdb_table_create
  *  @{
  *  @brief Create a table
  *  @param datasource - name of the data source that will contain the table
@@ -269,7 +269,7 @@ void tdbTableCreate (string datasource, string table, uint64 parameters) {
 }
 /** @} */
 
-/** \addtogroup <tdb_table_delete>
+/** \addtogroup tdb_table_delete
  *  @{
  *  @brief Delete a table
  *  @param datasource - name of the data source containing the table
@@ -280,7 +280,7 @@ void tdbTableDelete (string datasource, string table) {
 }
 /** @} */
 
-/** \addtogroup <tdb_table_exists>
+/** \addtogroup tdb_table_exists
  *  @{
  *  @brief Check if a table exists
  *  @param datasource - name of the data source that is expected to contain the table
@@ -294,7 +294,7 @@ bool tdbTableExists (string datasource, string table) {
 }
 /** @} */
 
-/** \addtogroup <tdb_insert_row>
+/** \addtogroup tdb_insert_row
  *  @{
  *  @brief Insert a row into a table
  *  @param datasource - name of the data source containing the table
@@ -308,7 +308,7 @@ void tdbInsertRow (string datasource, string table, uint64 parameters) {
 }
 /** @} */
 
-/** \addtogroup <tdb_get_row_count>
+/** \addtogroup tdb_get_row_count
  *  @{
  *  @brief Get the number of rows in a table
  *  @param datasource - data source name
@@ -322,7 +322,7 @@ uint64 tdbGetRowCount (string datasource, string table) {
 }
 /** @} */
 
-/** \addtogroup <tdb_read_column_index_vmap>
+/** \addtogroup tdb_read_column_index_vmap
  *  @{
  *  @brief Read a column from a table
  *  @param datasource - data source name
@@ -338,7 +338,7 @@ uint64 tdbReadColumn(string datasource, string table, uint64 index) {
 }
 /** @} */
 
-/** \addtogroup <tdb_read_column_string_vmap>
+/** \addtogroup tdb_read_column_string_vmap
  *  @{
  *  @brief Read a column from a table
  *  @param datasource - data source name
@@ -354,7 +354,7 @@ uint tdbReadColumn(string datasource, string table, string column) {
 }
 /** @} */
 
-/** \addtogroup <tdb_read_column_index_vec>
+/** \addtogroup tdb_read_column_index_vec
  *  @{
  *  @brief Read a column from a table
  *  @param datasource - data source name
@@ -362,6 +362,7 @@ uint tdbReadColumn(string datasource, string table, string column) {
  *  @param index - index of the column in the table
  *  @return returns a vector with the values in the column
  */
+/** \cond Doxygen_Suppress */
 template<type T>
 T[[1]] tdbReadColumn(string datasource, string table, uint64 index) {
     uint64 rv = 0;
@@ -370,9 +371,10 @@ T[[1]] tdbReadColumn(string datasource, string table, uint64 index) {
     tdbVmapDelete(rv);
     return out;
 }
+/** \endcond */
 /** @} */
 
-/** \addtogroup <tdb_read_column_string_vec>
+/** \addtogroup tdb_read_column_string_vec
  *  @{
  *  @brief Read a column from a table
  *  @param datasource - data source name
@@ -380,6 +382,7 @@ T[[1]] tdbReadColumn(string datasource, string table, uint64 index) {
  *  @param column - column name
  *  @return returns a vector with the values in the column
  */
+/** \cond Doxygen_Suppress */
 template<type T>
 T[[1]] tdbReadColumn(string datasource, string table, string column) {
     uint rv = 0;
@@ -388,9 +391,10 @@ T[[1]] tdbReadColumn(string datasource, string table, string column) {
     tdbVmapDelete(rv);
     return out;
 }
+/** \endcond */
 /** @} */
 
-/** \addtogroup <tdb_get_value_string>
+/** \addtogroup tdb_get_value_string
  *  @{
  *  @brief Get a string from a value vector in a vector map
  *  @param id - id of the vector map
@@ -425,7 +429,7 @@ string tdbVmapGetValue(uint64 id, string paramname, uint64 index) {
 }
 /** @} */
 
-/** \addtogroup <tdb_get_column_count>
+/** \addtogroup tdb_get_column_count
  *  @{
  *  @brief Get the number of columns in a table
  *  @param datasource - data source name
@@ -439,7 +443,7 @@ uint64 tdbGetColumnCount(string datasource, string table) {
 }
 /** @} */
 
-/** \addtogroup <tdb_get_column_names>
+/** \addtogroup tdb_get_column_names
  *  @{
  *  @brief Get the column names of a table
  *  @param datasource - data source name
@@ -454,7 +458,7 @@ uint64 tdbGetColumnNames(string datasource, string table) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_get_string>
+/** \addtogroup tdb_vmap_get_string
  *  @{
  *  @brief Get a string from a string vector in a vector map
  *  @param id - vector map id
@@ -478,7 +482,7 @@ string tdbVmapGetString(uint64 id, string paramname, uint64 index) {
 }
 /** @} */
 
-/** \addtogroup <tdb_get_column_types>
+/** \addtogroup tdb_get_column_types
  *  @{
  *  @brief Get the column types of a table
  *  @param datasource - data source name
@@ -493,7 +497,7 @@ uint64 tdbGetColumnTypes(string datasource, string table) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_get_type_name>
+/** \addtogroup tdb_vmap_get_type_name
  *  @{
  *  @brief Get the name of a type in a type vector in a vector map
  *  @param id - vector map id
@@ -516,7 +520,7 @@ string tdbVmapGetTypeName(uint id, string paramname, uint index) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_add_type>
+/** \addtogroup tdb_vmap_add_type
  *  @{
  *  @brief Add a type to a vector in a vector map
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
@@ -532,7 +536,7 @@ void tdbVmapAddType(uint id, string paramname, T t) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_add_vlen_type>
+/** \addtogroup tdb_vmap_add_vlen_type
  *  @{
  *  @brief Add a variable length type to a vector in a vector map
  *  @note This is used to create a table with a column that contains
@@ -549,7 +553,7 @@ void tdbVmapAddVlenType(uint64 id, string paramname, T t) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_add_value_scalar>
+/** \addtogroup tdb_vmap_add_value_scalar
  *  @{
  *  @brief Add a scalar value to a vector in a vector map
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
@@ -565,12 +569,12 @@ void tdbVmapAddValue(uint64 id, string paramname, T value) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_add_vlen_value>
+/** \addtogroup tdb_vmap_add_vlen_value
  *  @{
  *  @brief Add a string to a vector in a vector map
  *  @note Supported types - \ref string "string"
  *  @param id - vector map id
- *  @paramname - name of the vector to which the value is added
+ *  @param paramname - name of the vector to which the value is added
  *  @param values - vector to be added
  */
 void tdbVmapAddVlenValue (uint64 id, string paramname, string value) {
@@ -580,7 +584,7 @@ void tdbVmapAddVlenValue (uint64 id, string paramname, string value) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_add_value_vector>
+/** \addtogroup tdb_vmap_add_value_vector
  *  @{
  *  @brief Add a vector to a vector in a vector map
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
@@ -597,7 +601,7 @@ void tdbVmapAddValue (uint64 id, string paramname, T[[1]] values) {
 }
 /** @} */
 
-/** \addtogroup <tdb_vmap_get_value>
+/** \addtogroup tdb_vmap_get_value
  *  @{
  *  @brief Get a value from a vector in a vector map
  *  @param id - vector map id

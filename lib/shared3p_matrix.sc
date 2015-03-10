@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -49,7 +49,7 @@ import matrix;
 * \defgroup shared3p_diag_matrixmultiplication_cube diagMatrixMultiplication[[3]]
 */
 
-/** \addtogroup <shared3p_matrix>
+/** \addtogroup shared3p_matrix
 *@{
 *
 * @brief Module with functions for manipulating matrices and vectors (shared3p protection domain)
@@ -59,7 +59,7 @@ import matrix;
 	rowSums, colSums
 ********************************/
 
-/** \addtogroup <shared3p_rowsums>
+/** \addtogroup shared3p_rowsums
  *  @{
  *  @brief Function for summarizing the rows of a matrix
  *  @note **D** - shared3p protection domain
@@ -147,7 +147,7 @@ D float64[[1]] rowSums (D float64[[2]] mat) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_colsums>
+/** \addtogroup shared3p_colsums
  *  @{
  *  @brief Function for summarizing the columns of a matrix
  *  @note **D** - shared3p protection domain
@@ -218,14 +218,14 @@ D float64[[1]] colSums (D float64[[2]] mat) {
 	dotProduct
 ********************************/
 
-/** \addtogroup <shared3p_dotproduct>
+/** \addtogroup shared3p_dotproduct
  *  @{
  *  @brief Function for finding the dot product of two vectors/matrices
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  */
 
-/** \addtogroup <shared3p_dotproduct_vec>
+/** \addtogroup shared3p_dotproduct_vec
  *  @{
  *  @brief Function for finding the dot product of two vectors
  *  @note **D** - shared3p domain
@@ -311,7 +311,7 @@ D float64 dotProduct (D float64[[1]] x, D float64[[1]] y) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_dotproduct_mat>
+/** \addtogroup shared3p_dotproduct_mat
  *  @{
  *  @brief Function for finding the dot product of two matrices
  *  @note **D** - shared3p protection domain
@@ -436,7 +436,7 @@ D float64[[1]] dotProduct (D float64[[2]] x, D float64[[2]] y) {
 	vecLength, unitVector
 ********************************/
 
-/** \addtogroup <shared3p_veclength>
+/** \addtogroup shared3p_veclength
  *  @{
  *  @brief Function for finding the length of a vector
  *  @note **D** - shared3p protection domain
@@ -480,7 +480,7 @@ D float64[[1]] vecLength (D float64[[2]] x) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_unitvector>
+/** \addtogroup shared3p_unitvector
  *  @{
  *  @brief Function for finding the unit vector of the input vector
  *  @note **D** - shared3p protection domain
@@ -549,7 +549,7 @@ D float64[[2]] unitVector (D float64[[2]] x) {
 /*******************************
 	crossProduct
 ********************************/
-/** \addtogroup <shared3p_crossproduct>
+/** \addtogroup shared3p_crossproduct
  *  @{
  *  @brief Function for finding the cross product of two vectors/matrices
  *  @note **D** - shared3p protection domain
@@ -557,7 +557,7 @@ D float64[[2]] unitVector (D float64[[2]] x) {
  */
 
 
- /** \addtogroup <shared3p_crossproduct_vec>
+ /** \addtogroup shared3p_crossproduct_vec
  *  @{
  *  @brief Function for finding the cross product of two vectors
  *  @note **D** - shared3p protection domain
@@ -713,7 +713,7 @@ D float64[[1]] crossProduct (D float64[[1]] x, D float64[[1]] y) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_crossproduct_mat>
+/** \addtogroup shared3p_crossproduct_mat
  *  @{
  *  @brief Function for finding the cross product of two matrices
  *  @note **D** - shared3p protection domain
@@ -926,14 +926,14 @@ D float64[[2]] crossProduct (D float64[[2]] x, D float64[[2]] y) {
 	matrixMultiplication, diagMatrixMultiplication
 *****************************************************/
 
-/** \addtogroup <shared3p_matrixmultiplication>
+/** \addtogroup shared3p_matrixmultiplication
  *  @{
  *  @brief Function for multiplying two matrices
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  */
 
-/** \addtogroup <shared3p_matrixmultiplication_mat>
+/** \addtogroup shared3p_matrixmultiplication_mat
  *  @{
  *  @brief Function for multiplying two matrices
  *  @note **D** - shared3p protection domain
@@ -1383,7 +1383,7 @@ D float64[[2]] matrixMultiplication (D float64[[2]] x, D float64[[2]] y) {
 
 
 /** @}*/
-/** \addtogroup <shared3p_matrixmultiplication_cube>
+/** \addtogroup shared3p_matrixmultiplication_cube
  *  @{
  *  @brief Function for multiplying two matrices
  *  @note **D** - shared3p protection domain
@@ -1933,14 +1933,14 @@ D float64[[3]] matrixMultiplication (D float64[[3]] x, D float64[[3]] y) {
 
 
 
-/** \addtogroup <shared3p_diag_matrixmultiplication>
+/** \addtogroup shared3p_diag_matrixmultiplication
  *  @{
  *  @brief Function for multiplying two diagonal matrices
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  */
 
-/** \addtogroup <shared3p_diag_matrixmultiplication_mat>
+/** \addtogroup shared3p_diag_matrixmultiplication_mat
  *  @{
  *  @brief Function for multiplying two diagonal matrices
  *  @note **D** - shared3p protection domain
@@ -2352,7 +2352,7 @@ D float64[[2]] diagMatrixMultiplication (D float64[[2]] x, D float64[[2]] y) {
 
 
 /** @}*/
-/** \addtogroup <shared3p_diag_matrixmultiplication_cube>
+/** \addtogroup shared3p_diag_matrixmultiplication_cube
  *  @{
  *  @brief Function for multiplying two diagonal matrices
  *  @note **D** - shared3p protection domain

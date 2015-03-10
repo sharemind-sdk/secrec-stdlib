@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -35,12 +35,12 @@ import shared3p_aes;
 * \defgroup tablejoinaes128 tableJoinAes128
 */
 
-/** \addtogroup <shared3p_join>
+/** \addtogroup shared3p_join
 *@{
 * @brief Module with tableJoinAes128
 */
 
-/** \addtogroup <tablejoinaes128>
+/** \addtogroup tablejoinaes128
  *  @{
  *  @brief Function for joining two Aes128 matrices
  *  @note **D** - shared3p protection domain

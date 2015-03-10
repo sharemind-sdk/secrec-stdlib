@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -44,19 +44,19 @@ import matrix;
 * \defgroup randomize randomize
 */
 
-/** \addtogroup <shared3p_random> 
+/** \addtogroup shared3p_random
 *@{
 * @brief Module with functions for randomizing values
 */
 
-/** \addtogroup <shuffle> 
+/** \addtogroup shuffle
  *  @{
  *  @brief Functions for shuffling values
  *  @note **D** - shared3p protection domain
  *  @note **T** - any \ref data_types "data" type
  */
 
-/** \addtogroup <shuffle1> 
+/** \addtogroup shuffle1
  *  @{
  *  @brief Function for shuffling values
  *  @note **D** - shared3p protection domain
@@ -85,7 +85,7 @@ D T[[1]] shuffle (D T[[1]] vec) {
 }
 
 /** @}*/
-/** \addtogroup <shuffle2> 
+/** \addtogroup shuffle2
  *  @{
  *  @brief Protocols to shuffle an array with given key.
  *  @note **D** - shared3p protection domain
@@ -123,7 +123,7 @@ D T[[1]] shuffle (D T[[1]] vec, D uint8[[1]] key) {
 }
 
 /** @}*/
-/** \addtogroup <shuffle3> 
+/** \addtogroup shuffle3
  *  @{
  *  @brief Protocols to undo the shuffle of an array with given key.
  *  @note **D** - shared3p protection domain
@@ -161,7 +161,7 @@ D T[[1]] inverseShuffle (D T[[1]] vec, D uint8[[1]] key) {
 }
 
 /** @}*/
-/** \addtogroup <shufflerows1> 
+/** \addtogroup shufflerows1
 *  @{
 *  @brief Function for shuffling rows in a matrix
 *  @note **D** - shared3p protection domain
@@ -189,7 +189,7 @@ D T[[2]] shuffleRows (D T[[2]] mat) {
 }
 
 /** @}*/
-/** \addtogroup <shufflerows2> 
+/** \addtogroup shufflerows2
  *  @{
  *  @brief Protocols to shuffle rows in a matrix with given key.
  *  @note **D** - shared3p protection domain
@@ -226,7 +226,7 @@ D T[[2]] shuffleRows (D T[[2]] mat, D uint8[[1]] key) {
 }
 
 /** @}*/
-/** \addtogroup <shufflerows3> 
+/** \addtogroup shufflerows3
  *  @{
  *  @brief Protocols to undo the shuffling of rows in a matrix with given key.
  *  @note **D** - shared3p protection domain
@@ -263,7 +263,7 @@ D T[[2]] inverseShuffleRows (D T[[2]] mat, D uint8[[1]] key) {
 }
 
 /** @}*/
-/** \addtogroup <shufflecols1> 
+/** \addtogroup shufflecols1
 *  @{
 *  @brief Function for shuffling columns in a matrix
 *  @note **D** - shared3p protection domain
@@ -289,7 +289,7 @@ D T[[2]] shuffleColumns (D T[[2]] mat) {
 
 
 /** @}*/
-/** \addtogroup <shufflecols2> 
+/** \addtogroup shufflecols2
  *  @{
  *  @brief Protocols to shuffle columns in a matrix with given key.
  *  @note **D** - shared3p protection domain
@@ -324,7 +324,7 @@ D T[[2]] shuffleColumns (D T[[2]] mat, D uint8[[1]] key) {
 }
 
 /** @}*/
-/** \addtogroup <shufflecols3> 
+/** \addtogroup shufflecols3
  *  @{
  *  @brief Protocols to undo the shuffle of columns in a matrix with given key.
  *  @note **D** - shared3p protection domain
@@ -366,7 +366,7 @@ D T[[2]] inverseShuffleColumns (D T[[2]] mat, D uint8[[1]] key) {
 ********************************/
 
 
-/** \addtogroup <randomize> 
+/** \addtogroup randomize
  *  @{
  *  @brief Function for randomizing values
  *  @note **D** - shared3p protection domain

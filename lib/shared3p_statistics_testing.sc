@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -51,7 +51,7 @@ import stdlib;
  */
 
 /**
- * \addtogroup <shared3p_statistics_testing>
+ * \addtogroup shared3p_statistics_testing
  * @{
  * @brief Module with statistical hypothesis tests.
  */
@@ -304,7 +304,7 @@ D FT _combinedDegreesOfFreedom (D IT[[1]] data1,
 /** \endcond */
 
 /**
- * \addtogroup <hypothesis_testing_constants>
+ * \addtogroup hypothesis_testing_constants
  * @{
  * @brief Constants used for specifying the alternative hypothesis.
  */
@@ -314,7 +314,7 @@ int64 ALTERNATIVE_TWO_SIDED = 2;
 /** @} */
 
 
-/** \addtogroup <t_test>
+/** \addtogroup t_test
  *  @{
  *  @brief Perform t-tests
  *  @note **D** - shared3p protection domain
@@ -339,7 +339,7 @@ D float64 tTest (D int64[[1]] data, D bool[[1]] cases, D bool[[1]] controls, boo
 }
 /** @} */
 
-/** \addtogroup <t_test_samples>
+/** \addtogroup t_test_samples
  *  @{
  *  @brief Perform t-tests
  *  @note **D** - shared3p protection domain
@@ -375,7 +375,7 @@ D float64 tTest (D int64[[1]] data1,
 }
 /** @} */
 
-/** \addtogroup <combined_df>
+/** \addtogroup combined_df
  *  @{
  *  @brief Approximate the degrees of freedom of a linear combination
  *  of independent sample variances
@@ -443,7 +443,7 @@ D FT _pairedTTest (D T[[1]] sample1, D T[[1]] sample2, D bool[[1]] filter, FT co
 /** \endcond */
 
 
-/** \addtogroup <paired_t_test>
+/** \addtogroup paired_t_test
  *  @{
  *  @brief Perform paired t-tests
  *  @note **D** - shared3p protection domain
@@ -534,7 +534,7 @@ D FT _chiSquaredXClasses (D UT[[2]] contTable, T dummy) {
 }
 /** \endcond */
 
-/** \addtogroup <chisq>
+/** \addtogroup chisq
  *  @{
  *  @brief Perform Pearson's chi-squared test of independence
  *  @note **D** - any protection domain
@@ -580,7 +580,7 @@ D float64 chiSquared (D uint64[[2]] contTable) {
 /** @} */
 
 
-/** \addtogroup <chisq_cb>
+/** \addtogroup chisq_cb
  *  @{
  *  @brief Perform Pearson's chi-squared test of independence
  *  @note **D** - any protection domain
@@ -711,7 +711,7 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
 /** \endcond */
 
 
-/** \addtogroup <wilcoxon_rank_sum>
+/** \addtogroup wilcoxon_rank_sum
  *  @{
  *  @brief Perform Wilcoxon rank sum tests
  *  @note **D** - shared3p protection domain
@@ -837,7 +837,7 @@ D FT[[1]] _mannWhitneyU (D T[[1]] sample1,
 /** \endcond */
 
 /**
- * \addtogroup <mann_whitney_u>
+ * \addtogroup mann_whitney_u
  * @{
  * @brief Perform Mann-Whitney U test
  * @note **D** - shared3p protection domain
@@ -961,7 +961,7 @@ D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
 /** \endcond */
 
 
-/** \addtogroup <wilcoxon_signed_rank>
+/** \addtogroup wilcoxon_signed_rank
  *  @{
  *  @brief Perform Wilcoxon signed rank tests.
  *  @note The paired t-test requires the populations to be normally
@@ -1033,7 +1033,7 @@ D uint[[1]] _benjaminiHochberg (D FT[[1]] statistics,
 }
 /** \endcond */
 
-/** \addtogroup <multiple_testing>
+/** \addtogroup multiple_testing
  *  @brief Perform the Benjamini-Hochberg procedure for false
  *  discovery rate control.
  *  @note If multiple variables of a dataset are used for testing a

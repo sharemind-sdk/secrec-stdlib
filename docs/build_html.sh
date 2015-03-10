@@ -21,7 +21,6 @@
 doxygen Doxyfile
 for file in $(grep -il "." html/*.html)
 do
-	echo "repairing:" $file
 	sed '/.*<td class=\"paramtype\">.*<\/td>/ {
 		N
 		s/\[\[\(.\)\]/\[\[\1\]\]/

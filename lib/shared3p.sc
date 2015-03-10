@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -67,7 +67,7 @@ kind shared3p;
 * \defgroup shared3p_choose choose
 */
 
-/** \addtogroup <shared3p>
+/** \addtogroup shared3p
 *@{
 * @brief Module with shared3p protection domain functions
 */
@@ -94,7 +94,7 @@ D T[[N]] classify(T[[N]] value) {
     sign, abs
 ********************************/
 
-/** \addtogroup <sign>
+/** \addtogroup sign
  *  @{
  *  @brief Function for determining the sign of values
  *  @note **D** - shared3p protection domain
@@ -128,7 +128,7 @@ D int[[N]] sign (D int[[N]] x) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_abs>
+/** \addtogroup shared3p_abs
  *  @{
  *  @brief Function for finding absolute values
  *  @note **D** - shared3p protection domain
@@ -187,14 +187,14 @@ D float64[[N]] abs (D float64[[N]] value) {
 /*******************************
     sum
 ********************************/
-/** \addtogroup <shared3p_sum>
+/** \addtogroup shared3p_sum
  *  @{
  *  @brief Functions for finding sums
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  */
 
-/** \addtogroup <shared3p_sum_vec>
+/** \addtogroup shared3p_sum_vec
  *  @{
  *  @brief Function for finding the sum of all the elements in a vector
  *  @note **D** - shared3p protection domain
@@ -292,7 +292,7 @@ D float64 sum (D float64[[1]] vec) {
 
 /** @}*/
 
-/** \addtogroup <shared3p_sum_k>
+/** \addtogroup shared3p_sum_k
  *  @{
  *  @brief Function for finding the sum of all elements in the input vector in specified parts.
  *  @note **D** - shared3p protection domain
@@ -400,7 +400,7 @@ D float64[[1]] sum (D float64[[1]] vec, uint k) {
 /*******************************
     product
 ********************************/
-/** \addtogroup <shared3p_product>
+/** \addtogroup shared3p_product
  *  @{
  *  @brief Functions for finding products
  *  @note **D** - shared3p protection domain
@@ -408,7 +408,7 @@ D float64[[1]] sum (D float64[[1]] vec, uint k) {
  */
 
 
-/** \addtogroup <shared3p_product_vec>
+/** \addtogroup shared3p_product_vec
  *  @{
  *  @brief Function for finding the product of the input vector
  *  @note **D** - shared3p protection domain
@@ -479,7 +479,7 @@ D int product (D int[[1]] vec) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_product_k>
+/** \addtogroup shared3p_product_k
  *  @{
  *  @brief Function for finding the product of all elements in the input vector in specified parts.
  *  @note **D** - shared3p protection domain
@@ -563,7 +563,7 @@ D int[[1]] product (D int[[1]] vec, uint k) {
 ********************************/
 
 
-/** \addtogroup <shared3p_any>
+/** \addtogroup shared3p_any
  *  @{
  *  @brief Function for checking if any value of the input vector is true
  *  @note **D** - shared3p protection domain
@@ -607,7 +607,7 @@ D bool any (D bool[[N]] arr) {
 }
 /** @}*/
 
-/** \addtogroup <shared3p_all>
+/** \addtogroup shared3p_all
  *  @{
  *  @brief Function for checking if all values of the input vector are true
  *  @note **D** - shared3p protection domain
@@ -626,7 +626,7 @@ D bool all (D bool b) {
 }
 
 /**
-* @param vec - boolean 1-dimensional vector
+* @param arr - boolean 1-dimensional vector
 */
 template <domain D : shared3p>
 D bool all (D bool [[1]] arr) {
@@ -659,7 +659,7 @@ D bool all (D bool[[N]] arr) {
     truePrefixLength
 ********************************/
 
-/** \addtogroup <shared3p_trueprefixlength>
+/** \addtogroup shared3p_trueprefixlength
  *  @{
  *  @brief Function for finding how many elements from the start of a vector are true
  *  @note **D** - shared3p protection domain
@@ -1337,7 +1337,7 @@ D uint[[N]] operator % (D uint[[N]] arr, uint[[N]] pubArr) {
     inv, sqrt, sin, ln, exp, erf, isNegligible
 *****************************************************/
 
-/** \addtogroup <shared3p_inv>
+/** \addtogroup shared3p_inv
  *  @{
  *  @brief Function for inversing a value
  *  @note **D** - shared3p protection domain
@@ -1358,7 +1358,7 @@ D float64[[N]] inv (D float64[[N]] x) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_sqrt>
+/** \addtogroup shared3p_sqrt
  *  @{
  *  @brief Function for finding the square root of a value
  *  @note **D** - shared3p protection domain
@@ -1379,7 +1379,7 @@ D float64[[N]] sqrt (D float64[[N]] x) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_sin>
+/** \addtogroup shared3p_sin
  *  @{
  *  @brief Function for finding the sine of a value
  *  @note **D** - shared3p protection domain
@@ -1400,7 +1400,7 @@ D float64[[N]] sin (D float64[[N]] x) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_ln>
+/** \addtogroup shared3p_ln
  *  @{
  *  @brief Function for finding the natural logarithm of a value
  *  @note **D** - shared3p protection domain
@@ -1421,7 +1421,7 @@ D float64[[N]] ln (D float64[[N]] x) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_exp>
+/** \addtogroup shared3p_exp
  *  @{
  *  @brief Function for finding exp(x)
  *  @note **D** - shared3p protection domain
@@ -1442,7 +1442,7 @@ D float64[[N]] exp (D float64[[N]] x) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_erf>
+/** \addtogroup shared3p_erf
  *  @{
  *  @brief Function for finding the value of error function
  *  @note **D** - shared3p protection domain
@@ -1463,7 +1463,7 @@ D float64[[N]] erf (D float64[[N]] x) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_isnegligible>
+/** \addtogroup shared3p_isnegligible
  *  @{
  *  @brief Function for finding if the error is small enough to neglect
  *  @note **D** - shared3p protection domain
@@ -1524,14 +1524,14 @@ D bool[[1]] isNegligible (D float64[[1]] a) {
     Min, max
 ********************************/
 
-/** \addtogroup <shared3p_min>
+/** \addtogroup shared3p_min
  *  @{
  *  @brief Functions for finding the minimum value
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  */
 
-/** \addtogroup <shared3p_min_vec>
+/** \addtogroup shared3p_min_vec
  *  @{
  *  @brief Function for finding the minimum element of the input vector.
  *  @note **D** - shared3p protection domain
@@ -1625,7 +1625,7 @@ D float64 min (D float64[[1]] x) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_min_k>
+/** \addtogroup shared3p_min_k
  *  @{
  *  @brief Function for finding the minimum element in the specified parts of the vector.
  *  @note **D** - shared3p protection domain
@@ -1722,7 +1722,7 @@ D int[[1]] min (D int[[1]] x, uint k) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_min_2>
+/** \addtogroup shared3p_min_2
  *  @{
  *  @brief Function for finding the pointwise minimum of 2 arrays
  *  @note **D** - shared3p protection domain
@@ -1945,14 +1945,14 @@ D float64[[N]] min(D float64[[N]] x, D float64[[N]] y) {
 /** @}*/
 
 
-/** \addtogroup <shared3p_max>
+/** \addtogroup shared3p_max
  *  @{
  *  @brief Functions for finding the maximum value
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  */
 
-/** \addtogroup <shared3p_max_vec>
+/** \addtogroup shared3p_max_vec
  *  @{
  *  @brief Function for finding the maximum element of the input vector.
  *  @note **D** - shared3p protection domain
@@ -2046,7 +2046,7 @@ D float64 max(D float64[[1]] x) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_max_k>
+/** \addtogroup shared3p_max_k
  *  @{
  *  @brief Function for finding the maximum element in the specified parts of the vector.
  *  @note **D** - shared3p protection domain
@@ -2144,7 +2144,7 @@ D int[[1]] max (D int[[1]] x, uint k) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_max_2>
+/** \addtogroup shared3p_max_2
  *  @{
  *  @brief Function for finding the pointwise maximum of 2 arrays
  *  @note **D** - shared3p protection domain
@@ -2364,7 +2364,7 @@ D float64[[N]] max (D float64[[N]] x, D float64[[N]] y) {
 
 /** @}*/
 /** @}*/
-/** \addtogroup <shared3p_floor>
+/** \addtogroup shared3p_floor
  *  @{
  *  @brief Functions for rounding a value downwards
  *  @note **D** - shared3p protection domain
@@ -2407,7 +2407,7 @@ D int64[[1]] floor (D float64[[1]] arr) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_ceiling>
+/** \addtogroup shared3p_ceiling
  *  @{
  *  @brief Functions for rounding a value upwards
  *  @note **D** - shared3p protection domain
@@ -2450,7 +2450,7 @@ D int64[[1]] ceiling (D float64[[1]] arr) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_argument>
+/** \addtogroup shared3p_argument
  *  @{
  *  @brief Function for accessing the named program arguments of shared3p types.
  *  @note **T** - any \ref data_types "data" type
@@ -2458,7 +2458,7 @@ D int64[[1]] ceiling (D float64[[1]] arr) {
  *  @return returns the value associated with the argument specified by parameter name.
  */
 
-/** 
+/**
 *  @return An argument of scalar type.
 */
 template <domain D : shared3p, type T>
@@ -2488,7 +2488,7 @@ D T[[1]] argument (string name) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_publish>
+/** \addtogroup shared3p_publish
  *  @{
  *  @brief Function for publishing the named values of shared3p types.
  *  @note **N** - any array size of any dimension
@@ -2509,7 +2509,7 @@ void publish (string name, D T[[N]] val) {
 /** @}*/
 
 /**
- * \addtogroup <shared3p_bit_extract>
+ * \addtogroup shared3p_bit_extract
  * @{
  * @brief Function for converting xor_uint(X) type value to the bit representation.
  *  @note **D** - shared3p protection domain
@@ -2549,7 +2549,7 @@ D bool[[1]] bit_extract (D xor_uint64[[N]] input) {
 
 /**
  * @}
- * \addtogroup <shared3p_reshare>
+ * \addtogroup shared3p_reshare
  * @{
  * @brief Function for converting uint(X) type values to xor_uint(X) and the other way around
  *  @note **D** - shared3p protection domain
@@ -2738,7 +2738,7 @@ D uint64 [[2]] reshare (D xor_uint64[[2]] input) {
 
 /**
  * @}
- * \addtogroup <shared3p_choose>
+ * \addtogroup shared3p_choose
  *  @{
  *  @brief Function for obliviously choosing pointwise from the inputs
  *  @note **D** - shared3p protection domain
@@ -2780,14 +2780,14 @@ D xor_uint64[[N]] choose(D bool[[N]] cond, D xor_uint64[[N]] first, D xor_uint64
     Min, max
 ********************************/
 
-/** \addtogroup <shared3p_min>
+/** \addtogroup shared3p_min
  *  @{
  *  @brief Functions for finding the minimum value
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  */
 
-/** \addtogroup <shared3p_min_vec>
+/** \addtogroup shared3p_min_vec
  *  @{
  *  @brief Function for finding the minimum element of the input vector.
  *  @note **D** - shared3p protection domain
@@ -2826,7 +2826,7 @@ D xor_uint64 min (D xor_uint64[[1]] x) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_min_2>
+/** \addtogroup shared3p_min_2
  *  @{
  *  @brief Function for finding the pointwise minimum of 2 arrays
  *  @note **D** - shared3p protection domain
@@ -2910,14 +2910,14 @@ D xor_uint64[[N]] min (D xor_uint64[[N]] x, D xor_uint64[[N]] y) {
 /** @}*/
 
 
-/** \addtogroup <shared3p_max>
+/** \addtogroup shared3p_max
  *  @{
  *  @brief Functions for finding the maximum value
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  */
 
-/** \addtogroup <shared3p_max_vec>
+/** \addtogroup shared3p_max_vec
  *  @{
  *  @brief Function for finding the maximum element of the input vector.
  *  @note **D** - shared3p protection domain
@@ -2956,7 +2956,7 @@ D xor_uint64 max (D xor_uint64[[1]] x) {
 }
 
 /** @}*/
-/** \addtogroup <shared3p_max_2>
+/** \addtogroup shared3p_max_2
  *  @{
  *  @brief Function for finding the pointwise maximum of 2 arrays
  *  @note **D** - shared3p protection domain

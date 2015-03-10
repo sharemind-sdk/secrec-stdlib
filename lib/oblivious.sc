@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -43,7 +43,7 @@ import stdlib;
 * \defgroup matrixupdate matrixUpdate
 */
 
-/** \addtogroup <oblivious>
+/** \addtogroup oblivious
 *@{
 * @brief Module with functions for oblivious tasks
 */
@@ -66,14 +66,14 @@ import stdlib;
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <choose>
+/** \addtogroup choose
  *  @{
  *  @brief Function for obliviously choosing one of the inputs
  *  @note **D** - all protection domains
  *  @return returns one of the input arrays that was obliviously chosen with the condition
  */
 
-/** \addtogroup <choose1>
+/** \addtogroup choose1
  *  @{
  *  @brief Function for obliviously choosing one of the inputs
  *  @note **D** - all protection domains
@@ -157,7 +157,7 @@ D float64[[N]] choose(D bool cond, D float64[[N]] first, D float64[[N]] second) 
 
 /** @}*/
 
-/** \addtogroup <choose2>
+/** \addtogroup choose2
  *  @{
  *  @brief Function for obliviously choosing pointwise from the inputs
  *  @note **D** - all protection domains
@@ -260,7 +260,7 @@ D bool[[1]] vectorLookupBitmask(uint elems, D uint index) {
 * \endcond
 */
 
-/** \addtogroup <vectorlookup>
+/** \addtogroup vectorlookup
  *  @{
  *  @brief Function for obliviously looking up an element in a vector
  *  @note **D** - all protection domains
@@ -440,7 +440,7 @@ D bool[[2]] matrixLookupRowBitmask(uint rows, uint cols, D uint rowIndex) {
 * \endcond
 */
 
-/** \addtogroup <matrixlookuprow>
+/** \addtogroup matrixlookuprow
  *  @{
  *  @brief Function for obliviously looking up a row in a matrix
  *  @note **D** - all protection domains
@@ -675,7 +675,7 @@ D bool[[2]] matrixLookupColumnBitmask(uint rows, uint cols, D uint colIndex) {
 * \endcond
 */
 
-/** \addtogroup <matrixlookupcolumn>
+/** \addtogroup matrixlookupcolumn
  *  @{
  *  @brief Function for obliviously looking up a column in a matrix
  *  @note **D** - all protection domains
@@ -921,7 +921,7 @@ D bool[[2]] matrixLookupBitmask(uint rows, uint cols, D uint rowIndex, D uint co
 * \endcond
 */
 
-/** \addtogroup <matrixlookup>
+/** \addtogroup matrixlookup
  *  @{
  *  @brief Function for obliviously looking up an element in the input matrix
  *  @note **D** - all protection domains
@@ -1151,7 +1151,7 @@ D float64 matrixLookup(D float64[[2]] mat, D uint rowIndex, D uint columnIndex) 
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <vectorupdate>
+/** \addtogroup vectorupdate
  *  @{
  *  @brief Function for obliviously updating an element in the input vector
  *  @note **D** - all protection domains
@@ -1227,7 +1227,7 @@ D uint[[1]] vectorUpdate(D uint64[[1]] vec, D uint index, D uint64 newValue) {
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <matrixupdaterow>
+/** \addtogroup matrixupdaterow
  *  @{
  *  @brief Function for obliviously updating a row in the input matrix
  *  @note **D** - all protection domains
@@ -1403,7 +1403,7 @@ D int[[2]] matrixUpdateRow(D int[[2]] mat, D uint rowIndex, D int[[1]] newRow) {
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <matrixupdatecolumn>
+/** \addtogroup matrixupdatecolumn
  *  @{
  *  @brief Function for obliviously updating a column in the input matrix
  *  @note **D** - all protection domains
@@ -1577,7 +1577,7 @@ D int[[2]] matrixUpdateColumn(D int[[2]] mat, D uint colIndex, D int[[1]] newCol
 ********************************************************************************
 *******************************************************************************/
 
-/** \addtogroup <matrixupdate>
+/** \addtogroup matrixupdate
  *  @{
  *  @brief Function for obliviously updating a value in the input matrix
  *  @note **D** - all protection domains

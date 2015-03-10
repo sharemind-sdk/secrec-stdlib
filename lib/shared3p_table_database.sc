@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -40,12 +40,12 @@ import table_database;
  * \defgroup shared3p_tdb_read_column_string tdbReadColumn(string)
  */
 
-/** \addtogroup <shared3p_table_database>
+/** \addtogroup shared3p_table_database
  * @{
  * @brief Module for working with table databases that contain shared3p shares.
  */
 
-/** \addtogroup <shared3p_tdb_vmap_add_type>
+/** \addtogroup shared3p_tdb_vmap_add_type
  *  @{
  *  @brief Add a type to a vector in a vector map
  *  @note **D** - shared3p protection domain
@@ -64,7 +64,7 @@ void tdbVmapAddType (uint64 id, string paramname, D T t) {
 }
 /** @} */
 
-/** \addtogroup <shared3p_tdb_vmap_add_vlen_type>
+/** \addtogroup shared3p_tdb_vmap_add_vlen_type
  *  @{
  *  @brief Add a variable length type to a vector in a vector map
  *  @note This is used to create a table with a column that contains
@@ -83,7 +83,7 @@ void tdbVmapAddVlenType (uint64 id, string paramname, D T t) {
 }
 /** @} */
 
-/** \addtogroup <shared3p_tdb_vmap_add_value_scalar>
+/** \addtogroup shared3p_tdb_vmap_add_value_scalar
  *  @{
  *  @brief Add a scalar value to a vector in a vector map
  *  @note **D** - shared3p protection domain
@@ -106,7 +106,7 @@ void tdbVmapAddValue (uint64 id, string paramname, D T value) {
 }
 /** @} */
 
-/** \addtogroup <shared3p_tdb_vmap_add_value_vector>
+/** \addtogroup shared3p_tdb_vmap_add_value_vector
  *  @{
  *  @brief Add a vector to a vector in a vector map
  *  @note **D** - shared3p protection domain
@@ -129,13 +129,13 @@ void tdbVmapAddValue (uint64 id, string paramname, D T [[1]] values) {
 }
 /** @} */
 
-/** \addtogroup <shared3p_tdb_vmap_add_vlen_value>
+/** \addtogroup shared3p_tdb_vmap_add_vlen_value
  *  @{
  *  @brief Add a variable length vector to a vector in a vector map
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param id - vector map id
- *  @paramname - name of the vector to which the value is added
+ *  @param paramname - name of the vector to which the value is added
  *  @param values - vector to be added
  */
 template <domain D : shared3p, type T>
@@ -150,7 +150,7 @@ void tdbVmapAddVlenValue (uint64 id, string paramname, D T [[1]] values) {
 }
 /** @} */
 
-/** \addtogroup <shared3p_tdb_vmap_get_value>
+/** \addtogroup shared3p_tdb_vmap_get_value
  *  @{
  *  @brief Get a value from a vector in a vector map
  *  @note **D** - shared3p protection domain
@@ -207,7 +207,7 @@ D T[[1]] tdbVmapGetValue (uint64 id, string paramname, uint64 index) {
 }
 /** @} */
 
-/** \addtogroup <shared3p_tdb_vmap_get_vlen_value>
+/** \addtogroup shared3p_tdb_vmap_get_vlen_value
  *  @{
  *  @brief Get a variable length value from a vector in a vector map
  *  @note This function is used when the table column contains variable length vectors
@@ -262,7 +262,7 @@ D T[[1]] tdbVmapGetVlenValue (uint64 id, string paramname, uint64 index) {
 }
 /** @} */
 
-/** \addtogroup <shared3p_tdb_table_create>
+/** \addtogroup shared3p_tdb_table_create
  *  @{
  *  @brief Create a table where all columns have the same type
  *  @note **D** - shared3p protection domain
@@ -282,7 +282,7 @@ void tdbTableCreate (string datasource, string table, D T[[N]] vtype, uint64 nco
 }
 /** @} */
 
-/** \addtogroup <shared3p_tdb_insert_row>
+/** \addtogroup shared3p_tdb_insert_row
  *  @{
  *  @brief Insert a row into a table
  *  @note This function can be used if all columns have the same type.
@@ -306,7 +306,7 @@ void tdbInsertRow (string datasource, string table, D T[[1]] values) {
 }
 /** @} */
 
-/** \addtogroup <shared3p_tdb_read_column_index>
+/** \addtogroup shared3p_tdb_read_column_index
  *  @{
  *  @brief Read a column from a table
  *  @note **D** - shared3p protection domain
@@ -326,7 +326,7 @@ D T[[1]] tdbReadColumn (string datasource, string table, uint64 index) {
 }
 /** @} */
 
-/** \addtogroup <shared3p_tdb_read_column_string>
+/** \addtogroup shared3p_tdb_read_column_string
  *  @{
  *  @brief Read a column from a table
  *  @note **D** - shared3p protection domain

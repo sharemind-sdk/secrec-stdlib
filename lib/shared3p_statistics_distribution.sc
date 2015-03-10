@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -38,7 +38,7 @@ import stdlib;
  * \defgroup heatmap heatmap
  */
 
-/** \addtogroup <shared3p_statistics_distribution>
+/** \addtogroup shared3p_statistics_distribution
  *  @{
  *  @brief Module for visualising distribution of data.
  */
@@ -384,7 +384,7 @@ D T[[2]] _heatmap (D T[[1]] x,
 /** \endcond */
 
 
-/** \addtogroup <histogram>
+/** \addtogroup histogram
  *  @{
  *  @brief Create a histogram
  *  @note **D** - any protection domain
@@ -409,7 +409,7 @@ D int64[[2]] histogram (D int64[[1]] data, D bool[[1]] isAvailable) {
 /** @} */
 
 
-/** \addtogroup <discreteDistributionCount>
+/** \addtogroup discreteDistributionCount
  *  @{
  *  @brief Find discrete distribution of an input vector
  *  @note **D** - any protection domain
@@ -437,7 +437,7 @@ D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailab
 }
 /** @} */
 
-/** \addtogroup <discreteDistributionCount_stepSize>
+/** \addtogroup discreteDistributionCount_stepSize
  *  @{
  *  @brief Find discrete distribution of an input vector
  *  @note **D** - any protection domain
@@ -468,7 +468,7 @@ D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailab
 
 /** @} */
 
-/** \addtogroup <heatmap>
+/** \addtogroup heatmap
  *  @{
  *  @brief Create a heatmap
  *  @note **D** - shared3p

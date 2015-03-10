@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -39,12 +39,12 @@ import stdlib;
 * \defgroup shared3p_matrixupdatecolumn matrixUpdateColumn
 */
 
-/** \addtogroup <shared3p_oblivious>
+/** \addtogroup shared3p_oblivious
 *@{
 * @brief Module with functions for oblivious tasks (shared3p protection domain)
 */
 
-/** \addtogroup <shared3p_choose>
+/** \addtogroup shared3p_choose
  *  @{
  *  @brief Function for obliviously choosing one of the inputs
  *  @note **D** - shared3p protection domain
@@ -70,7 +70,7 @@ D float64[[N]] choose(D bool[[N]] cond, D float64[[N]] first, D float64[[N]] sec
 /** @}*/
 
 
-/** \addtogroup <shared3p_vectorupdate>
+/** \addtogroup shared3p_vectorupdate
  *  @{
  *  @brief Function for obliviously updating an element in the input vector
  *  @note **D** - shared3p protection domain
@@ -94,7 +94,7 @@ D float64[[1]] vectorUpdate(D float64[[1]] vec, D uint index, D float64 newValue
 /** @}*/
 
 
-/** \addtogroup <shared3p_matrixupdaterow>
+/** \addtogroup shared3p_matrixupdaterow
  *  @{
  *  @brief Function for obliviously updating a row in the input matrix
  *  @note **D** - shared3p protection domain
@@ -141,7 +141,7 @@ D float64[[2]] matrixUpdateRow(D float64[[2]] mat, D uint rowIndex, D float64[[1
 /** @}*/
 
 
-/** \addtogroup <shared3p_matrixupdatecolumn>
+/** \addtogroup shared3p_matrixupdatecolumn
  *  @{
  *  @brief Function for obliviously updating a column in the input matrix
  *  @note **D** - shared3p protection domain
@@ -187,7 +187,7 @@ D float64[[2]] matrixUpdateColumn(D float64[[2]] mat, D uint colIndex, D float64
 /** @}*/
 
 
-/** \addtogroup <shared3p_matrixupdate>
+/** \addtogroup shared3p_matrixupdate
  *  @{
  *  @brief Function for obliviously updating a value in the input matrix
  *  @note **D** - shared3p protection domain

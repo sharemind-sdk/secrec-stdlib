@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -39,14 +39,14 @@ import stdlib;
  */
 
 /**
- * \addtogroup <shared3p_statistics_glm>
+ * \addtogroup shared3p_statistics_glm
  * @{
  * @brief Module for performing regression analysis of generalized
  * linear models.
  */
 
 /**
- * \addtogroup <shared3p_glm_constants>
+ * \addtogroup shared3p_glm_constants
  * @{
  * @brief constants
  * @note The "family" constants are used to specify the distribution
@@ -257,7 +257,7 @@ D T[[1]] _dispatch(D T[[1]] dependent,
 /** \endcond */
 
 /**
- * \addtogroup <shared3p_generalized_linear_model>
+ * \addtogroup shared3p_generalized_linear_model
  * @{
  * @brief Fitting of generalized linear models
  * @note **D** - shared3p protection domain
@@ -292,7 +292,7 @@ D float64[[1]] generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] v
 /** @} */
 
 /**
- * \addtogroup <shared3p_generalized_linear_model_method>
+ * \addtogroup shared3p_generalized_linear_model_method
  * @{
  * @brief Fitting of generalized linear models
  * @note **D** - shared3p protection domain
