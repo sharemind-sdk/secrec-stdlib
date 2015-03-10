@@ -94,6 +94,9 @@ int64 INT64_MIN = -9223372036854775808;
 * \defgroup round round
 * \defgroup sqrt sqrt
 * \defgroup sin sin
+* \defgroup erf erf
+* \defgroup exp exp
+* \defgroup log log
 */
 
 /** \addtogroup <stdlib>
@@ -1817,6 +1820,66 @@ template<dim N>
 float64[[N]] sin(float64[[N]] x) {
     float64[[N]] ret = x;
     __syscall("float64_sin", __cref x, __ref ret);
+    return ret;
+}
+/** @} */
+
+/** \addtogroup <erf>
+ *  @{
+ *  @brief Error function.
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ */
+template<dim N>
+float32[[N]] erf(float32[[N]] x) {
+    float32[[N]] ret = x;
+    __syscall("float32_erf", __cref x, __ref ret);
+    return ret;
+}
+
+template<dim N>
+float64[[N]] erf(float64[[N]] x) {
+    float64[[N]] ret = x;
+    __syscall("float64_erf", __cref x, __ref ret);
+    return ret;
+}
+/** @} */
+
+/** \addtogroup <exp>
+ *  @{
+ *  @brief Exponential function.
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ */
+template<dim N>
+float32[[N]] exp(float32[[N]] x) {
+    float32[[N]] ret = x;
+    __syscall("float32_exp", __cref x, __ref ret);
+    return ret;
+}
+
+template<dim N>
+float64[[N]] exp(float64[[N]] x) {
+    float64[[N]] ret = x;
+    __syscall("float64_exp", __cref x, __ref ret);
+    return ret;
+}
+/** @} */
+
+/** \addtogroup <log>
+ *  @{
+ *  @brief Exponential function.
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ */
+template<dim N>
+float32[[N]] log(float32[[N]] x) {
+    float32[[N]] ret = x;
+    __syscall("float32_log", __cref x, __ref ret);
+    return ret;
+}
+
+template<dim N>
+float64[[N]] log(float64[[N]] x) {
+    float64[[N]] ret = x;
+    __syscall("float64_log", __cref x, __ref ret);
     return ret;
 }
 /** @} */
