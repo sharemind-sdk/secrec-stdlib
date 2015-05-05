@@ -96,7 +96,7 @@ int64 INT64_MIN = -9223372036854775808;
 * \defgroup sin sin
 * \defgroup erf erf
 * \defgroup exp exp
-* \defgroup log log
+* \defgroup ln ln
 */
 
 /** \addtogroup stdlib
@@ -1860,20 +1860,20 @@ float64[[N]] exp(float64[[N]] x) {
 }
 /** @} */
 
-/** \addtogroup log
+/** \addtogroup ln
  *  @{
- *  @brief Exponential function.
+ *  @brief Natural logarthim
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
  */
 template<dim N>
-float32[[N]] log(float32[[N]] x) {
+float32[[N]] ln(float32[[N]] x) {
     float32[[N]] ret = x;
     __syscall("float32_log", __cref x, __ref ret);
     return ret;
 }
 
 template<dim N>
-float64[[N]] log(float64[[N]] x) {
+float64[[N]] ln(float64[[N]] x) {
     float64[[N]] ret = x;
     __syscall("float64_log", __cref x, __ref ret);
     return ret;
