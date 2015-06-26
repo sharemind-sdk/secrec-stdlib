@@ -1471,6 +1471,7 @@ D float64[[N]] erf (D float64[[N]] x) {
  *  @return returns **true** if the error is small enough to neglect
  *  @return returns **false** if the error is not small enough
  *  @note isNegligible checks up to the 5th place after the comma
+ *  @note this does not quite match public isNegligible
  */
 
 /**

@@ -97,6 +97,7 @@ int64 INT64_MIN = -9223372036854775808;
 * \defgroup erf erf
 * \defgroup exp exp
 * \defgroup ln ln
+* \defgroup isnegligible isNegligible
 */
 
 /** \addtogroup stdlib
@@ -209,7 +210,7 @@ void publish (string name, string str) {
 /** @}*/
 
 /*******************************
-	Utility - flattening
+    Utility - flattening
 ********************************/
 
 /** \addtogroup flatten
@@ -224,13 +225,13 @@ void publish (string name, string str) {
 
 template <domain D, type T, dim N>
 D T[[1]] flatten (D T[[N]] arr) {
-	return reshape(arr,size(arr));
+    return reshape(arr,size(arr));
 }
 
 /** @}*/
 
 /*******************************
-	Utility - shapes are equal
+    Utility - shapes are equal
 ********************************/
 
 /** \addtogroup shapesareequal
@@ -261,24 +262,24 @@ bool shapesAreEqual(D1 T1[[N]] first, D2 T2[[N]] second) {
 /** @}*/
 
 /*******************************
-	Pretty printing
+    Pretty printing
 ********************************/
 /**
 * \cond
 */
 template <type T>
 string _vectorToString (T[[1]] vec) {
-	uint s = size (vec);
-	if (s == 0) {
-		return "{}";
-	}
-	uint sm = s - 1;
-  	string output = "{";
-  	for (uint i = 0; i < sm; ++i) {
-    	output += tostring(vec[i]) + ", ";
-  	}
-  	output += tostring(vec[sm]) + "}";
-  	return output;
+    uint s = size (vec);
+    if (s == 0) {
+        return "{}";
+    }
+    uint sm = s - 1;
+      string output = "{";
+      for (uint i = 0; i < sm; ++i) {
+        output += tostring(vec[i]) + ", ";
+      }
+      output += tostring(vec[sm]) + "}";
+      return output;
 }
 
 /**
@@ -299,7 +300,7 @@ string _vectorToString (T[[1]] vec) {
 */
 template <type T>
 string arrayToString (T scalar) {
-	return tostring(scalar);
+    return tostring(scalar);
 }
 
 /**
@@ -308,7 +309,7 @@ string arrayToString (T scalar) {
 
 template <type T>
 string arrayToString (T[[1]] vec) {
-	return _vectorToString(vec);
+    return _vectorToString(vec);
 }
 
 /**
@@ -317,13 +318,13 @@ string arrayToString (T[[1]] vec) {
 
 template <type T, dim N>
 string arrayToString (T[[N]] arr) {
-	uint n = size(arr);
-	if (n == 0) {
-		return "{}";
-	}
-	T[[1]] flatArr = reshape(arr, n);
+    uint n = size(arr);
+    if (n == 0) {
+        return "{}";
+    }
+    T[[1]] flatArr = reshape(arr, n);
 
-	return _vectorToString(flatArr);
+    return _vectorToString(flatArr);
 }
 
 /** @}*/
@@ -339,7 +340,7 @@ string arrayToString (T[[N]] arr) {
 
 template <type T>
 void printVector (T[[1]] vec) {
-	print(_vectorToString(vec));
+    print(_vectorToString(vec));
 }
 
 /** @}*/
@@ -356,21 +357,21 @@ void printVector (T[[1]] vec) {
 // nicer version of 2-dimensional printArray
 template <type T>
 void printMatrix (T[[2]] mat) {
-	uint rows = shape (mat)[0];
-	if (rows == 0) {
-		print("{}");
-	} else {
-		if (rows == 1) {
-			print("{ " + _vectorToString(mat[0,:]) + " }");
-		} else {
-			uint rowsm = rows-1;
-			print("{ " + _vectorToString(mat[0,:]) + ",");
-			for (uint i = 1; i < rowsm; ++i) {
-				print("  " + _vectorToString(mat[i,:]) + ",");
-			}
-			print("  " + _vectorToString(mat[rowsm,:]) + " }");
-		}
-	}
+    uint rows = shape (mat)[0];
+    if (rows == 0) {
+        print("{}");
+    } else {
+        if (rows == 1) {
+            print("{ " + _vectorToString(mat[0,:]) + " }");
+        } else {
+            uint rowsm = rows-1;
+            print("{ " + _vectorToString(mat[0,:]) + ",");
+            for (uint i = 1; i < rowsm; ++i) {
+                print("  " + _vectorToString(mat[i,:]) + ",");
+            }
+            print("  " + _vectorToString(mat[rowsm,:]) + " }");
+        }
+    }
 }
 
 /** @}*/
@@ -385,25 +386,25 @@ void printMatrix (T[[2]] mat) {
 
 template <type T>
 void print3dArray (T[[3]] arr) {
-	uint[[1]] s = shape(arr);
-	uint matrices = s[0];
-	uint rows = s[1];
-	if (matrices == 0) {
-		print("{}");
-	} else {
-		print("{");
-		printMatrix(arr[0,:,:]);
-		if (matrices > 1) {
-			print(",");
-			uint matricesm = matrices-1;
-			for (uint i = 1; i < matricesm; ++i) {
-				printMatrix(arr[i,:,:]);
-				print(",");
-			}
-			printMatrix(arr[matricesm,:,:]);
-		}
-		print("}");
-	}
+    uint[[1]] s = shape(arr);
+    uint matrices = s[0];
+    uint rows = s[1];
+    if (matrices == 0) {
+        print("{}");
+    } else {
+        print("{");
+        printMatrix(arr[0,:,:]);
+        if (matrices > 1) {
+            print(",");
+            uint matricesm = matrices-1;
+            for (uint i = 1; i < matricesm; ++i) {
+                printMatrix(arr[i,:,:]);
+                print(",");
+            }
+            printMatrix(arr[matricesm,:,:]);
+        }
+        print("}");
+    }
 }
 
 /** @}*/
@@ -418,13 +419,13 @@ void print3dArray (T[[3]] arr) {
 
 template <type T, dim N>
 void printArray (T[[N]] arr) {
-	print("shape: " + _vectorToString(shape(arr)));
-	print("elements: " + arrayToString(arr));
+    print("shape: " + _vectorToString(shape(arr)));
+    print("elements: " + arrayToString(arr));
 }
 /** @}*/
 
 /*******************************
-	All, any
+    All, any
 ********************************/
 
 
@@ -449,19 +450,19 @@ void printArray (T[[N]] arr) {
 */
 template <domain D>
 D bool any (D bool b) {
-	return b;
+    return b;
 }
 
 /**
 *  \cond
 */
 bool any (bool[[1]] vec) {
-	uint n = size(vec);
-	for (uint i = 0; i<n; ++i) {
-		if (vec[i]) {
-			return true;
-		}
-	}
+    uint n = size(vec);
+    for (uint i = 0; i<n; ++i) {
+        if (vec[i]) {
+            return true;
+        }
+    }
     return false;
 }
 
@@ -471,11 +472,11 @@ bool any (bool[[1]] vec) {
 */
 template <domain D>
 D bool any (D bool[[1]] vec) {
-	uint n = size(vec);
-	D bool result = false;
-	for (uint i = 0; i<n; ++i) {
-		result = result || vec[i];
-	}
+    uint n = size(vec);
+    D bool result = false;
+    for (uint i = 0; i<n; ++i) {
+        result = result || vec[i];
+    }
     return result;
 }
 
@@ -484,7 +485,7 @@ D bool any (D bool[[1]] vec) {
 */
 template <domain D, dim N>
 D bool any (D bool[[N]] arr) {
-	return any( flatten(arr) );
+    return any( flatten(arr) );
 }
 
 
@@ -504,18 +505,18 @@ D bool any (D bool[[N]] arr) {
 * \cond
 */
 bool[[1]] any (bool[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	uint len = n/k;
-	bool[[1]] result (k);
-	for (uint i = 0; i<k; ++i) {
-		for (uint j = 0; j<len; ++j) {
-			if (vec[i*len+j]) {
-				result[i] = true;
-				break;
-			}
-		}
-	}
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    uint len = n/k;
+    bool[[1]] result (k);
+    for (uint i = 0; i<k; ++i) {
+        for (uint j = 0; j<len; ++j) {
+            if (vec[i*len+j]) {
+                result[i] = true;
+                break;
+            }
+        }
+    }
 
     return result;
 }
@@ -525,15 +526,15 @@ bool[[1]] any (bool[[1]] vec, uint k) {
 */
 template <domain D>
 D bool[[1]] any (D bool[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	uint len = n/k;
-	D bool[[1]] result (k);
-	for (uint i = 0; i<k; ++i) {
-		for (uint j = 0; j<len; ++j) {
-			result[i] = result[i] || vec[i*len+j];
-		}
-	}
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    uint len = n/k;
+    D bool[[1]] result (k);
+    for (uint i = 0; i<k; ++i) {
+        for (uint j = 0; j<len; ++j) {
+            result[i] = result[i] || vec[i*len+j];
+        }
+    }
     return result;
 }
 
@@ -615,18 +616,18 @@ D bool all (D bool[[N]] arr) {
 * \cond
 */
 bool[[1]] all (bool[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	uint len = n/k;
-	bool[[1]] result (k) = true;
-	for (uint i = 0; i<k; ++i) {
-		for (uint j = 0; j<len; ++j) {
-			if (!vec[i*len+j]) {
-				result[i] = false;
-				break;
-			}
-		}
-	}
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    uint len = n/k;
+    bool[[1]] result (k) = true;
+    for (uint i = 0; i<k; ++i) {
+        for (uint j = 0; j<len; ++j) {
+            if (!vec[i*len+j]) {
+                result[i] = false;
+                break;
+            }
+        }
+    }
 
     return result;
 }
@@ -637,15 +638,15 @@ bool[[1]] all (bool[[1]] vec, uint k) {
 
 template <domain D>
 D bool[[1]] all (D bool[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	uint len = n/k;
-	D bool[[1]] result (k) = true;
-	for (uint i = 0; i<k; ++i) {
-		for (uint j = 0; j<len; ++j) {
-			result[i] = result[i] && vec[i*len+j];
-		}
-	}
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    uint len = n/k;
+    D bool[[1]] result (k) = true;
+    for (uint i = 0; i<k; ++i) {
+        for (uint j = 0; j<len; ++j) {
+            result[i] = result[i] && vec[i*len+j];
+        }
+    }
     return result;
 }
 
@@ -655,7 +656,7 @@ D bool[[1]] all (D bool[[1]] vec, uint k) {
 
 
 /*******************************
-	Sum
+    Sum
 ********************************/
 
 
@@ -677,112 +678,112 @@ D bool[[1]] all (D bool[[1]] vec, uint k) {
 
 template <domain D, type T>
 D T sum (D T scalar) {
-	return scalar;
+    return scalar;
 }
 
 template <domain D>
 D uint sum (D bool[[1]] vec) {
-	return sum((uint)vec);
+    return sum((uint)vec);
 }
 
 template <domain D>
 D uint8 sum (D uint8[[1]] vec) {
-	uint n = size(vec);
-	D uint8 sumOfArr;
-	for (uint i = 0; i<n; ++i) {
-		sumOfArr += vec[i];
-	}
-	return sumOfArr;
+    uint n = size(vec);
+    D uint8 sumOfArr;
+    for (uint i = 0; i<n; ++i) {
+        sumOfArr += vec[i];
+    }
+    return sumOfArr;
 }
 
 template <domain D>
 D uint16 sum (D uint16[[1]] vec) {
-	uint n = size(vec);
-	D uint16 sumOfArr;
-	for (uint i = 0; i<n; ++i) {
-		sumOfArr += vec[i];
-	}
-	return sumOfArr;
+    uint n = size(vec);
+    D uint16 sumOfArr;
+    for (uint i = 0; i<n; ++i) {
+        sumOfArr += vec[i];
+    }
+    return sumOfArr;
 }
 
 template <domain D>
 D uint32 sum (D uint32[[1]] vec) {
-	uint n = size(vec);
-	D uint32 sumOfArr;
-	for (uint i = 0; i<n; ++i) {
-		sumOfArr += vec[i];
-	}
-	return sumOfArr;
+    uint n = size(vec);
+    D uint32 sumOfArr;
+    for (uint i = 0; i<n; ++i) {
+        sumOfArr += vec[i];
+    }
+    return sumOfArr;
 }
 
 template <domain D>
 D uint sum (D uint[[1]] vec) {
-	uint n = size(vec);
-	D uint sumOfArr;
-	for (uint i = 0; i<n; ++i) {
-		sumOfArr += vec[i];
-	}
-	return sumOfArr;
+    uint n = size(vec);
+    D uint sumOfArr;
+    for (uint i = 0; i<n; ++i) {
+        sumOfArr += vec[i];
+    }
+    return sumOfArr;
 }
 
 template <domain D>
 D int8 sum (D int8[[1]] vec) {
-	uint n = size(vec);
-	D int8 sumOfArr;
-	for (uint i = 0; i<n; ++i) {
-		sumOfArr += vec[i];
-	}
-	return sumOfArr;
+    uint n = size(vec);
+    D int8 sumOfArr;
+    for (uint i = 0; i<n; ++i) {
+        sumOfArr += vec[i];
+    }
+    return sumOfArr;
 }
 
 template <domain D>
 D int16 sum (D int16[[1]] vec) {
-	uint n = size(vec);
-	D int16 sumOfArr;
-	for (uint i = 0; i<n; ++i) {
-		sumOfArr += vec[i];
-	}
-	return sumOfArr;
+    uint n = size(vec);
+    D int16 sumOfArr;
+    for (uint i = 0; i<n; ++i) {
+        sumOfArr += vec[i];
+    }
+    return sumOfArr;
 }
 
 template <domain D>
 D int32 sum (D int32[[1]] vec) {
-	uint n = size(vec);
-	D int32 sumOfArr;
-	for (uint i = 0; i<n; ++i) {
-		sumOfArr += vec[i];
-	}
-	return sumOfArr;
+    uint n = size(vec);
+    D int32 sumOfArr;
+    for (uint i = 0; i<n; ++i) {
+        sumOfArr += vec[i];
+    }
+    return sumOfArr;
 }
 
 template <domain D>
 D int sum (D int[[1]] vec) {
-	uint n = size(vec);
-	D int sumOfArr;
-	for (uint i = 0; i<n; ++i) {
-		sumOfArr += vec[i];
-	}
-	return sumOfArr;
+    uint n = size(vec);
+    D int sumOfArr;
+    for (uint i = 0; i<n; ++i) {
+        sumOfArr += vec[i];
+    }
+    return sumOfArr;
 }
 
 template <domain D>
 D float32 sum (D float32[[1]] vec) {
-	uint n = size(vec);
-	D float32 sumOfArr;
-	for (uint i = 0; i<n; ++i) {
-		sumOfArr += vec[i];
-	}
-	return sumOfArr;
+    uint n = size(vec);
+    D float32 sumOfArr;
+    for (uint i = 0; i<n; ++i) {
+        sumOfArr += vec[i];
+    }
+    return sumOfArr;
 }
 
 template <domain D>
 D float64 sum (D float64[[1]] vec) {
-	uint n = size(vec);
-	D float64 sumOfArr;
-	for (uint i = 0; i<n; ++i) {
-		sumOfArr += vec[i];
-	}
-	return sumOfArr;
+    uint n = size(vec);
+    D float64 sumOfArr;
+    for (uint i = 0; i<n; ++i) {
+        sumOfArr += vec[i];
+    }
+    return sumOfArr;
 }
 
 /** @}*/
@@ -792,170 +793,170 @@ D float64 sum (D float64[[1]] vec) {
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  * @param k - an \ref uint64 "uint" type scalar which specifies in how many parts the sum is found. \n
- 	For example if k = 2 then the input vector is split into two parts and the sums of those parts are found seperately.
+     For example if k = 2 then the input vector is split into two parts and the sums of those parts are found seperately.
  * @return returns a vector with the sum of the specified number of parts in the input vector
  * @note uses accumulator to calculate sum. May be very inefficient for private domains.
  */
 
 template <domain D>
 D uint[[1]] sum (D bool[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	D uint[[1]] sumsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return sumsOfSubArrs;
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    D uint[[1]] sumsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return sumsOfSubArrs;
 }
 
 template <domain D>
 D uint8[[1]] sum (D uint8[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	D uint8[[1]] sumsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return sumsOfSubArrs;
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    D uint8[[1]] sumsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return sumsOfSubArrs;
 }
 
 template <domain D>
 D uint16[[1]] sum (D uint16[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	D uint16[[1]] sumsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return sumsOfSubArrs;
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    D uint16[[1]] sumsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return sumsOfSubArrs;
 }
 
 template <domain D>
 D uint32[[1]] sum (D uint32[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	D uint32[[1]] sumsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return sumsOfSubArrs;
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    D uint32[[1]] sumsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return sumsOfSubArrs;
 }
 
 template <domain D>
 D uint[[1]] sum (D uint[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	D uint[[1]] sumsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return sumsOfSubArrs;
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    D uint[[1]] sumsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return sumsOfSubArrs;
 }
 
 template <domain D>
 D int8[[1]] sum (D int8[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	D int8[[1]] sumsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return sumsOfSubArrs;
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    D int8[[1]] sumsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return sumsOfSubArrs;
 }
 
 template <domain D>
 D int16[[1]] sum (D int16[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	D int16[[1]] sumsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return sumsOfSubArrs;
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    D int16[[1]] sumsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return sumsOfSubArrs;
 }
 
 template <domain D>
 D int32[[1]] sum (D int32[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	D int32[[1]] sumsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return sumsOfSubArrs;
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    D int32[[1]] sumsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return sumsOfSubArrs;
 }
 
 template <domain D>
 D int[[1]] sum (D int[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	D int[[1]] sumsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return sumsOfSubArrs;
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    D int[[1]] sumsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return sumsOfSubArrs;
 }
 
 template <domain D>
 D float32[[1]] sum (D float32[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	D float32[[1]] sumsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return sumsOfSubArrs;
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    D float32[[1]] sumsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return sumsOfSubArrs;
 }
 
 template <domain D>
 D float64[[1]] sum (D float64[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
-	D float64[[1]] sumsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return sumsOfSubArrs;
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    D float64[[1]] sumsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return sumsOfSubArrs;
 }
 /** @}*/
 /** @}*/
 
 
 /*******************************
-	Product
+    Product
 ********************************/
 
 /** \addtogroup product
@@ -975,148 +976,148 @@ D float64[[1]] sum (D float64[[1]] vec, uint k) {
 
 template <domain D, type T>
 D T product (D T scalar) {
-	return scalar;
+    return scalar;
 }
 
 
 template <domain D>
 D uint8 product (D uint8[[1]] vec) {
-	uint n = size(vec);
-	if (n == 0) {
-		return 0;
-	}
+    uint n = size(vec);
+    if (n == 0) {
+        return 0;
+    }
 
-	uint8 result = 1;
-	for (uint i = 0; i<n; ++i) {
-		result *= vec[i];
-	}
-	return result;
+    uint8 result = 1;
+    for (uint i = 0; i<n; ++i) {
+        result *= vec[i];
+    }
+    return result;
 }
 
 template <domain D>
 D uint16 product (D uint16[[1]] vec) {
-	uint n = size(vec);
-	if (n == 0) {
-		return 0;
-	}
+    uint n = size(vec);
+    if (n == 0) {
+        return 0;
+    }
 
-	uint16 result = 1;
-	for (uint i = 0; i<n; ++i) {
-		result *= vec[i];
-	}
-	return result;
+    uint16 result = 1;
+    for (uint i = 0; i<n; ++i) {
+        result *= vec[i];
+    }
+    return result;
 }
 
 template <domain D>
 D uint32 product (D uint32[[1]] vec) {
-	uint n = size(vec);
-	if (n == 0) {
-		return 0;
-	}
+    uint n = size(vec);
+    if (n == 0) {
+        return 0;
+    }
 
-	uint32 result = 1;
-	for (uint i = 0; i<n; ++i) {
-		result *= vec[i];
-	}
-	return result;
+    uint32 result = 1;
+    for (uint i = 0; i<n; ++i) {
+        result *= vec[i];
+    }
+    return result;
 }
 
 template <domain D>
 D uint product (D uint[[1]] vec) {
-	uint n = size(vec);
-	if (n == 0) {
-		return 0;
-	}
+    uint n = size(vec);
+    if (n == 0) {
+        return 0;
+    }
 
-	uint result = 1;
-	for (uint i = 0; i<n; ++i) {
-		result *= vec[i];
-	}
-	return result;
+    uint result = 1;
+    for (uint i = 0; i<n; ++i) {
+        result *= vec[i];
+    }
+    return result;
 }
 
 template <domain D>
 D int8 product (D int8[[1]] vec) {
-	uint n = size(vec);
-	if (n == 0) {
-		return 0;
-	}
+    uint n = size(vec);
+    if (n == 0) {
+        return 0;
+    }
 
-	int8 result = 1;
-	for (uint i = 0; i<n; ++i) {
-		result *= vec[i];
-	}
-	return result;
+    int8 result = 1;
+    for (uint i = 0; i<n; ++i) {
+        result *= vec[i];
+    }
+    return result;
 }
 
 template <domain D>
 D int16 product (D int16[[1]] vec) {
-	uint n = size(vec);
-	if (n == 0) {
-		return 0;
-	}
+    uint n = size(vec);
+    if (n == 0) {
+        return 0;
+    }
 
-	int16 result = 1;
-	for (uint i = 0; i<n; ++i) {
-		result *= vec[i];
-	}
-	return result;
+    int16 result = 1;
+    for (uint i = 0; i<n; ++i) {
+        result *= vec[i];
+    }
+    return result;
 }
 
 template <domain D>
 D int32 product (D int32[[1]] vec) {
-	uint n = size(vec);
-	if (n == 0) {
-		return 0;
-	}
+    uint n = size(vec);
+    if (n == 0) {
+        return 0;
+    }
 
-	int32 result = 1;
-	for (uint i = 0; i<n; ++i) {
-		result *= vec[i];
-	}
-	return result;
+    int32 result = 1;
+    for (uint i = 0; i<n; ++i) {
+        result *= vec[i];
+    }
+    return result;
 }
 
 template <domain D>
 D int product (D int[[1]] vec) {
-	uint n = size(vec);
-	if (n == 0) {
-		return 0;
-	}
+    uint n = size(vec);
+    if (n == 0) {
+        return 0;
+    }
 
-	int result = 1;
-	for (uint i = 0; i<n; ++i) {
-		result *= vec[i];
-	}
-	return result;
+    int result = 1;
+    for (uint i = 0; i<n; ++i) {
+        result *= vec[i];
+    }
+    return result;
 }
 
 template <domain D>
 D float32 product (D float32[[1]] vec) {
-	uint n = size(vec);
-	if (n == 0) {
-		return 0;
-	}
+    uint n = size(vec);
+    if (n == 0) {
+        return 0;
+    }
 
-	float32 result = 1;
-	for (uint i = 0; i<n; ++i) {
-		result *= vec[i];
-	}
-	return result;
+    float32 result = 1;
+    for (uint i = 0; i<n; ++i) {
+        result *= vec[i];
+    }
+    return result;
 }
 
 template <domain D>
 D float64 product (D float64[[1]] vec) {
-	uint n = size(vec);
-	if (n == 0) {
-		return 0;
-	}
+    uint n = size(vec);
+    if (n == 0) {
+        return 0;
+    }
 
-	float64 result = 1;
-	for (uint i = 0; i<n; ++i) {
-		result *= vec[i];
-	}
-	return result;
+    float64 result = 1;
+    for (uint i = 0; i<n; ++i) {
+        result *= vec[i];
+    }
+    return result;
 }
 
 /** @}*/
@@ -1126,164 +1127,164 @@ D float64 product (D float64[[1]] vec) {
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  * @param k - an \ref uint64 "uint" type scalar which specifies in how many parts the product is found. \n
- 	For example if k = 2 then the input vector is split into two parts and the products of those parts are found seperately.
+     For example if k = 2 then the input vector is split into two parts and the products of those parts are found seperately.
  * @return returns a vector with the product of the specified number of parts in the input vector
  */
 template <domain D>
 D uint8[[1]] product (D uint8[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
 
-	D uint8[[1]] prodsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return prodsOfSubArrs;
+    D uint8[[1]] prodsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return prodsOfSubArrs;
 }
 
 template <domain D>
 D uint16[[1]] product (D uint16[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
 
-	D uint16[[1]] prodsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return prodsOfSubArrs;
+    D uint16[[1]] prodsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return prodsOfSubArrs;
 }
 
 template <domain D>
 D uint32[[1]] product (D uint32[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
 
-	D uint32[[1]] prodsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return prodsOfSubArrs;
+    D uint32[[1]] prodsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return prodsOfSubArrs;
 }
 
 template <domain D>
 D uint[[1]] product (D uint[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
 
-	D uint[[1]] prodsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return prodsOfSubArrs;
+    D uint[[1]] prodsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return prodsOfSubArrs;
 }
 
 template <domain D>
 D int8[[1]] product (D int8[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
 
-	D int8[[1]] prodsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return prodsOfSubArrs;
+    D int8[[1]] prodsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return prodsOfSubArrs;
 }
 
 template <domain D>
 D int16[[1]] product (D int16[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
 
-	D int16[[1]] prodsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return prodsOfSubArrs;
+    D int16[[1]] prodsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return prodsOfSubArrs;
 }
 
 template <domain D>
 D int32[[1]] product (D int32[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
 
-	D int32[[1]] prodsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return prodsOfSubArrs;
+    D int32[[1]] prodsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return prodsOfSubArrs;
 }
 
 template <domain D>
 D int[[1]] product (D int[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
 
-	D int[[1]] prodsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return prodsOfSubArrs;
+    D int[[1]] prodsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return prodsOfSubArrs;
 }
 
 template <domain D>
 D float32[[1]] product (D float32[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
 
-	D float32[[1]] prodsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return prodsOfSubArrs;
+    D float32[[1]] prodsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return prodsOfSubArrs;
 }
 
 template <domain D>
 D float64[[1]] product (D float64[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(k > 0 && n % k == 0);
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
 
-	D float64[[1]] prodsOfSubArrs (k);
-	uint subArrLen = n/k;
-	uint subArrStartIdx = 0;
-	for (uint i = 0; i<k; ++i) {
-		prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-		subArrStartIdx += subArrLen;
-	}
-	return prodsOfSubArrs;
+    D float64[[1]] prodsOfSubArrs (k);
+    uint subArrLen = n/k;
+    uint subArrStartIdx = 0;
+    for (uint i = 0; i<k; ++i) {
+        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
+        subArrStartIdx += subArrLen;
+    }
+    return prodsOfSubArrs;
 }
 
 /** @}*/
 /** @}*/
 
 /*******************************
-	Minimum, maximum
+    Minimum, maximum
 ********************************/
 
 
@@ -1307,7 +1308,7 @@ D float64[[1]] product (D float64[[1]] vec, uint k) {
 */
 template <domain D, type T>
 D T min (D T scalar) {
-	return scalar;
+    return scalar;
 }
 
 /**
@@ -1316,13 +1317,13 @@ D T min (D T scalar) {
 //does not work for floats, xor_uints
 template <domain D, type T>
 D T min (T x, T y) {
-	D T isSmaller = (T) x < y;
-	return isSmaller*x + (1-isSmaller)*y;
+    D T isSmaller = (T) x < y;
+    return isSmaller*x + (1-isSmaller)*y;
 }
 
 template <domain D>
 D bool min (D bool[[1]] vec) {
-	return all(vec);
+    return all(vec);
 }
 
 /**
@@ -1335,17 +1336,17 @@ D bool min (D bool[[1]] vec) {
 */
 template <type T>
 T min (T[[1]] vec) {
-	uint n = size(vec);
-	assert(n > 0);
-	T result = vec[0];
-	T tmp;
-	for (uint i = 1; i<n; ++i) {
-		tmp = vec[i];
-		if (tmp < result) {
-			result = tmp;
-		}
-	}
-	return result;
+    uint n = size(vec);
+    assert(n > 0);
+    T result = vec[0];
+    T tmp;
+    for (uint i = 1; i<n; ++i) {
+        tmp = vec[i];
+        if (tmp < result) {
+            result = tmp;
+        }
+    }
+    return result;
 }
 
 /**
@@ -1356,17 +1357,17 @@ T min (T[[1]] vec) {
 */
 template <domain D, type T>
 D T min (D T[[1]] vec) {
-	uint n = size(vec);
-	assert(n > 0);
-	D T result = vec[0];
-	D T tmp;
-	for (uint i = 1; i<n; ++i) {
-		tmp = vec[i];
-		D T isSmaller = (T) (tmp < result);
-		result -= isSmaller*result;
-		result += isSmaller*tmp;
-	}
-	return result;
+    uint n = size(vec);
+    assert(n > 0);
+    D T result = vec[0];
+    D T tmp;
+    for (uint i = 1; i<n; ++i) {
+        tmp = vec[i];
+        D T isSmaller = (T) (tmp < result);
+        result -= isSmaller*result;
+        result += isSmaller*tmp;
+    }
+    return result;
 }
 
 /**
@@ -1375,7 +1376,7 @@ D T min (D T[[1]] vec) {
 */
 template <type T, dim N>
 T min (T[[N]] arr) {
-	return min(flatten(arr));
+    return min(flatten(arr));
 }
 
 /** @}*/
@@ -1395,30 +1396,30 @@ T min (T[[N]] arr) {
 /** pointwise minimum */
 template <type T>
 T min (T x, T y) {
-	return x < y ? x : y;
+    return x < y ? x : y;
 }
 
 template <domain D>
 D bool min (D bool x, D bool y) {
-	return x && y;
+    return x && y;
 }
 
 template <domain D>
 D bool[[1]] min (D bool[[1]] x, D bool[[1]] y) {
-	assert(size(x) == size(y));
-	return x && y;
+    assert(size(x) == size(y));
+    return x && y;
 }
 
 template <type T>
 T[[1]] min (T[[1]] x, T[[1]] y) {
-	uint n = size(x);
-	assert(n == size(y));
-	for (uint i = 0; i<n; ++i) {
-		if (y[i] < x[i]) {
-			x[i] = y[i];
-		}
-	}
-	return x;
+    uint n = size(x);
+    assert(n == size(y));
+    for (uint i = 0; i<n; ++i) {
+        if (y[i] < x[i]) {
+            x[i] = y[i];
+        }
+    }
+    return x;
 }
 
 /**
@@ -1428,13 +1429,13 @@ T[[1]] min (T[[1]] x, T[[1]] y) {
 //does not work for floats, xor_uints
 template <domain D, type T>
 D T[[1]] min (D T[[1]] x, D T[[1]] y) {
-	uint n = size(x);
-	assert(n == size(y));
-	for (uint i = 0; i<n; ++i) {
-		D T isSmaller = (T) x[i] < y[i];
-		x[i] = isSmaller*x[i] + (1-isSmaller)*y[i];
-	}
-	return x;
+    uint n = size(x);
+    assert(n == size(y));
+    for (uint i = 0; i<n; ++i) {
+        D T isSmaller = (T) x[i] < y[i];
+        x[i] = isSmaller*x[i] + (1-isSmaller)*y[i];
+    }
+    return x;
 }
 
 
@@ -1451,26 +1452,26 @@ D T[[1]] min (D T[[1]] x, D T[[1]] y) {
  */
 template <domain D>
 D bool[[1]] min (D bool[[1]] vec, uint k) {
-	return all(vec,k);
+    return all(vec,k);
 }
 
 template <type T>
 T[[1]] min (T[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(n > 0 && n % k == 0);
-	uint len = n/k;
-	T[[1]] result (k);
-	for (uint i = 0; i < k; ++i) {
-		result[i] = vec[i*len];
-		T tmp;
-		for (uint j = 1; j<len; ++j) {
-			tmp = vec[i*len+j];
-			if (tmp < result[i]) {
-				result[i] = tmp;
-			}
-		}
-	}
-	return result;
+    uint n = size(vec);
+    assert(n > 0 && n % k == 0);
+    uint len = n/k;
+    T[[1]] result (k);
+    for (uint i = 0; i < k; ++i) {
+        result[i] = vec[i*len];
+        T tmp;
+        for (uint j = 1; j<len; ++j) {
+            tmp = vec[i*len+j];
+            if (tmp < result[i]) {
+                result[i] = tmp;
+            }
+        }
+    }
+    return result;
 }
 
 /**
@@ -1480,21 +1481,21 @@ T[[1]] min (T[[1]] vec, uint k) {
 //does not work for floats, xor_uints
 template <domain D, type T>
 D T[[1]] min (D T[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(n > 0 && n % k == 0);
-	uint len = n/k;
-	D T[[1]] result (k);
-	for (uint i = 0; i < k; ++i) {
-		result[i] = vec[i*len];
-		D T tmp;
-		for (uint j = 1; j<len; ++j) {
-			tmp = vec[i*len+j];
-			D T isSmaller = (T) (tmp < result[i]);
-			result[i] -= isSmaller*result[i];
-			result[i] += isSmaller*tmp;
-		}
-	}
-	return result;
+    uint n = size(vec);
+    assert(n > 0 && n % k == 0);
+    uint len = n/k;
+    D T[[1]] result (k);
+    for (uint i = 0; i < k; ++i) {
+        result[i] = vec[i*len];
+        D T tmp;
+        for (uint j = 1; j<len; ++j) {
+            tmp = vec[i*len+j];
+            D T isSmaller = (T) (tmp < result[i]);
+            result[i] -= isSmaller*result[i];
+            result[i] += isSmaller*tmp;
+        }
+    }
+    return result;
 }
 
 
@@ -1520,7 +1521,7 @@ D T[[1]] min (D T[[1]] vec, uint k) {
 */
 template <domain D, type T>
 D T max (D T scalar) {
-	return scalar;
+    return scalar;
 }
 
 /**
@@ -1531,17 +1532,17 @@ D T max (D T scalar) {
 */
 template <type T>
 T max (T[[1]] vec) {
-	uint n = size(vec);
-	assert(n > 0);
-	T result = vec[0];
-	T tmp;
-	for (uint i = 1; i<n; ++i) {
-		tmp = vec[i];
-		if (tmp > result) {
-			result = tmp;
-		}
-	}
-	return result;
+    uint n = size(vec);
+    assert(n > 0);
+    T result = vec[0];
+    T tmp;
+    for (uint i = 1; i<n; ++i) {
+        tmp = vec[i];
+        if (tmp > result) {
+            result = tmp;
+        }
+    }
+    return result;
 }
 
 /**
@@ -1556,17 +1557,17 @@ T max (T[[1]] vec) {
 */
 template <domain D, type T>
 D T max (D T[[1]] vec) {
-	uint n = size(vec);
-	assert(n > 0);
-	D T result = vec[0];
-	D T tmp;
-	for (uint i = 1; i<n; ++i) {
-		tmp = vec[i];
-		D T isLarger = (T) (tmp > result);
-		result -= isLarger*result;
-		result += isLarger*tmp;
-	}
-	return result;
+    uint n = size(vec);
+    assert(n > 0);
+    D T result = vec[0];
+    D T tmp;
+    for (uint i = 1; i<n; ++i) {
+        tmp = vec[i];
+        D T isLarger = (T) (tmp > result);
+        result -= isLarger*result;
+        result += isLarger*tmp;
+    }
+    return result;
 }
 
 /**
@@ -1575,7 +1576,7 @@ D T max (D T[[1]] vec) {
 */
 template <type T, dim N>
 T max (T[[N]] arr) {
-	return max(flatten(arr));
+    return max(flatten(arr));
 }
 
 /**
@@ -1583,11 +1584,11 @@ T max (T[[N]] arr) {
 */
 template <domain D>
 D bool max (D bool[[1]] vec) {
-	return any(vec);
+    return any(vec);
 }
 
 bool max (bool[[1]] vec) {
-	return any(vec);
+    return any(vec);
 }
 
 /**
@@ -1610,37 +1611,37 @@ bool max (bool[[1]] vec) {
 /* pointwise maximum */
 template <type T>
 T max (T x, T y) {
-	return x > y ? x : y;
+    return x > y ? x : y;
 }
 
 template <type T>
 T[[1]] max (T[[1]] x, T[[1]] y) {
-	uint n = size(x);
-	assert(n == size(y));
-	for (uint i = 0; i<n; ++i) {
-		if (y[i] > x[i]) {
-			x[i] = y[i];
-		}
-	}
-	return x;
+    uint n = size(x);
+    assert(n == size(y));
+    for (uint i = 0; i<n; ++i) {
+        if (y[i] > x[i]) {
+            x[i] = y[i];
+        }
+    }
+    return x;
 }
 
 template <domain D>
 D bool max (D bool x, D bool y) {
-	return x || y;
+    return x || y;
 }
 
 //does not work for floats, xor_uints
 template <domain D, type T>
 D T max (T x, T y) {
-	D T isLarger = (T) x > y;
-	return isLarger*x + (1-isLarger)*y;
+    D T isLarger = (T) x > y;
+    return isLarger*x + (1-isLarger)*y;
 }
 
 template <domain D>
 D bool[[1]] max (D bool[[1]] x, D bool[[1]] y) {
-	assert(size(x) == size(y));
-	return x || y;
+    assert(size(x) == size(y));
+    return x || y;
 }
 /**
 * \endcond
@@ -1648,13 +1649,13 @@ D bool[[1]] max (D bool[[1]] x, D bool[[1]] y) {
 //does not work for floats, xor_uints
 template <domain D, type T>
 D T[[1]] max (D T[[1]] x, D T[[1]] y) {
-	uint n = size(x);
-	assert(n == size(y));
-	for (uint i = 0; i<n; ++i) {
-		D T isLarger = (T) x[i] > y[i];
-		x[i] = isLarger*x[i] + (1-isLarger)*y[i];
-	}
-	return x;
+    uint n = size(x);
+    assert(n == size(y));
+    for (uint i = 0; i<n; ++i) {
+        D T isLarger = (T) x[i] > y[i];
+        x[i] = isLarger*x[i] + (1-isLarger)*y[i];
+    }
+    return x;
 }
 /** @}*/
 /** \addtogroup max3
@@ -1670,31 +1671,31 @@ D T[[1]] max (D T[[1]] x, D T[[1]] y) {
 * \cond
 */
 bool[[1]] max (bool[[1]] vec, uint k) {
-	return any(vec,k);
+    return any(vec,k);
 }
 
 template <type T>
 T[[1]] max (T[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(n > 0 && n % k == 0);
-	uint len = n/k;
-	T[[1]] result (k);
-	for (uint i = 0; i < k; ++i) {
-		result[i] = vec[i*len];
-		T tmp;
-		for (uint j = 1; j<len; ++j) {
-			tmp = vec[i*len+j];
-			if (tmp > result[i]) {
-				result[i] = tmp;
-			}
-		}
-	}
-	return result;
+    uint n = size(vec);
+    assert(n > 0 && n % k == 0);
+    uint len = n/k;
+    T[[1]] result (k);
+    for (uint i = 0; i < k; ++i) {
+        result[i] = vec[i*len];
+        T tmp;
+        for (uint j = 1; j<len; ++j) {
+            tmp = vec[i*len+j];
+            if (tmp > result[i]) {
+                result[i] = tmp;
+            }
+        }
+    }
+    return result;
 }
 
 template <domain D>
 D bool[[1]] max (D bool[[1]] vec, uint k) {
-	return any(vec,k);
+    return any(vec,k);
 }
 /**
 * \endcond
@@ -1702,21 +1703,21 @@ D bool[[1]] max (D bool[[1]] vec, uint k) {
 //does not work for floats, xor_uints
 template <domain D, type T>
 D T[[1]] max (D T[[1]] vec, uint k) {
-	uint n = size(vec);
-	assert(n > 0 && n % k == 0);
-	uint len = n/k;
-	D T[[1]] result (k);
-	for (uint i = 0; i < k; ++i) {
-		result[i] = vec[i*len];
-		D T tmp;
-		for (uint j = 1; j<len; ++j) {
-			tmp = vec[i*len+j];
-			D T isLarger = (T) (tmp > result[i]);
-			result[i] -= isLarger*result[i];
-			result[i] += isLarger*tmp;
-		}
-	}
-	return result;
+    uint n = size(vec);
+    assert(n > 0 && n % k == 0);
+    uint len = n/k;
+    D T[[1]] result (k);
+    for (uint i = 0; i < k; ++i) {
+        result[i] = vec[i*len];
+        D T tmp;
+        for (uint j = 1; j<len; ++j) {
+            tmp = vec[i*len+j];
+            D T isLarger = (T) (tmp > result[i]);
+            result[i] -= isLarger*result[i];
+            result[i] += isLarger*tmp;
+        }
+    }
+    return result;
 }
 
 /** @}*/
@@ -1770,13 +1771,13 @@ float64[[N]] abs (float64[[N]] x) {
 * \todo what if argument is bigger than INT64_MAX?
 */
 int round (float32 x) {
-	float32 k = (float32)((int)x);
-	return x - k < 0.5 ? (int)k : ((int)k) + 1;
+    float32 k = (float32)((int)x);
+    return x - k < 0.5 ? (int)k : ((int)k) + 1;
 }
 
 int round (float64 x) {
-	float64 k = (float64)((int)x);
-	return x - k < 0.5 ? (int)k : ((int)k) + 1;
+    float64 k = (float64)((int)x);
+    return x - k < 0.5 ? (int)k : ((int)k) + 1;
 }
 /** @}*/
 
@@ -1879,5 +1880,47 @@ float64[[N]] ln(float64[[N]] x) {
     return ret;
 }
 /** @} */
+
+
+/** \addtogroup isnegligible
+ *  @{
+ *  @brief Function for finding if the error is small enough to neglect
+ *  @note **D** - any protection domain
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @return returns **true** if the error is small enough to neglect
+ *  @return returns **false** if the error is not small enough
+ *  @note isNegligible checks up to the 5th place after the comma
+ */
+
+/** \cond */
+
+template <domain D, type T, dim N>
+D bool[[N]] _isNegligible (D T[[N]] a) {
+    return abs(a) < 1e-5;
+}
+
+/** \endcond */
+
+template <domain D>
+D bool isNegligible (D float32 a) {
+    return _isNegligible (a);
+}
+
+template <domain D>
+D bool isNegligible (D float64 a) {
+    return _isNegligible (a);
+}
+
+template <domain D>
+D bool[[1]] isNegligible (D float32[[1]] a) {
+    return _isNegligible (a);
+}
+
+template <domain D>
+D bool[[1]] isNegligible (D float64[[1]] a) {
+    return _isNegligible (a);
+}
+
+/** @}*/
 
 /** @}*/
