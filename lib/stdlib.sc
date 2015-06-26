@@ -239,9 +239,11 @@ D T[[1]] flatten (D T[[N]] arr) {
  *  @brief Function for checking the shape equality of two arrays
  *  @note **D1** - all protection domains
  *  @note **D2** - all protection domains
+ *  @note **D3** - all protection domains
  *  @note **N** - any array size of any dimension
  *  @note **T1** - any \ref data_types "data" type
  *  @note **T2** - any \ref data_types "data" type
+ *  @note **T3** - any \ref data_types "data" type
  *  @return returns a \ref bool "bool" type value, whether the input arrays are of equal shape (**true**) or are not of equal shape (**false**)
  */
 
@@ -252,6 +254,25 @@ bool shapesAreEqual(D1 T1[[N]] first, D2 T2[[N]] second) {
     uint n = size(s1);
     for (uint i = 0; i < n; ++i) {
         if (s1[i] != s2[i]) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+template <domain D1, domain D2, domain D3, type T1, type T2, type T3, dim N>
+bool shapesAreEqual(D1 T1[[N]] first, D2 T2[[N]] second, D3 T3[[N]] third) {
+    uint[[1]] s1 = shape(first);
+    uint[[1]] s2 = shape(second);
+    uint[[1]] s3 = shape(third);
+    uint n = size(s1);
+    for (uint i = 0; i < n; ++i) {
+        if (s1[i] != s2[i]) {
+            return false;
+        }
+
+        if (s2[i] != s3[i]) {
             return false;
         }
     }
