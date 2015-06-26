@@ -681,109 +681,72 @@ D T sum (D T scalar) {
     return scalar;
 }
 
+/** \cond */
+template <domain D, type T>
+D T _sum (D T[[1]] vec) {
+    uint n = size(vec);
+    D T sumOfArr;
+    for (uint i = 0; i < n; ++i) {
+        sumOfArr += vec[i];
+    }
+
+    return sumOfArr;
+}
+/** \endcond */
+
 template <domain D>
 D uint sum (D bool[[1]] vec) {
-    return sum((uint)vec);
+    return _sum ((uint) vec);
 }
 
 template <domain D>
 D uint8 sum (D uint8[[1]] vec) {
-    uint n = size(vec);
-    D uint8 sumOfArr;
-    for (uint i = 0; i<n; ++i) {
-        sumOfArr += vec[i];
-    }
-    return sumOfArr;
+    return _sum (vec);
 }
 
 template <domain D>
 D uint16 sum (D uint16[[1]] vec) {
-    uint n = size(vec);
-    D uint16 sumOfArr;
-    for (uint i = 0; i<n; ++i) {
-        sumOfArr += vec[i];
-    }
-    return sumOfArr;
+    return _sum (vec);
 }
 
 template <domain D>
 D uint32 sum (D uint32[[1]] vec) {
-    uint n = size(vec);
-    D uint32 sumOfArr;
-    for (uint i = 0; i<n; ++i) {
-        sumOfArr += vec[i];
-    }
-    return sumOfArr;
+    return _sum (vec);
 }
 
 template <domain D>
 D uint sum (D uint[[1]] vec) {
-    uint n = size(vec);
-    D uint sumOfArr;
-    for (uint i = 0; i<n; ++i) {
-        sumOfArr += vec[i];
-    }
-    return sumOfArr;
+    return _sum (vec);
 }
 
 template <domain D>
 D int8 sum (D int8[[1]] vec) {
-    uint n = size(vec);
-    D int8 sumOfArr;
-    for (uint i = 0; i<n; ++i) {
-        sumOfArr += vec[i];
-    }
-    return sumOfArr;
+    return _sum (vec);
 }
 
 template <domain D>
 D int16 sum (D int16[[1]] vec) {
-    uint n = size(vec);
-    D int16 sumOfArr;
-    for (uint i = 0; i<n; ++i) {
-        sumOfArr += vec[i];
-    }
-    return sumOfArr;
+    return _sum (vec);
 }
 
 template <domain D>
 D int32 sum (D int32[[1]] vec) {
-    uint n = size(vec);
-    D int32 sumOfArr;
-    for (uint i = 0; i<n; ++i) {
-        sumOfArr += vec[i];
-    }
-    return sumOfArr;
+    return _sum (vec);
 }
 
 template <domain D>
 D int sum (D int[[1]] vec) {
-    uint n = size(vec);
-    D int sumOfArr;
-    for (uint i = 0; i<n; ++i) {
-        sumOfArr += vec[i];
-    }
-    return sumOfArr;
+    return _sum (vec);
 }
 
 template <domain D>
 D float32 sum (D float32[[1]] vec) {
-    uint n = size(vec);
-    D float32 sumOfArr;
-    for (uint i = 0; i<n; ++i) {
-        sumOfArr += vec[i];
-    }
-    return sumOfArr;
+    return _sum (vec);
 }
 
 template <domain D>
 D float64 sum (D float64[[1]] vec) {
-    uint n = size(vec);
-    D float64 sumOfArr;
-    for (uint i = 0; i<n; ++i) {
-        sumOfArr += vec[i];
-    }
-    return sumOfArr;
+    return _sum (vec);
 }
 
 /** @}*/
@@ -798,11 +761,13 @@ D float64 sum (D float64[[1]] vec) {
  * @note uses accumulator to calculate sum. May be very inefficient for private domains.
  */
 
-template <domain D>
-D uint[[1]] sum (D bool[[1]] vec, uint k) {
+/** \cond */
+
+template <domain D, type T>
+D T[[1]] _sum (D T[[1]] vec, uint k) {
     uint n = size(vec);
     assert(k > 0 && n % k == 0);
-    D uint[[1]] sumsOfSubArrs (k);
+    D T[[1]] sumsOfSubArrs (k);
     uint subArrLen = n/k;
     uint subArrStartIdx = 0;
     for (uint i = 0; i<k; ++i) {
@@ -810,147 +775,65 @@ D uint[[1]] sum (D bool[[1]] vec, uint k) {
         subArrStartIdx += subArrLen;
     }
     return sumsOfSubArrs;
+}
+
+/** \endcond */
+
+template <domain D>
+D uint[[1]] sum (D bool[[1]] vec, uint k) {
+    return _sum ((uint) vec, k);
 }
 
 template <domain D>
 D uint8[[1]] sum (D uint8[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-    D uint8[[1]] sumsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return sumsOfSubArrs;
+    return _sum (vec, k);
 }
 
 template <domain D>
 D uint16[[1]] sum (D uint16[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-    D uint16[[1]] sumsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return sumsOfSubArrs;
+    return _sum (vec, k);
 }
 
 template <domain D>
 D uint32[[1]] sum (D uint32[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-    D uint32[[1]] sumsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return sumsOfSubArrs;
+    return _sum (vec, k);
 }
 
 template <domain D>
 D uint[[1]] sum (D uint[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-    D uint[[1]] sumsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return sumsOfSubArrs;
+    return _sum (vec, k);
 }
 
 template <domain D>
 D int8[[1]] sum (D int8[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-    D int8[[1]] sumsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return sumsOfSubArrs;
+    return _sum (vec, k);
 }
 
 template <domain D>
 D int16[[1]] sum (D int16[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-    D int16[[1]] sumsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return sumsOfSubArrs;
+    return _sum (vec, k);
 }
 
 template <domain D>
 D int32[[1]] sum (D int32[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-    D int32[[1]] sumsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return sumsOfSubArrs;
+    return _sum (vec, k);
 }
 
 template <domain D>
 D int[[1]] sum (D int[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-    D int[[1]] sumsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return sumsOfSubArrs;
+    return _sum (vec, k);
 }
 
 template <domain D>
 D float32[[1]] sum (D float32[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-    D float32[[1]] sumsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return sumsOfSubArrs;
+    return _sum (vec, k);
 }
 
 template <domain D>
 D float64[[1]] sum (D float64[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-    D float64[[1]] sumsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        sumsOfSubArrs[i] = sum(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return sumsOfSubArrs;
+    return _sum (vec, k);
 }
+
 /** @}*/
 /** @}*/
 
@@ -979,145 +862,69 @@ D T product (D T scalar) {
     return scalar;
 }
 
+/** \cond */
 
-template <domain D>
-D uint8 product (D uint8[[1]] vec) {
+template <domain D, type T>
+D T _product (D T[[1]] vec) {
     uint n = size(vec);
-    if (n == 0) {
-        return 0;
-    }
-
-    uint8 result = 1;
+    T result = 1;
     for (uint i = 0; i<n; ++i) {
         result *= vec[i];
     }
+
     return result;
+}
+
+/** \endcond */
+
+template <domain D>
+D uint8 product (D uint8[[1]] vec) {
+    return _product (vec);
 }
 
 template <domain D>
 D uint16 product (D uint16[[1]] vec) {
-    uint n = size(vec);
-    if (n == 0) {
-        return 0;
-    }
-
-    uint16 result = 1;
-    for (uint i = 0; i<n; ++i) {
-        result *= vec[i];
-    }
-    return result;
+    return _product (vec);
 }
 
 template <domain D>
 D uint32 product (D uint32[[1]] vec) {
-    uint n = size(vec);
-    if (n == 0) {
-        return 0;
-    }
-
-    uint32 result = 1;
-    for (uint i = 0; i<n; ++i) {
-        result *= vec[i];
-    }
-    return result;
+    return _product (vec);
 }
 
 template <domain D>
 D uint product (D uint[[1]] vec) {
-    uint n = size(vec);
-    if (n == 0) {
-        return 0;
-    }
-
-    uint result = 1;
-    for (uint i = 0; i<n; ++i) {
-        result *= vec[i];
-    }
-    return result;
+    return _product (vec);
 }
 
 template <domain D>
 D int8 product (D int8[[1]] vec) {
-    uint n = size(vec);
-    if (n == 0) {
-        return 0;
-    }
-
-    int8 result = 1;
-    for (uint i = 0; i<n; ++i) {
-        result *= vec[i];
-    }
-    return result;
+    return _product (vec);
 }
 
 template <domain D>
 D int16 product (D int16[[1]] vec) {
-    uint n = size(vec);
-    if (n == 0) {
-        return 0;
-    }
-
-    int16 result = 1;
-    for (uint i = 0; i<n; ++i) {
-        result *= vec[i];
-    }
-    return result;
+    return _product (vec);
 }
 
 template <domain D>
 D int32 product (D int32[[1]] vec) {
-    uint n = size(vec);
-    if (n == 0) {
-        return 0;
-    }
-
-    int32 result = 1;
-    for (uint i = 0; i<n; ++i) {
-        result *= vec[i];
-    }
-    return result;
+    return _product (vec);
 }
 
 template <domain D>
 D int product (D int[[1]] vec) {
-    uint n = size(vec);
-    if (n == 0) {
-        return 0;
-    }
-
-    int result = 1;
-    for (uint i = 0; i<n; ++i) {
-        result *= vec[i];
-    }
-    return result;
+    return _product (vec);
 }
 
 template <domain D>
 D float32 product (D float32[[1]] vec) {
-    uint n = size(vec);
-    if (n == 0) {
-        return 0;
-    }
-
-    float32 result = 1;
-    for (uint i = 0; i<n; ++i) {
-        result *= vec[i];
-    }
-    return result;
+    return _product (vec);
 }
 
 template <domain D>
 D float64 product (D float64[[1]] vec) {
-    uint n = size(vec);
-    if (n == 0) {
-        return 0;
-    }
-
-    float64 result = 1;
-    for (uint i = 0; i<n; ++i) {
-        result *= vec[i];
-    }
-    return result;
+    return _product (vec);
 }
 
 /** @}*/
@@ -1130,12 +937,15 @@ D float64 product (D float64[[1]] vec) {
      For example if k = 2 then the input vector is split into two parts and the products of those parts are found seperately.
  * @return returns a vector with the product of the specified number of parts in the input vector
  */
-template <domain D>
-D uint8[[1]] product (D uint8[[1]] vec, uint k) {
+
+/** \cond */
+
+template <domain D, type T>
+D T[[1]] _product (D T[[1]] vec, uint k) {
     uint n = size(vec);
     assert(k > 0 && n % k == 0);
 
-    D uint8[[1]] prodsOfSubArrs (k);
+    D T[[1]] prodsOfSubArrs (k);
     uint subArrLen = n/k;
     uint subArrStartIdx = 0;
     for (uint i = 0; i<k; ++i) {
@@ -1143,141 +953,57 @@ D uint8[[1]] product (D uint8[[1]] vec, uint k) {
         subArrStartIdx += subArrLen;
     }
     return prodsOfSubArrs;
+}
+/** \endcond */
+
+template <domain D>
+D uint8[[1]] product (D uint8[[1]] vec, uint k) {
+    return _product (vec, k);
 }
 
 template <domain D>
 D uint16[[1]] product (D uint16[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-
-    D uint16[[1]] prodsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return prodsOfSubArrs;
+    return _product (vec, k);
 }
 
 template <domain D>
 D uint32[[1]] product (D uint32[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-
-    D uint32[[1]] prodsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return prodsOfSubArrs;
+    return _product (vec, k);
 }
 
 template <domain D>
 D uint[[1]] product (D uint[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-
-    D uint[[1]] prodsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return prodsOfSubArrs;
+    return _product (vec, k);
 }
 
 template <domain D>
 D int8[[1]] product (D int8[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-
-    D int8[[1]] prodsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return prodsOfSubArrs;
+    return _product (vec, k);
 }
 
 template <domain D>
 D int16[[1]] product (D int16[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-
-    D int16[[1]] prodsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return prodsOfSubArrs;
+    return _product (vec, k);
 }
 
 template <domain D>
 D int32[[1]] product (D int32[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-
-    D int32[[1]] prodsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return prodsOfSubArrs;
+    return _product (vec, k);
 }
 
 template <domain D>
 D int[[1]] product (D int[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-
-    D int[[1]] prodsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return prodsOfSubArrs;
+    return _product (vec, k);
 }
 
 template <domain D>
 D float32[[1]] product (D float32[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-
-    D float32[[1]] prodsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return prodsOfSubArrs;
+    return _product (vec, k);
 }
 
 template <domain D>
 D float64[[1]] product (D float64[[1]] vec, uint k) {
-    uint n = size(vec);
-    assert(k > 0 && n % k == 0);
-
-    D float64[[1]] prodsOfSubArrs (k);
-    uint subArrLen = n/k;
-    uint subArrStartIdx = 0;
-    for (uint i = 0; i<k; ++i) {
-        prodsOfSubArrs[i] = product(vec[subArrStartIdx : subArrStartIdx+subArrLen]);
-        subArrStartIdx += subArrLen;
-    }
-    return prodsOfSubArrs;
+    return _product (vec, k);
 }
 
 /** @}*/
