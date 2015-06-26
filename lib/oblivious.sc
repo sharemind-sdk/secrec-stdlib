@@ -232,13 +232,19 @@ D int[[N]] choose(D bool[[N]] cond, D int[[N]] first, D int[[N]] second) {
 /**
 * \cond
 */
-template <domain D>
-D bool[[1]] vectorLookupBitmask(uint elems, D uint index) {
-    uint[[1]] is (elems);
-    for (uint i = 0; i < elems; ++i) {
+
+uint[[1]] _indexVector (uint n) {
+    uint[[1]] is (n);
+    for (uint i = 0; i < n; ++ i) {
         is[i] = i;
     }
 
+    return is;
+}
+
+template <domain D>
+D bool[[1]] vectorLookupBitmask(uint elems, D uint index) {
+    uint[[1]] is = _indexVector (elems);
     return index == is;
 }
 
@@ -601,33 +607,13 @@ D float64[[1]] matrixLookupColumn(D float64[[2]] mat, D uint colIndex) {
 
 template <domain D>
 D bool[[2]] matrixLookupBitmask(uint rows, uint cols, D uint rowIndex, D uint columnIndex) {
-    // assert(declassify(rows > rowIndex));
-    // assert(declassify(cols > columnIndex));
-    // assert(declassify(cols > columnIndex));
-    D uint[[2]] mask(rows, cols);
-    uint[[2]] is(rows, cols);
-    if (UINT64_MAX / rows < cols) { // if (rows * cols) would overflow
-        D uint[[2]] mask2(rows, cols);
-        uint[[2]] is2(rows, cols);
-        for (uint i = 0; i < rows; ++i) {
-            for (uint j = 0; j < cols; ++j) {
-                is[i, j] = i;
-                is2[i, j] = j;
-                mask[i, j] = rowIndex;
-                mask2[i, j] = columnIndex;
-            }
-        }
-        return (mask == is) & (mask2 == is2);
-    } else {
-        D uint pIndex = rowIndex * cols + columnIndex;
-        for (uint i = 0; i < rows; ++i) {
-            for (uint j = 0; j < cols; ++j) {
-                is[i, j] = i * cols + j;
-                mask[i, j] = pIndex;
-            }
-        }
-        return (mask == is);
-    }
+    // check if rows * cols would overflow
+    // it's infeasible to handle the overflow as 2^64 of *anything* would be
+    // much much too large to handle.
+    assert (UINT64_MAX / rows >= cols);
+    uint[[1]] is = _indexVector (rows * cols);
+    D uint pIndex = rowIndex * cols + columnIndex;
+    return reshape (is, rows, cols) == pIndex;
 }
 
 /**
@@ -663,194 +649,68 @@ D bool matrixLookup(D bool[[2]] mat, D uint rowIndex, D uint columnIndex) {
     return sum;
 }
 
-template <domain D>
-D uint8 matrixLookup(D uint8[[2]] mat, D uint rowIndex, D uint columnIndex) {
+/** \cond */
+
+template <domain D, type T>
+D T _matrixLookup(D T[[2]] mat, D uint rowIndex, D uint columnIndex) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
     uint cols = s[1];
 
-    D uint8[[2]] mask = (uint8) matrixLookupBitmask(rows, cols, rowIndex, columnIndex);
+    D T[[2]] mask = (T) matrixLookupBitmask(rows, cols, rowIndex, columnIndex);
+    return sum (flatten (mat * mask));
+}
 
+/** \cond */
 
-    mat *= mask;
-
-    D uint8 sum;
-    for (uint i = 0; i < rows; ++i)
-        for (uint j = 0; j < cols; ++j)
-            sum += mat[i,j];
-
-    return sum;
+template <domain D>
+D uint8 matrixLookup(D uint8[[2]] mat, D uint rowIndex, D uint columnIndex) {
+    return _matrixLookup (mat, rowIndex, columnIndex);
 }
 
 template <domain D>
 D uint16 matrixLookup(D uint16[[2]] mat, D uint rowIndex, D uint columnIndex) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-
-    D uint16[[2]] mask = (uint16) matrixLookupBitmask(rows, cols, rowIndex, columnIndex);
-
-
-    mat *= mask;
-
-    D uint16 sum;
-    for (uint i = 0; i < rows; ++i)
-        for (uint j = 0; j < cols; ++j)
-            sum += mat[i,j];
-
-    return sum;
+    return _matrixLookup (mat, rowIndex, columnIndex);
 }
 
 template <domain D>
 D uint32 matrixLookup(D uint32[[2]] mat, D uint rowIndex, D uint columnIndex) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-
-    D uint32[[2]] mask = (uint32) matrixLookupBitmask(rows, cols, rowIndex, columnIndex);
-
-
-    mat *= mask;
-
-    D uint32 sum;
-    for (uint i = 0; i < rows; ++i)
-        for (uint j = 0; j < cols; ++j)
-            sum += mat[i,j];
-
-    return sum;
+    return _matrixLookup (mat, rowIndex, columnIndex);
 }
 
 template <domain D>
 D uint matrixLookup(D uint[[2]] mat, D uint rowIndex, D uint columnIndex) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-
-    D uint[[2]] mask = (uint) matrixLookupBitmask(rows, cols, rowIndex, columnIndex);
-
-
-    mat *= mask;
-
-    D uint sum;
-    for (uint i = 0; i < rows; ++i)
-        for (uint j = 0; j < cols; ++j)
-            sum += mat[i,j];
-
-    return sum;
+    return _matrixLookup (mat, rowIndex, columnIndex);
 }
 
 template <domain D>
 D int8 matrixLookup(D int8[[2]] mat, D uint rowIndex, D uint columnIndex) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-
-    D int8[[2]] mask = (int8) matrixLookupBitmask(rows, cols, rowIndex, columnIndex);
-
-
-    mat *= mask;
-
-    D int8 sum;
-    for (uint i = 0; i < rows; ++i)
-        for (uint j = 0; j < cols; ++j)
-            sum += mat[i,j];
-
-    return sum;
+    return _matrixLookup (mat, rowIndex, columnIndex);
 }
 
 template <domain D>
 D int16 matrixLookup(D int16[[2]] mat, D uint rowIndex, D uint columnIndex) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-
-    D int16[[2]] mask = (int16) matrixLookupBitmask(rows, cols, rowIndex, columnIndex);
-
-
-    mat *= mask;
-
-    D int16 sum;
-    for (uint i = 0; i < rows; ++i)
-        for (uint j = 0; j < cols; ++j)
-            sum += mat[i,j];
-
-    return sum;
+    return _matrixLookup (mat, rowIndex, columnIndex);
 }
 
 template <domain D>
 D int32 matrixLookup(D int32[[2]] mat, D uint rowIndex, D uint columnIndex) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-
-    D int32[[2]] mask = (int32) matrixLookupBitmask(rows, cols, rowIndex, columnIndex);
-
-
-    mat *= mask;
-
-    D int32 sum;
-    for (uint i = 0; i < rows; ++i)
-        for (uint j = 0; j < cols; ++j)
-            sum += mat[i,j];
-
-    return sum;
+    return _matrixLookup (mat, rowIndex, columnIndex);
 }
 
 template <domain D>
 D int matrixLookup(D int[[2]] mat, D uint rowIndex, D uint columnIndex) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-
-    D int[[2]] mask = (int) matrixLookupBitmask(rows, cols, rowIndex, columnIndex);
-
-
-    mat *= mask;
-
-    D int sum;
-    for (uint i = 0; i < rows; ++i)
-        for (uint j = 0; j < cols; ++j)
-            sum += mat[i,j];
-
-    return sum;
+    return _matrixLookup (mat, rowIndex, columnIndex);
 }
 
 template <domain D>
 D float32 matrixLookup(D float32[[2]] mat, D uint rowIndex, D uint columnIndex) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-
-    D float32[[2]] mask = (float32) matrixLookupBitmask(rows, cols, rowIndex, columnIndex);
-
-
-    mat *= mask;
-
-    D float32 sum;
-    for (uint i = 0; i < rows; ++i)
-        for (uint j = 0; j < cols; ++j)
-            sum += mat[i,j];
-
-    return sum;
+    return _matrixLookup (mat, rowIndex, columnIndex);
 }
 
 template <domain D>
 D float64 matrixLookup(D float64[[2]] mat, D uint rowIndex, D uint columnIndex) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-
-    D float64[[2]] mask = (float64) matrixLookupBitmask(rows, cols, rowIndex, columnIndex);
-
-
-    mat *= mask;
-
-    D float64 sum;
-    for (uint i = 0; i < rows; ++i)
-        for (uint j = 0; j < cols; ++j)
-            sum += mat[i,j];
-
-    return sum;
+    return _matrixLookup (mat, rowIndex, columnIndex);
 }
 
 /** @}*/
