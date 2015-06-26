@@ -685,7 +685,7 @@ D T sum (D T scalar) {
 template <domain D, type T>
 D T _sum (D T[[1]] vec) {
     uint n = size(vec);
-    D T sumOfArr;
+    D T sumOfArr = 0;
     for (uint i = 0; i < n; ++i) {
         sumOfArr += vec[i];
     }
@@ -867,7 +867,7 @@ D T product (D T scalar) {
 template <domain D, type T>
 D T _product (D T[[1]] vec) {
     uint n = size(vec);
-    T result = 1;
+    D T result = 1;
     for (uint i = 0; i<n; ++i) {
         result *= vec[i];
     }
