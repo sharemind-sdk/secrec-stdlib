@@ -111,6 +111,8 @@ D T[[3]] transpose (D T[[3]] arr) {
       Unit matrix
 ********************************/
 
+/** \cond */
+
 template <domain D, type T>
 D T[[2]] _unitMatrix (uint n) {
     T[[2]] mat (n, n);
@@ -121,6 +123,7 @@ D T[[2]] _unitMatrix (uint n) {
     return mat;
 }
 
+/** \endcond */
 
 /** \addtogroup unitmatrix
  *  @{
@@ -194,10 +197,14 @@ D float64[[2]] unitMatrix (uint n) {
     rowSums, colSums
 ********************************/
 
+/** \cond */
+
 template <domain D, type T>
 D T[[1]] _rowSums (D T[[2]] mat) {
     return sum(flatten(mat), shape(mat)[0]);
 }
+
+/** \endcond */
 
 /** \addtogroup rowsums
  *  @{
@@ -335,6 +342,8 @@ D float64[[1]] colSums (D float64[[2]] mat) {
     dotProduct
 ********************************/
 
+/** \cond */
+
 template <domain D, type T>
 D T _dotProduct (D T[[1]] x, D T[[1]] y) {
     assert (size (x) == size (y));
@@ -346,6 +355,8 @@ D T[[1]] _dotProduct (D T[[2]] x, D T[[2]] y) {
     assert (shapesAreEqual (x,y));
     return rowSums(x * y);
 }
+
+/** \endcond */
 
 /** \addtogroup dotproduct
  *  @{
@@ -524,6 +535,8 @@ float64[[1]] vecLength (float64[[2]] x) {
     unitVector
 ********************************/
 
+/** \cond */
+
 template <type T>
 T[[1]] _unitVector (T[[1]] x) {
     assert(size(x) > 0);
@@ -544,6 +557,8 @@ T [[2]] _unitVector (T [[2]] x) {
 
     return x * invLenExpanded;
 }
+
+/** \endcond */
 
 /** \addtogroup unitvector
  *  @{
@@ -589,6 +604,8 @@ float64[[2]] unitVector (float64[[2]] x) {
     crossProduct
 ********************************/
 
+/** \cond */
+
 template <domain D, type T>
 D T[[1]] _crossProduct (D T[[1]] x, D T[[1]] y) {
     assert (size (x) == 3 && size (y) == 3);
@@ -626,6 +643,8 @@ D T[[2]] _crossProduct (D T[[2]] x, D T[[2]] y) {
     result = parProdRes[:, 0 : 3] - parProdRes[:, 3 : 6];
     return result;
 }
+
+/** \endcond */
 
 /** \addtogroup crossproduct
  *  @{
@@ -723,6 +742,8 @@ D float64[[2]] crossProduct (D float64[[2]] x, D float64[[2]] y) {
     matrixMultiplication
 ********************************/
 
+/** \cond */
+
 template <domain D, type T>
 D T[[2]] _matrixMultiplication (D T[[2]] x, D T[[2]] y) {
     // For parallelisation
@@ -816,6 +837,8 @@ D T[[3]] _matrixMultiplication (D T[[3]] x, D T[[3]] y) {
 
     return result;
 }
+
+/** \endcond */
 
 /** \addtogroup matrixmultiplication
  *  @{
@@ -953,6 +976,8 @@ D float64[[3]] matrixMultiplication (D float64[[3]] x, D float64[[3]] y) {
     diagMatrixMultiplication
 *****************************************************/
 
+/** \cond */
+
 template <domain D, type T>
 D T[[2]] _diagMatrixMultiplication (D T[[2]] x, D T[[2]] y) {
 
@@ -1028,8 +1053,7 @@ D T[[3]] _diagMatrixMultiplication (D T[[3]] x, D T[[3]] y) {
     return result;
 }
 
-
-
+/** \endcond */
 
 
 /** \addtogroup diag_matrixmultiplication
