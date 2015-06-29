@@ -80,16 +80,25 @@ D float64[[N]] choose(D bool[[N]] cond, D float64[[N]] first, D float64[[N]] sec
  *  @param newValue - a scalar value of the same type as the input vector
  *  @return returns a vector with the value at position **index** replaced by **newValue**
  */
-template <domain D>
-D float32[[1]] vectorUpdate(D float32[[1]] vec, D uint index, D float32 newValue) {
-    D float32[[1]] n(size(vec)) = newValue;
+
+/** \cond */
+
+template <domain D : shared3p, type T>
+D T[[1]] _vectorUpdate(D T[[1]] vec, D uint index, D T newValue) {
+    D T[[1]] n(size(vec)) = newValue;
     return choose(vectorLookupBitmask(size(vec), index), n, vec);
 }
 
-template <domain D>
+/** \endcond */
+
+template <domain D : shared3p>
+D float32[[1]] vectorUpdate(D float32[[1]] vec, D uint index, D float32 newValue) {
+    return _vectorUpdate (vec, index, newValue);
+}
+
+template <domain D : shared3p>
 D float64[[1]] vectorUpdate(D float64[[1]] vec, D uint index, D float64 newValue) {
-    D float64[[1]] n(size(vec)) = newValue;
-    return choose(vectorLookupBitmask(size(vec), index), n, vec);
+    return _vectorUpdate (vec, index, newValue);
 }
 /** @}*/
 
@@ -105,8 +114,10 @@ D float64[[1]] vectorUpdate(D float64[[1]] vec, D uint index, D float64 newValue
  *  @return returns a matrix where the row at **rowIndex** has been replaced with **newRow**
  */
 
-template <domain D : shared3p>
-D float32[[2]] matrixUpdateRow(D float32[[2]] mat, D uint rowIndex, D float32[[1]] newRow) {
+/** \cond */
+
+template <domain D : shared3p, type T>
+D T[[2]] _matrixUpdateRow(D T[[2]] mat, D uint rowIndex, D T[[1]] newRow) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
     uint cols = s[1];
@@ -115,28 +126,23 @@ D float32[[2]] matrixUpdateRow(D float32[[2]] mat, D uint rowIndex, D float32[[1
 
     D bool[[2]] mask = matrixLookupRowBitmask(rows, cols, rowIndex);
 
-    D float32[[2]] newRows(rows, cols);
+    D T[[2]] newRows(rows, cols);
     for (uint i = 0; i < rows; ++i)
         newRows[i,:] = newRow;
 
     return choose(mask, newRows, mat);
 }
 
+/** \endcond */
+
+template <domain D : shared3p>
+D float32[[2]] matrixUpdateRow(D float32[[2]] mat, D uint rowIndex, D float32[[1]] newRow) {
+    return _matrixUpdateRow (mat, rowIndex, newRow);
+}
+
 template <domain D : shared3p>
 D float64[[2]] matrixUpdateRow(D float64[[2]] mat, D uint rowIndex, D float64[[1]] newRow) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-    assert(cols == size(newRow));
-    // assert(declassify(rows > rowIndex));
-
-    D bool[[2]] mask = matrixLookupRowBitmask(rows, cols, rowIndex);
-
-    D float64[[2]] newRows(rows, cols);
-    for (uint i = 0; i < rows; ++i)
-        newRows[i,:] = newRow;
-
-    return choose(mask, newRows, mat);
+    return _matrixUpdateRow (mat, rowIndex, newRow);
 }
 /** @}*/
 
@@ -151,8 +157,11 @@ D float64[[2]] matrixUpdateRow(D float64[[2]] mat, D uint rowIndex, D float64[[1
  *  @param newCol - a vector with new values
  *  @return returns a matrix where the column at **colIndex** has been replaced with **newCol**
  */
-template <domain D : shared3p>
-D float32[[2]] matrixUpdateColumn(D float32[[2]] mat, D uint colIndex, D float32[[1]] newCol) {
+
+/** \cond */
+
+template <domain D : shared3p, type T>
+D T[[2]] _matrixUpdateColumn(D T[[2]] mat, D uint colIndex, D T[[1]] newCol) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
     uint cols = s[1];
@@ -161,28 +170,23 @@ D float32[[2]] matrixUpdateColumn(D float32[[2]] mat, D uint colIndex, D float32
 
     D bool[[2]] mask = matrixLookupColumnBitmask(rows, cols, colIndex);
 
-    D float32[[2]] newCols(rows, cols);
+    D T[[2]] newCols(rows, cols);
     for (uint i = 0; i < cols; ++i)
         newCols[:,i] = newCol;
 
     return choose(mask, newCols, mat);
 }
 
+/** \cond */
+
+template <domain D : shared3p>
+D float32[[2]] matrixUpdateColumn(D float32[[2]] mat, D uint colIndex, D float32[[1]] newCol) {
+    return _matrixUpdateColumn (mat, colIndex, newCol);
+}
+
 template <domain D : shared3p>
 D float64[[2]] matrixUpdateColumn(D float64[[2]] mat, D uint colIndex, D float64[[1]] newCol) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-    assert(rows == size(newCol));
-    // assert(declassify(cols > colIndex));
-
-    D bool[[2]] mask = matrixLookupColumnBitmask(rows, cols, colIndex);
-
-    D float64[[2]] newCols(rows, cols);
-    for (uint i = 0; i < cols; ++i)
-        newCols[:,i] = newCol;
-
-    return choose(mask, newCols, mat);
+    return _matrixUpdateColumn (mat, colIndex, newCol);
 }
 /** @}*/
 
@@ -198,29 +202,33 @@ D float64[[2]] matrixUpdateColumn(D float64[[2]] mat, D uint colIndex, D float64
  *  @param newValue - a new scalar value
  *  @return returns a matrix where the element at row **rowIndex** and column **colIndex** has been replaced with **newValue**
  */
-template <domain D : shared3p>
-D float32[[2]] matrixUpdate(D float32[[2]] mat, D uint rowIndex, D uint columnIndex, D float32 newValue) {
+
+/** \cond */
+
+template <domain D : shared3p, type T>
+D T[[2]] _matrixUpdate(D T[[2]] mat, D uint rowIndex, D uint columnIndex, D T newValue) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
     uint cols = s[1];
     // assert(declassify(rows > rowIndex));
     // assert(declassify(cols > columnIndex));
 
-    D float32[[2]] n(rows, cols) = newValue;
+    D T[[2]] n(rows, cols) = newValue;
     return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
+}
+
+/** \endcond */
+
+template <domain D : shared3p>
+D float32[[2]] matrixUpdate(D float32[[2]] mat, D uint rowIndex, D uint columnIndex, D float32 newValue) {
+    return _matrixUpdate (mat, rowIndex, columnIndex, newValue);
 }
 
 template <domain D : shared3p>
 D float64[[2]] matrixUpdate(D float64[[2]] mat, D uint rowIndex, D uint columnIndex, D float64 newValue) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-    // assert(declassify(rows > rowIndex));
-    // assert(declassify(cols > columnIndex));
-
-    D float64[[2]] n(rows, cols) = newValue;
-    return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
+    return _matrixUpdate (mat, rowIndex, columnIndex, newValue);
 }
+
 /** @}*/
 
 /** @}*/
