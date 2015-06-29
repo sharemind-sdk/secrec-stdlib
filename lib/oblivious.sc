@@ -988,112 +988,65 @@ D int[[2]] matrixUpdateColumn(D int[[2]] mat, D uint colIndex, D int[[1]] newCol
  *  @return returns a matrix where the element at row **rowIndex** and column **colIndex** has been replaced with **newValue**
  */
 
-template <domain D>
-D bool[[2]] matrixUpdate(D bool[[2]] mat, D uint rowIndex, D uint columnIndex, D bool newValue) {
+/** \cond */
+
+template <domain D, type T>
+D T[[2]] _matrixUpdate(D T[[2]] mat, D uint rowIndex, D uint columnIndex, D bool newValue) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
     uint cols = s[1];
     // assert(declassify(rows > rowIndex));
     // assert(declassify(cols > columnIndex));
 
-    D bool[[2]] n(rows, cols) = newValue;
+    D T[[2]] n(rows, cols) = newValue;
     return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
+}
+
+/** \endcond */
+
+template <domain D>
+D bool[[2]] matrixUpdate(D bool[[2]] mat, D uint rowIndex, D uint columnIndex, D bool newValue) {
+    return _matrixUpdate (mat, rowIndex, columnIndex, newValue);
 }
 
 template <domain D>
 D uint8[[2]] matrixUpdate(D uint8[[2]] mat, D uint rowIndex, D uint columnIndex, D uint8 newValue) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-    // assert(declassify(rows > rowIndex));
-    // assert(declassify(cols > columnIndex));
-
-    D uint8[[2]] n(rows, cols) = newValue;
-    return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
+    return _matrixUpdate (mat, rowIndex, columnIndex, newValue);
 }
 
 template <domain D>
 D uint16[[2]] matrixUpdate(D uint16[[2]] mat, D uint rowIndex, D uint columnIndex, D uint16 newValue) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-    // assert(declassify(rows > rowIndex));
-    // assert(declassify(cols > columnIndex));
-
-    D uint16[[2]] n(rows, cols) = newValue;
-    return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
+    return _matrixUpdate (mat, rowIndex, columnIndex, newValue);
 }
 
 template <domain D>
 D uint32[[2]] matrixUpdate(D uint32[[2]] mat, D uint rowIndex, D uint columnIndex, D uint32 newValue) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-    // assert(declassify(rows > rowIndex));
-    // assert(declassify(cols > columnIndex));
-
-    D uint32[[2]] n(rows, cols) = newValue;
-    return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
+    return _matrixUpdate (mat, rowIndex, columnIndex, newValue);
 }
 
 template <domain D>
 D uint[[2]] matrixUpdate(D uint[[2]] mat, D uint rowIndex, D uint columnIndex, D uint newValue) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-    // assert(declassify(rows > rowIndex));
-    // assert(declassify(cols > columnIndex));
-
-    D uint[[2]] n(rows, cols) = newValue;
-    return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
+    return _matrixUpdate (mat, rowIndex, columnIndex, newValue);
 }
 
 template <domain D>
 D int8[[2]] matrixUpdate(D int8[[2]] mat, D uint rowIndex, D uint columnIndex, D int8 newValue) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-    // assert(declassify(rows > rowIndex));
-    // assert(declassify(cols > columnIndex));
-
-    D int8[[2]] n(rows, cols) = newValue;
-    return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
+    return _matrixUpdate (mat, rowIndex, columnIndex, newValue);
 }
 
 template <domain D>
 D int16[[2]] matrixUpdate(D int16[[2]] mat, D uint rowIndex, D uint columnIndex, D int16 newValue) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-    // assert(declassify(rows > rowIndex));
-    // assert(declassify(cols > columnIndex));
-
-    D int16[[2]] n(rows, cols) = newValue;
-    return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
+    return _matrixUpdate (mat, rowIndex, columnIndex, newValue);
 }
 
 template <domain D>
 D int32[[2]] matrixUpdate(D int32[[2]] mat, D uint rowIndex, D uint columnIndex, D int32 newValue) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-    // assert(declassify(rows > rowIndex));
-    // assert(declassify(cols > columnIndex));
-
-    D int32[[2]] n(rows, cols) = newValue;
-    return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
+    return _matrixUpdate (mat, rowIndex, columnIndex, newValue);
 }
 
 template <domain D>
 D int[[2]] matrixUpdate(D int[[2]] mat, D uint rowIndex, D uint columnIndex, D int newValue) {
-    uint[[1]] s = shape(mat);
-    uint rows = s[0];
-    uint cols = s[1];
-    // assert(declassify(rows > rowIndex));
-    // assert(declassify(cols > columnIndex));
-
-    D int[[2]] n(rows, cols) = newValue;
-    return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);
+    return _matrixUpdate (mat, rowIndex, columnIndex, newValue);
 }
 
 /** @}*/
