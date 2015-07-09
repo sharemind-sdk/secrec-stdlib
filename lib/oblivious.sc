@@ -991,7 +991,7 @@ D int[[2]] matrixUpdateColumn(D int[[2]] mat, D uint colIndex, D int[[1]] newCol
 /** \cond */
 
 template <domain D, type T>
-D T[[2]] _matrixUpdate(D T[[2]] mat, D uint rowIndex, D uint columnIndex, D bool newValue) {
+D T[[2]] _matrixUpdate(D T[[2]] mat, D uint rowIndex, D uint columnIndex, D T newValue) {
     uint[[1]] s = shape(mat);
     uint rows = s[0];
     uint cols = s[1];

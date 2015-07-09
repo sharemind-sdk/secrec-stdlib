@@ -116,7 +116,7 @@ D T[[3]] transpose (D T[[3]] arr) {
 template <domain D, type T>
 D T[[2]] _unitMatrix (uint n) {
     T[[2]] mat (n, n);
-    for(uint i = 0; i < x; ++i){
+    for(uint i = 0; i < n; ++i){
         mat[i, i] = 1;
     }
 
@@ -134,7 +134,7 @@ D T[[2]] _unitMatrix (uint n) {
 template <domain D>
 D bool[[2]] unitMatrix (uint n) {
     bool[[2]] mat (n, n);
-    for(uint i = 0; i < x; ++i){
+    for(uint i = 0; i < n; ++i){
         mat[i, i] = true;
     }
 
