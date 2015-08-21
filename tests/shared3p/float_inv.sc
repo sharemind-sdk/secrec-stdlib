@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -17,28 +17,14 @@
  * For further information, please contact us at sharemind@cyber.ee.
  */
 
-module float_inv;
-
 import stdlib;
-import matrix;
 import shared3p;
-import shared3p_matrix;
-import oblivious;
-import shared3p_random;
-import shared3p_sort;
-import shared3p_bloom;
-import shared3p_string;
-import shared3p_aes;
-import shared3p_join;
-import profiling;
 import test_utility;
-
 
 domain pd_shared3p shared3p;
 
-
 template<type T>
-void test_inv(T data){
+PrecisionTest<T> test_inv(T data){
     T max_absolute = 0, max_relative = 0;
     pd_shared3p T[[1]] a (20) = {
         -10000,
@@ -106,21 +92,24 @@ void test_inv(T data){
     max_absolute = max(d);
     max_relative = max(d / temp);
 
-    print("TEST completed");
-    print("Max absolute error: ", max_absolute);
-    print("Max relative error: ", max_relative);
-    test_report_error(max_relative);
+    public PrecisionTest<T> rv;
+    rv.res = true;
+    rv.max_abs_error = max_absolute;
+    rv.max_rel_error = max_relative;
+
+    return rv;
 }
 
-
 void main(){
-    print("Inv test: start");
+    string test_prefix = "Float32/64 inversion precision";
     {
-        print("Float32");
-        test_inv(0::float32);
+        PrecisionTest<float32> rv = test_inv(0::float32);
+        test(test_prefix, rv);
     }
     {
-        print("Float64");
-        test_inv(0::float64);
+        PrecisionTest<float64> rv = test_inv(0::float64);
+        test(test_prefix, rv);
     }
+
+    test_report();
 }

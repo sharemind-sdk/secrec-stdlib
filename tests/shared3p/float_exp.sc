@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -17,28 +17,14 @@
  * For further information, please contact us at sharemind@cyber.ee.
  */
 
-module float_exp;
-
 import stdlib;
-import matrix;
 import shared3p;
-import shared3p_matrix;
-import oblivious;
-import shared3p_random;
-import shared3p_sort;
-import shared3p_bloom;
-import shared3p_string;
-import shared3p_aes;
-import shared3p_join;
-import profiling;
 import test_utility;
-
 
 domain pd_shared3p shared3p;
 
-
 template<type T>
-void test_exp(T data){
+PrecisionTest<T> test_exp(T data){
     T max_absolute = 0, max_relative = 0;
     pd_shared3p T[[1]] a (20) = {
         -10,
@@ -96,31 +82,31 @@ void test_exp(T data){
     d = declassify(c) - b;
 
     for(uint i = 0; i < 20;++i){
-        print("Exp(",declassify(a[i]),") = ",declassify(c[i])," Expected: ",b[i]);
         if(d[i] < 0){d[i] = -d[i];}
         if(temp[i] < 0){temp[i] = -temp[i];}
-        print("absolute difference: ",d[i]);
-        print("relative difference: ",d[i] / temp[i]);
-        print("---------------------------");
     }
     max_absolute = max(d);
     max_relative = max(d / temp);
 
-    print("TEST completed");
-    print("Max absolute error: ", max_absolute);
-    print("Max relative error: ", max_relative);
-    test_report_error(max_relative);
+    public PrecisionTest<T> rv;
+    rv.res = true;
+    rv.max_abs_error = max_absolute;
+    rv.max_rel_error = max_relative;
+
+    return rv;
 }
 
 
 void main(){
-    print("Exp test: start");
+    string test_prefix = "Float32/64 exp precision";
     {
-        print("Float32");
-        test_exp(0::float32);
+        PrecisionTest<float32> rv = test_exp(0::float32);
+        test(test_prefix, rv);
     }
     {
-        print("Float64");
-        test_exp(0::float64);
+        PrecisionTest<float64> rv = test_exp(0::float64);
+        test(test_prefix, rv);
     }
+
+    test_report();
 }

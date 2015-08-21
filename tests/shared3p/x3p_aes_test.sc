@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -17,65 +17,46 @@
  * For further information, please contact us at sharemind@cyber.ee.
  */
 
-module shared3p_aes_test;
-
 import stdlib;
-import matrix;
 import shared3p;
-import shared3p_matrix;
-import oblivious;
-import shared3p_random;
-import shared3p_sort;
-import shared3p_bloom;
-import shared3p_string;
 import shared3p_aes;
-import shared3p_join;
-import profiling;
 import test_utility;
 
 domain pd_shared3p shared3p;
 
-public uint all_tests;
-public uint succeeded_tests;
-
-
 void main(){
-    print("S3P_AES test: start");
-
-    print("TEST 1: aes128 key generation");
+    string test_prefix = "aes128 key generation";
     {
+        bool result = true;
         for(uint i = 50; i < 300; i = i + 50){
             pd_shared3p xor_uint32[[1]] key = aes128Genkey(i);
 
-            if(size(key) == (i * 4)){
-                succeeded_tests = succeeded_tests + 1;
-                all_tests = all_tests +1;
-                print("SUCCESS!");
-            }
-            else{
-                print("FAILURE! aes128 key generation failed, key too big or too small");
-                all_tests = all_tests +1;
+            if (size(key) != (i * 4)) {
+                result = false;
+                break;
             }
         }
+
+        test(test_prefix, result);
     }
-    print("TEST 2: aes128 key expansion");
+
+    test_prefix = "aes128 key expansion";
     {
+        bool result = true;
         for(uint i = 2; i <= 10; i = i + 2){
             pd_shared3p xor_uint32[[1]] key = aes128Genkey(i);
             pd_shared3p xor_uint32[[1]] expandedKey = aes128ExpandKey(key);
 
-            if(size(expandedKey) == (i * 44)){
-                succeeded_tests = succeeded_tests + 1;
-                all_tests = all_tests +1;
-                print("SUCCESS!");
-            }
-            else{
-                print("FAILURE! aes128 expanded key generation failed, key too big or too small");
-                all_tests = all_tests +1;
+            if (size(expandedKey) != (i * 44)) {
+                result = false;
+                break;
             }
         }
+
+        test(test_prefix, result);
     }
-    print("TEST 3: Encrypt with aes128");
+
+    test_prefix = "Encrypt with aes128";
     {
         pd_shared3p xor_uint32[[1]] plainText = {0x3243f6a8, 0x885a308d, 0x313198a2, 0xe0370734};
         pd_shared3p xor_uint32[[1]] cipherText1 = {0x3925841d, 0x2dc09fb, 0xdc118597, 0x196a0b32};
@@ -94,54 +75,41 @@ void main(){
         };
 
         pd_shared3p xor_uint32[[1]] cipherText2 = aes128EncryptEcb(expandedKey,plainText);
-        if(all(declassify(cipherText1) == declassify(cipherText2))){
-            succeeded_tests = succeeded_tests + 1;
-            all_tests = all_tests +1;
-            print("SUCCESS!");
-        }
-        else{
-            print("FAILURE! encrypting with static expanded key invalid results. Expected: ");
-            printVector(declassify(cipherText1));
-            print(" but got: ");
-            printVector(declassify(cipherText2));
-            all_tests = all_tests +1;
-        }
+        test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
     }
-    /*
-    print("TEST 4: aes192 key generation");
+
+    test_prefix = "aes192 key generation";
     {
+        bool result = true;
         for(uint i = 50; i < 300; i = i + 50){
             pd_shared3p xor_uint32[[1]] key = aes192Genkey(i);
 
-            if(size(key) == (i * 6)){
-                succeeded_tests = succeeded_tests + 1;
-                all_tests = all_tests +1;
-                print("SUCCESS!");
-            }
-            else{
-                print("FAILURE! aes192 key generation failed, key too big or too small");
-                all_tests = all_tests +1;
+            if (size(key) != (i * 6)) {
+                result = false;
+                break;
             }
         }
+
+        test(test_prefix, result);
     }
-    print("TEST 5: aes192 key expansion");
+
+    test_prefix = "aes192 key expansion";
     {
+        bool result = true;
         for(uint i = 2; i <= 10; i = i + 2){
             pd_shared3p xor_uint32[[1]] key = aes192Genkey(i);
             pd_shared3p xor_uint32[[1]] expandedKey = aes192ExpandKey(key);
 
-            if(size(expandedKey) == (i * 52)){
-                succeeded_tests = succeeded_tests + 1;
-                all_tests = all_tests +1;
-                print("SUCCESS!");
-            }
-            else{
-                print("FAILURE! aes192 expanded key generation failed, key too big or too small");
-                all_tests = all_tests +1;
+            if (size(expandedKey) != (i * 52)) {
+                result = false;
+                break;
             }
         }
+
+        test(test_prefix, result);
     }
-    print("TEST 6: Encrypt with aes192");
+
+    test_prefix = "Encrypt with aes192";
     {
         pd_shared3p xor_uint32[[1]] plainText = {0x681c7acc, 0x1cdfa764, 0x8625d98c, 0xe535075a};
         pd_shared3p xor_uint32[[1]] cipherText1 = {0xf58ba066, 0x2b2a7bcc, 0xf48583fa, 0xa27bd0e4};
@@ -162,53 +130,41 @@ void main(){
         };
 
         pd_shared3p xor_uint32[[1]] cipherText2 = aes192EncryptEcb(expandedKey,plainText);
-        if(all(declassify(cipherText1) == declassify(cipherText2))){
-            succeeded_tests = succeeded_tests + 1;
-            all_tests = all_tests +1;
-            print("SUCCESS!");
-        }
-        else{
-            print("FAILURE! encrypting with static expanded key invalid results. Expected: ");
-            printVector(declassify(cipherText1));
-            print(" but got: ");
-            printVector(declassify(cipherText2));
-            all_tests = all_tests +1;
-        }
+        test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
     }
-    print("TEST 7: aes256 key generation");
+
+    test_prefix = "aes256 key generation";
     {
+        bool result = true;
         for(uint i = 50; i < 300; i = i + 50){
             pd_shared3p xor_uint32[[1]] key = aes256Genkey(i);
 
-            if(size(key) == (i * 8)){
-                succeeded_tests = succeeded_tests + 1;
-                all_tests = all_tests +1;
-                print("SUCCESS!");
-            }
-            else{
-                print("FAILURE! aes256 key generation failed, key too big or too small");
-                all_tests = all_tests +1;
+            if (size(key) != (i * 8)) {
+                result = false;
+                break;
             }
         }
+
+        test(test_prefix, result);
     }
-    print("TEST 8: aes256 key expansion");
+
+    test_prefix = "aes256 key expansion";
     {
+        bool result = true;
         for(uint i = 2; i <= 10; i = i + 2){
             pd_shared3p xor_uint32[[1]] key = aes256Genkey(i);
             pd_shared3p xor_uint32[[1]] expandedKey = aes256ExpandKey(key);
 
-            if(size(expandedKey) == (i * 60)){
-                succeeded_tests = succeeded_tests + 1;
-                all_tests = all_tests +1;
-                print("SUCCESS!");
-            }
-            else{
-                print("FAILURE! aes256 expanded key generation failed, key too big or too small");
-                all_tests = all_tests +1;
+            if (size(expandedKey) != (i * 60)) {
+                result = false;
+                break;
             }
         }
+
+        test(test_prefix, result);
     }
-    print("TEST 9: Encrypt with aes256");
+
+    test_prefix = "Encrypt with aes256";
     {
         pd_shared3p xor_uint32[[1]] plainText = {0x6d7134dd, 0x13026986, 0xa43e0ada, 0x569c6b53};
         pd_shared3p xor_uint32[[1]] cipherText1 = {0x91e3fd7c, 0x3221ec20, 0x64d8b896, 0xa0ccecab};
@@ -231,24 +187,8 @@ void main(){
         };
 
         pd_shared3p xor_uint32[[1]] cipherText2 = aes256EncryptEcb(expandedKey,plainText);
-        if(all(declassify(cipherText1) == declassify(cipherText2))){
-            succeeded_tests = succeeded_tests + 1;
-            all_tests = all_tests +1;
-            print("SUCCESS!");
-        }
-        else{
-            print("FAILURE! encrypting with static expanded key invalid results. Expected: ");
-            printVector(declassify(cipherText1));
-            print(" but got: ");
-            printVector(declassify(cipherText2));
-            all_tests = all_tests +1;
-        }
+        test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
     }
-    */
 
-    print("Test finished!");
-    print("Succeeded tests: ", succeeded_tests);
-    print("Failed tests: ", all_tests - succeeded_tests);
-
-    test_report(all_tests, succeeded_tests);
+    test_report();
 }

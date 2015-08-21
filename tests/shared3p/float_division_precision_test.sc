@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -17,20 +17,9 @@
  * For further information, please contact us at sharemind@cyber.ee.
  */
 
-module float_precision;
-
 import stdlib;
-import matrix;
 import shared3p;
-import shared3p_matrix;
-import oblivious;
 import shared3p_random;
-import shared3p_sort;
-import shared3p_bloom;
-import shared3p_string;
-import shared3p_aes;
-import shared3p_join;
-import profiling;
 import test_utility;
 
 
@@ -156,14 +145,13 @@ D T[[3]] random(D T[[3]] data){
 }
 
 template<type T>
-void test_division(T data){
+PrecisionTest<T> test_division(T data){
     T max_absolute = 0, max_relative = 0;
     T temp; T temp2;
     pd_shared3p T a;
     pd_shared3p T b;
     T sum; T sum2;
     for(uint i = 0; i < test_amount; ++i){
-        print("test: ",i+1);
         a = classify(random_float(0::T)); b = classify(random_float(0::T));
         sum = declassify(a/b); sum2 = declassify(a) / declassify(b);
         temp = sum-sum2; temp2 = sum2;
@@ -175,25 +163,24 @@ void test_division(T data){
             max_relative = temp / temp2;
     }
 
-    print("TEST completed");
-    print("Max absolute error: ", max_absolute);
-    print("Max relative error: ", max_relative);
-    test_report_error(max_relative);
+    public PrecisionTest<T> rv;
+    rv.res = true;
+    rv.max_abs_error = max_absolute;
+    rv.max_rel_error = max_relative;
+
+    return rv;
 }
 
 void main(){
-
-    print("Precision test: start");
-
-    print("TEST 4: Float32/64 Division precision");
+    string test_prefix = "Float32/64 Division precision";
     {
-        print("Float32");
-        test_division(0::float32);
+        PrecisionTest<float32> rv = test_division(0::float32);
+        test(test_prefix, rv);
     }
     {
-        print("Float64");
-        test_division(0::float64);
+        PrecisionTest<float64> rv = test_division(0::float64);
+        test(test_prefix, rv);
     }
 
-    print("Test finished!");
+    test_report();
 }

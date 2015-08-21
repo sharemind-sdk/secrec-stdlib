@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -17,24 +17,10 @@
  * For further information, please contact us at sharemind@cyber.ee.
  */
 
-module float_shared3p;
-
 import stdlib;
-import matrix;
 import shared3p;
-import shared3p_matrix;
-import oblivious;
 import shared3p_random;
-import shared3p_sort;
-import shared3p_bloom;
-import shared3p_string;
-import shared3p_aes;
-import shared3p_join;
-import profiling;
 import test_utility;
-
-public uint all_tests;
-public uint succeeded_tests;
 
 domain pd_shared3p shared3p;
 
@@ -45,7 +31,7 @@ T random_float(T data){
     pd_shared3p int8 temp2;
     T scalar;
     T scalar2;
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar = 0;
         while(scalar == 0 || scalar2 == 0){
             scalar = (T) declassify(randomize(temp));
@@ -71,7 +57,7 @@ D T[[1]] random(D T[[1]] data){
     pd_shared3p int8[[1]] temp2 (x_shape);
     T[[1]] scalar (x_shape);
     T[[1]] scalar2 (x_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -99,7 +85,7 @@ D T[[2]] random(D T[[2]] data){
     pd_shared3p int8[[2]] temp2 (x_shape,y_shape);
     T[[2]] scalar (x_shape,y_shape);
     T[[2]] scalar2 (x_shape,y_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -128,7 +114,7 @@ D T[[3]] random(D T[[3]] data){
     pd_shared3p int8[[3]] temp2 (x_shape,y_shape,z_shape);
     T[[3]] scalar (x_shape,y_shape,z_shape);
     T[[3]] scalar2 (x_shape,y_shape,z_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -148,34 +134,23 @@ D T[[3]] random(D T[[3]] data){
 }
 
 template<type T>
-void test_sum(T data){
-    {
-        pd_shared3p T[[1]] vec (0);
-        pd_shared3p T result = sum(vec);
-    }
+bool test_sum(T data){
     pd_shared3p T[[1]] temp (10);
-    temp = random(temp); 
+    temp = random(temp);
     T[[1]] vec = declassify(temp);
     T result = declassify(sum(temp));
     T control = 0;
     for(uint i = 0; i < size(vec);++i){
         control += vec[i];
     }
-    if(((control / result) >= 0.99) && ((control / result) <= 1.01)){
-        succeeded_tests = succeeded_tests + 1;
-        all_tests = all_tests +1;
-        print("SUCCESS!");
-    }
-    else{
-        all_tests = all_tests +1;
-        print("FAILURE! Sum failed");
-    }
+
+    return ((control / result) >= 0.99) && ((control / result) <= 1.01);
 }
 
 
 template<type T>
-void test_sum2(T data){
-    pd_shared3p T[[1]] temp (10); 
+bool test_sum2(T data){
+    pd_shared3p T[[1]] temp (10);
     temp = random(temp);
     T[[1]] vec = declassify(temp);
     T[[1]] result = declassify(sum(temp,2::uint));
@@ -189,58 +164,33 @@ void test_sum2(T data){
         startingIndex = 5;
         endIndex = 10;
     }
-    if(all((control / result) >= 0.99) && all((control / result) <= 1.01)){
-        succeeded_tests = succeeded_tests + 1;
-        all_tests = all_tests +1;
-        print("SUCCESS!");
-    }
-    else{
-        all_tests = all_tests +1;
-        print("FAILURE! Sum failed");
-    }
+
+    return all((control / result) >= 0.99) && all((control / result) <= 1.01);
 }
 
 void main(){
+//    print("TEST 1: Classify");
+//    {
+//        print("float32");
+//        float32 a = random_float(0::float32); pd_shared3p float32 b = classify(a);
+//        print("SUCCESS!");
+//        succeeded_tests = succeeded_tests + 1;
+//        all_tests = all_tests +1;
+//    }
+//    {
+//        print("float64");
+//        float64 a = random_float(0::float64); pd_shared3p float64 b = classify(a);
+//        print("SUCCESS!");
+//        succeeded_tests = succeeded_tests + 1;
+//        all_tests = all_tests +1;
+//    }
+    string test_prefix = "Sum";
+    test(test_prefix, test_sum(0::float32), 0::float32);
+    test(test_prefix, test_sum(0::float64), 0::float64);
 
-    print("Standard library: start");
+    test_prefix = "Sum (2)";
+    test(test_prefix, test_sum2(0::float32), 0::float32);
+    test(test_prefix, test_sum2(0::float64), 0::float64);
 
-    print("TEST 1: Classify");
-    {
-        print("float32");
-        float32 a = random_float(0::float32); pd_shared3p float32 b = classify(a); 
-        print("SUCCESS!");
-        succeeded_tests = succeeded_tests + 1;
-        all_tests = all_tests +1; 
-    }
-    {
-        print("float64");
-        float64 a = random_float(0::float64); pd_shared3p float64 b = classify(a); 
-        print("SUCCESS!");
-        succeeded_tests = succeeded_tests + 1;
-        all_tests = all_tests +1;
-    }
-    print("TEST 2: Sum");
-    {
-        print("float32");
-        test_sum(0::float32);
-    }
-    {
-        print("float64");
-        test_sum(0::float64);
-    }
-    print("TEST 3: Sum (2)");
-    {
-        print("float32");
-        test_sum2(0::float32);
-    }
-    {
-        print("float64");
-        test_sum2(0::float64);
-    }
-
-    print("Test finished!");
-    print("Succeeded tests: ", succeeded_tests);
-    print("Failed tests: ", all_tests - succeeded_tests);
-
-    test_report(all_tests, succeeded_tests);
+    test_report();
 }

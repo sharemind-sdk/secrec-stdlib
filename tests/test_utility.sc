@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -17,29 +17,63 @@
  * For further information, please contact us at sharemind@cyber.ee.
  */
 
-module test_report;
+module test_utility;
 
 import stdlib;
 
-void test_report(uint tests, uint passed) {
-    publish("test_count", tests);
-    publish("passed_count", passed);
+string var_prefix = "test";
+uint all_tests = 0;
+uint passed_tests = 0;
+uint failed_tests = 0;
+
+template<type T>
+struct PrecisionTest {
+    bool res;
+    T max_abs_error;
+    T max_rel_error;
 }
 
-void test_report(int64 tests, int64 passed) {
-    // SecreCTestRunner expects uint64s
-    test_report((uint) tests, (uint) passed);
+template<type T>
+string _precision_to_string(PrecisionTest<T> prec) {
+    return "(max abs. error: " + tostring(prec.max_abs_error) + ", max rel. error: " + tostring(prec.max_rel_error) + ")";
 }
 
-void test_report(uint32 tests, uint32 passed) {
-    // SecreCTestRunner expects uint64s
-    test_report((uint) tests, (uint) passed);
+template <dim N>
+void test(string desc, bool [[N]] resvec) {
+    bool res = all(resvec);
+    publish(var_prefix + tostring(all_tests) + "_description", desc);
+    publish(var_prefix + tostring(all_tests) + "_result", res);
+    ++all_tests;
+    res ? ++passed_tests : ++failed_tests;
 }
 
-void test_report_error(float64 relative) {
-    publish("f64_max_relative_error", relative);
+template <domain D, type T, dim N, dim M>
+void test(string desc, bool [[N]] resvec, D T [[M]] t) {
+    bool res = all(resvec);
+    publish(var_prefix + tostring(all_tests) + "_description", "[$T] " + desc);
+    publish(var_prefix + tostring(all_tests) + "_result", res);
+    ++all_tests;
+    res ? ++passed_tests : ++failed_tests;
 }
 
-void test_report_error(float32 relative) {
-    publish("f32_max_relative_error", relative);
+template <type T>
+void test(string desc, PrecisionTest<T> p) {
+    publish(var_prefix + tostring(all_tests) + "_description", "[$T] " + desc + " " + _precision_to_string(p));
+    publish(var_prefix + tostring(all_tests) + "_result", p.res);
+    ++all_tests;
+    p.res ? ++passed_tests : ++failed_tests;
+}
+
+template <domain D, type T, type U, dim N, dim M, dim O>
+void test(string desc, bool [[N]] resvec, D T [[M]] t, D U [[O]] u) {
+    bool res = all(resvec);
+    publish(var_prefix + tostring(all_tests) + "_description", "[$T,$U] " + desc);
+    publish(var_prefix + tostring(all_tests) + "_result", res);
+    ++all_tests;
+    res ? ++passed_tests : ++failed_tests;
+}
+
+void test_report() {
+    publish("test_count", all_tests);
+    publish("passed_count", passed_tests);
 }

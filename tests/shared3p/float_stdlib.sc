@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -17,24 +17,10 @@
  * For further information, please contact us at sharemind@cyber.ee.
  */
 
-module float_stdlib;
-
 import stdlib;
-import matrix;
 import shared3p;
-import shared3p_matrix;
-import oblivious;
 import shared3p_random;
-import shared3p_sort;
-import shared3p_bloom;
-import shared3p_string;
-import shared3p_aes;
-import shared3p_join;
-import profiling;
 import test_utility;
-
-public uint all_tests;
-public uint succeeded_tests;
 
 domain pd_shared3p shared3p;
 
@@ -45,7 +31,7 @@ T random_float(T data){
     pd_shared3p int8 temp2;
     T scalar;
     T scalar2;
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar = 0;
         while(scalar == 0 || scalar2 == 0){
             scalar = (T) declassify(randomize(temp));
@@ -71,7 +57,7 @@ D T[[1]] random(D T[[1]] data){
     pd_shared3p int8[[1]] temp2 (x_shape);
     T[[1]] scalar (x_shape);
     T[[1]] scalar2 (x_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -99,7 +85,7 @@ D T[[2]] random(D T[[2]] data){
     pd_shared3p int8[[2]] temp2 (x_shape,y_shape);
     T[[2]] scalar (x_shape,y_shape);
     T[[2]] scalar2 (x_shape,y_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -128,7 +114,7 @@ D T[[3]] random(D T[[3]] data){
     pd_shared3p int8[[3]] temp2 (x_shape,y_shape,z_shape);
     T[[3]] scalar (x_shape,y_shape,z_shape);
     T[[3]] scalar2 (x_shape,y_shape,z_shape);
-    for(uint i = 0; i < 2; ++i){   
+    for(uint i = 0; i < 2; ++i){
         scalar[0,0,0] = 0;
         while(any(scalar == 0) || any(scalar2 == 0)){
             scalar = (T) declassify(randomize(temp));
@@ -148,251 +134,140 @@ D T[[3]] random(D T[[3]] data){
 }
 
 template<type T>
-void test_flattening(T data){
-	{
-		T[[2]] mat (0,0);
-		T[[1]] vec = flatten(mat);
-	}
-	bool result = true;
-	pd_shared3p T[[2]] temp (3,3);
-	temp = random(temp);
-	T[[2]] object = declassify(temp);
-	T[[1]] vec = flatten(object);
-	for(uint i = 0; i < shape(object)[0];++i){
-		for(uint j = 0; j < shape(object)[1];++j){
-			if(object[i,j] != vec[(3*i + j)]){
-				result = false;
-				break;
-			}
-		}
-		if(!result){
-			break;	
-		}
-	}
-	if(!result){
-		all_tests = all_tests +1;
-		print("FAILURE! flattening returned: ");
-		printVector(vec);
-		print("From: ");
-		printMatrix(object);
-	}
-	else{
-		succeeded_tests = succeeded_tests + 1;
- 		all_tests = all_tests +1;
- 		print("SUCCESS!");
-	}
+bool test_flattening(T data){
+    bool result = true;
+    pd_shared3p T[[2]] temp (3,3);
+    temp = random(temp);
+    T[[2]] object = declassify(temp);
+    T[[1]] vec = flatten(object);
+    for(uint i = 0; i < shape(object)[0];++i){
+        for(uint j = 0; j < shape(object)[1];++j){
+            if(object[i,j] != vec[(3*i + j)]){
+                result = false;
+                break;
+            }
+        }
+        if(!result){
+            break;
+        }
+    }
+
+    return result;
 }
 
 template<type T>
-void equal_shapes_test(T data){
-	{
-		pd_shared3p T[[2]] mat (0,0);
-		pd_shared3p T[[2]] mat2 (0,0);
-		bool result = shapesAreEqual(mat,mat2);
-		pd_shared3p T[[2]] mat3 (0,2);
-		pd_shared3p T[[2]] mat4 (0,2);
-		result = shapesAreEqual(mat3,mat4);
-		pd_shared3p T[[2]] mat5 (2,0);
-		pd_shared3p T[[2]] mat6 (2,0);
-		result = shapesAreEqual(mat5,mat6);
-	}
-	{
-		pd_shared3p T[[2]] mat (3,3); 
-		pd_shared3p T[[2]] mat2 (3,3); 
-		T[[2]] mat3 = declassify(random(mat));
-		T[[2]] mat4 = declassify(random(mat2));
-		bool result = shapesAreEqual(mat3,mat4);
-		if(all(shape(mat3) == shape(mat4))){
-			succeeded_tests = succeeded_tests + 1;
-	 		all_tests = all_tests +1;
-	 		print("SUCCESS!");
-		}
-		else{
-			all_tests = all_tests +1;
-			print("FAILURE! Shapes should be equal but they're not");
-		}
-	}
-	{
-		pd_shared3p T[[2]] mat (3,2);
-		pd_shared3p T[[2]] mat2 (5,1); 
-		T[[2]] mat3 = declassify(random(mat));
-		T[[2]] mat4 = declassify(random(mat2));
-		bool result = shapesAreEqual(mat3,mat4);
-		if(!all(shape(mat3) == shape(mat4))){
-			succeeded_tests = succeeded_tests + 1;
-	 		all_tests = all_tests +1;
-	 		print("SUCCESS!");
-		}
-		else{
-			all_tests = all_tests +1;
-			print("FAILURE! Shapes should not be equal but they are");
-		}
-	}
+bool equal_shapes_test(T data){
+    {
+        pd_shared3p T[[2]] mat (3,3);
+        pd_shared3p T[[2]] mat2 (3,3);
+        T[[2]] mat3 = declassify(random(mat));
+        T[[2]] mat4 = declassify(random(mat2));
+        bool result = shapesAreEqual(mat3,mat4);
+        if (!all(shape(mat3) == shape(mat4)))
+            return false;
+    }
+    {
+        pd_shared3p T[[2]] mat (3,2);
+        pd_shared3p T[[2]] mat2 (5,1);
+        T[[2]] mat3 = declassify(random(mat));
+        T[[2]] mat4 = declassify(random(mat2));
+        bool result = shapesAreEqual(mat3,mat4);
+        if(all(shape(mat3) == shape(mat4)))
+            return false;
+    }
+
+    return true;
 }
 
 template<type T>
-void test_sum(T data){
-	{
-		T[[1]] vec (0);
-		T result = sum(vec);
-	}
-	pd_shared3p T[[1]] temp (6); 
-	T[[1]] vec = declassify(random(temp));
-	T result = sum(vec);
-	T control = 0;
-	for(uint i = 0; i < size(vec);++i){
-		control += vec[i];
-	}
-	if(all(control == result)){
-		succeeded_tests = succeeded_tests + 1;
- 		all_tests = all_tests +1;
- 		print("SUCCESS!");
-	}
-	else{
-		all_tests = all_tests +1;
-		print("FAILURE! Sum failed");
-	}
+bool test_sum(T data){
+    pd_shared3p T[[1]] temp (6);
+    T[[1]] vec = declassify(random(temp));
+    T result = sum(vec);
+    T control = 0;
+    for(uint i = 0; i < size(vec);++i){
+        control += vec[i];
+    }
+
+    return all(control == result);
 }
 
 
 template<type T>
-void test_sum2(T data){
-	pd_shared3p T[[1]] temp (6); 
-	T[[1]] vec = declassify(random(temp));
-	T[[1]] result = sum(vec,2::uint);
-	uint startingIndex = 0;
-	uint endIndex = size(vec) / 2;
-	T[[1]] control (2)= 0;
-	for(uint i = 0;i < 2;++i){
-		for(uint j = startingIndex;j < endIndex;++j){
-			control[i] += vec[j];
-		}
-		startingIndex = 3;
-		endIndex = 6;
-	}
-	if(all(control == result)){
-		succeeded_tests = succeeded_tests + 1;
- 		all_tests = all_tests +1;
- 		print("SUCCESS!");
-	}
-	else{
-		all_tests = all_tests +1;
-		print("FAILURE! Sum failed");
-	}
+bool test_sum2(T data){
+    pd_shared3p T[[1]] temp (6);
+    T[[1]] vec = declassify(random(temp));
+    T[[1]] result = sum(vec,2::uint);
+    uint startingIndex = 0;
+    uint endIndex = size(vec) / 2;
+    T[[1]] control (2)= 0;
+    for(uint i = 0;i < 2;++i){
+        for(uint j = startingIndex;j < endIndex;++j){
+            control[i] += vec[j];
+        }
+        startingIndex = 3;
+        endIndex = 6;
+    }
+
+    return all(control == result);
 }
 
 template<type T>
-void test_product(T data){
-	{
-		T[[1]] vec (0);
-		T result = product(vec);
-	}
-	pd_shared3p T[[1]] temp (6);
-	T[[1]] vec = declassify(random(temp));
-	T result = product(vec);
-	T control = 1;
-	for(uint i = 0; i < size(vec);++i){
-		control *= vec[i];
-	}
-	if(control == result){
-		succeeded_tests = succeeded_tests + 1;
- 		all_tests = all_tests +1;
- 		print("SUCCESS!");
-	}
-	else{
-		all_tests = all_tests +1;
-		print("FAILURE! Sum failed");
-	}
+bool test_product(T data){
+    pd_shared3p T[[1]] temp (6);
+    T[[1]] vec = declassify(random(temp));
+    T result = product(vec);
+    T control = 1;
+    for(uint i = 0; i < size(vec);++i){
+        control *= vec[i];
+    }
+
+    return control == result;
 }
 
 template<type T>
-void test_product2(T data){
-	pd_shared3p T[[1]] temp (6);
-	T[[1]] vec = declassify(random(temp));
-	T[[1]] result = product(vec,2::uint);
-	T[[1]] control (2)= 1;
-	uint startingIndex = 0;
-	uint endIndex = size(vec) / 2;
-	for(uint i = 0; i < 2;++i){
-		for(uint j = startingIndex; j < endIndex; ++j){
-			control[i] *= vec[j];
-		}
-		startingIndex += size(vec) / 2;
-		endIndex += size(vec) / 2;
-	}
-	if(all(control == result)){
-		succeeded_tests = succeeded_tests + 1;
- 		all_tests = all_tests +1;
- 		print("SUCCESS!");
-	}
-	else{
-		all_tests = all_tests +1;
-		print("FAILURE! Product failed");
-	}
+bool test_product2(T data){
+    pd_shared3p T[[1]] temp (6);
+    T[[1]] vec = declassify(random(temp));
+    T[[1]] result = product(vec,2::uint);
+    T[[1]] control (2)= 1;
+    uint startingIndex = 0;
+    uint endIndex = size(vec) / 2;
+    for(uint i = 0; i < 2;++i){
+        for(uint j = startingIndex; j < endIndex; ++j){
+            control[i] *= vec[j];
+        }
+        startingIndex += size(vec) / 2;
+        endIndex += size(vec) / 2;
+    }
+
+    return all(control == result);
 }
 
 void main(){
+    string test_prefix = "Flattening utility";
+    test(test_prefix, test_flattening(0::float32), 0::float32);
+    test(test_prefix, test_flattening(0::float64), 0::float64);
 
-	print("Standard library: start");
+    test_prefix = "Shapes are equal utility";
+    test(test_prefix, equal_shapes_test(0::float32), 0::float32);
+    test(test_prefix, equal_shapes_test(0::float64), 0::float64);
 
-	print("TEST 1: Flattening utility");
-	{
-		print("float32");
-		test_flattening(0::float32);
-	}
-	{
-		print("float64");
-		test_flattening(0::float64);
-	}
-	print("TEST 2: Shapes are equal utility");
-	{
-		print("float32");
-		equal_shapes_test(0::float32);
-	}
-	{
-		print("float64");
-		equal_shapes_test(0::float64);
-	}
-	print("TEST 4: Sum");
-	{
-		print("float32");
-		test_sum(0::float32);
-	}
-	{
-		print("float64");
-		test_sum(0::float64);
-	}
-	print("TEST 5: Sum (2)");
-	{
-		print("float32");
-		test_sum2(0::float32);
-	}
-	{
-		print("float64");
-		test_sum2(0::float64);
-	}
-	print("TEST 6: Product");
-	{
-		print("float32");
-		test_product(0::float32);
-	}
-	{
-		print("float64");
-		test_product(0::float64);
-	}
-	print("TEST 7: Product (2)");
-	{
-		print("float32");
-		test_product2(0::float32);
-	}
-	{
-		print("float64");
-		test_product2(0::float64);
-	}
+    test_prefix = "Sum";
+    test(test_prefix, test_sum(0::float32), 0::float32);
+    test(test_prefix, test_sum(0::float64), 0::float64);
 
-	print("Test finished!");
-	print("Succeeded tests: ", succeeded_tests);
-	print("Failed tests: ", all_tests - succeeded_tests);
+    test_prefix = "Sum (2)";
+    test(test_prefix, test_sum2(0::float32), 0::float32);
+    test(test_prefix, test_sum2(0::float64), 0::float64);
 
-    test_report(all_tests, succeeded_tests);
+    test_prefix = "Product";
+    test(test_prefix, test_product(0::float32), 0::float32);
+    test(test_prefix, test_product(0::float64), 0::float64);
+
+    test_prefix = "Product (2)";
+    test(test_prefix, test_product2(0::float32), 0::float32);
+    test(test_prefix, test_product2(0::float64), 0::float64);
+
+    test_report();
 }
