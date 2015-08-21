@@ -92,7 +92,7 @@ run() {
     local SB_BN=`echo "${SC_BN}" | sed 's/\.sc$//' | sed 's/$/.sb/'`
     local SB="${TMP_PATH}/${SB_BN}"
 
-    echo -n "[`basename "${SC_BN}"`]: "
+    local TEST_NAME="[`basename "${SC_BN}"`]: "
 
     compile "${SC}" "${SB}"
     local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
@@ -101,21 +101,21 @@ run() {
     local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
 
     local CWD=`pwd`; cd "`dirname "${TEST_RUNNER}"`"
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH}" "${TEST_RUNNER}" --file "${SB_BN}"
+    LD_LIBRARY_PATH="${LD_LIBRARY_PATH}" "${TEST_RUNNER}" --file "${SB_BN}" | sed "s/^/${TEST_NAME}/g"
     local RV=$?; cd "${CWD}"; return ${RV}
 }
 
 run_all() {
-    local RV=0
     for TESTS in `find "${ABSSP}" -mindepth 1 -maxdepth 1 -type d | sort`; do
         local TESTS_BN=`basename "${TESTS}"`
         echo "Testset: ${TESTS_BN}"
         for TEST in `find "${TESTS}" -mindepth 1 -maxdepth 1 -type f -name "*.sc" | sort`; do
             run "${TEST}"
-            local RV=$[ $RV || $? ]
+            local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
         done
     done
-    return ${RV}
+
+    return 0
 }
 
 if [ "x$1" = "x" ]; then
