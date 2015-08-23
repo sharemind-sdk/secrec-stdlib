@@ -87,12 +87,13 @@ install() {
 }
 
 run() {
-    local SC="$1"
+    local TESTSET="$1"
+    local SC="$2"
     local SC_BN=`basename "${SC}"`
     local SB_BN=`echo "${SC_BN}" | sed 's/\.sc$//' | sed 's/$/.sb/'`
     local SB="${TMP_PATH}/${SB_BN}"
 
-    local TEST_NAME="[`basename "${SC_BN}"`]: "
+    local TEST_NAME="[${TESTSET}\/`basename "${SC_BN}"`]: "
 
     compile "${SC}" "${SB}"
     local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
@@ -108,9 +109,8 @@ run() {
 run_all() {
     for TESTS in `find "${ABSSP}" -mindepth 1 -maxdepth 1 -type d | sort`; do
         local TESTS_BN=`basename "${TESTS}"`
-        echo "Testset: ${TESTS_BN}"
         for TEST in `find "${TESTS}" -mindepth 1 -maxdepth 1 -type f -name "*.sc" | sort`; do
-            run "${TEST}"
+            run "${TESTS_BN}" "${TEST}"
             local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
         done
     done
