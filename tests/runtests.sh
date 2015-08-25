@@ -87,13 +87,16 @@ install() {
 }
 
 run() {
-    local TESTSET="$1"
-    local SC="$2"
+    local SC="$1"
+    local TESTSET="$2"
     local SC_BN=`basename "${SC}"`
     local SB_BN=`echo "${SC_BN}" | sed 's/\.sc$//' | sed 's/$/.sb/'`
     local SB="${TMP_PATH}/${SB_BN}"
 
-    local TEST_NAME="[${TESTSET}\/`basename "${SC_BN}"`]: "
+    local TEST_NAME="[${SC}]: "
+    if [ -n "${TESTSET}" ]; then
+        TEST_NAME="[${TESTSET}\/`basename "${SC_BN}"`]: "
+    fi
 
     compile "${SC}" "${SB}"
     local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
@@ -102,7 +105,7 @@ run() {
     local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
 
     local CWD=`pwd`; cd "`dirname "${TEST_RUNNER}"`"
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH}" "${TEST_RUNNER}" --file "${SB_BN}" | sed "s/^/${TEST_NAME}/g"
+    LD_LIBRARY_PATH="${LD_LIBRARY_PATH}" "${TEST_RUNNER}" --file "${SB_BN}" | sed "s#^#${TEST_NAME}#g"
     local RV=$?; cd "${CWD}"; return ${RV}
 }
 
@@ -110,7 +113,7 @@ run_all() {
     for TESTS in `find "${ABSSP}" -mindepth 1 -maxdepth 1 -type d | sort`; do
         local TESTS_BN=`basename "${TESTS}"`
         for TEST in `find "${TESTS}" -mindepth 1 -maxdepth 1 -type f -name "*.sc" | sort`; do
-            run "${TESTS_BN}" "${TEST}"
+            run "${TEST}" "${TESTS_BN}"
             local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
         done
     done
