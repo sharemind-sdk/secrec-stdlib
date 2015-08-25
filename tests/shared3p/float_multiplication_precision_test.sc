@@ -68,7 +68,6 @@ PrecisionTest<T> test_multiplication(T data){
     pd_shared3p T b;
     T sum; T sum2;
     for(uint i = 0; i < test_amount; ++i){
-        print("test: ",i+1);
         a = classify(random_float(0::T)); b = classify(random_float(0::T));
         sum = declassify(a*b); sum2 = declassify(a) * declassify(b);
         temp = sum-sum2; temp2 = sum2;

@@ -82,12 +82,8 @@ PrecisionTest<T> test_ln(T data){
     d = declassify(c) - b;
 
     for(uint i = 0; i < 20;++i){
-        print("Ln(",declassify(a[i]),") = ",declassify(c[i])," Expected: ",b[i]);
         if(d[i] < 0){d[i] = -d[i];}
         if(temp[i] < 0){temp[i] = -temp[i];}
-        print("absolute difference: ",d[i]);
-        print("relative difference: ",d[i] / temp[i]);
-        print("---------------------------");
     }
     max_absolute = max(d);
     max_relative = max(d / temp);
