@@ -2370,7 +2370,7 @@ D float64[[N]] max (D float64[[N]] x, D float64[[N]] y) {
  *  @brief Functions for rounding a value downwards
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" \ref float64 "float64"
- *  @return returns an integer value with the downwards rounded value of the input scalar/vector
+ *  @return returns the downwards rounded value of the input scalar/vector
  */
 
 /**
@@ -2413,7 +2413,7 @@ D float64[[1]] floor (D float64[[1]] arr) {
  *  @brief Functions for rounding a value upwards
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" \ref float64 "float64"
- *  @return returns an integer value with the upwards rounded value of the input scalar/vector
+ *  @return returns the upwards rounded value of the input scalar/vector
  */
 
 /**
