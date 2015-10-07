@@ -2377,15 +2377,15 @@ D float64[[N]] max (D float64[[N]] x, D float64[[N]] y) {
 * @param value - input scalar of supported type
 */
 template <domain D : shared3p>
-D int32 floor (D float32 value) {
-    D int32 out;
+D float32 floor (D float32 value) {
+    D float32 out;
     __syscall("shared3p::floor_float32_vec", __domainid( D ), value, out);
     return out;
 }
 
 template <domain D : shared3p>
-D int64 floor (D float64 value) {
-    D int64 out;
+D float64 floor (D float64 value) {
+    D float64 out;
     __syscall("shared3p::floor_float64_vec", __domainid( D ), value, out);
     return out;
 }
@@ -2394,15 +2394,15 @@ D int64 floor (D float64 value) {
 * @param arr - input vector of supported type
 */
 template <domain D : shared3p>
-D int32[[1]] floor (D float32[[1]] arr) {
-    D int32[[1]] out (size (arr));
+D float32[[1]] floor (D float32[[1]] arr) {
+    D float32[[1]] out (size (arr));
     __syscall("shared3p::floor_float32_vec", __domainid( D ), arr, out);
     return out;
 }
 
 template <domain D : shared3p>
-D int64[[1]] floor (D float64[[1]] arr) {
-    D int64[[1]] out (size (arr));
+D float64[[1]] floor (D float64[[1]] arr) {
+    D float64[[1]] out (size (arr));
     __syscall("shared3p::floor_float64_vec", __domainid( D ), arr, out);
     return out;
 }
@@ -2420,15 +2420,15 @@ D int64[[1]] floor (D float64[[1]] arr) {
 * @param value - input scalar of supported type
 */
 template <domain D : shared3p>
-D int32 ceiling (D float32 value) {
-    D int32 out;
+D float32 ceiling (D float32 value) {
+    D float32 out;
     __syscall("shared3p::ceiling_float32_vec", __domainid( D ), value, out);
     return out;
 }
 
 template <domain D : shared3p>
-D int64 ceiling (D float64 value) {
-    D int64 out;
+D float32 ceiling (D float64 value) {
+    D float64 out;
     __syscall("shared3p::ceiling_float64_vec", __domainid( D ), value, out);
     return out;
 }
@@ -2437,15 +2437,15 @@ D int64 ceiling (D float64 value) {
 * @param arr - input vector of supported type
 */
 template <domain D : shared3p>
-D int32[[1]] ceiling (D float32[[1]] arr) {
-    D int32[[1]] out (size (arr));
+D float32[[1]] ceiling (D float32[[1]] arr) {
+    D float32[[1]] out (size (arr));
     __syscall("shared3p::ceiling_float32_vec", __domainid( D ), arr, out);
     return out;
 }
 
 template <domain D : shared3p>
-D int64[[1]] ceiling (D float64[[1]] arr) {
-    D int64[[1]] out (size (arr));
+D float32[[1]] ceiling (D float64[[1]] arr) {
+    D float64[[1]] out (size (arr));
     __syscall("shared3p::ceiling_float64_vec", __domainid( D ), arr, out);
     return out;
 }
