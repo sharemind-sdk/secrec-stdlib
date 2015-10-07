@@ -341,6 +341,7 @@ D T[[2]] _ludecomp(D T[[2]] a) {
         }
     }
 
+    // todo: we have structs now, don't make rowPerms a float vector
     D T[[2]] ret(n, n + 1);
     ret[:, :n] = a;
     ret[:, n] = rowPerms;
@@ -366,7 +367,7 @@ D T[[1]] _solveLU(D T[[2]] a, D T[[1]] b) {
 
     mat = _ludecomp(a);
     D T[[2]] lu = mat[:, :n];
-    D uint[[1]] q = (uint) floor(mat[:, n]);
+    D uint[[1]] q = (uint) mat[:, n];
 
     for (uint i = 0; i < n; i++) {
         // Exchange b[i], b[q[i]]

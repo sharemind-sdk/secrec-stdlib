@@ -1024,7 +1024,7 @@ D uint[[1]] _benjaminiHochberg (D FT[[1]] statistics,
     for (uint i = 0; i < size (comp); i++) {
         bool compPub = declassify (comp[i]);
         if (compPub) {
-            return (uint) floor (mat[i :, 1]);
+            return (uint) mat[i :, 1];
         }
     }
 
