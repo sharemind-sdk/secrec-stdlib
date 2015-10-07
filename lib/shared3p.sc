@@ -2427,7 +2427,7 @@ D float32 ceiling (D float32 value) {
 }
 
 template <domain D : shared3p>
-D float32 ceiling (D float64 value) {
+D float64 ceiling (D float64 value) {
     D float64 out;
     __syscall("shared3p::ceiling_float64_vec", __domainid( D ), value, out);
     return out;
@@ -2444,7 +2444,7 @@ D float32[[1]] ceiling (D float32[[1]] arr) {
 }
 
 template <domain D : shared3p>
-D float32[[1]] ceiling (D float64[[1]] arr) {
+D float64[[1]] ceiling (D float64[[1]] arr) {
     D float64[[1]] out (size (arr));
     __syscall("shared3p::ceiling_float64_vec", __domainid( D ), arr, out);
     return out;
