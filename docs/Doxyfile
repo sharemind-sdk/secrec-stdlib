@@ -752,6 +752,7 @@ INPUT                  = ../lib/table_database.sc \
                          ../lib/shared3p_statistics_outliers.sc \
                          ../lib/shared3p_statistics_regression.sc \
                          ../lib/shared3p_statistics_glm.sc \
+                         ../lib/shared3p_statistics_pca.sc \
                          ../lib/shared3p_matrix.sc \
                          ../lib/shared3p_random.sc \
                          ../lib/shared3p_bloom.sc \
