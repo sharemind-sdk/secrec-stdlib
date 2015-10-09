@@ -332,31 +332,31 @@ bool test_max3(T data){
 
 bool test_floor(){
     //scalar
-    pd_shared3p float64[[1]] value = {15.892356329,5.12974291,7.5009235790235,-52.325623,-12.5002362,-1,873258};
-    int64[[1]] control = {15,5,7,-53,-13,-2};
+    pd_shared3p float64[[1]] value = {15.892356329, 5.12974291, 7.5009235790235, -52.325623, -12.5002362, -1.873258};
+    float64[[1]] control = {15, 5, 7, -53, -13, -2};
     for(uint i = 0; i < size(value); ++i){
-        int64 result = declassify(floor(value[i]));
+        float64 result = declassify(floor(value[i]));
         if (control[i] != result)
             return false;
     }
 
     //vector
-    int64[[1]] result = declassify(floor(value));
+    float64[[1]] result = declassify(floor(value));
     return all(control == result);
 }
 
 bool test_ceiling(){
     //scalar
-    pd_shared3p float64[[1]] value = {15.892356329,5.12974291,7.5009235790235,-52.325623,-12.5002362,-1,873258};
-    int64[[1]] control = {16,6,8,-52,-12,-1};
+    pd_shared3p float64[[1]] value = {15.892356329, 5.12974291, 7.5009235790235, -52.325623, -12.5002362, -1.873258};
+    float64[[1]] control = {16, 6, 8, -52, -12, -1};
     for(uint i = 0; i < size(value); ++i){
-        int64 result = declassify(ceiling(value[i]));
+        float64 result = declassify(ceiling(value[i]));
         if (control[i] != result)
             return false;
     }
 
     //vector
-    int64[[1]] result = declassify(ceiling(value));
+    float64[[1]] result = declassify(ceiling(value));
     return all(control == result);
 }
 
