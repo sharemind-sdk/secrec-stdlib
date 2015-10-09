@@ -210,10 +210,6 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
     assert (n_components >= 1);
     assert (iterations >= 1);
 
-    print("residual ", wantResidual);
-    print("loads ", wantLoads);
-    print("scores ", wantScores);
-
     D Fix[[2]] R = X;
     D Fix[[2]] P(shape(X)[1], n_components);
     D Fix[[2]] T(shape(X)[0], n_components);
@@ -268,7 +264,9 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
             }
 
             if (i == iterations - 1) {
-                T[:, k] = v[:, 0];
+                t = v;
+                if (wantScores)
+                    T[:, k] = t[:, 0];
             }
 
             {
@@ -284,12 +282,9 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
                 R = R - _fixMatrixMultiplication(t, transpose(p));
             if (wantLoads)
                 P[:, k] = p[:, 0];
-            if (wantScores)
-                T[:, k] = t[:, 0];
         } else {
             R = R - _fixMatrixMultiplication(t, transpose(p));
             P[:, k] = p[:, 0];
-            T[:, k] = t[:, 0];
             V[:, k] = v[:, 0];
         }
     }
