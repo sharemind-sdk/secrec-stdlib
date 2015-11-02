@@ -87,7 +87,7 @@ run() {
     local SC="$1"
     local TESTSET="$2"
     local SC_BN=`basename "${SC}"`
-    local SB_BN=`echo "${SC_BN}" | sed 's/\.sc$//' | sed 's/$/.sb/'`
+    local SB_BN="${SC_BN%.sc}.sb"
     local SB=`mktemp sharemind_stlib_runtests.$$.XXXXXXXXXX.sb`
     local RV=$?; if [ $RV -ne 0 ]; then return $RV; fi
 
