@@ -18,7 +18,8 @@
 # For further information, please contact us at sharemind@cyber.ee.
 #
 
-if [ -z "${SHAREMIND_PATH}" ]; then
+if [ ! -d "${SHAREMIND_PATH}" ]; then
+    echo 'Required environment variable SHAREMIND_PATH missing or does not point to a directory!' 1>&2
     exit 1
 fi
 
