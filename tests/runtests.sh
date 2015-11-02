@@ -55,7 +55,7 @@ fi
 TEST_PATH="${ABSSP}"
 
 if [ -d "${SHAREMIND_PATH}/lib" ]; then
-  LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${SHAREMIND_PATH}/lib"
+  NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${SHAREMIND_PATH}/lib"
 fi
 
 SCC="${SHAREMIND_PATH}/bin/scc"
@@ -66,7 +66,7 @@ compile() {
     local SC="$1"
     local SB="$2"
 
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH}" "${SCC}" \
+    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" "${SCC}" \
         --include "${TEST_PATH}" --include "${STDLIB}" \
         --input "${SC}" --output "${SB}"
 }
@@ -104,7 +104,7 @@ run() {
     rm "${SB}"
 
     local CWD=`pwd`; cd "`dirname "${TEST_RUNNER}"`"
-    LD_LIBRARY_PATH="${LD_LIBRARY_PATH}" "${TEST_RUNNER}" --file "${SB_BN}" | sed "s#^#${TEST_NAME}#g"
+    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" "${TEST_RUNNER}" --file "${SB_BN}" | sed "s#^#${TEST_NAME}#g"
     local RV=$?; cd "${CWD}"; return ${RV}
 }
 
