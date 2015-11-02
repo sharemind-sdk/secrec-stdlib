@@ -23,10 +23,6 @@ if [ ! -d "${SHAREMIND_PATH}" ]; then
     exit 1
 fi
 
-if [ -z "${TMP_PATH}" ]; then
-    TMP_PATH="." # e.g. /tmp
-fi
-
 # readlink on OS X does not behave as on Linux
 # http://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
 if [ `uname -s` = "Darwin" ]; then
@@ -92,7 +88,8 @@ run() {
     local TESTSET="$2"
     local SC_BN=`basename "${SC}"`
     local SB_BN=`echo "${SC_BN}" | sed 's/\.sc$//' | sed 's/$/.sb/'`
-    local SB="${TMP_PATH}/${SB_BN}"
+    local SB=`mktemp sharemind_stlib_runtests.$$.XXXXXXXXXX.sb`
+    local RV=$?; if [ $RV -ne 0 ]; then return $RV; fi
 
     local TEST_NAME="[${SC}]: "
     if [ -n "${TESTSET}" ]; then
