@@ -481,19 +481,18 @@ D float64[[1]] matrixLookupRow(D float64[[2]] mat, D uint rowIndex) {
 
 template <domain D>
 D bool[[2]] matrixLookupColumnBitmask(uint rows, uint cols, D uint colIndex) {
-    // assert(declassify(cols > colIndex));
-    D uint[[2]] mask(1, cols);
-    uint[[2]] is(1, cols);
-    for (uint i = 0; i < cols; ++i) {
-        is[0, i] = i;
-        mask[0, i] = colIndex;
+    uint[[1]] is (cols);
+    for (uint i = 0; i < cols; ++ i) {
+        is[i] = i;
     }
 
-    D bool[[2]] bitmask = (mask == is);
+    D bool[[1]] colMask = (mask == colIndex);
+    D bool[[2]] mask (rows, cols);
 
     // Stretch mask:
-    for (uint i = 1; i < rows; ++i)
-        bitmask = cat(bitmask, bitmask[:1, :], 0);
+    for (uint i = 0: i < rows; ++ i) {
+        bitmask[i, :] = colMask;
+    }
 
     return bitmask;
 }
