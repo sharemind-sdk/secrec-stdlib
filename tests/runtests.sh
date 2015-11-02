@@ -72,14 +72,13 @@ compile() {
 }
 
 install() {
-    local SB="$1"
-    local SB_BN=`basename "${SB}"`
+    local ORIGIN="$1"
+    local TARGET_FILENAME="$2"
 
     for i in `seq 1 3`; do
         local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${i}/scripts"
-        mkdir -p "${SCRIPTS_PATH}"
-        cp "${SB}" "${SCRIPTS_PATH}/${SB_BN}"
-        local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
+        mkdir -p "${SCRIPTS_PATH}" || return $?
+        cp "${ORIGIN}" "${SCRIPTS_PATH}/${TARGET_FILENAME}" || return $?
     done
 }
 
@@ -96,16 +95,23 @@ run() {
         TEST_NAME="[${TESTSET}\/`basename "${SC_BN}"`]: "
     fi
 
-    compile "${SC}" "${SB}"
-    local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
-
-    install "${SB}"
-    local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
+    if compile "${SC}" "${SB}"; then
+        if install "${SB}" "${SB_BN}" ; then
+            rm "${SB}"
+            local CWD=`pwd`; cd "`dirname ${TEST_RUNNER}`"
+            ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
+                    "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
+                        | sed "s#^#${TEST_NAME}#g") \
+                 3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
+                 3>&1 1>&2 2>&3 3>&-
+            local RV=$?
+            cd "${CWD}"
+            return ${RV}
+        fi
+    fi
+    local RV=$?
     rm "${SB}"
-
-    local CWD=`pwd`; cd "`dirname "${TEST_RUNNER}"`"
-    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" "${TEST_RUNNER}" --file "${SB_BN}" | sed "s#^#${TEST_NAME}#g"
-    local RV=$?; cd "${CWD}"; return ${RV}
+    return ${RV}
 }
 
 run_all() {
