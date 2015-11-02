@@ -18,6 +18,9 @@
 # For further information, please contact us at sharemind@cyber.ee.
 #
 
+# Exit status of piped commands is zero only if all commands succeed
+set -o pipefail
+
 if [ ! -d "${SHAREMIND_PATH}" ]; then
     echo 'Required environment variable SHAREMIND_PATH missing or does not point to a directory!' 1>&2
     exit 1
