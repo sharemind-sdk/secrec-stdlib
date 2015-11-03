@@ -85,6 +85,20 @@ install() {
     done
 }
 
+run_test() {
+    local SB_BN="$1"
+    local TEST_NAME="$2"
+    local CWD=`pwd`; cd "`dirname ${TEST_RUNNER}`"
+    ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
+            "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
+                | sed "s#^#${TEST_NAME}#g") \
+         3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
+         3>&1 1>&2 2>&3 3>&-
+    local RV=$?
+    cd "${CWD}"
+    return ${RV}
+}
+
 run() {
     local SC="$1"
     local TESTSET="$2"
@@ -98,20 +112,7 @@ run() {
         TEST_NAME="[${TESTSET}\/`basename "${SC_BN}"`]: "
     fi
 
-    if compile "${SC}" "${SB}"; then
-        if install "${SB}" "${SB_BN}" ; then
-            rm "${SB}"
-            local CWD=`pwd`; cd "`dirname ${TEST_RUNNER}`"
-            ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
-                    "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
-                        | sed "s#^#${TEST_NAME}#g") \
-                 3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
-                 3>&1 1>&2 2>&3 3>&-
-            local RV=$?
-            cd "${CWD}"
-            return ${RV}
-        fi
-    fi
+    compile "${SC}" "${SB}" && install "${SB}" "${SB_BN}" && run_test "${SB_BN}" "${TEST_NAME}"
     local RV=$?
     rm "${SB}"
     return ${RV}
