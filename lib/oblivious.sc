@@ -349,24 +349,22 @@ D float64 vectorLookup(D float64[[1]] vec, D uint index) {
 * \cond
 */
 
-// TODO: this can be improved (requires some thought)
 template <domain D>
 D bool[[2]] matrixLookupRowBitmask(uint rows, uint cols, D uint rowIndex) {
-    // assert(declassify(rows > rowIndex));
-    D uint[[2]] mask(rows, 1);
-    uint[[2]] is(rows, 1);
-    for (uint i = 0; i < rows; ++i) {
-        is[i, 0] = i;
-        mask[i, 0] = rowIndex;
+    uint[[1]] is (rows);
+    for (uint i = 0; i < rows; ++ i) {
+        is[i] = i;
     }
 
-    D bool[[2]] bitmask = (mask == is);
+    D bool[[1]] rowMask = (is == rowIndex);
+    D bool[[2]] mask (rows, cols);
 
     // Stretch mask:
-    for (uint i = 1; i < cols; ++i)
-        bitmask = cat(bitmask, bitmask[:, :1], 1);
+    for (uint i = 0; i < cols; ++ i) {
+        mask[:, i] = rowMask;
+    }
 
-    return bitmask;
+    return mask;
 }
 
 /**
@@ -486,15 +484,15 @@ D bool[[2]] matrixLookupColumnBitmask(uint rows, uint cols, D uint colIndex) {
         is[i] = i;
     }
 
-    D bool[[1]] colMask = (mask == colIndex);
+    D bool[[1]] colMask = (is == colIndex);
     D bool[[2]] mask (rows, cols);
 
     // Stretch mask:
     for (uint i = 0; i < rows; ++ i) {
-        bitmask[i, :] = colMask;
+        mask[i, :] = colMask;
     }
 
-    return bitmask;
+    return mask;
 }
 /**
 * \endcond
