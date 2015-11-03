@@ -236,16 +236,6 @@ bool matrix_row_lookup(T data){
 
 template<type T>
 bool matrix_col_lookup(T data){
-    // TODO figure out what to do with these
-    {
-        pd_shared3p T[[2]] mat (0,0);
-        pd_shared3p uint index = 0;
-        pd_shared3p T[[1]] row = matrixLookupColumn(mat,index);
-        pd_shared3p T[[2]] mat2 (2,0);
-        row = matrixLookupColumn(mat2,index);
-        pd_shared3p T[[2]] mat3 (0,2);
-        row = matrixLookupColumn(mat3,index);
-    }
     bool result = true;
     pd_shared3p T[[2]] mat (4,4);
     mat = random(mat);
