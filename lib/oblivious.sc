@@ -490,7 +490,7 @@ D bool[[2]] matrixLookupColumnBitmask(uint rows, uint cols, D uint colIndex) {
     D bool[[2]] mask (rows, cols);
 
     // Stretch mask:
-    for (uint i = 0: i < rows; ++ i) {
+    for (uint i = 0; i < rows; ++ i) {
         bitmask[i, :] = colMask;
     }
 
