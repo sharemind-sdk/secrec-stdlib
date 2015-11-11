@@ -145,29 +145,21 @@ template<domain D : shared3p,type T>
 bool randomize_many(D T dummy_, uint n) {
     D T[[1]] vec (n);
 
-    uint limit = n / 100;
+    assert(n >= 5000);
 
+    // For a proper RNG the limit gives us failure probability of less than
+    // 2^-80 for n >= 5000.
+    uint limit = n / 3;
+
+    // Test if we have sufficiently many:
+    //  odds, evens, big values, small values
+    // Feel free to extend with predicates that roughly hold on half of the
+    // domain.
     T[[1]] pubVec = declassify (randomize (vec));
-
-    // Must have sufficiently many even values.
-    if (sum (pubVec % 2 == 0) < limit) {
-        return false;
-    }
-
-    // Must have sufficiently many odd values.
-    if (sum (pubVec % 2 == 1) < limit) {
-        return false;
-    }
-
-    // Must have sufficiently many small values.
-    if (sum (pubVec < uintMax(0 :: T)/2) < limit) {
-        return false;
-    }
-
-    // Must have sufficiently many big values.
-    if (sum (pubVec > uintMax(0 :: T)/2) < limit) {
-        return false;
-    }
+    if (sum (pubVec % 2 == 0) < limit) return false;
+    if (sum (pubVec % 2 == 1) < limit) return false;
+    if (sum (pubVec < uintMax(0 :: T)/2) < limit) return false;
+    if (sum (pubVec > uintMax(0 :: T)/2) < limit) return false;
 
     return true;
 }
@@ -196,6 +188,12 @@ void main(){
     { pd_shared3p uint16 t; test(test_prefix, randomize_few(t, 1000 :: uint), t); }
     { pd_shared3p uint32 t; test(test_prefix, randomize_few(t, 1000 :: uint), t); }
     { pd_shared3p uint64 t; test(test_prefix, randomize_few(t, 1000 :: uint), t); }
+
+    test_prefix = "Randomize on 5k values";
+    { pd_shared3p uint8 t; test(test_prefix, randomize_many(t, 5000 :: uint), t); }
+    { pd_shared3p uint16 t; test(test_prefix, randomize_many(t, 5000 :: uint), t); }
+    { pd_shared3p uint32 t; test(test_prefix, randomize_many(t, 5000 :: uint), t); }
+    { pd_shared3p uint64 t; test(test_prefix, randomize_many(t, 5000 :: uint), t); }
 
     test_prefix = "Randomize on 10k values";
     { pd_shared3p uint8 t; test(test_prefix, randomize_many(t, 100000 :: uint), t); }
