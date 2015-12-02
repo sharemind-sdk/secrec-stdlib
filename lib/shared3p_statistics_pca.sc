@@ -48,12 +48,14 @@ import stdlib;
  * each field only has a reasonable value if it was requested when
  * calling gspca. See also \ref shared3p_pca_return_values "return value constants".
  */
+/** \cond */
 template<domain D : shared3p, type T>
 struct PCAResult {
     D T[[2]] residual;
     D T[[2]] loads;
     D T[[2]] scores;
 }
+/** \endcond */
 /** @} */
 
 /**

@@ -658,7 +658,7 @@ D T _matrixLookup(D T[[2]] mat, D uint rowIndex, D uint columnIndex) {
     return sum (flatten (mat * mask));
 }
 
-/** \cond */
+/** \endcond */
 
 template <domain D>
 D uint8 matrixLookup(D uint8[[2]] mat, D uint rowIndex, D uint columnIndex) {

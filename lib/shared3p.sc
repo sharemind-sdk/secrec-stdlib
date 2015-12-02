@@ -2507,7 +2507,6 @@ void publish (string name, D T[[N]] val) {
     __syscall("Process_setResult", __cref name, __cref "$D", __cref "$T", __cref bytes, 0::uint, num_bytes);
 }
 /** @}*/
-/** @}*/
 
 /**
  * \addtogroup shared3p_bit_extract
@@ -3035,5 +3034,6 @@ D xor_uint64[[N]] max (D xor_uint64[[N]] x, D xor_uint64[[N]] y) {
     __syscall ("shared3p::max_xor_uint64_vec", __domainid (D), x, y, x);
     return x;
 }
+/** @}*/
 /** @}*/
 /** @}*/

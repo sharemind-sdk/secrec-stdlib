@@ -177,7 +177,7 @@ D T[[2]] _matrixUpdateColumn(D T[[2]] mat, D uint colIndex, D T[[1]] newCol) {
     return choose(mask, newCols, mat);
 }
 
-/** \cond */
+/** \endcond */
 
 template <domain D : shared3p>
 D float32[[2]] matrixUpdateColumn(D float32[[2]] mat, D uint colIndex, D float32[[1]] newCol) {

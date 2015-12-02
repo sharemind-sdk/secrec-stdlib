@@ -1190,7 +1190,6 @@ D float64[[3]] diagMatrixMultiplication (D float64[[3]] x, D float64[[3]] y) {
 /** @}*/
 
 
-/** @}*/
 /** \addtogroup determinant
  *  @{
  *  @brief Function for finding the determinant of a matrix

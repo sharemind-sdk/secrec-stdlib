@@ -1034,6 +1034,7 @@ D uint[[1]] _benjaminiHochberg (D FT[[1]] statistics,
 /** \endcond */
 
 /** \addtogroup multiple_testing
+ *  @{
  *  @brief Perform the Benjamini-Hochberg procedure for false
  *  discovery rate control.
  *  @note If multiple variables of a dataset are used for testing a
