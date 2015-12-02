@@ -776,6 +776,7 @@ INPUT                  = ../lib/table_database.sc \
                          ../lib/doc/functions.sc \
                          ../lib/doc/templates.sc \
                          ../lib/doc/modules.sc \
+                         ../lib/doc/structs.sc \
                          ../lib/doc/data_types.sc \
                          ../lib/doc/operators.sc \
                          ../lib/doc/main.sc
