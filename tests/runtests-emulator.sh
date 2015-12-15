@@ -79,10 +79,12 @@ run_test() {
     local SB="$1"
     local TEST_NAME="$2"
     local CWD=`pwd`; cd "`dirname ${EMULATOR}`"
-    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
+    ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
             "./`basename ${EMULATOR}`" --conf=emulator.cfg "${CWD}/${SB}" \
                 | python "${TEST_PARSER}" \
-                | sed "s#^#${TEST_NAME}#g"
+                | sed "s#^#${TEST_NAME}#g") \
+         3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
+         3>&1 1>&2 2>&3 3>&-
     local RV=$?
     cd "${CWD}"
     return ${RV}
