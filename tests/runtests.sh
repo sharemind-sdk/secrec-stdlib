@@ -134,6 +134,11 @@ if [ "x$1" = "x" ]; then
     run_all
 elif [ -f "$1" ]; then
     run "$1"
+elif [ -d "$1" ]; then
+    for TEST in `find "$1" -mindepth 1 -maxdepth 1 -type f -name "*.sc" | sort`; do
+        run "${TEST}" `basename "$1"`
+        RV=$?; if [ ${RV} -ne 0 ]; then exit ${RV}; fi
+    done
 else
     echo "Usage of `basename "$0"`:"
     echo "runtests.sh [filename.sc]"
