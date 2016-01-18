@@ -59,33 +59,36 @@ void main(){
         pd_shared3p xor_uint8[[1]] str (15) = 0;
         test(test_prefix, declassify(countZeroes(str)) == 15);
 
-        str = randomize(str);
-        for(uint i = 0; i < 15; i = i + 2){
-            str[i] = 0;
-        }
+        str = {0, 2, 0, 4, 0, 6, 0, 8, 0, 10, 0, 12, 0, 14, 0};
         test(test_prefix, declassify(countZeroes(str)) == 8);
     }
 
-    test_prefix = "is string empty function";
+    test_prefix = "Bounded length string is empty ";
     {
         pd_shared3p xor_uint8[[1]] str (15) = 0;
-        test(test_prefix, declassify(bl_strIsEmpty(str)));
+        test(test_prefix + "(15 x 0 is empty)", declassify(bl_strIsEmpty(str)));
 
-        str = randomize(str);
-        for(uint i = 0; i < 15; i = i + 2){
-            str[i] = 0;
-        }
-        test(test_prefix, !declassify(bl_strIsEmpty(str)));
+        str = {0};
+        test(test_prefix + "({0} is empty)", declassify(bl_strIsEmpty(str)));
+
+        str = {1};
+        test(test_prefix + "({1} is not empty)", !declassify(bl_strIsEmpty(str)));
+
+        str = reshape(0, 0); // {}; // does not work
+        test(test_prefix + "({} is empty)", declassify(bl_strIsEmpty(str)));
+
+        str = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 0, 0, 0, 0, 0};
+        test(test_prefix + "({1 .. 10, 0, 0, 0, 0, 0} is not empty)", !declassify(bl_strIsEmpty(str)));
     }
 
-    test_prefix = "String length function";
+    test_prefix = "Bounded string length function";
     {
         pd_shared3p xor_uint8[[1]] str (43) = {84,104,101,32,113,117,105,99,107,32,98,114,111,119,110,32,102,111,120,32,106,117,109,112,115,32,111,118,101,114,32,116,104,101,32,108,97,122,121,32,100,111,103};
         pd_shared3p uint length = bl_strLength(str);
         test(test_prefix, declassify(length) == 43);
     }
 
-    test_prefix = "String trimming function";
+    test_prefix = "Bounded string trimming function";
     {
         pd_shared3p xor_uint8[[1]] str (43) = {84,104,101,32,113,117,105,99,107,32,98,114,111,119,110,32,102,111,120,32,106,117,109,112,115,32,111,118,101,114,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
