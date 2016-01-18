@@ -529,7 +529,7 @@ D float64[[1]] fiveNumberSummaryNth (D int64[[1]] data, D bool[[1]] isAvailable)
 
 /** \addtogroup covariance
  *  @{
- *  @brief Find the covariance of two samples.
+ *  @brief Estimate the Pearson covariance of two samples.
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @param sample1 - first sample
@@ -550,7 +550,7 @@ D float64 covariance (D int64[[1]] sample1, D int64[[1]] sample2) {
 
 /** \addtogroup covariance_filter
  *  @{
- *  @brief Find the covariance of two samples.
+ *  @brief Estimate the Pearson covariance of two samples.
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @param sample1 - first sample
@@ -705,9 +705,10 @@ D FT _covariance (D T[[1]] sample1,
     mat[:, 2] = mulL[n:];
 
     D T[[1]] sums = colSums (mat);
-    D FT mult = 1 / (FT)(count * count);
+    D FT a = (FT) (count - 1);
+    D FT b = (FT) (count * (count - 1));
 
-    return mult * (FT)(count * sums[0] - sums[1] * sums[2]);
+    return ((FT) sums[0] / a) - ((FT) (sums[1] * sums[2]) / b);
 }
 
 template<domain D : shared3p, type T, type FT>
@@ -722,9 +723,10 @@ D FT _covariance (D T[[1]] sample1, D T[[1]] sample2) {
     mat[:, 2] = sample2;
 
     D T[[1]] sums = colSums (mat);
-    FT mult = 1 / (FT)(n * n);
+    D FT a = (FT) (n - 1);
+    D FT b = (FT) (n * (n - 1));
 
-    return mult * (FT)((T) n * sums[0] - sums[1] * sums[2]);
+    return ((FT) sums[0] / a) - ((FT) (sums[1] * sums[2]) / b);
 }
 /**
  * \endcond
