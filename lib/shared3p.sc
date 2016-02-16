@@ -693,265 +693,265 @@ D uint truePrefixLength (D bool [[1]] arr) {
 
 template <domain D : shared3p>
 D uint8 operator * (D uint8 a, uint8 b) {
-    __syscall ("shared3p::mulc_uint8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_uint8_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D uint8[[1]] operator * (D uint8[[1]] a, uint8[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_uint8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_uint8_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D uint8[[N]] operator * (D uint8[[N]] arr, uint8 pubScalar) {
     uint8[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::mulc_uint8_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D uint8[[N]] operator * (D uint8[[N]] arr, uint8[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
     __syscall ("shared3p::mulc_uint8_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
+        arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D uint16 operator * (D uint16 a, uint16 b) {
-    __syscall ("shared3p::mulc_uint16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_uint16_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D uint16[[1]] operator * (D uint16[[1]] a, uint16[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_uint16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_uint16_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D uint16[[N]] operator * (D uint16[[N]] arr, uint16 pubScalar) {
     uint16[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::mulc_uint16_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D uint16[[N]] operator * (D uint16[[N]] arr, uint16[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
     __syscall ("shared3p::mulc_uint16_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
+        arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D uint32 operator * (D uint32 a, uint32 b) {
-    __syscall ("shared3p::mulc_uint32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_uint32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D uint32[[1]] operator * (D uint32[[1]] a, uint32[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_uint32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_uint32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D uint32[[N]] operator * (D uint32[[N]] arr, uint32 pubScalar) {
     uint32[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::mulc_uint32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D uint32[[N]] operator * (D uint32[[N]] arr, uint32[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
     __syscall ("shared3p::mulc_uint32_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
+        arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D uint operator * (D uint a, uint b) {
-    __syscall ("shared3p::mulc_uint64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_uint64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D uint[[1]] operator * (D uint[[1]] a, uint[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_uint64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_uint64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D uint[[N]] operator * (D uint[[N]] arr, uint pubScalar) {
     uint[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::mulc_uint64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D uint[[N]] operator * (D uint[[N]] arr, uint[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
     __syscall ("shared3p::mulc_uint64_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
+        arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D int8 operator * (D int8 a, int8 b) {
-    __syscall ("shared3p::mulc_int8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_int8_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D int8[[1]] operator * (D int8[[1]] a, int8[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_int8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_int8_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D int8[[N]] operator * (D int8[[N]] arr, int8 pubScalar) {
     int8[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::mulc_int8_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D int8[[N]] operator * (D int8[[N]] arr, int8[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
     __syscall ("shared3p::mulc_int8_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
+        arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D int16 operator * (D int16 a, int16 b) {
-    __syscall ("shared3p::mulc_int16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_int16_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D int16[[1]] operator * (D int16[[1]] a, int16[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_int16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_int16_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D int16[[N]] operator * (D int16[[N]] arr, int16 pubScalar) {
     int16[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::mulc_int16_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D int16[[N]] operator * (D int16[[N]] arr, int16[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
     __syscall ("shared3p::mulc_int16_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
+        arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D int32 operator * (D int32 a, int32 b) {
-    __syscall ("shared3p::mulc_int32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_int32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D int32[[1]] operator * (D int32[[1]] a, int32[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_int32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_int32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D int32[[N]] operator * (D int32[[N]] arr, int32 pubScalar) {
     int32[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::mulc_int32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D int32[[N]] operator * (D int32[[N]] arr, int32[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
     __syscall ("shared3p::mulc_int32_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
+        arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D int operator * (D int a, int b) {
-    __syscall ("shared3p::mulc_int64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_int64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D int[[1]] operator * (D int[[1]] a, int[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_int64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_int64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D int[[N]] operator * (D int[[N]] arr, int pubScalar) {
     int[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::mulc_int64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D int[[N]] operator * (D int[[N]] arr, int[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
     __syscall ("shared3p::mulc_int64_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
+        arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D float32 operator * (D float32 a, float32 b) {
-    __syscall ("shared3p::mulc_float32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_float32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D float32[[1]] operator * (D float32[[1]] a, float32[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_float32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_float32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 
@@ -959,47 +959,47 @@ template <domain D : shared3p, dim N>
 D float32[[N]] operator * (D float32[[N]] arr, float32 pubScalar) {
     float32[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::mulc_float32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D float32[[N]] operator * (D float32[[N]] arr, float32[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
     __syscall ("shared3p::mulc_float32_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
+        arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D float64 operator * (D float64 a, float64 b) {
-    __syscall ("shared3p::mulc_float64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_float64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D float64[[1]] operator * (D float64[[1]] a, float64[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_float64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::mulc_float64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D float64[[N]] operator * (D float64[[N]] arr, float64 pubScalar) {
     float64[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::mulc_float64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D float64[[N]] operator * (D float64[[N]] arr, float64[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
     __syscall ("shared3p::mulc_float64_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
+        arr, __cref pubArr, arr);
+    return arr;
 }
 
 
@@ -1011,189 +1011,189 @@ D float64[[N]] operator * (D float64[[N]] arr, float64[[N]] pubArr) {
 /*
 template <domain D : shared3p>
 D uint8 operator / (D uint8 a, uint8 b) {
-    __syscall ("shared3p::divc_uint8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::divc_uint8_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D uint8[[1]] operator / (D uint8[[1]] a, uint8[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::divc_uint8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::divc_uint8_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D uint8[[N]] operator / (D uint8[[N]] arr, uint8 pubScalar) {
     uint8[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::divc_uint8_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D uint8[[N]] operator / (D uint8[[N]] arr, uint8[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::divc_uint8_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
+    __syscall ("shared3p::divc_uint8_vec", __domainid (D),
+       arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D uint16 operator / (D uint16 a, uint16 b) {
-    __syscall ("shared3p::divc_uint16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::divc_uint16_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D uint16[[1]] operator / (D uint16[[1]] a, uint16[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::divc_uint16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::divc_uint16_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D uint16[[N]] operator / (D uint16[[N]] arr, uint16 pubScalar) {
     uint16[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::divc_uint16_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D uint16[[N]] operator / (D uint16[[N]] arr, uint16[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::divc_uint16_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
+    __syscall ("shared3p::divc_uint16_vec", __domainid (D),
+       arr, __cref pubArr, arr);
+    return arr;
 }
 */
 
 template <domain D : shared3p>
 D uint32 operator / (D uint32 a, uint32 b) {
-    __syscall ("shared3p::divc_uint32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::divc_uint32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D uint32[[1]] operator / (D uint32[[1]] a, uint32[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::divc_uint32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::divc_uint32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D uint32[[N]] operator / (D uint32[[N]] arr, uint32 pubScalar) {
     uint32[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::divc_uint32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D uint32[[N]] operator / (D uint32[[N]] arr, uint32[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::divc_uint32_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
+    __syscall ("shared3p::divc_uint32_vec", __domainid (D),
+       arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D uint operator / (D uint a, uint b) {
-    __syscall ("shared3p::divc_uint64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::divc_uint64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D uint[[1]] operator / (D uint[[1]] a, uint[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::divc_uint64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::divc_uint64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D uint[[N]] operator / (D uint[[N]] arr, uint pubScalar) {
     uint[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::divc_uint64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D uint[[N]] operator / (D uint[[N]] arr, uint[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::divc_uint64_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
+    __syscall ("shared3p::divc_uint64_vec", __domainid (D),
+       arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D float32 operator / (D float32 a, float32 b) {
-    __syscall ("shared3p::divc_float32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::divc_float32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D float32[[1]] operator / (D float32[[1]] a, float32[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::divc_float32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::divc_float32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D float32[[N]] operator / (D float32[[N]] arr, float32 pubScalar) {
     float32[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::divc_float32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D float32[[N]] operator / (D float32[[N]] arr, float32[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::divc_float32_vec", __domainid (D),
-        a, __cref pubArr, arr);
-    return arr;
+    __syscall ("shared3p::divc_float32_vec", __domainid (D),
+        a, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D float64 operator / (D float64 a, float64 b) {
-    __syscall ("shared3p::divc_float64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::divc_float64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D float64[[1]] operator / (D float64[[1]] a, float64[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::divc_float64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::divc_float64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D float64[[N]] operator / (D float64[[N]] arr, float64 pubScalar) {
     float64[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::divc_float64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D float64[[N]] operator / (D float64[[N]] arr, float64[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::divc_float64_vec", __domainid (D),
-        a, __cref pubArr, arr);
-    return arr;
+    __syscall ("shared3p::divc_float64_vec", __domainid (D),
+        a, __cref pubArr, arr);
+    return arr;
 }
 
 
@@ -1205,127 +1205,127 @@ D float64[[N]] operator / (D float64[[N]] arr, float64[[N]] pubArr) {
 /*
 template <domain D : shared3p>
 D uint8 operator % (D uint8 a, uint8 b) {
-    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D uint8[[1]] operator % (D uint8[[1]] a, uint8[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D uint8[[N]] operator % (D uint8[[N]] arr, uint8 pubScalar) {
     uint8[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::modc_uint8_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D uint8[[N]] operator % (D uint8[[N]] arr, uint8[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
+    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
+       arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D uint16 operator % (D uint16 a, uint16 b) {
-    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D uint16[[1]] operator % (D uint16[[1]] a, uint16[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D uint16[[N]] operator % (D uint16[[N]] arr, uint16 pubScalar) {
     uint16[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::modc_uint16_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D uint16[[N]] operator % (D uint16[[N]] arr, uint16[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
+    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
+       arr, __cref pubArr, arr);
+    return arr;
 }
 */
 
 template <domain D : shared3p>
 D uint32 operator % (D uint32 a, uint32 b) {
-    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D uint32[[1]] operator % (D uint32[[1]] a, uint32[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D uint32[[N]] operator % (D uint32[[N]] arr, uint32 pubScalar) {
     uint32[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::modc_uint32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D uint32[[N]] operator % (D uint32[[N]] arr, uint32[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
+    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
+       arr, __cref pubArr, arr);
+    return arr;
 }
 
 template <domain D : shared3p>
 D uint operator % (D uint a, uint b) {
-    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p>
 D uint[[1]] operator % (D uint[[1]] a, uint[[1]] b) {
     assert(size(a) == size(b));
-    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
+    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
+        a, __cref b, a);
+    return a;
 }
 
 template <domain D : shared3p, dim N>
 D uint[[N]] operator % (D uint[[N]] arr, uint pubScalar) {
     uint[[1]] pubVec (size(arr)) = pubScalar;
     __syscall ("shared3p::modc_uint64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
+        arr, __cref pubVec, arr);
+    return arr;
 }
 
 template <domain D : shared3p, dim N>
 D uint[[N]] operator % (D uint[[N]] arr, uint[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
+    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
+       arr, __cref pubArr, arr);
+    return arr;
 }
 
 /**
@@ -1481,9 +1481,9 @@ D float64[[N]] erf (D float64[[N]] x) {
 */
 template <domain D : shared3p>
 D bool isNegligible (D float32 a) {
-    D bool out;
-    __syscall ("shared3p::isnegligible_float32_vec", __domainid (D), a, out);
-    return out;
+    D bool out;
+    __syscall ("shared3p::isnegligible_float32_vec", __domainid (D), a, out);
+    return out;
 }
 
 /**
@@ -1493,9 +1493,9 @@ D bool isNegligible (D float32 a) {
 */
 template <domain D : shared3p>
 D bool isNegligible (D float64 a) {
-    D bool out;
-    __syscall ("shared3p::isnegligible_float64_vec", __domainid (D), a, out);
-    return out;
+    D bool out;
+    __syscall ("shared3p::isnegligible_float64_vec", __domainid (D), a, out);
+    return out;
 }
 
 /**
@@ -1504,9 +1504,9 @@ D bool isNegligible (D float64 a) {
 */
 template <domain D : shared3p>
 D bool[[1]] isNegligible (D float32[[1]] a) {
-    D bool[[1]] out (size (a));
-    __syscall ("shared3p::isnegligible_float32_vec", __domainid (D), a, out);
-    return out;
+    D bool[[1]] out (size (a));
+    __syscall ("shared3p::isnegligible_float32_vec", __domainid (D), a, out);
+    return out;
 }
 
 /**
@@ -1515,9 +1515,9 @@ D bool[[1]] isNegligible (D float32[[1]] a) {
 */
 template <domain D : shared3p>
 D bool[[1]] isNegligible (D float64[[1]] a) {
-    D bool[[1]] out (size (a));
-    __syscall ("shared3p::isnegligible_float64_vec", __domainid (D), a, out);
-    return out;
+    D bool[[1]] out (size (a));
+    __syscall ("shared3p::isnegligible_float64_vec", __domainid (D), a, out);
+    return out;
 }
 /** @}*/
 
