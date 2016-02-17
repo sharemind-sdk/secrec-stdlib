@@ -6,12 +6,12 @@ class IncompleteInput(Exception):
     pass
 
 def parseArguments(inFile=sys.stdin, sizeTypeFormat='Q', sizeTypeSize=8,
-        encoding='ascii'):
+        encoding='utf-8'):
     def readBlock(size):
-        buf = inFile.read(size)
+        buf = inFile.buffer.read(size) if hasattr(inFile, 'buffer') else inFile.read(size)
         if len(buf) != size:
             raise IncompleteInput()
-        return buf.encode(encoding)
+        return buf
 
     def readString(size):
         return readBlock(size).decode(encoding)
