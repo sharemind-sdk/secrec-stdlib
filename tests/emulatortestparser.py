@@ -5,12 +5,16 @@ import sys
 class IncompleteInput(Exception):
     pass
 
-def parseArguments(inFile=sys.stdin, sizeTypeFormat='Q', sizeTypeSize=8):
+def parseArguments(inFile=sys.stdin, sizeTypeFormat='Q', sizeTypeSize=8,
+        encoding='ascii'):
     def readBlock(size):
         buf = inFile.read(size)
         if len(buf) != size:
             raise IncompleteInput()
-        return buf
+        return buf.encode(encoding)
+
+    def readString(size):
+        return readBlock(size).decode(encoding)
 
     def parseData(typeName, data):
         if typeName == 'bool':
@@ -35,6 +39,8 @@ def parseArguments(inFile=sys.stdin, sizeTypeFormat='Q', sizeTypeSize=8):
             return list(struct.unpack('%sL' % (len(data) // 4), data))
         elif typeName == 'uint64':
             return list(struct.unpack('%sQ' % (len(data) // 8), data))
+        elif typeName == 'string':
+            return data.decode(encoding)
         else:
             return data
 
@@ -43,11 +49,11 @@ def parseArguments(inFile=sys.stdin, sizeTypeFormat='Q', sizeTypeSize=8):
     try:
         while True:
             argNameSize = struct.unpack(sizeTypeFormat, readBlock(sizeTypeSize))[0]
-            argName = readBlock(argNameSize)
+            argName = readString(argNameSize)
             pdNameSize = struct.unpack(sizeTypeFormat, readBlock(sizeTypeSize))[0]
-            pdName = readBlock(pdNameSize)
+            pdName = readString(pdNameSize)
             typeNameSize = struct.unpack(sizeTypeFormat, readBlock(sizeTypeSize))[0]
-            typeName = readBlock(typeNameSize)
+            typeName = readString(typeNameSize)
             argDataSize = struct.unpack(sizeTypeFormat, readBlock(sizeTypeSize))[0]
             argData = parseData(typeName, readBlock(argDataSize))
             args[argName] = argData
@@ -69,7 +75,7 @@ def main():
         testCount = args['test_count'][0]
         passedCount = args['test_count'][0]
 
-        for i in xrange(testCount):
+        for i in range(testCount):
             descLabel = 'test%s_description' % i
             resLabel = 'test%s_result' % i
 
