@@ -76,23 +76,19 @@ template<type T>
 bool cast_type_to_bool(T data) {
     // public
     bool result = true;
-    T[[1]] temp (5);
+    T[[1]] temp (10);
     T[[1]] a = randomize(temp);
-    T[[1]] c (5);
-    for (uint i = 0; i < size(a);++i) {
-        if (a[i] % 2 == 0) {
-            c[i] = 0;
-        } else {
-            c[i] = 1;
-        }
-    }
-    bool[[1]] b (5) = (bool)c;
+    a[0] = 0;
+    a[1] = 1;
+    a[2] = -1;
+    
+    bool[[1]] b (10) = (bool)a;
 
-    for (uint i = 0; i < 5; ++i) {
-        if (b[i] == true && c[i] == 0) {
+    for (uint i = 0; i < 10; ++i) {
+        if (b[i] == true && a[i] == 0) {
             result = false;
         }
-        if (b[i] == false && c[i] == 1) {
+        if (b[i] == false && a[i] != 0) {
             result = false;
         }
     }

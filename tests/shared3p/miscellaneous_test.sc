@@ -84,18 +84,20 @@ bool cast_bool_to_type(D T data) {
 template<domain D, type T>
 bool cast_type_to_bool(D T data) {
     bool result = true;
-    D T[[1]] temp (5);
+    D T[[1]] temp (10);
     D T[[1]] a = randomize(temp);
-    D T[[1]] c = declassify(a) % 2;
+    a[0] = 0;
+    a[1] = 1;
+    a[2] = -1;
 
-    D bool[[1]] b (5) = (bool)c;
+    D bool[[1]] b (10) = (bool)a;
 
-    for (uint i = 0; i < 5; ++i) {
-        if (declassify(b[i]) == true && declassify(c[i]) == 0) {
+    for (uint i = 0; i < 10; ++i) {
+        if (declassify(b[i]) == true && declassify(a[i]) == 0) {
             result = false;
             break;
         }
-        if (declassify(b[i]) == false && declassify(c[i]) == 1) {
+        if (declassify(b[i]) == false && declassify(a[i]) != 0) {
             result = false;
             break;
         }
