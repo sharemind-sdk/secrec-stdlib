@@ -755,22 +755,22 @@ D uint[[2]] matrixMultiplication (D uint[[2]] x, D uint[[2]] y) {
 
 template <domain D : shared3p>
 D int8[[2]] matrixMultiplication (D int8[[2]] x, D int8[[2]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D int16[[2]] matrixMultiplication (D int16[[2]] x, D int16[[2]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D int32[[2]] matrixMultiplication (D int32[[2]] x, D int32[[2]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D int[[2]] matrixMultiplication (D int[[2]] x, D int[[2]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
