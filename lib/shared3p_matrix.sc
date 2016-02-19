@@ -704,6 +704,16 @@ D T[[3]] _matrixMultiplication (D T[[3]] x, D T[[3]] y) {
     return result;
 }
 
+template <domain D : shared3p, type T>
+D T[[2]] _intMatrixMultiplication(D T[[2]] x, D T[[2]] y) {
+    uint64[[1]] m (2) = shape(x);
+    uint64[[1]] n (2) = shape(y);
+    assert(m[1] == n[0]);
+    D T[[2]] z (m[0], n[1]);
+    __syscall("shared3p::mat_mult_$T\_vec", __domainid(D), x, y, z, __cref m[0], __cref m[1], __cref n[1]);
+    return z;
+}
+
 /** \endcond */
 
 /** \addtogroup shared3p_matrixmultiplication
@@ -725,22 +735,22 @@ D T[[3]] _matrixMultiplication (D T[[3]] x, D T[[3]] y) {
 
 template <domain D : shared3p>
 D uint8[[2]] matrixMultiplication (D uint8[[2]] x, D uint8[[2]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D uint16[[2]] matrixMultiplication (D uint16[[2]] x, D uint16[[2]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D uint32[[2]] matrixMultiplication (D uint32[[2]] x, D uint32[[2]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D uint[[2]] matrixMultiplication (D uint[[2]] x, D uint[[2]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
