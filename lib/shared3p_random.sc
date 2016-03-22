@@ -64,17 +64,6 @@ import matrix;
  */
 
 /**
-* @note Supported types - \ref bool "bool"
-* @param vec - a vector of supported type
-*/
-template <domain D : shared3p>
-D bool[[1]] shuffle (D bool[[1]] vec) {
-    D uint8[[1]] vec_uint8 = (uint8) vec;
-    __syscall ("shared3p::vecshuf_uint8_vec", __domainid (D), vec_uint8);
-    return (bool) vec_uint8;
-}
-
-/**
 *  @note **T** - any \ref data_types "data" type
 *  @param vec - a vector of supported type
 */
@@ -96,19 +85,6 @@ D T[[1]] shuffle (D T[[1]] vec) {
  *   If two vectors are shuffled using the same key the permutation applied is the same as long
  *   as the vectors are of the same length, and the key does not get reshared.
  */
-
-/**
-* @note Supported types - \ref bool "bool"
-*  @param vec - boolean input array to shuffle
-*  @param key - an \ref uint8 "uint8" type key that specifies the permutation
-*/
-template <domain D : shared3p>
-D bool[[1]] shuffle (D bool[[1]] vec, D uint8[[1]] key) {
-    assert (size (key) == 32);
-     D uint8[[1]] vec_uint8 = (uint8) vec;
-    __syscall ("shared3p::vecshufkey_uint8_vec", __domainid (D), vec_uint8, key);
-    return (bool) vec_uint8;
-}
 
 /**
 *  @note **T** - any \ref data_types "data" type
@@ -136,19 +112,6 @@ D T[[1]] shuffle (D T[[1]] vec, D uint8[[1]] key) {
  */
 
 /**
-* @note Supported types - \ref bool "bool"
-*  @param vec - boolean input array to shuffle
-*  @param key - an \ref uint8 "uint8" type key that specifies the permutation
-*/
-template <domain D : shared3p>
-D bool[[1]] inverseShuffle (D bool[[1]] vec, D uint8[[1]] key) {
-    assert (size (key) == 32);
-     D uint8[[1]] vec_uint8 = (uint8) vec;
-    __syscall ("shared3p::vecshufinv_uint8_vec", __domainid (D), vec_uint8, key);
-    return (bool) vec_uint8;
-}
-
-/**
 *  @note **T** - any \ref data_types "data" type
 *  @param vec - input array to shuffle
 *  @param key - an \ref uint8 "uint8" type key that specifies the permutation
@@ -168,16 +131,6 @@ D T[[1]] inverseShuffle (D T[[1]] vec, D uint8[[1]] key) {
 *  @return returns a matrix with shuffled rows
 */
 
-/**
-* @note Supported types - \ref bool "bool"
-* @param mat - a matrix of type boolean
-*/
-template <domain D : shared3p>
-D bool[[2]] shuffleRows (D bool[[2]] mat) {
-    D uint8[[2]] mat_uint8 = (uint8) mat;
-    __syscall ("shared3p::matshuf_uint8_vec", __domainid (D), mat_uint8, shape (mat)[1]);
-    return (bool) mat_uint8;
-}
 /**
 *  @note **T** - any \ref data_types "data" type
 *  @param mat - a matrix of any type
@@ -201,18 +154,6 @@ D T[[2]] shuffleRows (D T[[2]] mat) {
  *   as the vectors are of the same length, and the key does not get reshared.
  */
 
-/**
-*  @note Supported types - \ref bool "bool"
-*  @param mat - input matrix of type boolean to shuffle
-*  @param key - an \ref uint8 "uint8" type key that specifies the permutation
-*/
-template <domain D : shared3p>
-D bool[[2]] shuffleRows (D bool[[2]] mat, D uint8[[1]] key) {
-    assert (size (key) == 32);
-    D uint8[[2]] mat_uint8 = (uint8) mat;
-    __syscall ("shared3p::matshufkey_uint8_vec", __domainid (D), mat_uint8, shape (mat)[1], key);
-    return (bool) mat_uint8;
-}
 /**
 *  @note **T** - any \ref data_types "data" type
 *  @param mat - input matrix to shuffle
@@ -239,18 +180,6 @@ D T[[2]] shuffleRows (D T[[2]] mat, D uint8[[1]] key) {
  */
 
 /**
-*  @note Supported types - \ref bool "bool"
-*  @param mat - input matrix of type boolean to shuffle
-*  @param key - an \ref uint8 "uint8" type key that specifies the permutation
-*/
-template <domain D : shared3p>
-D bool[[2]] inverseShuffleRows (D bool[[2]] mat, D uint8[[1]] key) {
-    assert (size (key) == 32);
-    D uint8[[2]] mat_uint8 = (uint8) mat;
-    __syscall ("shared3p::matshufinv_uint8_vec", __domainid (D), mat_uint8, shape (mat)[1], key);
-    return (bool) mat_uint8;
-}
-/**
 *  @note **T** - any \ref data_types "data" type
 *  @param mat - input matrix to shuffle
 *  @param key - an \ref uint8 "uint8" type key that specifies the permutation
@@ -270,14 +199,6 @@ D T[[2]] inverseShuffleRows (D T[[2]] mat, D uint8[[1]] key) {
 *  @return returns a matrix with shuffled columns
 */
 
-/**
-* @note Supported types - \ref bool "bool"
-* @param mat - a matrix of type boolean
-*/
-template <domain D : shared3p>
-D bool[[2]] shuffleColumns (D bool[[2]] mat) {
-    return (bool)transpose(shuffleRows(transpose((uint8)mat)));
-}
 /**
 *  @note **T** - any \ref data_types "data" type
 *  @param mat - a matrix of any type
@@ -302,17 +223,6 @@ D T[[2]] shuffleColumns (D T[[2]] mat) {
  */
 
 /**
-*  @note Supported types - \ref bool "bool"
-*  @param mat - input matrix of type boolean to shuffle
-*  @param key - an \ref uint8 "uint8" type key that specifies the permutation
-*/
-template <domain D : shared3p>
-D bool[[2]] shuffleColumns (D bool[[2]] mat, D uint8[[1]] key) {
-    assert (size (key) == 32);
-    return (bool)transpose(shuffleRows(transpose((uint8)mat), key));
-}
-
-/**
 *  @note **T** - any \ref data_types "data" type
 *  @param mat - input matrix to shuffle
 *  @param key - an \ref uint8 "uint8" type key that specifies the permutation
@@ -335,17 +245,6 @@ D T[[2]] shuffleColumns (D T[[2]] mat, D uint8[[1]] key) {
  *   If two vectors are shuffled using the same key the permutation applied is the same as long
  *   as the vectors are of the same length, and the key does not get reshared.
  */
-
-/**
-*  @note Supported types - \ref bool "bool"
-*  @param mat - input matrix of type boolean to shuffle
-*  @param key - an \ref uint8 "uint8" type key that specifies the permutation
-*/
-template <domain D : shared3p>
-D bool[[2]] inverseShuffleColumns (D bool[[2]] mat, D uint8[[1]] key) {
-    assert (size (key) == 32);
-    return (bool)transpose(inverseShuffleRows(transpose((uint8)mat), key));
-}
 
 /**
 *  @note **T** - any \ref data_types "data" type

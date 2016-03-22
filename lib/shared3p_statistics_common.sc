@@ -87,27 +87,24 @@ D T[[1]] _cut (D T[[1]] data, D bool[[1]] isAvailable){
     assert (size (data) == size (isAvailable));
 
     uint s = size (data);
+    D uint8[[1]] key (32);
+    key = randomize (key);
 
-    D T[[2]] matrix (s, 2), shufMat (s, 2);
-    matrix[:,0] = data;
-    matrix[:,1] = (T)isAvailable;
+    data = shuffle (data, key);
+    isAvailable = shuffle (isAvailable, key);
 
-    shufMat = shuffleRows (matrix);
-
-    bool[[1]] shufIsAvailablePub (s);
-    shufIsAvailablePub = (bool)declassify (shufMat[:, 1]);
-
-    uint countAvailable = sum ((uint) shufIsAvailablePub);
-
-    D T[[1]] cutData (countAvailable);
-    uint indexCutData = 0;
-
-    for (uint i = 0; i < s; i = i + 1){
-        if (shufIsAvailablePub [i]){
-            cutData [indexCutData] = shufMat [i, 0];
-            indexCutData = indexCutData + 1;
+    bool[[1]] pubIsAvailable = declassify(isAvailable);
+    uint n = sum(pubIsAvailable);
+    uint[[1]] indices (n);
+    for (uint i = 0, j = 0; i < s; ++ i) {
+        if (pubIsAvailable[i]) {
+            indices[j ++] = i;
         }
     }
+
+    D T[[1]] cutData (n);
+    __syscall("shared3p::gather_$T\_vec",
+        __domainid(D), data, cutData, __cref indices);
 
     return cutData;
 }
