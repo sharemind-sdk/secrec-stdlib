@@ -82,8 +82,7 @@ kind shared3p;
 */
 template <domain D : shared3p, type T, dim N>
 D T[[N]] classify(T[[N]] value) {
-    D T[[N]] out;
-    __syscall("shared3p::classify_$T\_vec", __domainid(D), __cref value, out);
+    D T[[N]] out = value;
     return out;
 }
 /**
