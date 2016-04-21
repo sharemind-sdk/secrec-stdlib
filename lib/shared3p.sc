@@ -586,7 +586,18 @@ D bool any (D bool b) {
 */
 template <domain D : shared3p>
 D bool any (D bool[[1]] vec) {
-    return sum (vec) != 0;
+    uint n = size(vec);
+
+    if (n <= (uint) UINT8_MAX)
+        return sum((uint8) vec) != 0;
+
+    if (n <= (uint) UINT16_MAX)
+        return sum((uint16) vec) != 0;
+
+    if (n <= (uint) UINT32_MAX)
+        return sum((uint32) vec) != 0;
+
+    return sum(vec) != 0;
 }
 
 /**
@@ -595,7 +606,20 @@ D bool any (D bool[[1]] vec) {
 */
 template <domain D : shared3p>
 D bool[[1]] any (D bool[[1]] vec, uint k) {
-    return sum (vec, k) != 0;
+    uint n = size(vec);
+    assert(k > 0 && n % k == 0);
+    uint groupLen = n / k;
+
+    if (groupLen <= (uint) UINT8_MAX)
+        return sum((uint8) vec, k) != 0;
+
+    if (groupLen <= (uint) UINT16_MAX)
+        return sum((uint16) vec, k) != 0;
+
+    if (groupLen <= (uint) UINT32_MAX)
+        return sum((uint32) vec, k) != 0;
+
+    return sum(vec, k) != 0;
 }
 
 /**
@@ -632,6 +656,24 @@ template <domain D : shared3p>
 D bool all (D bool [[1]] arr) {
     uint n = size (arr);
     return sum (arr) == n;
+
+    /*
+     * NOTE: These special cases are useful because we are some times
+     * working with very long boolean arrays. Converting
+     * every bit into 64-bit integer can easily exeed memory limitations.
+     * Especially so because mostly the group sizes are small (less than 256).
+     */
+
+    if (n <= (uint) UINT8_MAX)
+        return sum((uint8) vec) == (uint8) n;
+
+    if (n <= (uint) UINT16_MAX)
+        return sum((uint16) vec) == (uint16) n;
+
+    if (n <= (uint) UINT32_MAX)
+        return sum((uint32) vec) == (uint32) n;
+
+    return sum(vec) == n;
 }
 
 /**
@@ -642,8 +684,18 @@ template <domain D : shared3p>
 D bool[[1]] all (D bool[[1]] vec, uint k) {
     uint n = size(vec);
     assert(k > 0 && n % k == 0);
-    uint len = n / k;
-    return sum (vec, k) == len;
+    uint groupLen = n / k;
+
+    if (groupLen <= (uint) UINT8_MAX)
+        return sum((uint8) vec, k) == (uint8) groupLen;
+
+    if (groupLen <= (uint) UINT16_MAX)
+        return sum((uint16) vec, k) == (uint16) groupLen;
+
+    if (groupLen <= (uint) UINT32_MAX)
+        return sum((uint32) vec, k) == (uint32) groupLen;
+
+    return sum(vec, k) == groupLen;
 }
 
 /**
