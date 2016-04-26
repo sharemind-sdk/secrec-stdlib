@@ -2617,6 +2617,13 @@ D xor_uint8 reshare (D uint8 input) {
 }
 
 template <domain D : shared3p>
+D xor_uint8 reshare (D int8 input) {
+    D xor_uint8 out;
+    __syscall ("shared3p::reshare_int8_to_xor_uint8_vec", __domainid (D), input, out);
+    return out;
+}
+
+template <domain D : shared3p>
 D uint8 reshare (D xor_uint8 input) {
     D uint8 out;
     __syscall ("shared3p::reshare_xor_uint8_to_uint8_vec", __domainid (D), input, out);
@@ -2631,6 +2638,13 @@ D xor_uint8 [[1]] reshare (D uint8[[1]] input) {
 }
 
 template <domain D : shared3p>
+D xor_uint8 [[1]] reshare (D int8[[1]] input) {
+    D xor_uint8[[1]] out (size (input));
+    __syscall ("shared3p::reshare_int8_to_xor_uint8_vec", __domainid (D), input, out);
+    return out;
+}
+
+template <domain D : shared3p>
 D uint8 [[1]] reshare (D xor_uint8[[1]] input) {
     D uint8[[1]] out (size (input));
     __syscall ("shared3p::reshare_xor_uint8_to_uint8_vec", __domainid (D), input, out);
@@ -2641,6 +2655,13 @@ template <domain D : shared3p>
 D xor_uint8 [[2]] reshare (D uint8[[2]] input) {
     D xor_uint8[[2]] out (shape(input)[0],shape(input)[1]);
     __syscall ("shared3p::reshare_uint8_to_xor_uint8_vec", __domainid (D), input, out);
+    return out;
+}
+
+template <domain D : shared3p>
+D xor_uint8 [[2]] reshare (D int8[[2]] input) {
+    D xor_uint8[[2]] out (shape(input)[0],shape(input)[1]);
+    __syscall ("shared3p::reshare_int8_to_xor_uint8_vec", __domainid (D), input, out);
     return out;
 }
 
@@ -2662,6 +2683,13 @@ D xor_uint16 reshare (D uint16 input) {
 }
 
 template <domain D : shared3p>
+D xor_uint16 reshare (D int16 input) {
+    D xor_uint16 out;
+    __syscall ("shared3p::reshare_int16_to_xor_uint16_vec", __domainid (D), input, out);
+    return out;
+}
+
+template <domain D : shared3p>
 D uint16 reshare (D xor_uint16 input) {
     D uint16 out;
     __syscall ("shared3p::reshare_xor_uint16_to_uint16_vec", __domainid (D), input, out);
@@ -2676,6 +2704,13 @@ D xor_uint16 [[1]] reshare (D uint16[[1]] input) {
 }
 
 template <domain D : shared3p>
+D xor_uint16 [[1]] reshare (D int16[[1]] input) {
+    D xor_uint16[[1]] out (size (input));
+    __syscall ("shared3p::reshare_int16_to_xor_uint16_vec", __domainid (D), input, out);
+    return out;
+}
+
+template <domain D : shared3p>
 D uint16 [[1]] reshare (D xor_uint16[[1]] input) {
     D uint16[[1]] out (size (input));
     __syscall ("shared3p::reshare_xor_uint16_to_uint16_vec", __domainid (D), input, out);
@@ -2686,6 +2721,13 @@ template <domain D : shared3p>
 D xor_uint16 [[2]] reshare (D uint16[[2]] input) {
     D xor_uint16[[2]] out (shape(input)[0],shape(input)[1]);
     __syscall ("shared3p::reshare_uint16_to_xor_uint16_vec", __domainid (D), input, out);
+    return out;
+}
+
+template <domain D : shared3p>
+D xor_uint16 [[2]] reshare (D int16[[2]] input) {
+    D xor_uint16[[2]] out (shape(input)[0],shape(input)[1]);
+    __syscall ("shared3p::reshare_int16_to_xor_uint16_vec", __domainid (D), input, out);
     return out;
 }
 
@@ -2707,6 +2749,13 @@ D xor_uint32 reshare (D uint32 input) {
 }
 
 template <domain D : shared3p>
+D xor_uint32 reshare (D int32 input) {
+    D xor_uint32 out;
+    __syscall ("shared3p::reshare_int32_to_xor_uint32_vec", __domainid (D), input, out);
+    return out;
+}
+
+template <domain D : shared3p>
 D uint32 reshare (D xor_uint32 input) {
     D uint32 out;
     __syscall ("shared3p::reshare_xor_uint32_to_uint32_vec", __domainid (D), input, out);
@@ -2721,6 +2770,13 @@ D xor_uint32 [[1]] reshare (D uint32[[1]] input) {
 }
 
 template <domain D : shared3p>
+D xor_uint32 [[1]] reshare (D int32[[1]] input) {
+    D xor_uint32[[1]] out (size (input));
+    __syscall ("shared3p::reshare_int32_to_xor_uint32_vec", __domainid (D), input, out);
+    return out;
+}
+
+template <domain D : shared3p>
 D uint32 [[1]] reshare (D xor_uint32[[1]] input) {
     D uint32[[1]] out (size (input));
     __syscall ("shared3p::reshare_xor_uint32_to_uint32_vec", __domainid (D), input, out);
@@ -2731,6 +2787,13 @@ template <domain D : shared3p>
 D xor_uint32 [[2]] reshare (D uint32[[2]] input) {
     D xor_uint32[[2]] out (shape(input)[0],shape(input)[1]);
     __syscall ("shared3p::reshare_uint32_to_xor_uint32_vec", __domainid (D), input, out);
+    return out;
+}
+
+template <domain D : shared3p>
+D xor_uint32 [[2]] reshare (D int32[[2]] input) {
+    D xor_uint32[[2]] out (shape(input)[0],shape(input)[1]);
+    __syscall ("shared3p::reshare_int32_to_xor_uint32_vec", __domainid (D), input, out);
     return out;
 }
 
@@ -2752,6 +2815,13 @@ D xor_uint64 reshare (D uint64 input) {
 }
 
 template <domain D : shared3p>
+D xor_uint64 reshare (D int64 input) {
+    D xor_uint64 out;
+    __syscall ("shared3p::reshare_int64_to_xor_uint64_vec", __domainid (D), input, out);
+    return out;
+}
+
+template <domain D : shared3p>
 D uint64 reshare (D xor_uint64 input) {
     D uint64 out;
     __syscall ("shared3p::reshare_xor_uint64_to_uint64_vec", __domainid (D), input, out);
@@ -2766,6 +2836,13 @@ D xor_uint64 [[1]] reshare (D uint64[[1]] input) {
 }
 
 template <domain D : shared3p>
+D xor_uint64 [[1]] reshare (D int64[[1]] input) {
+    D xor_uint64[[1]] out (size (input));
+    __syscall ("shared3p::reshare_int64_to_xor_uint64_vec", __domainid (D), input, out);
+    return out;
+}
+
+template <domain D : shared3p>
 D uint64 [[1]] reshare (D xor_uint64[[1]] input) {
     D uint64[[1]] out (size (input));
     __syscall ("shared3p::reshare_xor_uint64_to_uint64_vec", __domainid (D), input, out);
@@ -2776,6 +2853,13 @@ template <domain D : shared3p>
 D xor_uint64 [[2]] reshare (D uint64[[2]] input) {
     D xor_uint64[[2]] out (shape(input)[0],shape(input)[1]);
     __syscall ("shared3p::reshare_uint64_to_xor_uint64_vec", __domainid (D), input, out);
+    return out;
+}
+
+template <domain D : shared3p>
+D xor_uint64 [[2]] reshare (D int64[[2]] input) {
+    D xor_uint64[[2]] out (shape(input)[0],shape(input)[1]);
+    __syscall ("shared3p::reshare_int64_to_xor_uint64_vec", __domainid (D), input, out);
     return out;
 }
 
