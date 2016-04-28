@@ -649,12 +649,11 @@ D bool all (D bool b) {
 }
 
 /**
-* @param arr - boolean 1-dimensional vector
+* @param vec - boolean 1-dimensional vector
 */
 template <domain D : shared3p>
-D bool all (D bool [[1]] arr) {
-    uint n = size (arr);
-    return sum (arr) == n;
+D bool all (D bool [[1]] vec) {
+    uint n = size (vec);
 
     /*
      * NOTE: These special cases are useful because we are some times
