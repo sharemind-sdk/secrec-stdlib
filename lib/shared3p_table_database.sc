@@ -56,11 +56,9 @@ import table_database;
  */
 template <domain D : shared3p, type T>
 void tdbVmapAddType (uint64 id, string paramname, D T t) {
-    string t_dom;
-    __syscall("shared3p::get_domain_name", __domainid(D), __return t_dom);
     uint64 t_size;
     __syscall("shared3p::get_type_size_$T", __domainid(D), __return t_size);
-    __syscall("tdb_vmap_push_back_type", id, __cref paramname, __cref t_dom, __cref "$T", t_size);
+    __syscall("tdb_vmap_push_back_type", id, __cref paramname, __cref "$D", __cref "$T", t_size);
 }
 /** @} */
 
@@ -77,9 +75,7 @@ void tdbVmapAddType (uint64 id, string paramname, D T t) {
  */
 template <domain D : shared3p, type T>
 void tdbVmapAddVlenType (uint64 id, string paramname, D T t) {
-    string t_dom;
-    __syscall("shared3p::get_domain_name", __domainid(D), __return t_dom);
-    __syscall("tdb_vmap_push_back_type", id, __cref paramname, __cref t_dom, __cref "$T", 0::uint64);
+    __syscall("tdb_vmap_push_back_type", id, __cref paramname, __cref "$D", __cref "$T", 0::uint64);
 }
 /** @} */
 
@@ -94,15 +90,13 @@ void tdbVmapAddVlenType (uint64 id, string paramname, D T t) {
  */
 template <domain D : shared3p, type T>
 void tdbVmapAddValue (uint64 id, string paramname, D T value) {
-    string t_dom;
-    __syscall("shared3p::get_domain_name", __domainid(D), __return t_dom);
     uint64 t_size;
     __syscall("shared3p::get_type_size_$T", __domainid(D), __return t_size);
     uint64 num_bytes;
     __syscall("shared3p::get_shares_$T\_vec", __domainid(D), value, __return num_bytes);
     uint8 [[1]] bytes(num_bytes);
     __syscall("shared3p::get_shares_$T\_vec", __domainid(D), value, __ref bytes);
-    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", t_size, __cref bytes);
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref "$D", __cref "$T", t_size, __cref bytes);
 }
 /** @} */
 
@@ -117,15 +111,13 @@ void tdbVmapAddValue (uint64 id, string paramname, D T value) {
  */
 template <domain D : shared3p, type T>
 void tdbVmapAddValue (uint64 id, string paramname, D T [[1]] values) {
-    string t_dom;
-    __syscall("shared3p::get_domain_name", __domainid(D), __return t_dom);
     uint64 t_size;
     __syscall("shared3p::get_type_size_$T", __domainid(D), __return t_size);
     uint64 num_bytes;
     __syscall("shared3p::get_shares_$T\_vec", __domainid(D), values, __return num_bytes);
     uint8 [[1]] bytes(num_bytes);
     __syscall("shared3p::get_shares_$T\_vec", __domainid(D), values, __ref bytes);
-    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", t_size, __cref bytes);
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref "$D", __cref "$T", t_size, __cref bytes);
 }
 /** @} */
 
@@ -140,13 +132,11 @@ void tdbVmapAddValue (uint64 id, string paramname, D T [[1]] values) {
  */
 template <domain D : shared3p, type T>
 void tdbVmapAddVlenValue (uint64 id, string paramname, D T [[1]] values) {
-    string t_dom;
-    __syscall("shared3p::get_domain_name", __domainid(D), __return t_dom);
     uint64 num_bytes;
     __syscall("shared3p::get_shares_$T\_vec", __domainid(D), values, __return num_bytes);
     uint8 [[1]] bytes(num_bytes);
     __syscall("shared3p::get_shares_$T\_vec", __domainid(D), values, __ref bytes);
-    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", 0::uint64, __cref bytes);
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref "$D", __cref "$T", 0::uint64, __cref bytes);
 }
 /** @} */
 
@@ -163,8 +153,6 @@ void tdbVmapAddVlenValue (uint64 id, string paramname, D T [[1]] values) {
 template <domain D : shared3p, type T>
 D T[[1]] tdbVmapGetValue (uint64 id, string paramname, uint64 index) {
     // Get type information
-    string t_dom;
-    __syscall ("shared3p::get_domain_name", __domainid(D), __return t_dom);
     uint64 t_size = 0;
     __syscall ("shared3p::get_type_size_$T", __domainid(D), __return t_size);
 
@@ -181,7 +169,7 @@ D T[[1]] tdbVmapGetValue (uint64 id, string paramname, uint64 index) {
     // Check if the returned value type matches
     string rt_dom;
     __syscall ("tdb_vmap_at_value_type_domain", id, __cref paramname, index, __return rt_dom);
-    assert (rt_dom == t_dom);
+    assert (rt_dom == "$D");
 
     string rt_name;
     __syscall ("tdb_vmap_at_value_type_name", id, __cref paramname, index, __return rt_name);
@@ -219,10 +207,6 @@ D T[[1]] tdbVmapGetValue (uint64 id, string paramname, uint64 index) {
  */
 template <domain D : shared3p, type T>
 D T[[1]] tdbVmapGetVlenValue (uint64 id, string paramname, uint64 index) {
-    // Get type information
-    string t_dom;
-    __syscall ("shared3p::get_domain_name", __domainid(D), __return t_dom);
-
     // Check if the given vector map is valid
     uint64 isvalue = 0;
     __syscall ("tdb_vmap_is_value_vector", id, __cref paramname, __return isvalue);
@@ -236,7 +220,7 @@ D T[[1]] tdbVmapGetVlenValue (uint64 id, string paramname, uint64 index) {
     // Check if the returned value type matches
     string rt_dom;
     __syscall ("tdb_vmap_at_value_type_domain", id, __cref paramname, index, __return rt_dom);
-    assert (rt_dom == t_dom);
+    assert (rt_dom == "$D");
 
     string rt_name;
     __syscall ("tdb_vmap_at_value_type_name", id, __cref paramname, index, __return rt_name);
@@ -274,11 +258,9 @@ D T[[1]] tdbVmapGetVlenValue (uint64 id, string paramname, uint64 index) {
  */
 template <domain D : shared3p, type T, dim N>
 void tdbTableCreate (string datasource, string table, D T[[N]] vtype, uint64 ncols) {
-    string t_dom;
-    __syscall ("shared3p::get_domain_name", __domainid(D), __return t_dom);
     uint64 t_size = 0;
     __syscall ("shared3p::get_type_size_$T", __domainid(D), __return t_size);
-    __syscall ("tdb_tbl_create", __cref datasource, __cref table, __cref t_dom, __cref "$T", t_size, ncols);
+    __syscall ("tdb_tbl_create", __cref datasource, __cref table, __cref "$D", __cref "$T", t_size, ncols);
 }
 /** @} */
 
@@ -294,15 +276,13 @@ void tdbTableCreate (string datasource, string table, D T[[N]] vtype, uint64 nco
  */
 template <domain D : shared3p, type T>
 void tdbInsertRow (string datasource, string table, D T[[1]] values) {
-    string t_dom;
-    __syscall ("shared3p::get_domain_name", __domainid(D), __return t_dom);
     uint64 t_size = 0;
     __syscall ("shared3p::get_type_size_$T", __domainid(D), __return t_size);
     uint64 num_bytes = 0;
     __syscall ("shared3p::get_shares_$T\_vec", __domainid(D), values, __return num_bytes);
     uint8[[1]] bytes(num_bytes);
     __syscall ("shared3p::get_shares_$T\_vec", __domainid(D), values, __ref bytes);
-    __syscall ("tdb_insert_row", __cref datasource, __cref table, __cref t_dom, __cref "$T", t_size, __cref bytes);
+    __syscall ("tdb_insert_row", __cref datasource, __cref table, __cref "$D", __cref "$T", t_size, __cref bytes);
 }
 /** @} */
 
