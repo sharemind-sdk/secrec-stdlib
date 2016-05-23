@@ -29,36 +29,36 @@ fi
 # readlink on OS X does not behave as on Linux
 # http://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
 if [ `uname -s` = "Darwin" ]; then
-  CWD=`pwd`
-  TARGET_FILE=$0
+    CWD=`pwd`
+    TARGET_FILE=$0
 
-  cd "`dirname "${TARGET_FILE}"`"
-  TARGET_FILE=`basename "${TARGET_FILE}"`
-
-  # Iterate down a (possible) chain of symlinks
-  while [ -L "${TARGET_FILE}" ]
-  do
-    TARGET_FILE=`readlink "${TARGET_FILE}"`
     cd "`dirname "${TARGET_FILE}"`"
     TARGET_FILE=`basename "${TARGET_FILE}"`
-  done
-  unset -v TARGET_FILE
 
-  # Compute the canonicalized name by finding the physical path
-  # for the directory we're in and appending the target file.
-  ABSSP=`pwd -P`
-  cd "$CWD"
-  unset -v CWD
+    # Iterate down a (possible) chain of symlinks
+    while [ -L "${TARGET_FILE}" ]
+    do
+        TARGET_FILE=`readlink "${TARGET_FILE}"`
+        cd "`dirname "${TARGET_FILE}"`"
+        TARGET_FILE=`basename "${TARGET_FILE}"`
+    done
+    unset -v TARGET_FILE
+
+    # Compute the canonicalized name by finding the physical path
+    # for the directory we're in and appending the target file.
+    ABSSP=`pwd -P`
+    cd "$CWD"
+    unset -v CWD
 else
-  ABSS=`readlink -f "$0"`
-  ABSSP=`dirname "$ABSS"`
-  unset -v ABSS
+    ABSS=`readlink -f "$0"`
+    ABSSP=`dirname "${ABSS}"`
+    unset -v ABSS
 fi
 
 TEST_PATH="${ABSSP}"
 
 if [ -d "${SHAREMIND_PATH}/lib" ]; then
-  NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${SHAREMIND_PATH}/lib"
+    NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${SHAREMIND_PATH}/lib"
 fi
 
 SCC="${SHAREMIND_PATH}/bin/scc"
