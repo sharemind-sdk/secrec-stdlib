@@ -57,6 +57,10 @@ fi
 
 TEST_PATH="${ABSSP}"
 
+if [ -z "${LOG_PATH}" ]; then
+    LOG_PATH="${TEST_PATH}/`basename "$0"`.log"
+fi
+
 if [ -d "${SHAREMIND_PATH}/lib" ]; then
   NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${SHAREMIND_PATH}/lib"
 fi
@@ -89,8 +93,10 @@ run_test() {
     local SB_BN="$1"
     local TEST_NAME="$2"
     local CWD=`pwd`; cd "`dirname ${TEST_RUNNER}`"
+
     ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
             "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
+                    --logfile "${LOG_PATH}" --logmode append \
                 | sed "s#^#${TEST_NAME}#g") \
          3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
          3>&1 1>&2 2>&3 3>&-
