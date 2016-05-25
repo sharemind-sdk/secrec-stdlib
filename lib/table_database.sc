@@ -62,6 +62,8 @@ import stdlib;
  * \defgroup tdb_vmap_add_value_vector tdbVmapAddValue(vector)
  * \defgroup tdb_vmap_add_vlen_value tdbVmapAddVlenValue
  * \defgroup tdb_vmap_get_value tdbVmapGetValue
+ * \defgroup tdb_vmap_add_index tdbVmapAddIndex
+ * \defgroup tdb_vmap_get_index tdbVmapGetIndex
  */
 
 /** \addtogroup table_database
@@ -641,6 +643,33 @@ T[[1]] tdbVmapGetValue (uint id, string paramname, uint index) {
     __syscall("tdb_vmap_at_value", id, __cref paramname, index, __ref out);
 
     return out;
+}
+/** @} */
+
+/** \addtogroup tdb_vmap_add_index
+ *  @{
+ *  @brief Add a unsigned integer value to a vector in a vector map
+ *  @param id - vector map id
+ *  @param paramname - name of the vector to which the string is added
+ *  @param value - value to be added
+ */
+void tdbVmapAddIndex(uint64 id, string paramname, uint64 value) {
+    __syscall("tdb_vmap_push_back_index", id, __cref paramname, value);
+}
+/** @} */
+
+/** \addtogroup tdb_vmap_get_index
+ *  @{
+ *  @brief Get a string from a string vector in a vector map
+ *  @param id - vector map id
+ *  @param paramname - string vector name
+ *  @param index - index of the value in the vector
+ *  @return returns the unsigned integer value in the vector at the specified index
+ */
+uint64 tdbVmapGetIndex(uint64 id, string paramname, uint index) {
+    uint64 ret;
+    __syscall("tdb_vmap_at_index", id, __cref paramname, index, __return ret);
+    return ret;
 }
 /** @} */
 
