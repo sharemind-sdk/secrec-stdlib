@@ -108,10 +108,10 @@ D int64 maximum (D int64[[1]] data, D bool[[1]] isAvailable) {
 
 /** \addtogroup mean
  *  @{
- *  @brief Find the mean of a vector
+ *  @brief Find the mean of a vector 
  *  @note **D** - any protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @param data - input vector
+ *  @param data - input vector (the function may overflow if the input is too big)
  *  @return returns the mean of the input vector
  */
 template <domain D>
@@ -131,7 +131,7 @@ D float64 mean (D int64[[1]] data) {
  *  @brief Find the mean of a filtered vector
  *  @note **D** - any protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @param data - input vector
+ *  @param data - input vector (the function may overflow if the input is too big)
  *  @param mask - mask indicating which elements of the input vector to include when computing the mean
  *  @return returns the mean of the filtered input vector
  */
@@ -154,7 +154,7 @@ D float64 mean (D int64[[1]] data, D bool[[1]] mask) {
  *  @brief Find the variance of a vector
  *  @note **D** - any protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @param data - input vector
+ *  @param data - input vector (the function may overflow if the input is too big)
  *  @return returns the variance of the input vector
  */
 template <domain D>
@@ -182,7 +182,7 @@ D float64 variance (D int64[[1]] data) {
  *  @brief Find the variance of a filtered vector
  *  @note **D** - any protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @param data - input vector
+ *  @param data - input vector (the function may overflow if the input is too big)
  *  @param mask - mask indicating which elements of the input vector to include when computing the variance
  *  @return returns the variance of the input vector
  */
@@ -221,7 +221,7 @@ D float64 variance (D int64[[1]] data, D bool[[1]] mask) {
  *  @brief Find the standard deviation of a sample
  *  @note **D** - any protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @param data - input sample
+ *  @param data - input sample (the function may overflow if the input is too big)
  *  @return returns the standard deviation of the input sample
  */
 template <domain D>
@@ -243,7 +243,7 @@ D float64 standardDev (D int64[[1]] data) {
  *  @brief Find the standard deviation of a filtered sample
  *  @note **D** - any protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @param data - input sample
+ *  @param data - input sample (the function may overflow if the input is too big)
  *  @param mask - mask vector indicating which elements of the input
  *  sample to include when computing the standard deviation
  *  @return returns the standard deviation of the filtered input vector
