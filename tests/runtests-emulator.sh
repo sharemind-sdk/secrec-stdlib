@@ -125,9 +125,9 @@ run() {
 }
 
 run_all() {
-    for TESTS in `find "${ABSSP}" -mindepth 1 -maxdepth 1 -type d | sort`; do
+    for TESTS in `find "${ABSSP}" -mindepth 1 -type d | sort`; do
         local TESTS_BN=`basename "${TESTS}"`
-        for TEST in `find "${TESTS}" -mindepth 1 -maxdepth 1 -type f -name "*.sc" | sort`; do
+        for TEST in `find "${TESTS}" -mindepth 1 -type f -name "*.sc" | sort`; do
             run "${TEST}" "${TESTS_BN}"
         done
     done
@@ -138,7 +138,7 @@ if [ "x$1" = "x" ]; then
 elif [ -f "$1" ]; then
     run "$1"
 elif [ -d "$1" ]; then
-    for TEST in `find "$1" -mindepth 1 -maxdepth 1 -type f -name "*.sc" | sort`; do
+    for TEST in `find "$1" -mindepth 1 -type f -name "*.sc" | sort`; do
         run "${TEST}" `basename "$1"`
     done
 else
