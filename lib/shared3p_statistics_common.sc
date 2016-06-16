@@ -401,22 +401,29 @@ D T[[2]] _contingencyTable (D T[[1]] data, D bool[[1]] cases, D bool[[1]] contro
 
     assert (size (data) == size (cases) && size (data) == size (controls));
 
-    // Count the classes and check whether the codeBook contains zeroes
     uint[[1]] shapeCodeBook = shape (codeBook);
+
+    assert (shapeCodeBook[0] == 2);
+    assert (shapeCodeBook[1] > 0);
+    assert (min (codeBook[1, :]) == 1);
+
     uint codeCount = shapeCodeBook[1];
     uint dataSize = size (data);
-
     bool codeBookZeroes = false;
-    T classCount = 1;
-    for (uint i = 0; i < codeCount; i = i + 1) {
-        if (codeBook [0, i] == 0){
-            // codeBook contains zeroes, must be dealt with separately
+    T classCount = 0;
+    T[[1]] seen;
+
+    for (uint i = 0; i < codeCount; ++i) {
+        if (!any(codeBook[1, i] == seen)) {
+            seen = cat(seen, {codeBook[1, i]});
+            ++classCount;
+        }
+
+        if (codeBook[0, i] == 0)
             codeBookZeroes = true;
-        }
-        if (classCount < codeBook[1, i]) {
-            classCount = codeBook[1, i];
-        }
     }
+
+    assert (max (codeBook[1, :]) - min (codeBook[1, :]) + 1 == classCount);
 
     // If the codebook contains zeroes, add the value of the filter to every element
     // This will increase the codes by 1 where the filter contains 1 and will not change the value otherwise
@@ -448,7 +455,6 @@ D T[[2]] _contingencyTable (D T[[1]] data, D bool[[1]] cases, D bool[[1]] contro
 	D T[[2]] contTable ((uint) classCount, 2) = 0;
     for (uint i = 0; i < codeCount; i = i + 1) {
        	uint64 class = (uint) codeBook[1, i] - 1;
-
 		contTable[class, 0] = contTable[class, 0] + (T)parEqSums[i * 2];
 		contTable[class, 1] = contTable[class, 1] + (T)parEqSums[i * 2 + 1];
 	}
@@ -469,7 +475,7 @@ D T[[2]] _contingencyTable (D T[[1]] data, D bool[[1]] cases, D bool[[1]] contro
  *  @param codeBook - matrix used for coding the answer. The first row
  *  contains expected values of the input vector and the second row
  *  contains the classes that these values will be put into. The
- *  classes should begin with 1.
+ *  classes should be consecutive and begin from 1.
  *  @return returns a contingency table in the format
  *  @return
  *  <table>
