@@ -26,24 +26,30 @@ domain pd_shared3p shared3p;
 
 template<type T>
 bool contingency_table_test(T data) {
-	pd_shared3p T[[1]] in_data (8) = {1, 2, 3, 4, 5, 6, 7, 8};
-	pd_shared3p bool[[1]] cases (8) = {false, true, false, true, false, true, false, true};
-	pd_shared3p bool[[1]] controls (8) = {true, false, true, false, true, false, true, false};
+	pd_shared3p T[[1]] in_data (8) = {0, 0, 2, 0, 0, 2, 2, 0};
+	pd_shared3p bool[[1]] cases (8) = {true, true, true, true, false, false, false, false};
+	pd_shared3p bool[[1]] controls (8) = !cases;
 	
-	pd_shared3p T[[2]] code_book (2, 8) = reshape({1, 2, 3, 4, 5, 6, 7, 8, 1, 1, 2, 2, 3, 3, 4, 4}, 2, 8);
 	
-	printMatrix(declassify(code_book));
+	//crashes if there are 0 in the input that are not mapped to other values
+	//temporarly leaving it at this, the function is broken
+	T[[2]] code_book = reshape({2, 0, 2, 1}, 2, 2);
+	
+	printMatrix(code_book);
 
-	pd_shared3p T[[2]] table (2, 5) = contingencyTable(in_data, cases, controls, code_book);
+	pd_shared3p T[[2]] table = contingencyTable(in_data, cases, controls, code_book);
 	printMatrix(declassify(table));
 	
-	return true;
+	return false;
 }
 
 
 void main() {
 	string test_prefix = "ContingencyTable";
+
 	test(test_prefix, contingency_table_test(0::uint32), 0::uint32);
+	test(test_prefix, contingency_table_test(0::uint64), 0::uint64);
+
 	
 	test_report();
 
