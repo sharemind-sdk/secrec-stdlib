@@ -77,8 +77,8 @@ D FT[[1]] _simpleLinear(D T[[1]] x, D T[[1]] y, D bool[[1]] filter) {
     // Calculate covariance
     D FT[[1]] samples(n * 2);
     D FT[[1]] means(n * 2);
-    samples[:n] = (FT) x;
-    samples[n:] = (FT) y;
+    samples[:n] = (FT) mat[:, 0];
+    samples[n:] = (FT) mat[:, 1];
     means[:n] = meanVec[0];
     means[n:] = meanVec[1];
 
