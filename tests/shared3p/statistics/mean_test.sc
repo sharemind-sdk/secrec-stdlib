@@ -29,8 +29,10 @@ bool mean_test(int32 data) {
 	pd_shared3p int32[[1]] a (8) = {1, 4, 5, 10, 5, 5, 5, 6};
 	pd_shared3p float32 b = mean(a);
 	
+	float32 x = (abs(declassify(b) - 5.125))/5.125;
+	
 	//the relative error is around 1e-8
-	if (!isNegligible((abs(declassify(b) - 5.125))/5.125)) 
+	if (!isNegligible(x)) 
 		return false;
 	
 	return true;
@@ -41,7 +43,10 @@ bool mean_test(int64 data) {
 	pd_shared3p int64[[1]] a (2) = {INT64_MAX, INT64_MIN};
 	pd_shared3p float64 b = mean(a);
 	
-	if (!isNegligible(declassify(b) + 0.5)) 
+	float64 x = (abs(declassify(b) + 0.5)/0.5);
+	
+	//the relative error is around 1e-16
+	if (!isNegligible(x)) 
 		return false;
 	
 	return true;
@@ -52,8 +57,10 @@ bool mean_test_filter(int32 data) {
 	pd_shared3p bool[[1]] mask (3) = {true, true, false};
 	
 	pd_shared3p float32 b = mean(a, mask);
-
-	if (!isNegligible(declassify(b) + 0.5)) 
+	
+	float32 x = (abs(declassify(b) + 0.5)/0.5);
+	
+	if (!isNegligible(x)) 
 		return false;
 	
 	return true;
@@ -66,7 +73,9 @@ bool mean_test_filter(int64 data) {
 	
 	pd_shared3p float64 b = mean(a, mask);
 	
-	if (!isNegligible(declassify(b) + 0.5)) 
+	float64 x = (abs(declassify(b) + 0.5)/0.5);
+
+	if (!isNegligible(x)) 
 		return false;
 	
 	return true;
