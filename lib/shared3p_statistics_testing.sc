@@ -210,6 +210,9 @@ D FT[[1]] _parallelMeanVar (D IT[[1]] data1,
     UT n1 = sum ((UT) pubIA1);
     UT n2 = sum ((UT) pubIA2);
 
+    assert (n1 > 1);
+    assert (n2 > 1);
+
     D IT[[1]] data1Cut ((uint) n1);
     D IT[[1]] data2Cut ((uint) n2);
 
@@ -235,15 +238,16 @@ D FT[[1]] _parallelMeanVar (D IT[[1]] data1,
 
     D IT[[1]] sums = colSums (cutMat);
     UT[[1]] ns = {n1, n2};
+    UT[[1]] divisor = {n1 - 1, n2 - 1};
 
     D FT[[1]] means = (FT) sums / (FT) ns;
     D FT[[2]] meanMat ((uint) max (n1, n2), 2);
-    meanMat[:, 0] = means[0];
-    meanMat[:, 1] = means[1];
+    meanMat[: (uint) n1, 0] = means[0];
+    meanMat[: (uint) n2, 1] = means[1];
     D FT[[2]] diffs = (FT) cutMat - meanMat;
     diffs = diffs * diffs;
     D FT[[1]] diffSum = colSums (diffs);
-    D FT[[1]] variances = diffSum / (FT) ns;
+    D FT[[1]] variances = diffSum / (FT) divisor;
 
     return cat(means, variances);
 }
