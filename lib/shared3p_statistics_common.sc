@@ -36,7 +36,6 @@ import stdlib;
  * \defgroup cut cut
  * \defgroup cut_n cut(multiple samples)
  * \defgroup nth_element nthElement
- * \defgroup nth_element_indexes nthElement(with indexes)
  * \defgroup contingency contingencyTable
  */
 
@@ -364,33 +363,6 @@ D int32 nthElement (D int32[[1]] data, uint64 k, bool shuffle) {
 template<domain D : shared3p>
 D int64 nthElement (D int64[[1]] data, uint64 k, bool shuffle) {
     return nthElement (data, 0::uint, size(data)-1, k, shuffle);
-}
-/** @} */
-
-
-/** \addtogroup nth_element_indexes
- *  @{
- *  @brief Find the nth element in size from a vector
- *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @param data - input vector
- *  @param left - index of the start of range to be searched (inclusive)
- *  @param right - index of the end of range to be searched (inclusive)
- *  @param k - index of the value's rank (starts from 0)
- *  @param shuffle - indicates if the input vector should be shuffled
- *  before running the algorithm. Shuffling is necessary to hide the
- *  execution flow but if the input vector has already been shuffled
- *  it's unnecessary.
- *  @return returns the nth element in size of the input vector.
- */
-template<domain D : shared3p>
-D int32 nthElement (D int32[[1]] data, uint64 left, uint64 right, uint64 k, bool shuffle) {
-    return _nthElement (data, left, right, k, shuffle);
-}
-
-template<domain D : shared3p>
-D int64 nthElement (D int64[[1]] data, uint64 left, uint64 right, uint64 k, bool shuffle) {
-    return _nthElement (data, left, right, k, shuffle);
 }
 /** @} */
 
