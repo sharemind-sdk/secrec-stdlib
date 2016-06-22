@@ -220,10 +220,13 @@ D T[[2]] _histogram (D T[[1]] data, D bool[[1]] isAvailable) {
 
 
 template<domain D, type T>
-D T[[2]] _discreteDistributionCount (D T[[1]] data, D bool[[1]] isAvailable, D T min, D T max, D T stepSize) {
-
+D T[[2]] _discreteDistributionCount (D T[[1]] data,
+                                     D bool[[1]] isAvailable,
+                                     D T min,
+                                     D T max,
+                                     D T stepSize)
+{
     D T[[1]] cutData = cut (data, isAvailable);
-
     uint sizeData = size (cutData);
 
     // Why exactly 5? Should it be bigger than 5?
@@ -233,9 +236,9 @@ D T[[2]] _discreteDistributionCount (D T[[1]] data, D bool[[1]] isAvailable, D T
     }
 
     // Number of "columns" (different possible values).
-    uint cols = (uint)declassify ((max - min)) + 1;
+    uint cols = declassify ((uint) (max - min) / (uint) stepSize) + 1;
     // Already declassifying something (matrix size).
-    D T[[2]] result (2, cols) = stepSize;
+    D T[[2]] result (2, cols);
 
     uint compSize = sizeData * cols;
     // Vectors for parallel computations.
@@ -252,8 +255,7 @@ D T[[2]] _discreteDistributionCount (D T[[1]] data, D bool[[1]] isAvailable, D T
         startIndex = i * sizeData;
         endIndex = (i + 1) * sizeData;
         compA[startIndex:endIndex] = cutData;
-        // Here we declassify stepSize. Problem? No? Probably should make stepSize parameter public.
-        colVal = min + (T)(i * (uint)declassify(stepSize));
+        colVal = min + (T)(i * (uint) stepSize);
         compB[startIndex:endIndex] = colVal;
 
         result[0,i] = colVal;
