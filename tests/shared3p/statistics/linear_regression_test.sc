@@ -29,21 +29,22 @@ domain pd_shared3p shared3p;
 template<type T, type G>
 bool test_lg(T data, G data2, int64 algorithm) {
 	pd_shared3p T[[2]] variables = reshape(
-		{1, 1, 2,
-		 2, 2, 1,
-		 2, 3, 6,
-		 2, 1, 2,
-		 1, 1, 1}, 5, 3);
+		{1, 1, 2, 3, 1, 4, 
+		 2, 2, 1, 6, 2, 3,
+		 2, 3, 6, 1, 5, 2,
+		 2, 1, 2, 5, 3, 1,
+		 1, 1, 1, 1, 4, 3,
+		 4, 3, 1, 1, 3, 6}, 6, 6);
 	
 	variables = transpose(variables);
 	
-	pd_shared3p T[[1]] dependent = {1, 2, 2};
+	pd_shared3p T[[1]] dependent = {1, 2, 2, 4, 6, 1};
 	pd_shared3p G[[1]] result = linearRegression(variables, dependent, algorithm);
 	
 	G[[2]] x = (G) declassify(variables);
-	G[[2]] y = declassify(reshape(result, 6, 1));
-	G[[2]] output = matrixMultiplication(x, reshape(y[0:5, 0], 5, 1)) + y[5, 0];	
-	G[[2]] expected = (G) reshape(declassify(dependent), 3, 1);
+	G[[2]] y = declassify(reshape(result, 7, 1));
+	G[[2]] output = matrixMultiplication(x, reshape(y[0:6, 0], 6, 1)) + y[6, 0];	
+	G[[2]] expected = (G) reshape(declassify(dependent), 6, 1);
 	
 	G relative_error = sum(colSums(expected-output)) / sum(colSums(expected));
 	
@@ -60,19 +61,19 @@ bool test_lg(T data, G data2, int64 algorithm) {
 template<type T, type G>
 bool test_lg_invert(T data, G data2) {
 	pd_shared3p T[[2]] variables = reshape(
-		{1, 2,
-		 2, 2,
-		 1, 1}, 3, 2);
+		{1, 2, 1, 5, 3,
+		 2, 2, 5, 5, 1,
+		 1, 1, 5, 1, 3}, 3, 5);
 	
 	variables = transpose(variables);
 	
-	pd_shared3p T[[1]] dependent = {1, 2};
+	pd_shared3p T[[1]] dependent = {1, 2, 2, 4, 1};
 	pd_shared3p G[[1]] result = linearRegression(variables, dependent, LINEAR_REGRESSION_INVERT);
 	
 	G[[2]] x = (G) declassify(variables);
 	G[[2]] y = declassify(reshape(result, 4, 1));
 	G[[2]] output = matrixMultiplication(x, reshape(y[0:3, 0], 3, 1)) + y[3, 0];	
-	G[[2]] expected = (G) reshape(declassify(dependent), 2, 1);
+	G[[2]] expected = (G) reshape(declassify(dependent), 5, 1);
 	
 	G relative_error = sum(colSums(expected-output)) / sum(colSums(expected));
 	
