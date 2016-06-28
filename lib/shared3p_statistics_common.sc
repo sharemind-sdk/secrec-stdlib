@@ -357,12 +357,12 @@ D T _nthElement (D T[[1]] data, uint64 left, uint64 right, uint64 k, bool shuffl
  */
 template<domain D : shared3p>
 D int32 nthElement (D int32[[1]] data, uint64 k, bool shuffle) {
-    return nthElement (data, 0::uint, size(data)-1, k, shuffle);
+    return _nthElement (data, 0::uint, size(data)-1, k, shuffle);
 }
 
 template<domain D : shared3p>
 D int64 nthElement (D int64[[1]] data, uint64 k, bool shuffle) {
-    return nthElement (data, 0::uint, size(data)-1, k, shuffle);
+    return _nthElement (data, 0::uint, size(data)-1, k, shuffle);
 }
 /** @} */
 
