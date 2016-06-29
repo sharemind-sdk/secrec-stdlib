@@ -25,88 +25,90 @@ import test_utility;
 domain pd_shared3p shared3p;
 
 
-bool MAD_test(int32 data) {
+bool MAD_test (int32 data) {
 	pd_shared3p int32[[1]] a (5) = {1, 1, 2, 2, 2147483647};
-	pd_shared3p float32 mad_a = MAD(a);
+	pd_shared3p float32 result = MAD(a);
 	
-	float32 x = (abs(declassify(mad_a) - 1.4826)/1.4826);
+	float32 expected_result = 1.4826;
+	float32 relative_error = abs (declassify (result) - expected_result) / expected_result;
 	
-	if (!isNegligible(x))
+	if (!isNegligible (relative_error))
 		return false;
 
 	return true;
 }
 
 
-bool MAD_test(int64 data) {
+bool MAD_test (int64 data) {
 	pd_shared3p int64[[1]] a (5) = {1, 1, 2, 2, 2147483647};
-	pd_shared3p float64 mad_a = MAD(a);
+	pd_shared3p float64 result = MAD (a);
 	
-	float64 x = (abs(declassify(mad_a) - 1.4826)/1.4826);
+	float64 expected_result = 1.4826;
+	float64 relative_error = abs (declassify (result) - expected_result) / expected_result ;
 	
-	if (!isNegligible(x))
+	if (!isNegligible (relative_error))
 		return false;
 
 	return true;
 }
 
 
-bool MAD_test_const(int32 data, float32 data2) {
+bool MAD_test_const (int32 data, float32 data2) {
 	pd_shared3p int32[[1]] a (5) = {1, 1, 2, 2, 2147483647};
 	float32 scale = 1/3;
-	pd_shared3p float32 mad_a = MAD(a, scale);
+	pd_shared3p float32 result = MAD (a, scale);
 	
-	float32 x = (abs(declassify(mad_a) - scale)/scale);
+	float32 relative_error = abs (declassify (result) - scale) / scale;
 
-	if (!isNegligible(x))
+	if (!isNegligible (relative_error))
 		return false;
 
 	return true;
 }
 
 
-bool MAD_test_const(int64 data, float64 data2) {
+bool MAD_test_const (int64 data, float64 data2) {
 	pd_shared3p int64[[1]] a (5) = {1, 1, 2, 2, 2147483647};
 	float64 scale = 900000000000/7;
-	pd_shared3p float64 mad_a = MAD(a, scale);
+	pd_shared3p float64 result = MAD (a, scale);
 	
-	float64 x = (abs(declassify(mad_a) - scale)/scale);
+	float64 relative_error = abs (declassify (result) - scale) / scale;
 	
-	print(x);
-	
-	if (!isNegligible(x))
+	if (!isNegligible (relative_error))
 		return false;
 
 	return true;
 }
 
 
-bool MAD_test_filter(int32 data) {
+bool MAD_test_filter (int32 data) {
 	pd_shared3p int32[[1]] a (8) = {50, 50, 100, 1, 1, 2, 2, 2147483647};
 	pd_shared3p bool[[1]] mask (8) = true;
 	mask[0:2] = false;
 	
-	pd_shared3p float32 mad_a = MAD(a, mask);
+	pd_shared3p float32 result = MAD (a, mask);
 	
-	float32 x = (abs(declassify(mad_a) - 1.4826)/1.4826);
+	float32 expected_result = 1.4826;
+	float32 relative_error = abs (declassify (result) - expected_result) / expected_result;
 	
-	if (!isNegligible(x))
+	if (!isNegligible (relative_error))
 		return false;
 
 	return true;
 }
 
 
-bool MAD_test_filter(int64 data) {
+bool MAD_test_filter (int64 data) {
 	pd_shared3p int64[[1]] a (8) = {50, 50, 100, 1, 1, 2, 2, 2147483647};
 	pd_shared3p bool[[1]] mask (8) = true;
 	mask[0:2] = false;
 	
-	pd_shared3p float64 mad_a = MAD(a, mask);
+	pd_shared3p float64 result = MAD (a, mask);
 	
-	float64 x = (abs(declassify(mad_a) - 1.4826)/1.4826);
+	float64 expected_result = 1.4826;
+	float64 relative_error = abs (declassify (result) - expected_result) / expected_result;
 	
-	if (!isNegligible(x))
+	if (!isNegligible (relative_error))
 		return false;
 
 	return true;
@@ -119,11 +121,11 @@ bool MAD_test_filter_constant(int32 data, float32 data2) {
 	float32 scale = 1/3;
 	mask[0:2] = false;
 	
-	pd_shared3p float32 mad_a = MAD(a, mask, scale);
+	pd_shared3p float32 result = MAD (a, mask, scale);
 	
-	float32 x = (abs(declassify(mad_a) - scale)/scale);
+	float32 relative_error = abs (declassify (result) - scale)/scale;
 
-	if (!isNegligible(x))
+	if (!isNegligible (relative_error))
 		return false;
 
 	return true;
@@ -136,11 +138,11 @@ bool MAD_test_filter_constant(int64 data, float64 data2) {
 	float64 scale = 1/3;
 	mask[0:2] = false;
 	
-	pd_shared3p float64 mad_a = MAD(a, mask, scale);
+	pd_shared3p float64 result = MAD(a, mask, scale);
 	
-	float64 x = (abs(declassify(mad_a) - scale)/scale);
+	float64 relative_error = abs (declassify (result) - scale) / scale;
 
-	if (!isNegligible(x))
+	if (!isNegligible (relative_error))
 		return false;
 
 	return true;
@@ -149,20 +151,20 @@ bool MAD_test_filter_constant(int64 data, float64 data2) {
 
 void main() {
 	string test_prefix = "MAD";
-	test(test_prefix, MAD_test(0::int32), 0::int32);
-	test(test_prefix, MAD_test(0::int64), 0::int64);
+	test (test_prefix, MAD_test (0::int32), 0::int32);
+	test (test_prefix, MAD_test (0::int64), 0::int64);
 	
 	test_prefix = "MAD(constant)";
-	test(test_prefix, MAD_test_const(0::int32, 0::float32), 0::int32, 0::float32);
-	test(test_prefix, MAD_test_const(0::int64, 0::float64), 0::int64, 0::float64);
+	test (test_prefix, MAD_test_const (0::int32, 0::float32), 0::int32, 0::float32);
+	test (test_prefix, MAD_test_const (0::int64, 0::float64), 0::int64, 0::float64);
 	
 	test_prefix = "MAD(filter)";
-	test(test_prefix, MAD_test_filter(0::int32), 0::int32);
-	test(test_prefix, MAD_test_filter(0::int64), 0::int64);
+	test (test_prefix, MAD_test_filter (0::int32), 0::int32);
+	test (test_prefix, MAD_test_filter (0::int64), 0::int64);
 	
 	test_prefix = "MAD(filter, constant)";
-	test(test_prefix, MAD_test_filter_constant(0::int32, 0::float32), 0::int32, 0::float32);
-	test(test_prefix, MAD_test_filter_constant(0::int64, 0::float64), 0::int64, 0::float64);
+	test (test_prefix, MAD_test_filter_constant (0::int32, 0::float32), 0::int32, 0::float32);
+	test (test_prefix, MAD_test_filter_constant (0::int64, 0::float64), 0::int64, 0::float64);
 	
 	test_report();
 }

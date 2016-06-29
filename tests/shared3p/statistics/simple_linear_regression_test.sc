@@ -25,21 +25,19 @@ import test_utility;
 domain pd_shared3p shared3p;
 
 template<type T, type G>
-bool test_simple_lg(T data, G data2) {
+bool test_simple_lg (T data, G data2) {
 	pd_shared3p T[[1]] sample_x (10) = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	pd_shared3p T[[1]] sample_y (10) = {1, 2, 3 ,4, 5, 6, 7, 8, 9, 10};
 	
-	pd_shared3p bool[[1]] filter (10) = true;
-	filter[0] = false;
+	pd_shared3p bool[[1]] mask (10) = true;
+	mask[0] = false;
 	
-	pd_shared3p G[[1]] line = simpleLinearRegression(sample_x, sample_y, filter);
+	pd_shared3p G[[1]] result = simpleLinearRegression (sample_x, sample_y, mask);
+
+	G error1 = abs(declassify (result[1]) - 1);
+	G error2 = abs(declassify (result[0]) - 0);
 	
-	printVector(declassify(line));
-	
-	G x = abs(declassify(line[1]) - 1);
-	G y = abs(declassify(line[0]) - 0);
-	
-	if (!isNegligible(x) || !isNegligible(y))
+	if (!isNegligible (error1) || !isNegligible (error2))
 		return false;
 	
 	return true;
@@ -48,8 +46,8 @@ bool test_simple_lg(T data, G data2) {
 
 void main() {
 	string test_prefix = "SimpleLinearRegression";
-	test(test_prefix, test_simple_lg(0::int32, 0::float32), 0::int32);
-	test(test_prefix, test_simple_lg(0::int32, 0::float32), 0::int32);
+	test (test_prefix, test_simple_lg (0::int32, 0::float32), 0::int32);
+	test (test_prefix, test_simple_lg (0::int32, 0::float32), 0::int32);
 	
 	test_report();
 }

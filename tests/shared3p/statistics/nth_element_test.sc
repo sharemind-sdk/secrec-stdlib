@@ -24,6 +24,10 @@ import test_utility;
 
 domain pd_shared3p shared3p;
 
+/*
+ * This function no longer exists
+ */
+
 template<type T>
 bool nth_element_test(T data) {
 	pd_shared3p T[[1]] a (9) = {15, 10, 8, 6, 5, 4, 3, 2, 1};
@@ -65,6 +69,7 @@ bool nth_element_test_indexes(T data) {
 
 
 void main() {
+	/*
 	string test_prefix = "NthElement";
 	test(test_prefix, nth_element_test(0::int32), 0::int32);
 	test(test_prefix, nth_element_test(0::int64), 0::int64);
@@ -74,4 +79,6 @@ void main() {
 	test(test_prefix, nth_element_test_indexes(0::int64), 0::int64);
 	
 	test_report();
+	
+	*/
 }

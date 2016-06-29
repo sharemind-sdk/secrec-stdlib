@@ -24,17 +24,24 @@ import test_utility;
 
 domain pd_shared3p shared3p;
 
-//this function can overflow if the input get close to the maximum value of int
+
 template<type T, type G>
 bool covariance_test(T data, G data2) {
+	//the function may overflow if the input is too big
 	pd_shared3p T[[1]] a (10) = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 	pd_shared3p T[[1]] b (10) = {10, 40, 60, 80, 100, 120, 140, 160, 180, 200};
 	
-	pd_shared3p G c = covariance(a, b);
+	//find the covariance
+	pd_shared3p G result = covariance(a, b);
 
-	//the inaccuaracy is present in other functions aswell
-	//the relative error is around 1e-8 
-	if (!isNegligible((abs(declassify(c) - 1883.3333))/1883.3333))
+	//covariance calculated with R
+	G expected_result = 1883.333333;
+	
+	//the relative error is around 1e-8 for 32 and 1e-14 for 64 bit inputs
+	G relative_error = abs (declassify (result) - expected_result) / expected_result;
+	
+	//if the error is creater than 1e-5 then the test fails
+	if (!isNegligible (relative_error))
 		return false;
 	
 	return true;
@@ -44,15 +51,24 @@ bool covariance_test(T data, G data2) {
 
 template<type T, type G>
 bool covariance_test_filter(T data, G data2) {
+	//the function may overflow if the input is too big
 	pd_shared3p T[[1]] a (10) = {10, 20, 30, 40, 50, 60, 70, 80, 90, 100};
 	pd_shared3p T[[1]] b (10) = {10, 40, 60, 80, 100, 120, 140, 160, 180, 200};
 	
+	//the mask determines which values in the input vectors are available
 	pd_shared3p bool[[1]] mask (10) = true;
 	mask [9] = false;
 	
-	pd_shared3p G c = covariance(a, b, mask);
+	//find the covariance
+	pd_shared3p G result = covariance(a, b, mask);
 	
-	if (!isNegligible((abs(declassify(c) - 1550))/1550))
+	//covariance calculated with R
+	G expected_result = 1550;
+	
+	G relative_error = abs (declassify (result) - expected_result) / expected_result;
+	
+	//if the error is creater than 1e-5 then the test fails
+	if (!isNegligible (relative_error))
 		return false;
 	
 	return true;
@@ -62,13 +78,12 @@ bool covariance_test_filter(T data, G data2) {
 
 void main() {
 	string test_prefix = "Covariance";
-	//mind that the covariance is a float of the same size as the input
-	test(test_prefix, covariance_test(0::int32, 0::float32), 0::int32);
-	test(test_prefix, covariance_test(0::int64, 0::float64), 0::int64);
+	test (test_prefix, covariance_test (0::int32, 0::float32), 0::int32);
+	test (test_prefix, covariance_test (0::int64, 0::float64), 0::int64);
 	
 	test_prefix = "Covariance(filter)";
-	test(test_prefix, covariance_test_filter(0::int32, 0::float32), 0::int32);
-	test(test_prefix, covariance_test_filter(0::int64, 0::float64), 0::int64);	
+	test (test_prefix, covariance_test_filter (0::int32, 0::float32), 0::int32);
+	test (test_prefix, covariance_test_filter (0::int64, 0::float64), 0::int64);	
 	
 	test_report();
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Cybernetica
+ * Copyright  (C) 2015 Cybernetica
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
@@ -26,16 +26,16 @@ import test_utility;
 domain pd_shared3p shared3p;
 
 template <type T, type G>
-bool outliersMAD_test(T data, G data2) {
+bool outliersMAD_test (T data, G data2) {
 	pd_shared3p T[[1]] a = {1, 3, 7, 15, 31, 63, 127};
-	pd_shared3p bool[[1]] mask (7) = true;
+	pd_shared3p bool[[1]] mask  (7) = true;
 	mask[0] = false;
 
-	pd_shared3p bool[[1]] result = outlierDetectionMAD(a, mask, 2::G);
+	pd_shared3p bool[[1]] result = outlierDetectionMAD (a, mask, 2::G);
 	
-	T x = declassify(sum(cut(a, result)));
+	T relative_error = declassify (sum (cut (a, result)));
 	
-	if (x != 56)
+	if  (relative_error != 56)
 		return false;
 	
 	return true;
@@ -43,30 +43,30 @@ bool outliersMAD_test(T data, G data2) {
 
 
 template <type T, type G>
-bool outliersQuantiles_test(T data, G data2) {
+bool outliersQuantiles_test (T data, G data2) {
 	pd_shared3p T[[1]] a = {1, 3, 7, 15, 31, 63, 127};
-	pd_shared3p bool[[1]] mask (7) = true;
+	pd_shared3p bool[[1]] mask  (7) = true;
 	mask[0] = false;
 
-	pd_shared3p bool[[1]] result = outlierDetectionQuantiles(0.10::G, a, mask);
+	pd_shared3p bool[[1]] result = outlierDetectionQuantiles (0.10::G, a, mask);
 	
-	T x = declassify(sum(cut(a, result)));
+	T relative_error = declassify (sum (cut (a, result)));
 
-	if (x != 116)
+	if  (relative_error != 116)
 		return false;
 	
 	return true;
 }
 
 
-void main() {
+void main () {
 	string test_prefix = "OutlierDetectionMAD";
-	test(test_prefix, outliersMAD_test(0::int32, 0::float32), 0::int32, 0::float32);
-	test(test_prefix, outliersMAD_test(0::int64, 0::float64), 0::int64, 0::float64);
+	test (test_prefix, outliersMAD_test (0::int32, 0::float32), 0::int32, 0::float32);
+	test (test_prefix, outliersMAD_test (0::int64, 0::float64), 0::int64, 0::float64);
 
 	test_prefix = "OutlierDetectionQuantiles";
-	test(test_prefix, outliersQuantiles_test(0::int32, 0::float32), 0::int32, 0::float32);
-	test(test_prefix, outliersQuantiles_test(0::int64, 0::float64), 0::int64, 0::float64);
+	test (test_prefix, outliersQuantiles_test (0::int32, 0::float32), 0::int32, 0::float32);
+	test (test_prefix, outliersQuantiles_test (0::int64, 0::float64), 0::int64, 0::float64);
 	
-	test_report();
+	test_report ();
 }

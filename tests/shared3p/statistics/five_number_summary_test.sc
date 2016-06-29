@@ -31,17 +31,17 @@ bool fns_sort_test(T data, G data2) {
 	pd_shared3p bool[[1]] mask (10) = true;
 	mask[0] = false;
 	
-	G[[1]] summary (5) = declassify(fiveNumberSummarySn(a, mask));
+	G[[1]] result (5) = declassify (fiveNumberSummarySn (a, mask));
 	
-	bool[[1]] result = {
-		summary[0] == 2, 
-		summary[1] == 4, 
-		summary[2] == 6, 
-		summary[3] == 8,
-		summary[4] == 10
+	bool[[1]] test_results = {
+		result[0] == 2, 
+		result[1] == 4, 
+		result[2] == 6, 
+		result[3] == 8,
+		result[4] == 10
 	};
 	
-	return all(result);
+	return all (test_results);
 }
 
 
@@ -52,28 +52,33 @@ bool fns_nth_test(T data, G data2) {
 	pd_shared3p bool[[1]] mask (10) = true;
 	mask[0] = false;
 	
-	G[[1]] summary (5) = declassify(fiveNumberSummaryNth(a, mask));
+	/*
+	G[[1]] result (5) = declassify (fiveNumberSummaryNth (a, mask));
 	
-	bool[[1]] result = {
-		summary[0] == 2, 
-		summary[1] == 4, 
-		summary[2] == 6, 
-		summary[3] == 8,
-		summary[4] == 10
+	bool[[1]] test_results = {
+		result[0] == 2, 
+		result[1] == 4, 
+		result[2] == 6, 
+		result[3] == 8,
+		result[4] == 10
 	};
 	
-	return all(result);
+	return all (test_results);
+	*/
+	
+	//nthElement doesn't work anymore
+	return false
 }
 
 
 void main() {
 	string test_prefix = "FiveNumberSummarySn";
-	test(test_prefix, fns_sort_test(0::int32, 0::float32), 0::int32);
-	test(test_prefix, fns_sort_test(0::int64, 0::float64), 0::int64);
+	test (test_prefix, fns_sort_test (0::int32, 0::float32), 0::int32);
+	test (test_prefix, fns_sort_test (0::int64, 0::float64), 0::int64);
 	
 	test_prefix = "FiveNumberSummaryNth";
-	test(test_prefix, fns_nth_test(0::int32, 0::float32), 0::int32);
-	test(test_prefix, fns_nth_test(0::int64, 0::float64), 0::int64);
+	test (test_prefix, fns_nth_test (0::int32, 0::float32), 0::int32);
+	test (test_prefix, fns_nth_test (0::int64, 0::float64), 0::int64);
 	
 	
 	test_report();

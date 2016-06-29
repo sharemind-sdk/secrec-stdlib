@@ -27,8 +27,8 @@ domain pd_shared3p shared3p;
 
 
 template<type T, type G>
-bool test_lg(T data, G data2, int64 algorithm) {
-	pd_shared3p T[[2]] variables = reshape(
+bool test_lg (T data, G data2, int64 algorithm) {
+	pd_shared3p T[[2]] variables = reshape (
 		{1, 1, 2, 3, 1, 4, 
 		 2, 2, 1, 6, 2, 3,
 		 2, 3, 6, 1, 5, 2,
@@ -36,22 +36,21 @@ bool test_lg(T data, G data2, int64 algorithm) {
 		 1, 1, 1, 1, 4, 3,
 		 4, 3, 1, 1, 3, 6}, 6, 6);
 	
-	variables = transpose(variables);
+	variables = transpose (variables);
 	
 	pd_shared3p T[[1]] dependent = {1, 2, 2, 4, 6, 1};
 	pd_shared3p G[[1]] result = linearRegression(variables, dependent, algorithm);
 	
-	G[[2]] x = (G) declassify(variables);
-	G[[2]] y = declassify(reshape(result, 7, 1));
-	G[[2]] output = matrixMultiplication(x, reshape(y[0:6, 0], 6, 1)) + y[6, 0];	
-	G[[2]] expected = (G) reshape(declassify(dependent), 6, 1);
+	G[[2]] x = (G) declassify (variables);
+	G[[2]] y = declassify (reshape (result, 7, 1));
 	
-	G relative_error = sum(colSums(expected-output)) / sum(colSums(expected));
+	//Y = aX + b where Y is the dependent, X is the variables, a and b are the results from linear regression
+	G[[2]] output = matrixMultiplication (x, reshape(y[0:6, 0], 6, 1)) + y[6, 0];	
+	G[[2]] expected = (G) reshape (declassify (dependent), 6, 1);
 	
-	printMatrix(output);
-	print(relative_error);
-	
-	if (!isNegligible(relative_error))
+	G relative_error = sum (colSums (expected-output)) / sum (colSums (expected));
+
+	if (!isNegligible (relative_error))
 		return false;
 		
 	return true;
@@ -59,28 +58,27 @@ bool test_lg(T data, G data2, int64 algorithm) {
 
 
 template<type T, type G>
-bool test_lg_invert(T data, G data2) {
-	pd_shared3p T[[2]] variables = reshape(
+bool test_lg_invert (T data, G data2) {
+	pd_shared3p T[[2]] variables = reshape (
 		{1, 2, 1, 5, 3,
 		 2, 2, 5, 5, 1,
 		 1, 1, 5, 1, 3}, 3, 5);
 	
-	variables = transpose(variables);
+	variables = transpose (variables);
 	
 	pd_shared3p T[[1]] dependent = {1, 2, 2, 4, 1};
-	pd_shared3p G[[1]] result = linearRegression(variables, dependent, LINEAR_REGRESSION_INVERT);
+	pd_shared3p G[[1]] result = linearRegression (variables, dependent, LINEAR_REGRESSION_INVERT);
 	
-	G[[2]] x = (G) declassify(variables);
-	G[[2]] y = declassify(reshape(result, 4, 1));
-	G[[2]] output = matrixMultiplication(x, reshape(y[0:3, 0], 3, 1)) + y[3, 0];	
-	G[[2]] expected = (G) reshape(declassify(dependent), 5, 1);
+	G[[2]] x = (G) declassify (variables);
+	G[[2]] y = declassify (reshape (result, 4, 1));
 	
-	G relative_error = sum(colSums(expected-output)) / sum(colSums(expected));
+	//Y = aX + b where Y is the dependent, X is the variables, a and b are the results from linear regression
+	G[[2]] output = matrixMultiplication (x, reshape (y[0:3, 0], 3, 1)) + y[3, 0];	
+	G[[2]] expected = (G) reshape (declassify (dependent), 5, 1);
 	
-	printMatrix(output);
-	print(relative_error);
-	
-	if (!isNegligible(relative_error))
+	G relative_error = sum (colSums (expected-output)) / sum (colSums (expected));
+
+	if (!isNegligible (relative_error))
 		return false;
 		
 	return true;
@@ -88,7 +86,7 @@ bool test_lg_invert(T data, G data2) {
 
 
 template<type T, type G>
-bool test_lg_cg(T data, G data2) {
+bool test_lg_cg (T data, G data2) {
 	pd_shared3p T[[2]] variables = reshape(
 		{1, 1, 2,
 		 2, 2, 1,
@@ -96,23 +94,22 @@ bool test_lg_cg(T data, G data2) {
 		 2, 1, 2,
 		 1, 1, 1}, 5, 3);
 	
-	variables = transpose(variables);
+	variables = transpose (variables);
 	
 	pd_shared3p T[[1]] dependent = {1, 2, 2};
-	pd_shared3p G[[1]] result = linearRegressionCG(variables, dependent, 10::uint64);
+	pd_shared3p G[[1]] result = linearRegressionCG (variables, dependent, 10::uint64);
 	
 	G[[2]] x = (G) declassify(variables);
 	G[[2]] y = declassify(reshape(result, 6, 1));
-	G[[2]] output = matrixMultiplication(x, reshape(y[0:5, 0], 5, 1)) + y[5, 0];	
-	G[[2]] expected = (G) reshape(declassify(dependent), 3, 1);
 	
-	G relative_error = sum(colSums(expected-output)) / sum(colSums(expected));
+	//Y = aX + b where Y is the dependent, X is the variables, a and b are the results from linear regression
+	G[[2]] output = matrixMultiplication (x, reshape (y[0:5, 0], 5, 1)) + y[5, 0];	
+	G[[2]] expected = (G) reshape (declassify (dependent), 3, 1);
 	
-	printMatrix(output);
-	print(relative_error);
+	G relative_error = sum (colSums (expected-output)) / sum (colSums (expected));
 	
 	//the relative error is about 1e-8 for 32 bit and 1e-14 for 64 bit inputs
-	if (!isNegligible(relative_error))
+	if (!isNegligible (relative_error))
 		return false;
 		
 	return true;
@@ -121,20 +118,20 @@ bool test_lg_cg(T data, G data2) {
 
 void main() {
 	string test_prefix = "LinearRegression (Gauss)";
-	test(test_prefix, test_lg(0::int32, 0::float32, LINEAR_REGRESSION_GAUSS), 0::int32);
-	test(test_prefix, test_lg(0::int64, 0::float64, LINEAR_REGRESSION_GAUSS), 0::int64);
+	test (test_prefix, test_lg (0::int32, 0::float32, LINEAR_REGRESSION_GAUSS), 0::int32);
+	test (test_prefix, test_lg (0::int64, 0::float64, LINEAR_REGRESSION_GAUSS), 0::int64);
 	
 	test_prefix = "LinearRegression (Lu Decomposition)";
-	test(test_prefix, test_lg(0::int32, 0::float32, LINEAR_REGRESSION_LU_DECOMPOSITION), 0::int32);
-	test(test_prefix, test_lg(0::int64, 0::float64, LINEAR_REGRESSION_LU_DECOMPOSITION), 0::int64);
+	test (test_prefix, test_lg (0::int32, 0::float32, LINEAR_REGRESSION_LU_DECOMPOSITION), 0::int32);
+	test (test_prefix, test_lg (0::int64, 0::float64, LINEAR_REGRESSION_LU_DECOMPOSITION), 0::int64);
 	
 	test_prefix = "LinearRegression (Invert)";
-	test(test_prefix, test_lg_invert(0::int32, 0::float32), 0::int32);
-	test(test_prefix, test_lg_invert(0::int64, 0::float64), 0::int64);
+	test (test_prefix, test_lg_invert (0::int32, 0::float32), 0::int32);
+	test (test_prefix, test_lg_invert (0::int64, 0::float64), 0::int64);
 	
 	test_prefix = "LinearRegressionCG";
-	test(test_prefix, test_lg_cg(0::int32, 0::float32), 0::int32);
-	test(test_prefix, test_lg_cg(0::int64, 0::float64), 0::int64);
+	test (test_prefix, test_lg_cg (0::int32, 0::float32), 0::int32);
+	test (test_prefix, test_lg_cg (0::int64, 0::float64), 0::int64);
 	
 	test_report();
 }

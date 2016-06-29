@@ -25,23 +25,34 @@ import test_utility;
 domain pd_shared3p shared3p;
 
 template<type T>
-bool contingency_table_test(T data) {
-	//T x = (T)UINT32_MIN;  //64 and 32 both fail
-	//T x = (T)UINT32_MAX;  //64 passes but 32 fails
-	T x = (T)5;   //both pass
+bool contingency_table_test (T data) {
+	/*
+	if the sum of the input exceeds the maximum 
+	value of that data type the function will overflow
+	*/
 	
-	pd_shared3p T[[1]] in_data (8) = {0, 0, x, 0, 0, x, x, 0};
+	T x = (T)5;
+	
+	pd_shared3p T[[1]] a (8) = {0, 0, x, 0, 0, x, x, 0};
+	
+	//cases and controls indicate which column the corresponding input belongs to
+	//controls must always be the opposite of cases
 	pd_shared3p bool[[1]] cases (8) = {true, true, true, true, false, false, false, false};
 	pd_shared3p bool[[1]] controls (8) = !cases;
-	T[[2]] code_book = reshape({0, x, 1, 2}, 2, 2);
+	
+	//the code book indicates which input value belongs to which row in the table
+	//rows start at 1
+	T[[2]] code_book = reshape ({0, x, 1, 2}, 2, 2);
 
-	pd_shared3p T[[2]] table = contingencyTable(in_data, cases, controls, code_book);
-	printMatrix(declassify(table));
+	//construct the contingency table
+	pd_shared3p T[[2]] table = contingencyTable (a, cases, controls, code_book);
 	
-	T[[2]] expected_table (2, 2) = reshape({3, 1, 2, 2}, 2, 2);
+	//the expected table for compareing the result
+	T[[2]] expected_table (2, 2) = reshape ({3, 1, 2, 2}, 2, 2);
 	
-	//couldn't think of a better way to test if the output is correct
-	if (sum(flatten(declassify(table))) != sum(flatten(expected_table)))
+	//if the recieved table does not match the expected table
+	//the test fails
+	if (all (expected_table != declassify (table)))
 		return false;
 	
 	return true;
@@ -50,11 +61,8 @@ bool contingency_table_test(T data) {
 
 void main() {
 	string test_prefix = "ContingencyTable";
-
-	test(test_prefix, contingency_table_test(0::uint32), 0::uint32);
-	test(test_prefix, contingency_table_test(0::uint64), 0::uint64);
-
+	test (test_prefix, contingency_table_test (0::uint32), 0::uint32);
+	test (test_prefix, contingency_table_test (0::uint64), 0::uint64);
 	
 	test_report();
-
 }

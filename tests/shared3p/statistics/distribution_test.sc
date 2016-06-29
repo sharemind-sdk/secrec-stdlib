@@ -36,7 +36,7 @@ bool discrete_distribution_test (T data) {
 	pd_shared3p T x = 2;
 	pd_shared3p T[[2]] distribution = discreteDistributionCount (a, mask, x, maximum(a, mask));
 	
-	if (declassify(sum(distribution[1, :])) != 7)
+	if (declassify (sum (distribution[1, :])) != 7)
 		return false;
 	
 	return true;
@@ -79,7 +79,7 @@ bool heatmap_test (T data) {
 	if (columns != 3 || rows != 3)
 		return false;
 		
-	if (all(expected_heatmap != result[0, :]))
+	if (all (expected_heatmap != result[0, :]))
 		return false;
 	
 	return true;
@@ -91,10 +91,10 @@ bool histogram_test (T data) {
 	pd_shared3p T[[1]] a = {1, 1, 1, 2, 2, 3, 3, 3, 4};
 	pd_shared3p bool[[1]] mask (9) = true;
 	
-	T[[2]] result = declassify(histogram(a, mask));
+	T[[2]] result = declassify (histogram (a, mask));
 	T[[1]] expected_histogram = {5, 3, 1, 0};
 
-	if (all(expected_histogram != result[1, :]))
+	if (all (expected_histogram != result[1, :]))
 		return false;
 	
 	return true;
