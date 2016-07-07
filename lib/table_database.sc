@@ -239,7 +239,7 @@ uint64 tdbVmapGetBatchCount (uint64 id) {
 
 /** \addtogroup tdb_open_connection
  *  @{
- *  @brief Open connection to a data source
+ *  @brief Open connection to a data source. Multiple connections can not be open simultaneously. Before opening a new connection the old one should be closed.
  *  @param datasource - data source name
  */
 void tdbOpenConnection (string datasource) {

@@ -779,7 +779,8 @@ INPUT                  = ../lib/table_database.sc \
                          ../lib/doc/structs.sc \
                          ../lib/doc/data_types.sc \
                          ../lib/doc/operators.sc \
-                         ../lib/doc/main.sc
+                         ../lib/doc/main.sc \
+						 ../lib/doc/table_database.sc
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
