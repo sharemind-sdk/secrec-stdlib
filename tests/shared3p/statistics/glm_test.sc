@@ -34,7 +34,7 @@ bool glm_test_gaussian (T data, G data2) {
 											 1, 3, 3,
 											 4, 1, 5,
 											 5, 1, 2
-										     }, 4, 3);
+											 }, 4, 3);
 	
 	G[[1]] result = declassify (generalizedLinearModel (dependent, variables, 0, 5::uint));
 	

@@ -88,10 +88,14 @@ def main():
             desc = args[descLabel]
             res = args[resLabel][0]
 
+            if not res:
+                passedCount -= 1
+			
             if res:
                 sys.stdout.write('{} - PASSED\n'.format(desc))
             else:
                 sys.stderr.write('{} - FAILED\n'.format(desc))
+			    
 
         sys.stdout.write('Passed: {}, Failed: {}, Total: {}\n'.format(passedCount, testCount - passedCount, testCount))
     except Exception as e:

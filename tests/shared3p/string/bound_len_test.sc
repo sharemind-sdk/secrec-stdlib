@@ -25,10 +25,10 @@ import test_utility;
 domain pd_shared3p shared3p;
 
 bool bl_str_test () {
-	string a = "öö;;::";
+	string a = "XXYYyy";
 	
 	pd_shared3p xor_uint8[[1]] result = bl_str (a);
-	pd_shared3p xor_uint8[[1]] expected_result = {195, 182, 195, 182, 59, 59, 58, 58};
+	pd_shared3p xor_uint8[[1]] expected_result = {88, 88, 89, 89, 121, 121};
 
 	if (!all (declassify (result) == declassify (expected_result)))
 		return false;
@@ -37,21 +37,21 @@ bool bl_str_test () {
 }
 
 bool bl_strCat_test () {
-	string a = "õ";
-	string b = "ö";
+	string a = "XX";
+	string b = "YY";
 	
 	pd_shared3p xor_uint8[[1]] result = bl_strCat (bl_str (a), bl_str (b));
 
-	if (!all (declassify (result) == declassify (bl_str ("õö"))))
+	if (!all (declassify (result) == declassify (bl_str ("XXYY"))))
 		return false;
 	
 	return true;
 }
 
 bool bl_strContains_test () {
-	string a = "???!??";
-	string b = "?!?";
-	string c = "!?!";
+	string a = "XXXYXXX";
+	string b = "XYX";
+	string c = "YXY";
 	
 	pd_shared3p bool result1 = bl_strContains (bl_str (a), bl_str (b));
 	pd_shared3p bool result2 = bl_strContains (bl_str (a), bl_str (c));
@@ -64,7 +64,7 @@ bool bl_strContains_test () {
 
 
 bool bl_strDeclassify_test () {
-	string a = "??!!??";
+	string a = "XXYYXX";
 	
 	pd_shared3p xor_uint8[[1]] b = bl_str (a);
 	
@@ -133,8 +133,8 @@ bool bl_strLength_test () {
 
 
 bool bl_strLevenshtein_test () {
-	string a = "ööõõ";
-	string b = "ööõä";
+	string a = "XXZY";
+	string b = "XXZW";
 	
 	pd_shared3p uint result = bl_strLevenshtein (bl_str (a), bl_str(b));
 	

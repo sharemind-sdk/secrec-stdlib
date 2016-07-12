@@ -29,33 +29,6 @@ domain pd_shared3p shared3p;
 //do multiple tests on one value map and return the results as an array
 template<domain D : shared3p, type T>
 bool[[1]] vmap_test (D T data) {
-	
-	//create a table to insert data into
-	string data_source = "DS1";
-	string table_name = "TestTable";
-	
-	tdbOpenConnection(data_source);
-	
-	//test if the table already exists, if so, delete the table
-	if (tdbTableExists(data_source, table_name)) {
-        print("Deleting existing table: ", table_name);
-        tdbTableDelete(data_source, table_name);
-	}
-	
-		
-	/*        _____________________
-	 * types | D T type | D T type |
-	 *       |---------------------|
-	 * names |  value1  |  value2  |
-	 *       |----------|----------|
-	 * value |    10    |    20    |
-	 *       |    20    |    40    |
-	 *       |    30    |    60    |
-	 *       |    40    |    80    |
-	 *       |    50    |    100   |
-	 *       |---------------------|
-	 */
-	
 	uint vmap_id = tdbVmapNew ();
 	
 	{
@@ -70,18 +43,15 @@ bool[[1]] vmap_test (D T data) {
 		tdbVmapAddString (vmap_id, "names", "value2");
 	}
 	
-	tdbTableCreate (data_source, table_name, vmap_id);	
 	
-	bool[[1]] test_results (9) = false;
+	bool[[1]] test_results (7) = false;
 	
-	test_results[1] = insertRow_test (data, vmap_id, data_source, table_name);
-	test_results[2] = readColumn_test (data, vmap_id, data_source, table_name);
-	test_results[3] = vmap_getValue_test (data, vmap_id, data_source, table_name);
-	test_results[4] = vmap_getType_test (data, vmap_id, data_source, table_name);
-	test_results[5] = vmap_getString_test (data, vmap_id, data_source, table_name);
-	test_results[6] = vmap_getIndex_test (data, vmap_id, data_source, table_name);
-	test_results[7] = vmap_count_test (data, vmap_id, data_source, table_name);
-	test_results[8] = vmap_erase_test (data, vmap_id, data_source, table_name);
+	test_results[1] = vmap_getValue_test 	(data, vmap_id);
+	test_results[2] = vmap_getType_test 	(data, vmap_id);
+	test_results[3] = vmap_getString_test 	(data, vmap_id);
+	test_results[4] = vmap_getIndex_test 	(data, vmap_id);
+	test_results[5] = vmap_count_test 		(data, vmap_id);
+	test_results[6] = vmap_erase_test 		(data, vmap_id);
 	
 	test_results[0] = all (test_results[1:]);
 	printVector(test_results);
@@ -90,57 +60,9 @@ bool[[1]] vmap_test (D T data) {
 }
 
 
-template<domain D : shared3p, type T>
-bool insertRow_test (D T data, uint vmap_id, string data_source, string table_name) {
-
-	tdbVmapDelete (vmap_id);
-	
-	vmap_id = tdbVmapNew();
-		
-	for (T i = 1; i < 6; i++) {
-		D T value1 = i * 10;
-		D T value2 = (i + 1);
-		
-		if (i != 1) {
-			tdbVmapAddBatch(vmap_id);
-		}
-		
-		tdbVmapAddValue(vmap_id, "values", value1);
-		tdbVmapAddValue(vmap_id, "values", value2);
-	}
-	
-	tdbInsertRow (data_source, table_name, vmap_id);
-	
-	D T[[1]] value1 = tdbReadColumn(data_source, table_name, "value1");
-	D T[[1]] value2 = tdbReadColumn(data_source, table_name, 1::uint);
-	
-	D T[[1]] expected_value1 = {10, 20, 30, 40, 50};
-	D T[[1]] expected_value2 = {2, 3, 4, 5, 6};
-	
-	bool result1 = all (declassify (value1) == declassify (expected_value1));
-	bool result2 = all (declassify (value2) == declassify (expected_value2));
-	
-	return result1 && result2;
-}
-	
 
 template<domain D : shared3p, type T>
-bool readColumn_test (D T data, uint vmap_id, string data_source, string table_name) {
-	D T[[1]] value1 = tdbReadColumn(data_source, table_name, "value1");
-	D T[[1]] value2 = tdbReadColumn(data_source, table_name, 1::uint);
-	
-	D T[[1]] expected_value1 = {10, 20, 30, 40, 50};
-	D T[[1]] expected_value2 = {2, 3, 4, 5, 6};
-	
-	bool result1 = all (declassify (value1) == declassify (expected_value1));
-	bool result2 = all (declassify (value2) == declassify (expected_value2));
-	
-	return result1 && result2;
-}
-
-
-template<domain D : shared3p, type T>
-bool vmap_getValue_test (D T data, uint vmap_id, string data_source, string table_name) {	
+bool vmap_getValue_test (D T data, uint vmap_id) {
 	tdbVmapDelete (vmap_id);
 	vmap_id = tdbVmapNew();
 	
@@ -169,7 +91,7 @@ bool vmap_getValue_test (D T data, uint vmap_id, string data_source, string tabl
 
 
 template<domain D : shared3p, type T>
-bool vmap_getType_test (D T data, uint vmap_id, string data_source, string table_name) {
+bool vmap_getType_test (D T data, uint vmap_id) {
 	tdbVmapDelete (vmap_id);
 	uint vmap_id = tdbVmapNew ();
 	
@@ -192,7 +114,7 @@ bool vmap_getType_test (D T data, uint vmap_id, string data_source, string table
 
 
 template<domain D : shared3p, type T>
-bool vmap_getString_test (D T data, uint vmap_id, string data_source, string table_name) {
+bool vmap_getString_test (D T data, uint vmap_id) {
 	string result = tdbVmapGetString (vmap_id, "names", 0::uint);
 	string expected_result = "value1";
 	
@@ -201,7 +123,7 @@ bool vmap_getString_test (D T data, uint vmap_id, string data_source, string tab
 
 
 template<domain D : shared3p, type T>
-bool vmap_getIndex_test (D T data, uint vmap_id, string data_source, string table_name) {
+bool vmap_getIndex_test (D T data, uint vmap_id) {
 	tdbVmapDelete (vmap_id);
 	uint vmap_id = tdbVmapNew ();
 
@@ -219,7 +141,7 @@ bool vmap_getIndex_test (D T data, uint vmap_id, string data_source, string tabl
 
 
 template<domain D : shared3p, type T>
-bool vmap_count_test (D T data, uint vmap_id, string data_source, string table_name) {
+bool vmap_count_test (D T data, uint vmap_id) {
 	uint result = tdbVmapCount (vmap_id, "indexes");
 	uint expected_result = 1;
 	
@@ -228,7 +150,7 @@ bool vmap_count_test (D T data, uint vmap_id, string data_source, string table_n
 
 
 template<domain D : shared3p, type T>
-bool vmap_erase_test (D T data, uint vmap_id, string data_source, string table_name) {
+bool vmap_erase_test (D T data, uint vmap_id) {
 	tdbVmapErase (vmap_id, "indexes");
 	uint result = tdbVmapCount (vmap_id, "indexes");
 	uint expected_result = 0;
@@ -245,27 +167,111 @@ void main () {
 		bool[[1]] test_results = vmap_test(a);
 		
 		test ("TdbVmapNew", 		test_results[0], a);
-		test ("TdbInsertRow", 		test_results[1], a);
-		test ("TdbReadColumn", 		test_results[2], a);
-		test ("TdbVmapGetValue", 	test_results[3], a);
-		test ("TdbVmapGetType", 	test_results[4], a);
-		test ("TdbVmapGetString", 	test_results[5], a);
-		test ("TdbVmapGetIndex", 	test_results[6], a);
-		test ("TdbVmapCount",	 	test_results[7], a);
-		test ("TdbVmapErase",	 	test_results[8], a); }
+		test ("TdbVmapGetValue", 	test_results[1], a);
+		test ("TdbVmapGetType", 	test_results[2], a);
+		test ("TdbVmapGetString", 	test_results[3], a);
+		test ("TdbVmapGetIndex", 	test_results[4], a);
+		test ("TdbVmapCount",	 	test_results[5], a);
+		test ("TdbVmapErase",	 	test_results[6], a); }
 	
 	{	pd_shared3p int16 a;
 		bool[[1]] test_results = vmap_test(a);
 		
 		test ("TdbVmapNew", 		test_results[0], a);
-		test ("TdbInsertRow", 		test_results[1], a);
-		test ("TdbReadColumn", 		test_results[2], a);
-		test ("TdbVmapGetValue", 	test_results[3], a);
-		test ("TdbVmapGetType", 	test_results[4], a);
-		test ("TdbVmapGetString", 	test_results[5], a);
-		test ("TdbVmapGetIndex", 	test_results[6], a);
-		test ("TdbVmapCount",	 	test_results[7], a);
-		test ("TdbVmapErase",	 	test_results[8], a); }
+		test ("TdbVmapGetValue", 	test_results[1], a);
+		test ("TdbVmapGetType", 	test_results[2], a);
+		test ("TdbVmapGetString", 	test_results[3], a);
+		test ("TdbVmapGetIndex", 	test_results[4], a);
+		test ("TdbVmapCount",	 	test_results[5], a);
+		test ("TdbVmapErase",	 	test_results[6], a); }
+	
+	{	pd_shared3p int32 a;
+		bool[[1]] test_results = vmap_test(a);
+		
+		test ("TdbVmapNew", 		test_results[0], a);
+		test ("TdbVmapGetValue", 	test_results[1], a);
+		test ("TdbVmapGetType", 	test_results[2], a);
+		test ("TdbVmapGetString", 	test_results[3], a);
+		test ("TdbVmapGetIndex", 	test_results[4], a);
+		test ("TdbVmapCount",	 	test_results[5], a);
+		test ("TdbVmapErase",	 	test_results[6], a); }
+	
+	{	pd_shared3p int64 a;
+		bool[[1]] test_results = vmap_test(a);
+		
+		test ("TdbVmapNew", 		test_results[0], a);
+		test ("TdbVmapGetValue", 	test_results[1], a);
+		test ("TdbVmapGetType", 	test_results[2], a);
+		test ("TdbVmapGetString", 	test_results[3], a);
+		test ("TdbVmapGetIndex", 	test_results[4], a);
+		test ("TdbVmapCount",	 	test_results[5], a);
+		test ("TdbVmapErase",	 	test_results[6], a); }
+		
+	{	pd_shared3p uint8 a;
+		bool[[1]] test_results = vmap_test(a);
+		
+		test ("TdbVmapNew", 		test_results[0], a);
+		test ("TdbVmapGetValue", 	test_results[1], a);
+		test ("TdbVmapGetType", 	test_results[2], a);
+		test ("TdbVmapGetString", 	test_results[3], a);
+		test ("TdbVmapGetIndex", 	test_results[4], a);
+		test ("TdbVmapCount",	 	test_results[5], a);
+		test ("TdbVmapErase",	 	test_results[6], a); }
+	
+	{	pd_shared3p uint16 a;
+		bool[[1]] test_results = vmap_test(a);
+		
+		test ("TdbVmapNew", 		test_results[0], a);
+		test ("TdbVmapGetValue", 	test_results[1], a);
+		test ("TdbVmapGetType", 	test_results[2], a);
+		test ("TdbVmapGetString", 	test_results[3], a);
+		test ("TdbVmapGetIndex", 	test_results[4], a);
+		test ("TdbVmapCount",	 	test_results[5], a);
+		test ("TdbVmapErase",	 	test_results[6], a); }
+	
+	{	pd_shared3p uint32 a;
+		bool[[1]] test_results = vmap_test(a);
+		
+		test ("TdbVmapNew", 		test_results[0], a);
+		test ("TdbVmapGetValue", 	test_results[1], a);
+		test ("TdbVmapGetType", 	test_results[2], a);
+		test ("TdbVmapGetString", 	test_results[3], a);
+		test ("TdbVmapGetIndex", 	test_results[4], a);
+		test ("TdbVmapCount",	 	test_results[5], a);
+		test ("TdbVmapErase",	 	test_results[6], a); }
+	
+	{	pd_shared3p uint64 a;
+		bool[[1]] test_results = vmap_test(a);
+		
+		test ("TdbVmapNew", 		test_results[0], a);
+		test ("TdbVmapGetValue", 	test_results[1], a);
+		test ("TdbVmapGetType", 	test_results[2], a);
+		test ("TdbVmapGetString", 	test_results[3], a);
+		test ("TdbVmapGetIndex", 	test_results[4], a);
+		test ("TdbVmapCount",	 	test_results[5], a);
+		test ("TdbVmapErase",	 	test_results[6], a); }
+		
+	{	pd_shared3p float32 a;
+		bool[[1]] test_results = vmap_test(a);
+		
+		test ("TdbVmapNew", 		test_results[0], a);
+		test ("TdbVmapGetValue", 	test_results[1], a);
+		test ("TdbVmapGetType", 	test_results[2], a);
+		test ("TdbVmapGetString", 	test_results[3], a);
+		test ("TdbVmapGetIndex", 	test_results[4], a);
+		test ("TdbVmapCount",	 	test_results[5], a);
+		test ("TdbVmapErase",	 	test_results[6], a); }
+	
+	{	pd_shared3p float64 a;
+		bool[[1]] test_results = vmap_test(a);
+		
+		test ("TdbVmapNew", 		test_results[0], a);
+		test ("TdbVmapGetValue", 	test_results[1], a);
+		test ("TdbVmapGetType", 	test_results[2], a);
+		test ("TdbVmapGetString", 	test_results[3], a);
+		test ("TdbVmapGetIndex", 	test_results[4], a);
+		test ("TdbVmapCount",	 	test_results[5], a);
+		test ("TdbVmapErase",	 	test_results[6], a); }
 	
 	test_report();
 }

@@ -76,10 +76,13 @@ bool heatmap_test (T data) {
 							   0, 2, 0, 
 							   0, 0, 2};
 	
+	print("Hold");
+	printVector(result[1, :]);
+	
 	if (columns != 3 || rows != 3)
 		return false;
 		
-	if (all (expected_heatmap != result[0, :]))
+	if (all (expected_heatmap != result[1, :]))
 		return false;
 	
 	return true;
@@ -94,6 +97,7 @@ bool histogram_test (T data) {
 	T[[2]] result = declassify (histogram (a, mask));
 	T[[1]] expected_histogram = {5, 3, 1, 0};
 
+	
 	if (all (expected_histogram != result[1, :]))
 		return false;
 	
