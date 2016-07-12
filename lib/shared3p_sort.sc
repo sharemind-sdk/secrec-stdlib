@@ -28,6 +28,10 @@ import shared3p_random;
 import oblivious;
 import shared3p_oblivious;
 import shared3p;
+
+import profiling;
+
+
 /**
 * \endcond
 */
@@ -46,6 +50,16 @@ import shared3p;
 * \defgroup selectk selectK
 * \defgroup selectk_vec selectK[[1]]
 * \defgroup selectk_mat selectK[[2]]
+* \defgroup radix_sort radixSort
+* \defgroup radix_sort_vector radixSort(vector)
+* \defgroup radix_sort_index radixSortWithIndex
+* \defgroup radix_sort_matrix radixSort(matrix)
+* \defgroup quick_sort quicksort
+* \defgroup quick_sort_vector quicksort(vector)
+* \defgroup quick_sort_matrix quicksort(matrix)
+* \defgroup quick_quick_sort quickquicksort
+* \defgroup quick_quick_sort_vector quickquicksort(vector)
+* \defgroup quick_quick_sort_matrix quickquicksort(matrix)
 */
 
 /** \addtogroup shared3p_sort
@@ -67,6 +81,7 @@ import shared3p;
  *  @note **D** - shared3p protection domain
  *  @note **T** - any \ref data_types "data" type
  *  @note boolean values are sorted after their numerical value. **false** first then **true**
+ *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
  */
 
 /** \addtogroup sort_vec
@@ -74,6 +89,7 @@ import shared3p;
  *  @brief Function for sorting values in a vector
  *  @note **D** - shared3p protection domain
  *  @return returns a sorted vector from smaller to bigger values
+ *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
  */
 
 
@@ -185,6 +201,7 @@ D T[[1]] sort(D T[[1]] vec) {
  *  @note **D** - shared3p protection domain
  *  @return returns a matrix where the input matrix rows are sorted
  *  based on values of the specified column
+ *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
  */
 
 /**
@@ -329,6 +346,7 @@ uint[[1]] generateSortingNetwork(uint arraysize) {
  *  @brief Functions for sorting values with sorting networks
  *  @note **D** - all protection domains
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @leakage{None}
  */
 
 /** \addtogroup sortingnetwork_vec
@@ -338,6 +356,7 @@ uint[[1]] generateSortingNetwork(uint arraysize) {
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param array - a vector of supported type
  *  @return returns a sorted vector from smaller to bigger values
+ *  @leakage{None}
  */
 
 
@@ -503,6 +522,7 @@ D T[[1]] sortingNetworkSort (D T[[1]] array) {
  *  @param column - index of the column used for ordering rows of the matrix
  *  @param matrix - a matrix of supported type
  *  @return returns a matrix with sorted rows
+ *  @leakage{None}
  */
 template <domain D : shared3p>
 D uint8[[2]] sortingNetworkSort (D uint8[[2]] matrix, uint column) {
@@ -839,6 +859,7 @@ D T[[1]] _sortingNetworkSort (D T[[1]] vector, D T[[1]] indices) {
  *  been sorted. For ordering two rows, the values in column1 are
  *  compared first, if they are equal then the values in column2 are
  *  compared.
+ *  @leakage{None}
  */
 template <domain D : shared3p>
 D uint8[[2]] sortingNetworkSort (D uint8[[2]] matrix, uint column1, uint column2) {
@@ -1191,6 +1212,7 @@ D T[[1]] _sortingNetworkSort2 (D T[[1]] vector, D T[[1]] indices) {
  *  compared first, if they are equal then the values in column2 are
  *  compared, if they are equal then the values in column3 are
  *  compared.
+ *  @leakage{None}
  */
 template <domain D : shared3p>
 D uint8[[2]] sortingNetworkSort (D uint8[[2]] matrix, uint column1, uint column2, uint column3) {
@@ -1988,6 +2010,979 @@ D T[[1]] _selectK (D T[[1]] vector, D T[[1]] indices, uint k) {
 /**
  * \endcond
  */
+
+/** @}*/
+/** @}*/
+
+/*******************************************************************************
+********************************************************************************
+**                                                                            **
+**  radixsort                                                                 **
+**                                                                            **
+********************************************************************************
+*******************************************************************************/
+
+
+
+// FIXME: Actually radix sort is not for a3p
+
+/**
+* \cond
+*/
+
+template <domain D, type T>
+D T[[1]] _radixSort(D T[[1]] array) {
+
+    if (size(array) <= 1) {
+        return array;
+    }
+
+    uint32 extractSectType = newSectionType ("radixsort_extract");
+    uint32 castSectType = newSectionType ("radixsort_cast");
+    uint32 choiceSectType = newSectionType ("radixsort_choice");
+    uint32 shuffleSectType = newSectionType ("radixsort_shuffle");
+    uint32 declassifySectType = newSectionType ("radixsort_declassify");
+
+    uint n = size(array);
+
+    // Determine the bit length of inputs
+    D T x;
+    D bool[[1]] xbits = bit_extract(x);
+    uint nrOfBits = size(xbits);
+
+    for (uint k = 0; k < nrOfBits; k++) {
+        // TODO: Maybe we can do these transformations only once and then
+        // do bool[[2]] -> xor_uint[[1]] in the end?
+        // It only increases parallelism.
+        uint32 extractSect = startSection(extractSectType, n);
+        D bool[[1]] bitVec = bit_extract(array);
+        endSection (extractSect);
+
+        uint32 castSect = startSection(castSectType, n);
+        D bool[[2]] bitMatrix = reshape(bitVec, n, nrOfBits);
+        D bool[[1]] bitCol = bitMatrix[:,k];
+        D uint[[1]] bitColMod2n = (uint) bitCol;
+        endSection(castSect);
+
+        uint32 choiceSect = startSection(choiceSectType, n);
+        D uint nrOfZeros = n - sum(bitColMod2n);
+        D uint constOne = 1;
+
+        // Obliviously construct counter vectors for zeros and ones
+        D uint[[1]] c0 (n);
+        D uint[[1]] c1 (n);
+
+        c0[0] = constOne - bitColMod2n[0];
+        c1[0] = nrOfZeros + bitColMod2n[0];
+
+        for (uint i = 1; i < n; i++) {
+            c0[i] = c0[i-1] + constOne - bitColMod2n[i];
+            c1[i] = c1[i-1] + bitColMod2n[i];
+        }
+
+        D uint[[1]] order = choose(bitCol, c1, c0);
+        endSection(choiceSect);
+
+        // Shuffle data vector and order vector
+        uint32 shuffleSect = startSection(shuffleSectType, n);
+        D uint8[[1]] key (32);
+        key = randomize(key);
+
+        order = shuffle(order, key);
+        D T[[1]] shuffledArray = shuffle(array, key);
+        endSection(shuffleSect);
+
+        // Reorder data vector according to the order vector:
+        // Note: Order values start at 1
+        uint32 declassifySect = startSection(declassifySectType, n);
+        uint[[1]] publicOrder = declassify(order);
+
+        for (uint i = 0; i < n; i++) {
+            array[publicOrder[i]-1] = shuffledArray[i];
+        }
+        endSection (declassifySect);
+    }
+
+    return array;
+}
+/**
+* \endcond
+*/
+
+
+/** \addtogroup radix_sort
+ *  @{
+ *  @brief Functions for sorting values using the radix sort algorithm
+ *  @note **D** - all protection domains
+ *  @note Supported types - \ref uint64 "uint" / \ref xor_uint64 "xor_uint64"
+ *  @leakage{Shuffled reordering decisions are declassified}
+ */
+
+/** \addtogroup radix_sort_vector
+ *  @{
+ *  @brief Functions for sorting values in a vector using the radix sort algorithm
+ *  @note **D** - all protection domains
+ *  @note Supported types - \ref uint64 "uint" / \ref xor_uint64 "xor_uint64"
+ *  @param array - a vector of supported type
+ *  @return returns a sorted vector from smaller to bigger values
+ *  @leakage{Shuffled reordering decisions are declassified}
+ */
+template <domain D>
+D uint64[[1]] radixSort(D uint64[[1]] array) {
+
+    uint n = size(array);
+
+    uint32 sortSectType = newSectionType ("radixsort_sort");
+    uint32 reshareSectType = newSectionType ("radixsort_reshare");
+
+    uint32 sortSect = startSection(sortSectType, n);
+    uint32 reshareSect = startSection(reshareSectType, n);
+    D xor_uint64[[1]] xor_array = reshare(array);
+    endSection(reshareSect);
+
+    D xor_uint64[[1]] sorted = _radixSort(xor_array);
+
+    reshareSect = startSection(reshareSectType, n);
+    D uint64[[1]] result = reshare(sorted);
+    endSection(reshareSect);
+    endSection(sortSect);
+
+    return result;
+}
+
+template <domain D>
+D xor_uint64[[1]] radixSort(D xor_uint64[[1]] array) {
+
+    uint n = size(array);
+
+    uint32 sortSectType = newSectionType ("radixsort_sort");
+    uint32 sortSect = startSection(sortSectType, n);
+    D xor_uint64[[1]] sorted = _radixSort(array);
+    endSection(sortSect);
+
+    return sorted;
+}
+
+/** @}*/
+
+// FIXME: Actually radix sort is not for a3p
+
+
+/** \addtogroup radix_sort_index
+ *  @{
+ *  @brief Function for sorting values in a vector using the radix sort algorithm
+ *  @note **D** - all protection domains
+ *  @note Supported types - \ref uint64 "uint" / \ref xor_uint64 "xor_uint64"
+ *  @param array - a vector of supported type
+ *  @param indexVector - a vector of indexes that correspond to a value in the input array
+ *  @return returns the sorted indexVector where every index corresponds to a value in the input vector
+ *  @leakage{Shuffled reordering decisions are declassified}
+ */
+template <domain D, type T>
+D uint[[1]] radixSortWithIndex(D T[[1]] array, D uint[[1]] indexVector) {
+
+    if (size(array) <= 1) {
+        return indexVector;
+    }
+
+    assert(size(array) == size(indexVector));
+
+    uint32 extractSectType = newSectionType ("radixsort_extract");
+    uint32 castSectType = newSectionType ("radixsort_cast");
+    uint32 choiceSectType = newSectionType ("radixsort_choice");
+    uint32 shuffleSectType = newSectionType ("radixsort_shuffle");
+    uint32 declassifySectType = newSectionType ("radixsort_declassify");
+
+    uint n = size(array);
+
+    // Determine the bit length of inputs
+    D T x;
+    D bool[[1]] xbits = bit_extract(x);
+    uint nrOfBits = size(xbits);
+
+    for (uint k = 0; k < nrOfBits; k++) {
+        // TODO: Maybe we can do these transformations only once and then
+        // do bool[[2]] -> xor_uint[[1]] in the end?
+        // It only increases parallelism.
+        uint32 extractSect = startSection(extractSectType, n);
+        D bool[[1]] bitVec = bit_extract(array);
+        endSection (extractSect);
+
+        uint32 castSect = startSection(castSectType, n);
+        D bool[[2]] bitMatrix = reshape(bitVec, n, nrOfBits);
+        D bool[[1]] bitCol = bitMatrix[:,k];
+        D uint[[1]] bitColMod2n = (uint) bitCol;
+        endSection(castSect);
+
+        uint32 choiceSect = startSection(choiceSectType, n);
+        D uint nrOfZeros = n - sum(bitColMod2n);
+        D uint constOne = 1;
+
+        // Obliviously construct counter vectors for zeros and ones
+        D uint[[1]] c0 (n);
+        D uint[[1]] c1 (n);
+
+        c0[0] = constOne - bitColMod2n[0];
+        c1[0] = nrOfZeros + bitColMod2n[0];
+
+        for (uint i = 1; i < n; i++) {
+            c0[i] = c0[i-1] + constOne - bitColMod2n[i];
+            c1[i] = c1[i-1] + bitColMod2n[i];
+        }
+
+        D uint[[1]] order = choose(bitCol, c1, c0);
+        endSection(choiceSect);
+
+        // Shuffle data vector and order vector
+        uint32 shuffleSect = startSection(shuffleSectType, n);
+        D uint8[[1]] key (32);
+        key = randomize(key);
+
+        order = shuffle(order, key);
+        D T[[1]] shuffledArray = shuffle(array, key);
+        D uint[[1]] shuffledIndex = shuffle(indexVector, key);
+        endSection(shuffleSect);
+
+        // Reorder data vector according to the order vector:
+        // Note: Order values start at 1
+
+        uint32 declassifySect = startSection(declassifySectType, n);
+        uint[[1]] publicOrder = declassify(order);
+
+        for (uint i = 0; i < n; i++) {
+            array[publicOrder[i]-1] = shuffledArray[i];
+            indexVector[publicOrder[i]-1] = shuffledIndex[i];
+        }
+        endSection(declassifySect);
+    }
+
+    return indexVector;
+}
+
+/** @}*/
+
+/**
+* \cond
+*/
+
+template <domain D, type T>
+D T[[2]] _radixSort(D T[[2]] matrix, uint column1) {
+    uint[[1]] matShape = shape(matrix);
+
+    assert(matShape[1] > column1);
+
+    // Shuffle the matrix
+    uint32 shuffleSectType = newSectionType ("radixsort_shuffle");
+    uint32 shuffleSect = startSection(shuffleSectType, matShape[0]);
+    D T[[2]] shuffledMatrix = shuffleRows(matrix);
+    endSection(shuffleSect);
+
+    // Construct index vector
+    D uint[[1]] indexVector (matShape[0]);
+    for (uint i = 0; i < matShape[0]; ++i) {
+        indexVector[i] = i;
+    }
+
+    // Pick column and sort
+    D T[[1]] columnToSort = shuffledMatrix[:,column1];
+    indexVector = radixSortWithIndex(columnToSort, indexVector);
+
+    // Reorder the rest of the matrix by index vector
+    uint[[1]] publicIndexVector = declassify(indexVector);
+    for (uint i = 0; i < matShape[0]; i++) {
+        matrix[i,:] = shuffledMatrix[publicIndexVector[i],:];
+
+	}
+    return matrix;
+}
+
+template <domain D>
+D xor_uint64[[2]] radixSort(D xor_uint64[[2]] array, uint column1) {
+
+    uint[[1]] matShape = shape(array);
+
+    uint32 sortSectType = newSectionType ("radixsort_sort");
+    uint32 sortSect = startSection(sortSectType, matShape[0]);
+    D xor_uint64[[2]] sorted = _radixSort(array, column1);
+    endSection(sortSect);
+
+    return sorted;
+}
+
+/**
+* \endcond
+*/
+
+
+/** \addtogroup radix_sort_matrix
+ *  @{
+ *  @brief Functions for sorting rows in a matrix using the radix sort algorithm
+ *  @note **D** - all protection domains
+ *  @note Supported types - \ref uint64 "uint" / \ref xor_uint64 "xor_uint64"
+ *  @param array - a vector of supported type
+ *  @param column - the index of the sorting column
+ *  @return returns a matrix where the rows are sorted based on the column given
+ *  @leakage{Shuffled reordering decisions are declassified}
+ */
+template <domain D>
+D uint64[[2]] radixSort(D uint64[[2]] array, uint column1) {
+
+    uint[[1]] matShape = shape(array);
+
+    uint32 sortSectType = newSectionType ("radixsort_sort");
+    uint32 reshareSectType = newSectionType ("radixsort_reshare");
+
+    uint32 sortSect = startSection(sortSectType, matShape[0]);
+    uint32 reshareSect = startSection(reshareSectType, matShape[0]);
+    D xor_uint64[[2]] xor_array = reshare(array);
+    endSection(reshareSect);
+
+    D xor_uint64[[2]] sorted = _radixSort(xor_array, column1);
+
+    reshareSect = startSection(reshareSectType, matShape[0]);
+    D uint64[[2]] result = reshare(sorted);
+    endSection(reshareSect);
+    endSection(sortSect);
+
+    return result;
+}
+/** @}*/
+
+/**
+* \cond
+*/
+
+template <domain D>
+D xor_uint64[[1]] _partition(D xor_uint64[[1]] array) {
+    uint32 compareSectType = newSectionType ("quicksort_comparison");
+    uint32 declassifySectType = newSectionType ("quicksort_declassify");
+    uint32 partitionSectType = newSectionType ("quicksort_partition");
+
+    uint m = size (array);
+
+    uint32 partitionSect = startSection(partitionSectType, m);
+
+    uint i = -1; // This works as i is always increased before use
+
+    // Do all comparisons in parallel:
+    uint32 compareSect = startSection(compareSectType, m);
+    D xor_uint64[[1]] lastElement (m-1);
+    lastElement = array[m-1];
+    D bool[[1]] comp = (array[0:m-1] <= lastElement);
+    endSection(compareSect);
+
+    uint32 declassifySect = startSection(declassifySectType, m);
+    bool[[1]] publicComp = declassify(comp);
+    endSection(declassifySect);
+
+    for (uint j = 0; j < m - 1; j++) {
+        if (publicComp[j] == true) {
+            i = i + 1;
+            // Swap a[i] and a[j]
+            D xor_uint64 tmp = array[i];
+            array[i] = array[j];
+            array[j] = tmp;
+        }
+    }
+    uint p = i + 1;
+    // Swap a[p] and a[m]
+    D xor_uint64 tmp = array[p];
+    array[p] = array[m-1];
+    array[m-1] = tmp;
+
+    // Make result vector
+    D xor_uint64[[1]] result (m + 1);
+    result[0] = p;
+    result[1:] = array[:];
+
+    endSection(partitionSect);
+
+    return result;
+}
+
+/**
+* \endcond
+*/
+
+/** @}*/
+
+/*******************************************************************************
+********************************************************************************
+**                                                                            **
+**  quicksort                                                                 **
+**                                                                            **
+********************************************************************************
+*******************************************************************************/
+
+/** \addtogroup quick_sort
+ *  @{
+ *  @brief Functions for sorting values using the quicksort algorithm
+ *  @note **D** - all protection domains
+ *  @note Supported types - \ref xor_uint64 "xor_uint64"
+ *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ */
+
+/**
+* \cond
+*/
+
+template <domain D>
+D xor_uint64[[1]] _quicksort(D xor_uint64[[1]] array) {
+    uint m = size (array);
+
+    if (m <= 1) {
+        return array;
+    }
+
+    D xor_uint64[[1]] part = _partition(array);
+
+    // Unpack partition results
+    uint p = declassify(part[0]);
+    array[:] = part[1:];
+
+    D xor_uint64[[1]] newArray (m);
+
+    newArray[0:p] = _quicksort(array[0:p]);
+    newArray[p] = array[p];
+    newArray[p+1:] = _quicksort(array[p+1:]);
+
+    return newArray;
+}
+
+template <domain D>
+D xor_uint64[[1]] _partition(D xor_uint64[[1]] array, D xor_uint64[[1]] indexVector, uint columns) {
+    assert(size(array) == size(indexVector));
+
+    uint32 compareSectType = newSectionType ("quicksort_comparison");
+    uint32 declassifySectType = newSectionType ("quicksort_declassify");
+    uint32 partitionSectType = newSectionType ("quicksort_partition");
+
+    uint m = size (array);
+
+    // columns parameter is only used here for profiling
+    uint32 partitionSect = startSection(partitionSectType, m*columns);
+
+    uint i = -1; // This works as i is always increased before use
+
+    // Do all comparisons in parallel:
+    uint32 compareSect = startSection(compareSectType, m*columns);
+    D xor_uint64[[1]] lastElement (m-1);
+    lastElement = array[m-1];
+    D bool[[1]] comp = (array[0:m-1] <= lastElement);
+    endSection(compareSect);
+
+    uint32 declassifySect = startSection(declassifySectType, m*columns);
+    bool[[1]] publicComp = declassify(comp);
+    endSection(declassifySect);
+
+    for (uint j = 0; j < m - 1; j++) {
+        if (publicComp[j] == true) {
+            i = i + 1;
+            // Swap a[i] and a[j], make the same change in indexVector
+            D xor_uint64 tmp = array[i];
+            array[i] = array[j];
+            array[j] = tmp;
+            D xor_uint64 tmp2 = indexVector[i];
+            indexVector[i] = indexVector[j];
+            indexVector[j] = tmp2;
+        }
+    }
+    uint p = i + 1;
+    // Swap a[p] and a[m], make the same change in indexVector
+    D xor_uint64 tmp = array[p];
+    array[p] = array[m-1];
+    array[m-1] = tmp;
+    D xor_uint64 tmp2 = indexVector[p];
+    indexVector[p] = indexVector[m-1];
+    indexVector[m-1] = tmp2;
+
+    // Make result vector
+    D xor_uint64[[1]] result (2*m + 1);
+    result[0] = p;
+    result[1:m+1] = array[:];
+    result[m+1:] = indexVector[:];
+
+    endSection(partitionSect);
+
+    return result;
+}
+
+template <domain D>
+D xor_uint64[[1]] _quicksort(D xor_uint64[[1]] array, D xor_uint64[[1]] indexVector, uint columns) {
+    assert(size(array) == size(indexVector));
+
+    uint m = size (array);
+
+    // Make result vector:
+    D xor_uint64[[1]] result (2*m);
+
+    if (m <= 1) {
+        result[:m] = array[:];
+        result[m:] = indexVector[:];
+        return result;
+    }
+
+    D xor_uint64[[1]] part = _partition(array, indexVector, columns);
+
+    // Unpack partition results
+    uint p = declassify(part[0]);
+    array[:] = part[1:m+1];
+    indexVector[:] = part[m+1:];
+
+    D xor_uint64[[1]] first = _quicksort(array[:p], indexVector[:p], columns);
+    D xor_uint64[[1]] second = _quicksort(array[p+1:], indexVector[p+1:], columns);
+
+    // Repack results:
+    result[:p] = first[:p];
+    result[p] = array[p];
+    result[p+1:m] = second[:m-p-1];
+
+    result[m:m+p] = first[p:];
+    result[m+p] = indexVector[p];
+    result[m+p+1:] = second[m-p-1:];
+
+    return result;
+}
+/**
+* \endcond
+*/
+
+/** \addtogroup quick_sort_matrix
+ *  @{
+ *  @brief Functions for sorting rows in a matrix using the quicksort algorithm
+ *  @note **D** - all protection domains
+ *  @note Supported types -  \ref xor_uint64 "xor_uint64"
+ *  @param array - a vector of supported type
+ *  @param column - the index of the sorting column
+ *  @return returns a matrix where the input matrix rows are sorted based on values of the specified column 
+ *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ */
+template <domain D>
+D xor_uint64[[2]] quicksort(D xor_uint64[[2]] matrix, uint column1) {
+    uint[[1]] matShape = shape(matrix);
+
+    assert(matShape[1] > column1);
+
+    // Shuffle the matrix
+    uint32 shuffleSectType = newSectionType ("quicksort_shuffle");
+    uint32 shuffleSect = startSection(shuffleSectType, matShape[0]);
+    D xor_uint64[[2]] shuffledMatrix = shuffleRows(matrix);
+    endSection(shuffleSect);
+
+    uint32 sortSectType = newSectionType ("quicksort_sort");
+    uint32 sortSect = startSection(sortSectType, matShape[0]);
+
+    // Construct index vector
+    D xor_uint64[[1]] indexVector (matShape[0]);
+    for (uint i = 0; i < matShape[0]; ++i) {
+        indexVector[i] = i;
+    }
+
+    // Pick column and sort
+    D xor_uint64[[1]] columnToSort = shuffledMatrix[:,column1];
+    D xor_uint64[[1]] sorted = _quicksort(columnToSort, indexVector, matShape[1]);
+    indexVector[:] = sorted[matShape[0]:];
+
+    // Reorder the rest of the matrix by index vector
+    uint[[1]] publicIndexVector = declassify(indexVector);
+    for (uint i = 0; i < matShape[0]; i++) {
+        matrix[i,:] = shuffledMatrix[publicIndexVector[i],:];
+    }
+    endSection (sortSect);
+
+    return matrix;
+}
+
+/** @}*/
+
+/** \addtogroup quick_sort_vector
+ *  @{
+ *  @brief Functions for sorting values in a matrix using the quicksort algorithm
+ *  @note **D** - all protection domains
+ *  @note Supported types -  \ref xor_uint64 "xor_uint64"
+ *  @param array - a vector of supported type
+ *  @return returns a vector where the values are sorted from smallest to greatest 
+ *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ */
+template <domain D>
+D xor_uint64[[1]] quicksort(D xor_uint64[[1]] array) {
+    uint32 shuffleSectType = newSectionType ("quicksort_shuffle");
+
+    uint32 shuffleSect = startSection(shuffleSectType, size(array));
+    array = shuffle(array);
+    endSection(shuffleSect);
+
+    uint32 sortSectType = newSectionType ("quicksort_sort");
+    uint32 sortSect = startSection(sortSectType, size(array));
+
+    array = _quicksort(array);
+    endSection (sortSect);
+    return array;
+}
+
+
+/** @}*/
+/** @}*/
+
+/*******************************************************************************
+********************************************************************************
+**                                                                            **
+**  quick quicksort                                                           **
+**                                                                            **
+********************************************************************************
+*******************************************************************************/
+
+/** \addtogroup quick_quick_sort
+ *  @{
+ *  @brief Functions for sorting values using the quicksort algorithm
+ *  @note **D** - all protection domains
+ *  @note Supported types - \ref xor_uint64 "xor_uint64"
+ *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ */
+
+
+/**
+* \cond
+*/
+template <domain D, type T>
+D T[[1]] _quickquicksort(D T[[1]] array) {
+    uint m = size(array);
+
+    uint32 shuffleSectType = newSectionType ("quicksort_shuffle");
+    uint32 sortSectType = newSectionType ("quicksort_sort");
+    //uint32 partitionSectType = newSectionType ("quicksort_partition");
+    uint32 compareSectType = newSectionType ("quicksort_comparison");
+    uint32 declassifySectType = newSectionType ("quicksort_declassify");
+
+    uint32 shuffleSect = startSection(shuffleSectType, m);
+    array = shuffle(array);
+    endSection(shuffleSect);
+
+    uint32 sortSect = startSection(sortSectType, m);
+
+    uint jobs = 0; // Number of jobs to do
+    uint[[1]] begin (m); // Holds a starting index for each job
+    uint[[1]] end (m); // Holds a last index for each job
+
+    // Initialize:
+    jobs = 1;
+    begin[0] = 0;
+    end[0] = m-1;
+
+    D T[[1]] pivots (m); // reused
+    D T[[1]] others (m);  // reused
+    uint[[1]] offset (m); // reused
+
+    // Main loop:
+    while (jobs > 0) {
+        uint32 compareSect = startSection(compareSectType, m);
+
+        offset[0] = 0;
+
+        for (uint i = 0; i < jobs; i++) {
+            offset[i+1] = offset[i] + end[i] - begin[i];
+            others[offset[i]:offset[i+1]] = array[begin[i]:end[i]]; // left side of '<=' op.
+            pivots[offset[i]:offset[i+1]] = array[end[i]]; // right side of '<=' op.
+        }
+
+        // Do all comparisons in parallel:
+        D bool[[1]] comp = (others[:offset[jobs]] <= pivots[:offset[jobs]]);
+        endSection(compareSect);
+
+        uint32 declassifySect = startSection(declassifySectType, m);
+        bool[[1]] publicComp = declassify(comp);
+        endSection(declassifySect);
+
+        // Partition jobs
+        uint jobs_ = 0;
+        uint[[1]] begin_ (m);
+        uint[[1]] end_ (m);
+
+        for (uint i = 0; i < jobs; i++) {
+            
+            // Find partition point p:
+            uint idx = begin[i] - 1; // It is OK even if idx < 0, as it is always increased before use
+
+            for (uint j = begin[i]; j < end[i]; j++) {
+                if (publicComp[offset[i] + j - begin[i]] == true) {
+                    idx++;
+                    // Swap a[idx] and a[j]
+                    D T tmp = array[idx];
+                    array[idx] = array[j];
+                    array[j] = tmp;
+                }
+            }
+            uint p = idx + 1;
+            // Swap a[p] and a[end[i]]
+            D T tmp = array[p];
+            array[p] = array[end[i]];
+            array[end[i]] = tmp;
+
+            // Make new jobs, if any:
+            if (p - begin[i] >= 2) {
+                begin_[jobs_] = begin[i];
+                end_[jobs_] = p-1;
+                jobs_++;
+            }
+            if (end[i] - p >= 2) {
+                begin_[jobs_] = p+1;
+                end_[jobs_] = end[i];
+                jobs_++;
+            }
+        }
+        jobs = jobs_;
+        begin = begin_;
+        end = end_;
+    }
+
+    endSection (sortSect);
+    return array;
+}
+/**
+* \endcond
+*/
+
+/** \addtogroup quick_quick_sort_vector
+ *  @{
+ *  @brief Functions for sorting values in a matrix using the quicksort algorithm
+ *  @note **D** - all protection domains
+ *  @note Supported types -  \ref uint64 "uint64" / \ref xor_uint64 "xor_uint64"
+ *  @param array - a vector of supported type
+ *  @return returns a vector where the values are sorted from smallest to greatest 
+ *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ */
+
+template <domain D>
+D xor_uint64[[1]] quickquicksort(D xor_uint64[[1]] array) {
+
+    uint n = size(array);
+
+    uint32 sortSectType = newSectionType ("quicksort_total");
+    uint32 sortSect = startSection(sortSectType, n);
+    D xor_uint64[[1]] sorted = _quickquicksort(array);
+    endSection(sortSect);
+
+    return sorted;
+}
+/** @}*/
+
+/**
+* \cond
+*/
+template <domain D>
+D uint64[[1]] quickquicksort(D uint64[[1]] array) {
+
+    uint n = size(array);
+
+    uint32 sortSectType = newSectionType ("quicksort_total");
+    uint32 reshareSectType = newSectionType ("quicksort_reshare");
+
+    uint32 sortSect = startSection(sortSectType, n);
+    uint32 reshareSect = startSection(reshareSectType, n);
+    D xor_uint64[[1]] xor_array = reshare(array);
+    endSection(reshareSect);
+
+    D xor_uint64[[1]] sorted = _quickquicksort(xor_array);
+
+    reshareSect = startSection(reshareSectType, n);
+    D uint64[[1]] result = reshare(sorted);
+    endSection(reshareSect);
+    endSection(sortSect);
+
+    return result;
+}
+
+template <domain D, type T>
+D T[[2]] _quickquicksort(D T[[2]] matrix, uint column1) {
+    uint[[1]] matShape = shape(matrix);
+
+    assert(matShape[1] > column1);
+
+    uint32 shuffleSectType = newSectionType ("quicksort_shuffle");
+    uint32 sortSectType = newSectionType ("quicksort_sort");
+    //uint32 partitionSectType = newSectionType ("quicksort_partition");
+    uint32 compareSectType = newSectionType ("quicksort_comparison");
+    uint32 declassifySectType = newSectionType ("quicksort_declassify");
+
+    // Shuffle the matrix
+    uint32 shuffleSect = startSection(shuffleSectType, product(matShape));
+    D T[[2]] shuffledMatrix = shuffleRows(matrix);
+    endSection(shuffleSect);
+
+    uint32 sortSect = startSection(sortSectType, product(matShape));
+
+    uint m = matShape[0];
+
+    // Construct index vector
+    D uint[[1]] indexVector (m);
+    for (uint i = 0; i < m; ++i) {
+        indexVector[i] = i;
+    }
+
+    // Pick column and sort
+    D T[[1]] array = shuffledMatrix[:,column1];
+
+    // The usual quicksort for array
+    uint jobs = 0; // Number of jobs to do
+    uint[[1]] begin (m); // Holds a starting index for each job
+    uint[[1]] end (m); // Holds a last index for each job
+
+    // Initialize:
+    jobs = 1;
+    begin[0] = 0;
+    end[0] = m-1;
+
+    D T[[1]] pivots (m); // reused
+    D T[[1]] others (m);  // reused
+    uint[[1]] offset (m); // reused
+
+    // Main loop:
+    while (jobs > 0) {
+        uint32 compareSect = startSection(compareSectType, product(matShape));
+
+        offset[0] = 0;
+
+        for (uint i = 0; i < jobs; i++) {
+            offset[i+1] = offset[i] + end[i] - begin[i];
+            others[offset[i]:offset[i+1]] = array[begin[i]:end[i]]; // left side of '<=' op.
+            pivots[offset[i]:offset[i+1]] = array[end[i]]; // right side of '<=' op.
+        }
+
+        // Do all comparisons in parallel:
+        D bool[[1]] comp = (others[:offset[jobs]] <= pivots[:offset[jobs]]);
+        endSection(compareSect);
+
+        uint32 declassifySect = startSection(declassifySectType, product(matShape));
+        bool[[1]] publicComp = declassify(comp);
+        endSection(declassifySect);
+
+        // Partition jobs
+        uint jobs_ = 0;
+        uint[[1]] begin_ (m);
+        uint[[1]] end_ (m);
+
+        for (uint i = 0; i < jobs; i++) {
+            
+            // Find partition point p:
+            uint idx = begin[i] - 1; // It is OK even if idx < 0, as it is always increased before use
+
+            for (uint j = begin[i]; j < end[i]; j++) {
+                if (publicComp[offset[i] + j - begin[i]] == true) {
+                    idx++;
+                    // Swap a[idx] and a[j], do the same for index vector
+                    D T tmp = array[idx];
+                    array[idx] = array[j];
+                    array[j] = tmp;
+                    D uint tmp2 = indexVector[idx];
+                    indexVector[idx] = indexVector[j];
+                    indexVector[j] = tmp2;
+                }
+            }
+            uint p = idx + 1;
+            // Swap a[p] and a[end[i]], do the same for index vector
+            D T tmp = array[p];
+            array[p] = array[end[i]];
+            array[end[i]] = tmp;
+            D uint tmp2 = indexVector[p];
+            indexVector[p] = indexVector[end[i]];
+            indexVector[end[i]] = tmp2;
+
+            // Make new jobs, if any:
+            if (p - begin[i] >= 2) {
+                begin_[jobs_] = begin[i];
+                end_[jobs_] = p-1;
+                jobs_++;
+            }
+            if (end[i] - p >= 2) {
+                begin_[jobs_] = p+1;
+                end_[jobs_] = end[i];
+                jobs_++;
+            }
+        }
+        jobs = jobs_;
+        begin = begin_;
+        end = end_;
+    }
+
+    // Reorder the rest of the matrix by index vector
+    uint32 declassifySect = startSection(declassifySectType, product(matShape));
+    uint[[1]] publicIndexVector = declassify(indexVector);
+    endSection(declassifySect);
+
+    for (uint i = 0; i < m; i++) {
+        matrix[i,:] = shuffledMatrix[publicIndexVector[i],:];
+    }
+
+    endSection (sortSect);
+
+    return matrix;
+}
+/**
+* \endcond
+*/
+
+
+/** \addtogroup quick_quick_sort_matrix
+ *  @{
+ *  @brief Functions for sorting rows in a matrix using the qucikquicksort algorithm
+ *  @note **D** - all protection domains
+ *  @note Supported types -  \ref uint64 "uint64" / \ref xor_uint64 "xor_uint64"
+ *  @param array - a vector of supported type
+ *  @param column - the index of the sorting column
+ *  @return returns a matrix where the input matrix rows are sorted based on values of the specified column 
+ *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ */
+
+template <domain D>
+D xor_uint64[[2]] quickquicksort(D xor_uint64[[2]] array, uint column1) {
+
+    uint[[1]] matShape = shape(array);
+
+    uint32 sortSectType = newSectionType ("quicksort_total");
+    uint32 sortSect = startSection(sortSectType, matShape[0]);
+    D xor_uint64[[2]] sorted = _quickquicksort(array, column1);
+    endSection(sortSect);
+
+    return sorted;
+}
+
+
+/**
+* \cond
+*/
+template <domain D>
+D uint64[[2]] quickquicksort(D uint64[[2]] array, uint column1) {
+
+    uint[[1]] matShape = shape(array);
+
+    uint32 sortSectType = newSectionType ("quicksort_total");
+    uint32 reshareSectType = newSectionType ("quicksort_reshare");
+
+    uint32 sortSect = startSection(sortSectType, matShape[0]);
+    uint32 reshareSect = startSection(reshareSectType, matShape[0]);
+    D xor_uint64[[2]] xor_array = reshare(array);
+    endSection(reshareSect);
+
+    D xor_uint64[[2]] sorted = _quickquicksort(xor_array, column1);
+
+    reshareSect = startSection(reshareSectType, matShape[0]);
+    D uint64[[2]] result = reshare(sorted);
+    endSection(reshareSect);
+    endSection(sortSect);
+
+    return result;
+}
+/**
+* \endcond
+*/
+
+
+
+/** @}*/
+/** @}*/
+
+
+
 /** @} */
 /** @} */
 /** @}*/
