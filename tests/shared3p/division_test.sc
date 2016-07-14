@@ -39,8 +39,7 @@ void main() {
     }
     {
         pd_shared3p uint64 a = 2578953, b = 1872698523698, c = 726146;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     test_prefix = "Division with one private one public value";
     {
@@ -57,8 +56,7 @@ void main() {
     }
     {
         pd_shared3p uint64 a = 2578953; uint64 b = 1872698523698; pd_shared3p uint64 c = 726146;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     test_prefix = "Division with one private one public value(2)";
     {
@@ -75,8 +73,7 @@ void main() {
     }
     {
         pd_shared3p uint64 a = 2578953; uint64 b = 1872698523698; pd_shared3p uint64 c = 0;
-//        test(test_prefix, declassify(a/b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a/b) == declassify(c), c);
     }
     test_prefix = "0 divided with random private values";
     {
@@ -93,8 +90,7 @@ void main() {
     }
     {
         pd_shared3p uint64 a = 2578953, b = 0, c = 0;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     test_prefix = "Division accuracy private";
     {
@@ -111,8 +107,7 @@ void main() {
     }
     {
         pd_shared3p uint64 a = UINT64_MAX, b = UINT64_MAX-1, c = 0;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     {
         pd_shared3p int8 a = INT8_MAX, b = INT8_MAX-1, c = 0;
@@ -150,8 +145,7 @@ void main() {
     }
     {
         pd_shared3p uint64 b = 2578953, a = 1872698523698, c = 2118560;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
     }
     {
         pd_shared3p int8 b = -25, a = 50, c = 0;
@@ -189,8 +183,7 @@ void main() {
     }
     {
         pd_shared3p uint64 b = 2578953; uint64 a = 1872698523698; pd_shared3p uint64 c = 2118560;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
     }
     {
         pd_shared3p int8 b = -25; int8 a = 50; pd_shared3p int8 c = 0;
@@ -228,8 +221,7 @@ void main() {
     }
     {
         pd_shared3p uint64 b = 1872698523698; uint64 a = 2578953; pd_shared3p uint64 c = 2118560;
-//        test(test_prefix, declassify(b%a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b%a) == declassify(c), c);
     }
     {
         pd_shared3p int8 b = 50; int8 a = -25; pd_shared3p int8 c = 0;
@@ -279,16 +271,11 @@ void main() {
     }
     {
         pd_shared3p uint64 b = 1, a = 0, c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-
+        test(test_prefix, declassify(a%b) == declassify(c), c);
         b = 1; a = 1;c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-
+        test(test_prefix, declassify(a%b) == declassify(c), c);
         b = UINT64_MAX; a = UINT64_MAX;  c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
     }
     {
         pd_shared3p int8 b = 1, a = 0, c = 0;
