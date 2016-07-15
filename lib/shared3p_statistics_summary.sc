@@ -68,6 +68,7 @@ import stdlib;
  *  @param data - input vector
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns the smallest element of the input vector
+ *  @leakage{Leaks the amount of values in isAvailable}
  */
 template <domain D : shared3p>
 D int32 minimum (D int32[[1]] data, D bool[[1]] isAvailable) {
@@ -91,6 +92,7 @@ D int64 minimum (D int64[[1]] data, D bool[[1]] isAvailable) {
  *  @param data - input vector
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns the largest element of the input vector
+ *  @leakage{Leaks the amount of values in isAvailable}
  */
 template <domain D : shared3p>
 D int32 maximum (D int32[[1]] data, D bool[[1]] isAvailable) {
@@ -113,6 +115,7 @@ D int64 maximum (D int64[[1]] data, D bool[[1]] isAvailable) {
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @param data - input vector (the function may overflow if the input is too big)
  *  @return returns the mean of the input vector
+ *  @leakage{None}
  */
 template <domain D>
 D float32 mean (D int32[[1]] data) {
@@ -134,6 +137,7 @@ D float64 mean (D int64[[1]] data) {
  *  @param data - input vector (the function may overflow if the input is too big)
  *  @param mask - mask indicating which elements of the input vector to include when computing the mean
  *  @return returns the mean of the filtered input vector
+ *  @leakage{None}
  */
 template <domain D>
 D float32 mean (D int32[[1]] data, D bool[[1]] mask) {
@@ -156,6 +160,7 @@ D float64 mean (D int64[[1]] data, D bool[[1]] mask) {
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @param data - input vector (the function may overflow if the input is too big)
  *  @return returns the variance of the input vector
+ *  @leakage{None}
  */
 template <domain D>
 D float32 variance (D int32[[1]] data) {
@@ -185,6 +190,7 @@ D float64 variance (D int64[[1]] data) {
  *  @param data - input vector (the function may overflow if the input is too big)
  *  @param mask - mask indicating which elements of the input vector to include when computing the variance
  *  @return returns the variance of the input vector
+ *  @leakage{None}
  */
 template <domain D>
 D float32 variance (D int32[[1]] data, D bool[[1]] mask) {
@@ -271,6 +277,7 @@ D float64 standardDev (D int64[[1]] data, D bool[[1]] mask){
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @param data - input sample
  *  @return returns the median absolute deviation of the input multiplied by 1.4826
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D float32 MAD (D int32[[1]] data) {
@@ -292,6 +299,7 @@ D float64 MAD (D int64[[1]] data) {
  *  @param constant - scale factor
  *  @return returns the median absolute deviation of the input
  *  multiplied by the scale factor
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D float32 MAD (D int32[[1]] data, float32 constant) {
@@ -314,6 +322,7 @@ D float64 MAD (D int64[[1]] data, float64 constant) {
  *  sample to include when computing MAD
  *  @return returns the median absolute deviation of the filtered
  *  input multiplied by 1.4826
+ *  @leakage{Leaks the number of values in the mask}
  */
 template<domain D : shared3p>
 D float32 MAD (D int32[[1]] data, D bool[[1]] mask) {
@@ -337,6 +346,7 @@ D float64 MAD (D int64[[1]] data, D bool[[1]] mask) {
  *  @param constant - scale factor
  *  @return returns the median absolute deviation of the filtered
  *  input multiplied by the scale factor
+ *  @leakage{Leaks the number of values in the mask}
  */
 template<domain D : shared3p>
 D float32 MAD (D int32[[1]] data, D bool[[1]] mask, float32 constant) {
@@ -428,6 +438,7 @@ D FT[[1]] _fiveNumberSummarySn (D T[[1]] data, D bool[[1]] isAvailable) {
  *  median, upper quartile and maximum of the input sample (in that
  *  order). If the input size is less than five, a vector of zeroes is
  *  returned.
+ *  @leakage{Leaks the amount of values in isAvailable}
  */
 template<domain D>
 D float32[[1]] fiveNumberSummarySn (D int32[[1]] data, D bool[[1]] isAvailable) {

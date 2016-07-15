@@ -120,6 +120,7 @@ D T[[1]] _cut (D T[[1]] data, D bool[[1]] isAvailable){
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns a vector where elements of the input vector have
  *   been removed if the corresponding element in isAvailable is zero.
+ *  @leakage{Leaks the amount of values in isAvailable}
  */
 template <domain D : shared3p>
 D bool[[1]] cut (D bool[[1]] data, D bool[[1]] isAvailable) {
@@ -250,6 +251,7 @@ D T[[2]] _cut (D T[[2]] data, D bool[[1]] isAvailable) {
  *  @param isAvailable - vector indicating which elements of the input
  *  samples are available. Has to have as many elements as there are
  *  rows in the data matrix.
+ *  @leakage{Leaks the amount of values in isAvailable}
  */
 template <domain D : shared3p>
 D int32[[2]] cut (D int32[[2]] data, D bool[[1]] isAvailable) {
@@ -354,6 +356,7 @@ D T _nthElement (D T[[1]] data, uint64 left, uint64 right, uint64 k, bool shuffl
  *  execution flow but if the input vector has already been shuffled
  *  it's unnecessary.
  *  @return returns the nth element in size of the input vector.
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D int32 nthElement (D int32[[1]] data, uint64 k, bool shuffle) {
@@ -457,6 +460,7 @@ D T[[2]] _contingencyTable (D T[[1]] data, D bool[[1]] cases, D bool[[1]] contro
  *  <tr><td>Option 3</td><td>c3</td><td>d3</td></tr>
  *  <tr><td>…</td><td>…</td><td>…</td></tr>
  *  </table>
+ *  @leakage{None}
  */
 template<domain D>
 D uint32[[2]] contingencyTable (D uint32[[1]] data,

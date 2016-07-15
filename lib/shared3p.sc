@@ -100,6 +100,7 @@ D T[[N]] classify(T[[N]] value) {
  *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @param x - an array of any dimension
  *  @return returns an array of equal shape, size and dimension, where -1 signifies that, in the input array at that position was a negative number and 1  that it was a positive number
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -134,6 +135,7 @@ D int[[N]] sign (D int[[N]] x) {
  *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" \ref float32 "float32" / \ref float64 "float64"
  *  @param x - an array of any dimension
  *  @return returns an array of equal shape, size and dimension, where all values are the absolute values of the input array at that position
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -203,6 +205,7 @@ D float64[[N]] abs (D float64[[N]] value) {
  *  range of 100 to 200 times slower.
  *  @param x - a 1-dimensional array
  *  @returns the sum of all input vector elements
+ *  @leakage{None}
  */
 
 
@@ -300,6 +303,7 @@ D float64 sum (D float64[[1]] vec) {
  *  @param vec - The input array of subarrays to sum. The subarrays are stacked one after another and are all of the same size.
  *  @param k - The number of subarrays in the input array.
  *  @return The array of subarrayCount number of sums, each corresponding to respective subarray in the input array **vec**.
+ *  @leakage{None}
  */
 
 
@@ -414,6 +418,7 @@ D float64[[1]] sum (D float64[[1]] vec, uint k) {
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @param vec - a vector of supported type
  *  @return The product of the input vector
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, type T>
@@ -487,6 +492,7 @@ D int product (D int[[1]] vec) {
  *  @param vec - The input array of subarrays to find the product of. The subarrays are stacked one after another and are all of the same size.
  *  @param k - The number of subarrays in the input array.
  *  @return The array of subarrayCount number of products, each corresponding to respective subarray in the input array **vec**.
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -570,6 +576,7 @@ D int[[1]] product (D int[[1]] vec, uint k) {
  *  @return true if any of the input bits is set
  *  @return false if all input bits are not set
  *  @note performs one vectorized cast, and one comparison against zero
+ *  @leakage{None}
  */
 
 /**
@@ -638,6 +645,7 @@ D bool any (D bool[[N]] arr) {
  *  @return true if all of the input bits are set
  *  @return false if any input bit is not set
  *  @note performs one vectorized cast, and one comparison against length of the vector
+ *  @leakage{None}
  */
 
 /**
@@ -716,6 +724,7 @@ D bool all (D bool[[N]] arr) {
  *  @note Supported types - \ref bool "bool"
  *  @returns the number of set bits in the longest constant true prefix of the input
  *  @note this function performs log n multiplications on vectors of at most size n this is more efficient than performing n multiplications on scalars
+ *  @leakage{None}
  * \todo i think this can be further optimized
  */
 
@@ -1393,6 +1402,7 @@ D uint[[N]] operator % (D uint[[N]] arr, uint[[N]] pubArr) {
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
  *  @return returns the inversed values of the input array
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -1414,6 +1424,7 @@ D float64[[N]] inv (D float64[[N]] x) {
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
  *  @return returns the square roots of the input array
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -1435,6 +1446,7 @@ D float64[[N]] sqrt (D float64[[N]] x) {
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
  *  @return returns the sines of the input array
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -1456,6 +1468,7 @@ D float64[[N]] sin (D float64[[N]] x) {
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
  *  @return returns the natural logarithms of the input array
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -1477,6 +1490,7 @@ D float64[[N]] ln (D float64[[N]] x) {
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
  *  @return returns the exponents of the input array
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -1498,6 +1512,7 @@ D float64[[N]] exp (D float64[[N]] x) {
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
  *  @return returns the error functions of the input array
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -1522,6 +1537,7 @@ D float64[[N]] erf (D float64[[N]] x) {
  *  @return returns **false** if the error is not small enough
  *  @note isNegligible checks up to the 5th place after the comma
  *  @note this does not quite match public isNegligible
+ *  @leakage{None}
  */
 
 /**
@@ -1589,6 +1605,7 @@ D bool[[1]] isNegligible (D float64[[1]] a) {
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @returns minimum element of the input vector.
  *  @pre input vector is not empty
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, type T>
@@ -1685,6 +1702,7 @@ D float64 min (D float64[[1]] x) {
  *  @returns a vector with all the minimum elements of all the subarrays specified by k
  *  @pre input vector is not empty
  *  @pre the size of the input array is dividable by **k**
+ *  @leakage{None}
  */
 
 
@@ -1780,6 +1798,7 @@ D int[[1]] min (D int[[1]] x, uint k) {
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @returns an array with the pointwise minimum of each element in the two input vectors
  *  @pre both input vectors are of equal length
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -2010,6 +2029,7 @@ D float64[[N]] min(D float64[[N]] x, D float64[[N]] y) {
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @returns maximum element of the input vector.
  *  @pre input vector is not empty
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, type T>
@@ -2106,6 +2126,7 @@ D float64 max(D float64[[1]] x) {
  *  @returns a vector with all the maximum elements of all the subarrays specified by k
  *  @pre input vector is not empty
  *  @pre the size of the input array is dividable by **k**
+ *  @leakage{None}
  */
 
 
@@ -2202,6 +2223,7 @@ D int[[1]] max (D int[[1]] x, uint k) {
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @returns an array with the pointwise maximum of each element in the two input vectors
  *  @pre both input vectors are of equal length
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -2421,6 +2443,7 @@ D float64[[N]] max (D float64[[N]] x, D float64[[N]] y) {
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" \ref float64 "float64"
  *  @return returns the downwards rounded value of the input scalar/vector
+ *  @leakage{None}
  */
 
 /**
@@ -2464,6 +2487,7 @@ D float64[[1]] floor (D float64[[1]] arr) {
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" \ref float64 "float64"
  *  @return returns the upwards rounded value of the input scalar/vector
+ *  @leakage{None}
  */
 
 /**
@@ -2928,6 +2952,7 @@ D xor_uint64[[N]] choose(D bool[[N]] cond, D xor_uint64[[N]] first, D xor_uint64
  *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @returns minimum element of the input vector.
  *  @pre input vector is not empty
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -2967,6 +2992,7 @@ D xor_uint64 min (D xor_uint64[[1]] x) {
  *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @returns an array with the pointwise minimum of each element in the two input vectors
  *  @pre both input vectors are of equal length
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -3058,6 +3084,7 @@ D xor_uint64[[N]] min (D xor_uint64[[N]] x, D xor_uint64[[N]] y) {
  *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @returns maximum element of the input vector.
  *  @pre input vector is not empty
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -3097,6 +3124,7 @@ D xor_uint64 max (D xor_uint64[[1]] x) {
  *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @returns an array with the pointwise maximum of each element in the two input vectors
  *  @pre both input vectors are of equal length
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>

@@ -269,6 +269,7 @@ D T[[1]] _dispatch(D T[[1]] dependent,
  * @param family - indicates the distribution of the dependent
  * variable
  * @param iterations - number of iterations of the GLM algorithm
+ * @leakage{None}
  */
 template<domain D : shared3p>
 D float32[[1]] generalizedLinearModel(D int32[[1]] dependent, D int32[[2]] variables, int64 family, uint iterations) {
@@ -308,6 +309,8 @@ D float64[[1]] generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] v
  * @param SOLEiterations - if the conjugate gradient method is used
  * for solving systems of linear equations, this parameter is the
  * number of iterations to use
+ *
+ *@leakage{None}
  */
 template<domain D : shared3p>
 D float32[[1]] generalizedLinearModel(D int32[[1]] dependent, D int32[[2]] variables, int64 family, uint iterations, int64 SOLEmethod, uint SOLEiterations) {

@@ -245,7 +245,8 @@ D T[[1]] flatten (D T[[N]] arr) {
  *  @note **T2** - any \ref data_types "data" type
  *  @note **T3** - any \ref data_types "data" type
  *  @return returns a \ref bool "bool" type value, whether the input arrays are of equal shape (**true**) or are not of equal shape (**false**)
- */
+ *  @leakage{Leaks the shapes of the inputs}
+*/
 
 template <domain D1, domain D2, type T1, type T2, dim N>
 bool shapesAreEqual(D1 T1[[N]] first, D2 T2[[N]] second) {
@@ -454,6 +455,7 @@ void printArray (T[[N]] arr) {
  *  @{
  *  @brief Function for checking if any element in a boolean vector is true
  *  @note **D** - all protection domains
+ *  @leakage{None}
  */
 
 /** \addtogroup any1
@@ -464,6 +466,7 @@ void printArray (T[[N]] arr) {
  *  @return **true** if any of the input bits are set
  *  @return **false** if all input bits are not set
  *  @note iteratively checks all elements in input vector and returns true when the first 1-bit is found.
+ *  @leakage{None}
  */
 
 /**
@@ -520,6 +523,7 @@ D bool any (D bool[[N]] arr) {
  *  @param k - an \ref uint64 "uint" type value for specifying from how many subarrays **any** must be found
  *  @return returns a boolean vector that evaluates every subarray seperately for \ref any1 "any"
  *  @note iteratively checks all elements in input vector and returns true when the first 1-bit is found.
+ *  @leakage{None}
  */
 
 /**
@@ -576,6 +580,7 @@ D bool[[1]] any (D bool[[1]] vec, uint k) {
  *  @return **true** if all of the input bits are set
  *  @return **false** if any input bit is not set
  *  @note iteratively checks all elements in input vector and returns false when the first 0-bit is found.
+ *  @leakage{None}
  */
 
 /**
@@ -631,6 +636,7 @@ D bool all (D bool[[N]] arr) {
  *  @param k - an \ref uint64 "uint" type value for specifying from how many subarrays **all** must be found
  *  @return returns a boolean vector that evaluates every subarray seperately for \ref all1 "all"
  *  @note iteratively checks all elements in input vector and returns false when the first 0-bit is found.
+ *  @leakage{None}
  */
 
 /**
@@ -693,8 +699,9 @@ D bool[[1]] all (D bool[[1]] vec, uint k) {
  *  @brief Function for finding the sum of all elements in the input vector
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
- * @return returns the sum of all elements in input vector
- * @note uses accumulator to calculate sum. May be very inefficient for private domains.
+ *  @return returns the sum of all elements in input vector
+ *  @note uses accumulator to calculate sum. May be very inefficient for private domains.
+ *  @leakage{None}
  */
 
 template <domain D, type T>
@@ -776,10 +783,11 @@ D float64 sum (D float64[[1]] vec) {
  *  @brief Function for finding the sum of all elements in the input vector in specified parts
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
- * @param k - an \ref uint64 "uint" type scalar which specifies in how many parts the sum is found. \n
+ *  @param k - an \ref uint64 "uint" type scalar which specifies in how many parts the sum is found. \n
      For example if k = 2 then the input vector is split into two parts and the sums of those parts are found seperately.
- * @return returns a vector with the sum of the specified number of parts in the input vector
- * @note uses accumulator to calculate sum. May be very inefficient for private domains.
+ *  @return returns a vector with the sum of the specified number of parts in the input vector
+ *  @note uses accumulator to calculate sum. May be very inefficient for private domains.
+ *  @leakage{None}
  */
 
 /** \cond */
@@ -875,7 +883,8 @@ D float64[[1]] sum (D float64[[1]] vec, uint k) {
  *  @brief Function for finding the product of the input vector
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
- * @return returns the product of the input vector
+ *  @return returns the product of the input vector
+ *  @leakage{None}
  */
 
 template <domain D, type T>
@@ -957,6 +966,7 @@ D float64 product (D float64[[1]] vec) {
  * @param k - an \ref uint64 "uint" type scalar which specifies in how many parts the product is found. \n
      For example if k = 2 then the input vector is split into two parts and the products of those parts are found seperately.
  * @return returns a vector with the product of the specified number of parts in the input vector
+ *  @leakage{None}
  */
 
 /** \cond */
@@ -1046,6 +1056,7 @@ D float64[[1]] product (D float64[[1]] vec, uint k) {
  *  @brief Function for finding the minimum value of the input
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @return returns the minimum value of the input
+ *  @leakage{None}
  */
 
 /**
@@ -1101,6 +1112,7 @@ T min (T[[1]] vec) {
 * @note **D** - all protection domains
 * @param vec - a 1-dimensional vector
 * @return returns the smallest value in the vector
+*  @leakage{None}
 */
 template <domain D, type T>
 D T min (D T[[1]] vec) {
@@ -1134,6 +1146,7 @@ T min (T[[N]] arr) {
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @param x,y - input vector of supported type
  *  @return returns the pointwise minimum of the two input vectors
+ *  @leakage{None}
  */
 
 /**
@@ -1195,6 +1208,7 @@ D T[[1]] min (D T[[1]] x, D T[[1]] y) {
  *  @param vec - input vector on supported type
  *  @param k - an \ref uint64 "uint" type value for specifying from how many subarrays **min** must be found
  *  @return returns the minimum value of every subarray in the input
+ *  @leakage{None}
  *  \cond
  */
 template <domain D>
@@ -1259,6 +1273,7 @@ D T[[1]] min (D T[[1]] vec, uint k) {
  *  @brief Function for finding the maximum value of the input
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @return return the maximum value of the input
+ *  @leakage{None}
  */
 
 /**
@@ -1350,6 +1365,7 @@ bool max (bool[[1]] vec) {
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @param x,y - input vectors of supported type
  *  @return return the pointwise maximum of the two input vectors
+ *  @leakage{None}
  */
 
 /**
@@ -1412,6 +1428,7 @@ D T[[1]] max (D T[[1]] x, D T[[1]] y) {
 *  @param vec - a vector of supported type
 *  @param k - an \ref uint64 "uint" type value for specifying from how many subarrays **max** must be found
 *  @return returns the maximum value of every subarray in the input
+*  @leakage{None}
 */
 
 /**
@@ -1637,6 +1654,7 @@ float64[[N]] ln(float64[[N]] x) {
  *  @return returns **true** if the error is small enough to neglect
  *  @return returns **false** if the error is not small enough
  *  @note isNegligible checks up to the 5th place after the comma
+ *  @leakage{None}
  */
 
 /** \cond */

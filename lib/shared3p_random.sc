@@ -272,6 +272,7 @@ D T[[2]] inverseShuffleColumns (D T[[2]] mat, D uint8[[1]] key) {
  *  @note **T** - any \ref data_types "data" type
  *  @param arr - an array of any dimension
  *  @return returns an array with randomized values
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>

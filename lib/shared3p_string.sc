@@ -178,6 +178,7 @@ D xor_uint32[[N]] shiftBitsRightVec (D xor_uint32[[N]] bits, int k) {
 * @brief murmurHash
 * @note **D** - shared3p protection domain
 * @note Supported types - \ref xor_uint32 "xor_uint32"
+* @leakage{None}
 */
 
 /**
@@ -245,6 +246,7 @@ D xor_uint32[[1]] murmurHasherVec (D xor_uint32[[1]] hashee,  public uint32[[1]]
  *  @brief Count zeroes in the input vector
  *  @param s - a vector of supported type
  *  @return returns the number of 0 bytes in the input vector
+ *  @leakage{If the zeros are only at the end of the array, leaks the real length of the string}
  */
 
 template <domain D : shared3p>
@@ -258,6 +260,7 @@ D uint countZeroes (D xor_uint8[[1]] s) {
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
  *  @brief Convert a string to a vector of type xor_uint8
+ *  @leakage{None}
  */
 
 /**
@@ -296,6 +299,7 @@ D xor_uint8[[1]] bl_str (string s) {
  *  @param s - a vector of supported type
  *  @brief Check if the input string is empty
  *  @return returns **true** if the given known length input \ref string "string" is empty
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -311,6 +315,7 @@ D bool bl_strIsEmpty (D xor_uint8[[1]] s) {
  *  @param ps - a vector of supported type
  *  @brief Function for converting an array of type xor_uint8 to a string
  *  @return returns a declassified bounded length \ref string "string", extra bytes are removed
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -334,6 +339,7 @@ string bl_strDeclassify (D xor_uint8[[1]] ps) {
  *  @param s - a vector of supported type
  *  @brief Function for finding the length of the given input string
  *  @return returns the actual length of the bounded lengthed input \ref string "string"
+ *  @leakage{None}
  */
 template <domain D : shared3p>
 D uint bl_strLength (D xor_uint8[[1]] s) {
@@ -348,6 +354,7 @@ D uint bl_strLength (D xor_uint8[[1]] s) {
  *  @param s - a vector of supported type
  *  @brief Function for trimming a string
  *  @return returns a \ref string "string" with excess bytes removed
+ *  @leakage{Leaks the amount of zeros at the end of the string}
  */
 template <domain D : shared3p>
 D xor_uint8[[1]] bl_strTrim (D xor_uint8[[1]] s) {
@@ -363,6 +370,7 @@ D xor_uint8[[1]] bl_strTrim (D xor_uint8[[1]] s) {
  *  @param s,t - vectors of supported type
  *  @brief Compare two string with each other
  *  @return returns **true** if the two input strings are equal
+ *  @leakage{None}
  */
 template <domain D : shared3p>
 D bool bl_strEquals (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
@@ -383,6 +391,7 @@ D bool bl_strEquals (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @param arr - a vector of supported type
  *  @brief Function for finding a stable sorting permutation
  *  @return returns a stable (in a sorting sense) permutation that moves **false** values to end
+ *  @leakage{None}
  */
 template <domain D : shared3p>
 D uint[[1]] findSortingPermutation (D bool[[1]] arr) {
@@ -415,6 +424,7 @@ D uint[[1]] findSortingPermutation (D bool[[1]] arr) {
  *  @param s,t - string vectors of supported type
  *  @brief Function for concatenating two strings
  *  @return returns a concatenation of the two input strings
+ *  @leakage{None}
  */
 template <domain D : shared3p>
 D xor_uint8[[1]] bl_strCat (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
@@ -450,6 +460,7 @@ D xor_uint8[[1]] bl_strCat (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @post **s** is a prefix of the output vector
  *  @post only zeroes have been added to the output vector
  *  @post if size ( **s** ) >= **n** then the output vector == **s**
+ *  @leakage{None}
  */
 template <domain D : shared3p>
 D xor_uint8[[1]] zeroExtend (D xor_uint8[[1]] s, uint n) {
@@ -469,6 +480,7 @@ D xor_uint8[[1]] zeroExtend (D xor_uint8[[1]] s, uint n) {
  *  @param s,t - input string vectors of supported type
  *  @brief function for comparing two strings alphabetically
  *  @return returns **true** if s < t
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -491,6 +503,7 @@ D bool bl_strIsLessThan (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @return returns the edit distance of the two input strings
  *  @note the algorithm is almost identical to the known length one. The only difference is that the result is found somewhere in the middle of the 2D grid, and not in the bottom right corner. To find it we: a) compute a mask that's one in that position and zero otherwise, b) multiply the mask with the grid, and c) return the sum of the result.
  * \todo we can optimize by computing the entire grid and performing a single multiplication
+ *  @leakage{None}
  */
 template <domain D : shared3p>
 D uint bl_strLevenshtein (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
@@ -585,6 +598,7 @@ D uint bl_strLevenshtein (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @param str - input string vector of supported type
  *  @param pat - the pattern to look for
  *  @return returns a boolean vector indicating if the pattern is a substring of the input string at that position
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -625,6 +639,7 @@ D bool[[1]] bl_strEqPrefixes (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
  *  @param pat - the pattern to look for
  *  @brief function for checking if a string contains the given pattern
  *  @return returns **true** if the given pattern is a substring of the given string
+ *  @leakage{None}
  */
 template <domain D : shared3p>
 D bool bl_strContains (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
@@ -644,6 +659,7 @@ D bool bl_strContains (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
  *  @brief function for finding the index of a given pattern
  *  @return returns the position where given pattern is contained in the string
  *  @note if the string is not found returns value that is or equal to size (str)
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -661,6 +677,7 @@ D uint bl_strIndexOf (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
  *  @brief Function for finding the number of bytes that the two input strings differ in
  *  @return returns the number of bytes that the inputs differ in
  *  @pre bl_strLength(s) == bl_strLength(t), otherwise the behaviour is undefined
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -692,6 +709,7 @@ D uint bl_strHamming (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @brief Function for constructing a known length string from given public string
  *  @param s - a \ref string "string"
  *  @return XOR shared byte array of length equal to the input public string.
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -707,6 +725,7 @@ D xor_uint8[[1]] kl_str (string s) {
  *  @param ps - a string vector of supported type
  *  @brief Function for declassifying a given XOR shared byte string.
  *  @return returns a public string
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -723,6 +742,7 @@ string kl_strDeclassify (D xor_uint8[[1]] ps) {
  *  @param str - a string vector of supported type
  *  @brief Function for getting the length of a string
  *  @return returns a length of the string
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -738,6 +758,7 @@ uint kl_strLength (D xor_uint8[[1]] str) {
  *  @brief Function for checking whether two strings are equal
  *  @param s,t - string vectors of supported type
  *  @return returns **true** if the input strings are equal, **false** it they are not
+ *  @leakage{None}
  */
 
 
@@ -758,6 +779,7 @@ D bool kl_strEquals (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @brief Function for comparing two strings alphabetically
  *  @param s,t - string vectors of supported type
  *  @return returns **true** if the first input string is less than the second (in dictionary order)
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -791,6 +813,7 @@ D bool kl_strIsLessThan (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @param s,t - string vectors of supported type
  *  @brief Function for concatenating two strings
  *  @return returns a concatenation of the two input strings
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -808,6 +831,7 @@ D xor_uint8[[1]] kl_strCat (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @param str - the input string vector of supported type
  *  @param pat - the substring to look for
  *  @return returns a boolean vector indicating if the pattern is a substring of the input string in that position
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -851,6 +875,7 @@ D bool[[1]] kl_strEqPrefixes (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
  *  @param str - the haystack
  *  @param pat - the needle
  *  @return returns if the needle is found within the haystack
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -869,6 +894,7 @@ D bool kl_strContains (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
  *  @param pat - the needle
  *  @return returns the position of the needle in the haystack
  *  @return returns size(str) if the pat is not a substring of str
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -895,6 +921,7 @@ D uint kl_strIndexOf (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
  *  @param s,t - input string vectors of supported type
  *  @pre the input strings are of equal length
  *  @return returns the number of bytes that the inputs differ in
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -912,6 +939,7 @@ D uint kl_strHamming (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @param s,t - input string vectors of supported type
  *  @brief Function for finding the edit distance of two input strings
  *  @return returns the edit distance of the two input strings
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>

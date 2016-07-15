@@ -317,6 +317,7 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
  * @param iterations - how many iterations to run the algorithm
  * @param returnValues - indicates which results to return. Use
  * bitwise or if you want multiple results.
+ * @leakage{None}
  */
 template<domain D : shared3p>
 PCAResult<D, float32> gspca(D float32[[2]] X, uint n_components,

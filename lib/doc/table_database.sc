@@ -56,25 +56,13 @@ Data is added to the table one row at a time with the function \link shared3p_ta
 
 A vector map (also referred to as a value map or a vmap) is a data structure for making more complicated tables with column identifiers and multiple data types. A vmap can contain four different types of information: types, strings, values and indexes. A vmap is similar to a Python dictionary as the vmap contains parameters and data associated to those parameters.
 
-Listing 6.38: Visualization of a vector map
-
-\code
-	//A vector map is similar to a Python dictionary
-	
-	tdbVmapNew() --> {
-		"types"  : {shared3p int32, bool},
-		"names"  : {"measurements", "is available"},
-		"values" : {{10, 20, 30, 40},
-			    {true, true, true, false}}
-\endcode
-
-Values added to the vmap can be either fixed lenght or variable length. Variable length means that the size of values must not be uniform in one column e.g. strings or vectors with variable length. Values are stored in the vmap as batches. Each batch covers all columns but one row. Data can be added one entry at a time with tdbVmapAdd{Type/String/Value/Index} for fixed length data or with tdbVmapAddVlen{Type/Value} for variable length data.
+Values added to the vmap can be either fixed lenght or variable length. Variable length means that the size of values must not be uniform in one column e.g. strings or vectors with variable length. Values are stored in the vmap as batches. Each batch covers all columns but one row. Data can be added one entry at a time with<b> tdbVmapAdd{Type/String/Value/Index} </b>for fixed length data or with<b> tdbVmapAddVlen{Type/Value}</b> for variable length data.
 
 @subsection vmap_table Creating a table from a vector map
 
 When creating a table instead of specifing a data type and the number of columns a vmap can be used. The vmap must contain a type and string for every column with the parameters "types" and "names" respectively. Data can be inserted to the table with tdbInsertRow but instead of a vector a vmap can be used. The vmap must have values with the parameter "values" that are the same type as their respective column in the table. Every batch in the vmap corresponds to a single row in the table. 
 
-Listing 6.39: Creating a table with a vector map
+Listing 6.38: Creating a table with a vector map
 
 \code
 	import shared3p;
