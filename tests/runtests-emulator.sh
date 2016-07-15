@@ -20,11 +20,29 @@
 
 # Exit status of piped commands is zero only if all commands succeed
 set -o pipefail
+set -e
 
 if [ ! -d "${SHAREMIND_PATH}" ]; then
     echo 'Required environment variable SHAREMIND_PATH missing or does not point to a directory!' 1>&2
     exit 1
 fi
+
+# http://www.linuxjournal.com/content/use-bash-trap-statement-cleanup-temporary-files
+declare -a ON_EXIT_ITEMS
+
+function on_exit() {
+    for ITEM in "${ON_EXIT_ITEMS[@]}"; do
+        eval "${ITEM}"
+    done
+}
+
+function add_on_exit() {
+    local N=${#ON_EXIT_ITEMS[*]}
+    ON_EXIT_ITEMS["${N}"]="$*"
+    if [[ "${N}" -eq 0 ]]; then
+        trap on_exit EXIT
+    fi
+}
 
 # readlink on OS X does not behave as on Linux
 # http://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
@@ -80,23 +98,23 @@ run_test() {
     local TEST_NAME="$2"
     local CWD=`pwd`; cd "`dirname ${EMULATOR}`"
     ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
-            "./`basename ${EMULATOR}`" --conf=emulator.cfg "${CWD}/${SB}" \
-                | python "${TEST_PARSER}" \
+            "./`basename ${EMULATOR}`" --conf=emulator.cfg \
+            --outFile=emulator.out --force "${SB}" \
                 | sed "s#^#${TEST_NAME}#g") \
-         3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
-         3>&1 1>&2 2>&3 3>&-
-    local RV=$?
+        3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
+        3>&1 1>&2 2>&3 3>&-
+    ((python "${TEST_PARSER}" < emulator.out | sed "s#^#${TEST_NAME}#g") \
+        3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
+        3>&1 1>&2 2>&3 3>&-
     cd "${CWD}"
-    return ${RV}
 }
 
 run() {
     local SC="$1"
     local TESTSET="$2"
     local SC_BN=`basename "${SC}"`
-    local SB_BN="${SC_BN%.sc}.sb"
-    local SB=`mktemp sharemind_stlib_runtests.$$.XXXXXXXXXX.sb`
-    local RV=$?; if [ $RV -ne 0 ]; then return $RV; fi
+    local SB=`mktemp --tmpdir sharemind_stlib_runtests.$$.XXXXXXXXXX.sb`
+    add_on_exit "rm \"${SB}\""
 
     local TEST_NAME="[${SC}]: "
     if [ -n "${TESTSET}" ]; then
@@ -104,9 +122,6 @@ run() {
     fi
 
     compile "${SC}" "${SB}" && run_test "${SB}" "${TEST_NAME}"
-    local RV=$?
-    rm "${SB}"
-    return ${RV}
 }
 
 run_all() {
@@ -114,11 +129,8 @@ run_all() {
         local TESTS_BN=`basename "${TESTS}"`
         for TEST in `find "${TESTS}" -mindepth 1 -maxdepth 1 -type f -name "*.sc" | sort`; do
             run "${TEST}" "${TESTS_BN}"
-            local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
         done
     done
-
-    return 0
 }
 
 if [ "x$1" = "x" ]; then
@@ -128,7 +140,6 @@ elif [ -f "$1" ]; then
 elif [ -d "$1" ]; then
     for TEST in `find "$1" -mindepth 1 -maxdepth 1 -type f -name "*.sc" | sort`; do
         run "${TEST}" `basename "$1"`
-        RV=$?; if [ ${RV} -ne 0 ]; then exit ${RV}; fi
     done
 else
     echo "Usage of `basename "$0"`:"

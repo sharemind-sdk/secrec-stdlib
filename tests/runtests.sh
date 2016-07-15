@@ -20,11 +20,29 @@
 
 # Exit status of piped commands is zero only if all commands succeed
 set -o pipefail
+set -e
 
 if [ ! -d "${SHAREMIND_PATH}" ]; then
     echo 'Required environment variable SHAREMIND_PATH missing or does not point to a directory!' 1>&2
     exit 1
 fi
+
+# http://www.linuxjournal.com/content/use-bash-trap-statement-cleanup-temporary-files
+declare -a ON_EXIT_ITEMS
+
+function on_exit() {
+    for ITEM in "${ON_EXIT_ITEMS[@]}"; do
+        eval "${ITEM}"
+    done
+}
+
+function add_on_exit() {
+    local N=${#ON_EXIT_ITEMS[*]}
+    ON_EXIT_ITEMS["${N}"]="$*"
+    if [[ "${N}" -eq 0 ]]; then
+        trap on_exit EXIT
+    fi
+}
 
 # readlink on OS X does not behave as on Linux
 # http://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
@@ -82,10 +100,10 @@ install() {
     local ORIGIN="$1"
     local TARGET_FILENAME="$2"
 
-    for i in `seq 1 3`; do
-        local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${i}/scripts"
-        mkdir -p "${SCRIPTS_PATH}" || return $?
-        cp "${ORIGIN}" "${SCRIPTS_PATH}/${TARGET_FILENAME}" || return $?
+    for I in `seq 1 3`; do
+        local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
+        mkdir -p "${SCRIPTS_PATH}"
+        cp "${ORIGIN}" "${SCRIPTS_PATH}/${TARGET_FILENAME}"
     done
 }
 
@@ -100,9 +118,7 @@ run_test() {
                 | sed "s#^#${TEST_NAME}#g") \
          3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
          3>&1 1>&2 2>&3 3>&-
-    local RV=$?
     cd "${CWD}"
-    return ${RV}
 }
 
 run() {
@@ -110,8 +126,8 @@ run() {
     local TESTSET="$2"
     local SC_BN=`basename "${SC}"`
     local SB_BN="${SC_BN%.sc}.sb"
-    local SB=`mktemp sharemind_stlib_runtests.$$.XXXXXXXXXX.sb`
-    local RV=$?; if [ $RV -ne 0 ]; then return $RV; fi
+    local SB=`mktemp --tmpdir sharemind_stlib_runtests.$$.XXXXXXXXXX.sb`
+    add_on_exit "rm \"${SB}\""
 
     local TEST_NAME="[${SC}]: "
     if [ -n "${TESTSET}" ]; then
@@ -119,9 +135,6 @@ run() {
     fi
 
     compile "${SC}" "${SB}" && install "${SB}" "${SB_BN}" && run_test "${SB_BN}" "${TEST_NAME}"
-    local RV=$?
-    rm "${SB}"
-    return ${RV}
 }
 
 run_all() {
@@ -129,11 +142,8 @@ run_all() {
         local TESTS_BN=`basename "${TESTS}"`
         for TEST in `find "${TESTS}" -mindepth 1 -maxdepth 1 -type f -name "*.sc" | sort`; do
             run "${TEST}" "${TESTS_BN}"
-            local RV=$?; if [ ${RV} -ne 0 ]; then return ${RV}; fi
         done
     done
-
-    return 0
 }
 
 if [ "x$1" = "x" ]; then
@@ -143,7 +153,6 @@ elif [ -f "$1" ]; then
 elif [ -d "$1" ]; then
     for TEST in `find "$1" -mindepth 1 -maxdepth 1 -type f -name "*.sc" | sort`; do
         run "${TEST}" `basename "$1"`
-        RV=$?; if [ ${RV} -ne 0 ]; then exit ${RV}; fi
     done
 else
     echo "Usage of `basename "$0"`:"
