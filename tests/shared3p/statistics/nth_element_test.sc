@@ -77,8 +77,7 @@ void main() {
 	test_prefix = "NthElement(with indexes)";
 	test(test_prefix, nth_element_test_indexes(0::int32), 0::int32);
 	test(test_prefix, nth_element_test_indexes(0::int64), 0::int64);
+	*/
 
 	test_report();
-
-	*/
 }
