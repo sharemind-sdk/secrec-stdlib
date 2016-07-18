@@ -650,6 +650,9 @@ D FT[[1]] _rank (D T[[1]] data) {
     return (FT) rowSums(matA * matB) / (FT) rowSums(matA);
 }
 
+/*
+ * Reference: Nonparametric Statistical Methods
+ */
 template <domain D : shared3p, type T, type FT>
 D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
                             D bool[[1]] ia1,
@@ -658,6 +661,11 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
                             bool correctRanks,
                             int64 alternative)
 {
+    // Continuity correction
+    assert (alternative == ALTERNATIVE_LESS ||
+            alternative == ALTERNATIVE_GREATER ||
+            alternative == ALTERNATIVE_TWO_SIDED);
+
     // Zero will indicate that the matrix row is from sample2, one
     // indicates that it's from sample1.
     D T[[2]] mat (size (sample1) + size (sample2), 2);
@@ -671,13 +679,45 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
     mat = sortingNetworkSort (mat, 0 :: uint);
 
     uint N = shape (mat)[0];
+    assert (N > 1);
 
     // Use the rank sum of the first sample
     D FT w;
+    D FT n1 = (FT) sum ((T) ia1);
+    D FT n2 = (FT) sum ((T) ia2);
+    D FT sigmaSqr = n1 * n2 * ((FT) N + 1) / 12;
+
     if (correctRanks) {
-        // Replace tied ranks with their average
-        D FT[[1]] ranksFixed = _rank (mat[:, 0]);
-        w = sum (ranksFixed * (FT) mat[:, 1]);
+        D T[[2]] matA(N, N);
+        D T[[2]] matB(N, N);
+        T[[1]] ranks(N);
+
+        D T[[1]] data = mat[:, 0];
+        // On row i of matA, we want a filter indicating which values of
+        // the sorted data vector equal the i-th element of the sorted data
+        for (uint i = 0; i < N; i++) {
+            matA[i, :] = data;
+            matB[i, :] = data[i];
+            ranks[i] = (T) (i + 1);
+        }
+        matA = (T) (matA == matB);
+
+        for (uint i = 0; i < N; i++) {
+            matB[i, :] = ranks;
+        }
+
+        // Calculate the average of the ranks where the data values are
+        // equal and the sum in the tied rank variance correction.
+        D T[[1]] counts = rowSums(matA);
+        D FT[[1]] correctRanks = (FT) rowSums(matA * matB) / (FT) counts;
+        D bool[[1]] unique(size(data));
+        unique[0] = true;
+        unique[1:] = data[1:] != data[:size(data) - 1];
+        D bool[[1]] filter = (counts != 1) && unique;
+        counts = counts * (T) filter;
+        D T tieCorrection = sum((counts - 1) * counts * (counts + 1));
+        w = sum (correctRanks * (FT) mat[:, 1]);
+        sigmaSqr = sigmaSqr - (n1 * n2 / (12 * (FT) (N * (N - 1))) * (FT) tieCorrection);
     } else {
         T[[1]] ranks (N);
         for (uint i = 0; i < N; i++) {
@@ -686,27 +726,18 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
         w = (FT) sum (ranks * mat[:, 1]);
     }
 
-    // Calculate z score
-    D FT n1 = (FT) sum ((T) ia1);
-    D FT n2 = (FT) sum ((T) ia2);
-    D FT meanW = n1 * ((FT) N + 1) / 2;
-    D FT sigma = sqrt (n1 * n2 * ((FT) N + 1) / 12);
-    D FT z;
+    D FT z = w - n1 * ((FT) N + 1) / 2;
     FT correction;
 
-    // Continuity correction
-    assert (alternative == ALTERNATIVE_LESS ||
-            alternative == ALTERNATIVE_GREATER ||
-            alternative == ALTERNATIVE_TWO_SIDED);
-
-    if (alternative == ALTERNATIVE_LESS)
+    if (alternative == ALTERNATIVE_LESS) {
         correction = 0.5;
-    else if (alternative == ALTERNATIVE_GREATER)
+    } else if (alternative == ALTERNATIVE_GREATER) {
         correction = -0.5;
-    else if (alternative == ALTERNATIVE_TWO_SIDED)
+    } else if (alternative == ALTERNATIVE_TWO_SIDED) {
         correction = -0.5;
+    }
 
-    z = ((w - meanW) + correction) / sigma;
+    z = (z + correction) / sqrt (sigmaSqr);
 
     D FT[[1]] res = {w, z};
 
