@@ -107,53 +107,56 @@ install() {
     done
 }
 
-run_test() {
+run() {
     local SB_BN="$1"
     local TEST_NAME="$2"
-    local CWD=`pwd`; cd "`dirname ${TEST_RUNNER}`"
-
-    ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
-            "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
-                    --logfile "${LOG_PATH}" --logmode append \
-                | sed "s#^#${TEST_NAME}#g") \
-         3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
-         3>&1 1>&2 2>&3 3>&-
-    cd "${CWD}"
+    (cd "`dirname ${TEST_RUNNER}`" &&
+        ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
+                "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
+                        --logfile "${LOG_PATH}" --logmode append \
+                    | sed "s#^#${TEST_NAME}#g") \
+             3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
+             3>&1 1>&2 2>&3 3>&-
+        )
 }
 
-run() {
+run_test() {
     local SC="$1"
-    local TESTSET="$2"
+    local TEST="$2"
     local SC_BN=`basename "${SC}"`
     local SB_BN="${SC_BN%.sc}.sb"
     local SB=`mktemp --tmpdir sharemind_stlib_runtests.$$.XXXXXXXXXX.sb`
     add_on_exit "rm \"${SB}\""
 
     local TEST_NAME="[${SC}]: "
-    if [ -n "${TESTSET}" ]; then
-        TEST_NAME="[${TESTSET}\/`basename "${SC_BN}"`]: "
+    if [ -n "${TEST}" ]; then
+        TEST_NAME="[${TEST}]: "
     fi
 
-    compile "${SC}" "${SB}" && install "${SB}" "${SB_BN}" && run_test "${SB_BN}" "${TEST_NAME}"
+    compile "${SC}" "${SB}" && install "${SB}" "${SB_BN}" && run "${SB_BN}" "${TEST_NAME}"
+}
+
+run_testset() {
+    local TESTSET=`echo "$1" | sed 's/\/\+$//'`
+    local TESTSET_BN=`basename "${TESTSET}"`
+    local TESTSET_PREFIX="${TESTSET::-${#TESTSET_BN}}"
+    for TEST in `find "${TESTSET}" -mindepth 1 -type f -name "*.sc" | sort`; do
+        run_test "${TEST}" "${TEST:${#TESTSET_PREFIX}}"
+    done
 }
 
 run_all() {
-    for TESTS in `find "${ABSSP}" -mindepth 1 -type d | sort`; do
-        local TESTS_BN=`basename "${TESTS}"`
-        for TEST in `find "${TESTS}" -mindepth 1 -type f -name "*.sc" | sort`; do
-            run "${TEST}" "${TESTS_BN}"
-        done
+    for TESTSET in `find "${ABSSP}" -mindepth 1 -maxdepth 1 -type d | sort`; do
+        run_testset "${TESTSET}"
     done
 }
 
 if [ "x$1" = "x" ]; then
     run_all
 elif [ -f "$1" ]; then
-    run "$1"
+    run_test "$1"
 elif [ -d "$1" ]; then
-    for TEST in `find "$1" -mindepth 1 -type f -name "*.sc" | sort`; do
-        run "${TEST}" `basename "$1"`
-    done
+    run_testset "$1"
 else
     echo "Usage of `basename "$0"`:"
     echo "runtests.sh [filename.sc]"
