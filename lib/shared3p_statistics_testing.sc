@@ -877,7 +877,7 @@ D float32[[1]] mannWhitneyU (D int32[[1]] sample1,
                              bool correctRanks,
                              int64 alternative)
 {
-    return _mannWhitneyU (sample1, ia1, sample2, ia2, correctRanks, ALTERNATIVE_TWO_SIDED);
+    return _mannWhitneyU (sample1, ia1, sample2, ia2, correctRanks, alternative);
 }
 
 template <domain D : shared3p>
@@ -888,7 +888,7 @@ D float64[[1]] mannWhitneyU (D int64[[1]] sample1,
                              bool correctRanks,
                              int64 alternative)
 {
-    return _mannWhitneyU (sample1, ia1, sample2, ia2, correctRanks, ALTERNATIVE_TWO_SIDED);
+    return _mannWhitneyU (sample1, ia1, sample2, ia2, correctRanks, alternative);
 }
 /** @} */
 
