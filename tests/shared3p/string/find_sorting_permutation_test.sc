@@ -16,7 +16,7 @@
  *
  * For further information, please contact us at sharemind@cyber.ee.
  */
- 
+
 import stdlib;
 import shared3p;
 import shared3p_string;
@@ -27,10 +27,10 @@ domain pd_shared3p shared3p;
 
 bool find_sorting_permutation_test () {
 	pd_shared3p bool[[1]] a = {false, true, true, false};
-	
+
 	pd_shared3p uint[[1]] result = findSortingPermutation (a);
-	uint[[1]] expected_result = {2, 0, 1, 3};	
-	
+	uint[[1]] expected_result = {2, 0, 1, 3};
+
 	return all (declassify (result) == expected_result);
 }
 

@@ -16,7 +16,7 @@
  *
  * For further information, please contact us at sharemind@cyber.ee.
  */
- 
+
 import stdlib;
 import shared3p;
 import shared3p_statistics_summary;
@@ -30,17 +30,17 @@ bool fns_sort_test(T data, G data2) {
 	pd_shared3p T[[1]] a (10) = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	pd_shared3p bool[[1]] mask (10) = true;
 	mask[0] = false;
-	
+
 	G[[1]] result (5) = declassify (fiveNumberSummarySn (a, mask));
-	
+
 	bool[[1]] test_results = {
-		result[0] == 2, 
-		result[1] == 4, 
-		result[2] == 6, 
+		result[0] == 2,
+		result[1] == 4,
+		result[2] == 6,
 		result[3] == 8,
 		result[4] == 10
 	};
-	
+
 	return all (test_results);
 }
 
@@ -51,21 +51,21 @@ bool fns_nth_test(T data, G data2) {
 	pd_shared3p T[[1]] a (10) = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	pd_shared3p bool[[1]] mask (10) = true;
 	mask[0] = false;
-	
+
 	/*
 	G[[1]] result (5) = declassify (fiveNumberSummaryNth (a, mask));
-	
+
 	bool[[1]] test_results = {
-		result[0] == 2, 
-		result[1] == 4, 
-		result[2] == 6, 
+		result[0] == 2,
+		result[1] == 4,
+		result[2] == 6,
 		result[3] == 8,
 		result[4] == 10
 	};
-	
+
 	return all (test_results);
 	*/
-	
+
 	//nthElement doesn't work anymore
 	return false;
 }
@@ -75,12 +75,12 @@ void main() {
 	string test_prefix = "FiveNumberSummarySn";
 	test (test_prefix, fns_sort_test (0::int32, 0::float32), 0::int32);
 	test (test_prefix, fns_sort_test (0::int64, 0::float64), 0::int64);
-	
+
 	test_prefix = "FiveNumberSummaryNth";
 	test (test_prefix, fns_nth_test (0::int32, 0::float32), 0::int32);
 	test (test_prefix, fns_nth_test (0::int64, 0::float64), 0::int64);
-	
-	
+
+
 	test_report();
-	
+
 }

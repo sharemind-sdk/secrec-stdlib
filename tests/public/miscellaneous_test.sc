@@ -81,7 +81,7 @@ bool cast_type_to_bool(T data) {
     a[0] = 0;
     a[1] = 1;
     a[2] = -1;
-    
+
     bool[[1]] b (10) = (bool)a;
 
     for (uint i = 0; i < 10; ++i) {

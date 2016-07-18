@@ -16,7 +16,7 @@
  *
  * For further information, please contact us at sharemind@cyber.ee.
  */
- 
+
 import stdlib;
 import shared3p;
 import shared3p_statistics_common;
@@ -31,13 +31,13 @@ domain pd_shared3p shared3p;
 template<type T>
 bool nth_element_test(T data) {
 	pd_shared3p T[[1]] a (9) = {15, 10, 8, 6, 5, 4, 3, 2, 1};
-	
+
 	uint x = 1;
 	uint y = 2;
-	
+
 	pd_shared3p T b = nthElement(a, x, true);
 	pd_shared3p T c = nthElement(a, y, false);
-	
+
 	if (declassify(b) != 2 || declassify(c) != 3)
 		return false;
 
@@ -48,19 +48,19 @@ bool nth_element_test(T data) {
 template<type T>
 bool nth_element_test_indexes(T data) {
 	pd_shared3p T[[1]] a (9) = {15, 10, 8, 6, 5, 4, 3, 2, 1};
-	
+
 	uint64 x = 1;
 	uint64 y = 2;
-	
-	uint64 left = 2;	
-	uint64 right = 6;	
-	
+
+	uint64 left = 2;
+	uint64 right = 6;
+
 	pd_shared3p T b = nthElement(a, left, right, x, false);
 	pd_shared3p T c = nthElement(a, left, right, y, false);
-	
+
 	print(declassify(b));
 	print(declassify(c));
-	
+
 	if (declassify(b) != 4 || declassify(c) != 5)
 		return false;
 
@@ -73,12 +73,12 @@ void main() {
 	string test_prefix = "NthElement";
 	test(test_prefix, nth_element_test(0::int32), 0::int32);
 	test(test_prefix, nth_element_test(0::int64), 0::int64);
-	
+
 	test_prefix = "NthElement(with indexes)";
 	test(test_prefix, nth_element_test_indexes(0::int32), 0::int32);
 	test(test_prefix, nth_element_test_indexes(0::int64), 0::int64);
-	
+
 	test_report();
-	
+
 	*/
 }

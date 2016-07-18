@@ -16,7 +16,7 @@
  *
  * For further information, please contact us at sharemind@cyber.ee.
  */
- 
+
 import stdlib;
 import shared3p;
 import shared3p_string;
@@ -28,25 +28,25 @@ domain pd_shared3p shared3p;
 
 bool kl_str_test () {
 	string a = "XXYYyy";
-	
+
 	pd_shared3p xor_uint8[[1]] result = kl_str (a);
 	pd_shared3p xor_uint8[[1]] expected_result = {88, 88, 89, 89, 121, 121};
 
 	if (!all (declassify (result) == declassify (expected_result)))
 		return false;
-		
+
 	return true;
 }
 
 bool kl_strCat_test () {
 	string a = "XX";
 	string b = "YY";
-	
+
 	pd_shared3p xor_uint8[[1]] result = kl_strCat (kl_str (a), kl_str (b));
 
 	if (!all (declassify (result) == declassify (kl_str ("XXYY"))))
 		return false;
-	
+
 	return true;
 }
 
@@ -54,22 +54,22 @@ bool kl_strContains_test () {
 	string a = "XXXYXXX";
 	string b = "XYX";
 	string c = "YXY";
-	
+
 	pd_shared3p bool result1 = kl_strContains (kl_str (a), kl_str (b));
 	pd_shared3p bool result2 = kl_strContains (kl_str (a), kl_str (c));
-	
+
 	if (! declassify (result1) || declassify (result2))
 		return false;
-	
+
 	return true;
 }
 
 
 bool kl_strDeclassify_test () {
 	string a = "XXYYXX";
-	
+
 	pd_shared3p xor_uint8[[1]] b = kl_str (a);
-	
+
 	string result = kl_strDeclassify (b);
 
 	return a == result;
@@ -79,13 +79,13 @@ bool kl_strDeclassify_test () {
 bool kl_strEqPrefixes_test () {
 	string a = "XXYXYX";
 	string b = "XYX";
-	
+
 	pd_shared3p bool[[1]] result = kl_strEqPrefixes (kl_str (a), kl_str (b));
 	bool[[1]] expected_result = {false, true, false, true};
 
 	if (!all (declassify (result) == expected_result))
 		return false;
-		
+
 	return true;
 }
 
@@ -103,7 +103,7 @@ bool kl_strHamming_test () {
 	string b = "y";
 
 	pd_shared3p uint result = kl_strHamming (kl_str (a), kl_str (b));
-	
+
 	return declassify (result) - 1 == 0;
 }
 
@@ -112,7 +112,7 @@ bool kl_strIndexOf_test () {
 	string b = "YX";
 
 	pd_shared3p uint result = kl_strIndexOf (kl_str (a), kl_str (b));
-	
+
 	return declassify (result) == 4;
 }
 
@@ -121,7 +121,7 @@ bool kl_strIsLessThan_test () {
 	string a = "aaab";
 	string b = "AAb";
 
-	pd_shared3p bool result = kl_strIsLessThan (kl_str (b), kl_str (a)); 
+	pd_shared3p bool result = kl_strIsLessThan (kl_str (b), kl_str (a));
 
 	return declassify(result);
 }
@@ -137,9 +137,9 @@ bool kl_strLength_test () {
 bool kl_strLevenshtein_test () {
 	string a = "XXYZ";
 	string b = "XXYW";
-	
+
 	pd_shared3p uint result = kl_strLevenshtein (kl_str (a), kl_str(b));
-	
+
 	return declassify (result) == 1;
 }
 
@@ -147,36 +147,36 @@ bool kl_strLevenshtein_test () {
 void main () {
 	string test_prefix = "Kl_str";
 	test (test_prefix, kl_str_test (), " ");
-	
+
 	test_prefix = "Kl_strCat";
 	test (test_prefix, kl_strCat_test (), " ");
-	
+
 	test_prefix = "Kl_strContains";
 	test (test_prefix, kl_strContains_test (), " ");
-	
+
 	test_prefix = "Kl_strDeclassify";
 	test (test_prefix, kl_strDeclassify_test (), " ");
-	
+
 	test_prefix = "Kl_strEqPrefixes";
 	test (test_prefix, kl_strEqPrefixes_test (), " ");
-	
+
 	test_prefix = "Kl_strEquals";
 	test (test_prefix, kl_strEquals_test (), " ");
-	
+
 	test_prefix = "Kl_strHamming";
 	test (test_prefix, kl_strHamming_test (), " ");
-	
+
 	test_prefix = "Kl_strIndexOf";
 	test (test_prefix, kl_strIndexOf_test (), " ");
-	
+
 	test_prefix = "Kl_strIsLessThan";
 	test (test_prefix, kl_strIsLessThan_test (), " ");
-	
+
 	test_prefix = "Kl_strLength";
 	test (test_prefix, kl_strLength_test (), " ");
-	
+
 	test_prefix = "Kl_strLevenshtein";
 	test (test_prefix, kl_strLevenshtein_test (), " ");
-	
+
 	test_report();
 }

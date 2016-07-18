@@ -16,7 +16,7 @@
  *
  * For further information, please contact us at sharemind@cyber.ee.
  */
- 
+
 import stdlib;
 import shared3p;
 import shared3p_statistics_summary;
@@ -29,9 +29,9 @@ template<type T, type G>
 bool variance_test (T data, G data2) {
 	pd_shared3p T[[1]] a (11) = {1, 1, 2, 3, 6, 10, 6, 3, 2, 1, 1};
 	pd_shared3p G result = variance (a);
-	
+
 	G relative_error = (abs (declassify (result) - 8.41818181818182))/8.4182;
-	
+
 	//the relative error is about 1e-16 for 64 bit floats, 1e-7 for 32 bit floats
 	if (!isNegligible (relative_error))
 		return false;
@@ -45,8 +45,8 @@ bool variance_test_filter (T data, G data2) {
 	pd_shared3p T[[1]] a (11) = {1, 1, 2, 3, 6, 10, 6, 3, 2, 1, 1};
 	pd_shared3p bool[[1]] mask (11) = true;
 	mask[0:2] = false;
-	
-	pd_shared3p G result = variance (a, mask);	
+
+	pd_shared3p G result = variance (a, mask);
 
 	G relative_error = (abs (declassify (result) - 8.94444444444444))/8.944444;
 
@@ -61,11 +61,11 @@ void main () {
 	string test_prefix = "Variance";
 	test (test_prefix, variance_test (0::int32, 0::float32), 0::int32);
 	test (test_prefix, variance_test (0::int64, 0::float64), 0::int64);
-	
+
 	test_prefix = "Variance (filter)";
 	test (test_prefix, variance_test_filter (0::int32, 0::float32), 0::int32);
 	test (test_prefix, variance_test_filter (0::int64, 0::float64), 0::int64);
-	
+
 	test_report ();
 
 }

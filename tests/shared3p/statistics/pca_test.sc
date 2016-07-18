@@ -16,7 +16,7 @@
  *
  * For further information, please contact us at sharemind@cyber.ee.
  */
- 
+
 import stdlib;
 import shared3p;
 import shared3p_statistics_pca;
@@ -35,7 +35,7 @@ bool gspca_test (T data) {
 	pd_shared3p T[[2]] data (20, 2);
 		data[:, 0] = a;
 		data[:, 1] = b;
-	
+
 	PCAResult<pd_shared3p, T> result = gspca (data, 2::uint, 10::uint, 2::uint8);
 
 	//calculate the error
@@ -48,7 +48,7 @@ bool gspca_test (T data) {
 
 	if (error > 0.001)
 		return false;
-		
+
 	return true;
 }
 

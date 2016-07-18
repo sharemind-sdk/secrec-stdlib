@@ -16,7 +16,7 @@
  *
  * For further information, please contact us at sharemind@cyber.ee.
  */
- 
+
 import stdlib;
 import shared3p;
 import shared3p_statistics_outliers;
@@ -32,12 +32,12 @@ bool outliersMAD_test (T data, G data2) {
 	mask[0] = false;
 
 	pd_shared3p bool[[1]] result = outlierDetectionMAD (a, mask, 2::G);
-	
+
 	T relative_error = declassify (sum (cut (a, result)));
-	
+
 	if  (relative_error != 56)
 		return false;
-	
+
 	return true;
 }
 
@@ -49,12 +49,12 @@ bool outliersQuantiles_test (T data, G data2) {
 	mask[0] = false;
 
 	pd_shared3p bool[[1]] result = outlierDetectionQuantiles (0.10::G, a, mask);
-	
+
 	T relative_error = declassify (sum (cut (a, result)));
 
 	if  (relative_error != 116)
 		return false;
-	
+
 	return true;
 }
 
@@ -67,6 +67,6 @@ void main () {
 	test_prefix = "OutlierDetectionQuantiles";
 	test (test_prefix, outliersQuantiles_test (0::int32, 0::float32), 0::int32, 0::float32);
 	test (test_prefix, outliersQuantiles_test (0::int64, 0::float64), 0::int64, 0::float64);
-	
+
 	test_report ();
 }
