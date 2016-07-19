@@ -626,6 +626,52 @@ D float64 chiSquared (D uint64[[1]] data,
 
 
 /** \cond */
+template <domain D, type T, type FT>
+struct _RankResult {
+    D FT tieCorrection;
+    D FT rankSum;
+}
+
+/*
+ * Rank tie correction reference: "Nonparametric Statistical Methods"
+ */
+template <domain D : shared3p, type T, type FT>
+_RankResult<D, T, FT> _rank (D T[[1]] data, D T[[1]] groupFilter, D FT n1, D FT n2) {
+    uint N = size(data);
+    D T[[2]] matA(N, N);
+    D T[[2]] matB(N, N);
+    T[[1]] ranks(N);
+
+    // On row i of matA, we want a filter indicating which values of
+    // the sorted data vector equal the i-th element of the sorted data.
+    for (uint i = 0; i < N; i++) {
+        matA[i, :] = data;
+        matB[i, :] = data[i];
+        ranks[i] = (T) (i + 1);
+    }
+    matA = (T) (matA == matB);
+
+    for (uint i = 0; i < N; i++) {
+        matB[i, :] = ranks;
+    }
+
+    // Calculate the average of the ranks where the data values are
+    // equal and the sum in the tied rank variance correction.
+    D T[[1]] counts = rowSums(matA);
+    D FT[[1]] correctRanks = (FT) rowSums(matA * matB) / (FT) counts;
+    D bool[[1]] unique(size(data));
+    unique[0] = true;
+    unique[1:] = data[1:] != data[:size(data) - 1];
+    D bool[[1]] filter = (counts != 1) && unique;
+    counts = counts * (T) filter;
+
+    public _RankResult<D, T, FT> res;
+    res.rankSum = sum(correctRanks * (FT) groupFilter);
+    res.tieCorrection = n1 * n2 / (12 * (FT) (N * (N - 1))) *
+        (FT) sum((counts - 1) * counts * (counts + 1));
+    return res;
+}
+
 template <domain D : shared3p, type T, type FT>
 D FT[[1]] _rank (D T[[1]] data) {
     uint N = size(data);
@@ -661,7 +707,6 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
                             bool correctRanks,
                             int64 alternative)
 {
-    // Continuity correction
     assert (alternative == ALTERNATIVE_LESS ||
             alternative == ALTERNATIVE_GREATER ||
             alternative == ALTERNATIVE_TWO_SIDED);
@@ -688,36 +733,9 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
     D FT sigmaSqr = n1 * n2 * ((FT) N + 1) / 12;
 
     if (correctRanks) {
-        D T[[2]] matA(N, N);
-        D T[[2]] matB(N, N);
-        T[[1]] ranks(N);
-
-        D T[[1]] data = mat[:, 0];
-        // On row i of matA, we want a filter indicating which values of
-        // the sorted data vector equal the i-th element of the sorted data
-        for (uint i = 0; i < N; i++) {
-            matA[i, :] = data;
-            matB[i, :] = data[i];
-            ranks[i] = (T) (i + 1);
-        }
-        matA = (T) (matA == matB);
-
-        for (uint i = 0; i < N; i++) {
-            matB[i, :] = ranks;
-        }
-
-        // Calculate the average of the ranks where the data values are
-        // equal and the sum in the tied rank variance correction.
-        D T[[1]] counts = rowSums(matA);
-        D FT[[1]] correctRanks = (FT) rowSums(matA * matB) / (FT) counts;
-        D bool[[1]] unique(size(data));
-        unique[0] = true;
-        unique[1:] = data[1:] != data[:size(data) - 1];
-        D bool[[1]] filter = (counts != 1) && unique;
-        counts = counts * (T) filter;
-        D T tieCorrection = sum((counts - 1) * counts * (counts + 1));
-        w = sum (correctRanks * (FT) mat[:, 1]);
-        sigmaSqr = sigmaSqr - (n1 * n2 / (12 * (FT) (N * (N - 1))) * (FT) tieCorrection);
+        public _RankResult<D, T, FT> res = _rank (mat[:, 0], mat[:, 1], n1, n2);
+        w = res.rankSum;
+        sigmaSqr = sigmaSqr - res.tieCorrection;
     } else {
         T[[1]] ranks (N);
         for (uint i = 0; i < N; i++) {
@@ -729,12 +747,14 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
     D FT z = w - n1 * ((FT) N + 1) / 2;
     FT correction;
 
+    // Continuity correction
     if (alternative == ALTERNATIVE_LESS) {
         correction = 0.5;
     } else if (alternative == ALTERNATIVE_GREATER) {
         correction = -0.5;
     } else if (alternative == ALTERNATIVE_TWO_SIDED) {
         correction = -0.5;
+        z = abs (z);
     }
 
     z = (z + correction) / sqrt (sigmaSqr);
@@ -811,6 +831,10 @@ D FT[[1]] _mannWhitneyU (D T[[1]] sample1,
                          bool correctRanks,
                          int64 alternative)
 {
+    assert (alternative == ALTERNATIVE_LESS ||
+            alternative == ALTERNATIVE_GREATER ||
+            alternative == ALTERNATIVE_TWO_SIDED);
+
     // Zero will indicate that the matrix row is from sample2, one
     // indicates that it's from sample1.
     D T[[2]] mat (size (sample1) + size (sample2), 2);
@@ -828,11 +852,13 @@ D FT[[1]] _mannWhitneyU (D T[[1]] sample1,
     D uint32 n2 = sum ((uint32) ia2);
     D FT n1n2 = (FT) (n1 * n2);
     uint N = shape (mat)[0];
+    D FT sigmaUSqr = n1n2 * (FT) (N + 1) / 12;
 
     D FT sum1;
     if (correctRanks) {
-        D FT[[1]] ranks = _rank (mat[:, 0]);
-        sum1 = sum (ranks * (FT) mat[:, 1]);
+        public _RankResult<D, T, FT> res = _rank (mat[:, 0], mat[:, 1], (FT) n1, (FT) n2);
+        sum1 = res.rankSum;
+        sigmaUSqr = sigmaUSqr - res.tieCorrection;
     } else {
         T[[1]] ranks (N);
         for (uint64 i = 0; i < N; i = i + 1) {
@@ -841,31 +867,28 @@ D FT[[1]] _mannWhitneyU (D T[[1]] sample1,
         sum1 = (FT) sum (ranks * mat[:, 1]);
     }
 
-    D FT U1 = sum1 - ((FT) n1 * ((FT) n1 + 1)) / 2;
+    D FT U1 = sum1 - ((FT) (n1 * (n1 + 1))) / 2;
     D FT U2 = n1n2 - U1;
+    // Should we return min(U1, U2)? R returns U1, SciPy returns U2.
     D FT U = choose (U1 < U2, U1, U2);
 
     // Calculate z-score from U1 (it doesn't matter which one we use).
     FT correction;
-    D FT meanU = n1n2 / 2;
-    D FT sigmaU = sqrt (n1n2 * (FT) (N + 1) / 12);
-    D FT z;
+    D FT z = U1 - n1n2 / 2;
 
     // Continuity correction
-    assert (alternative == ALTERNATIVE_LESS ||
-            alternative == ALTERNATIVE_GREATER ||
-            alternative == ALTERNATIVE_TWO_SIDED);
-
-    if (alternative == ALTERNATIVE_LESS)
+    if (alternative == ALTERNATIVE_LESS) {
         correction = 0.5;
-    else if (alternative == ALTERNATIVE_GREATER)
+    } else if (alternative == ALTERNATIVE_GREATER) {
         correction = -0.5;
-    else if (alternative == ALTERNATIVE_TWO_SIDED)
+    } else if (alternative == ALTERNATIVE_TWO_SIDED) {
+        z = abs (z);
         correction = -0.5;
+    }
 
-    z = ((U - meanU) + correction) / sigmaU;
+    z = (z + correction) / sqrt (sigmaUSqr);
 
-    D FT[[1]] res(2) = {U, z};
+    D FT[[1]] res = {U, z};
 
     return res;
 }
