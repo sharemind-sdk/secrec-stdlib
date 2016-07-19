@@ -1048,26 +1048,30 @@ D uint[[1]] _benjaminiHochberg (D FT[[1]] statistics,
 {
     assert (size (statistics) == size (quantiles));
 
-    // Columns: statistics, indices, quantiles
-    D FT[[2]] mat (size (statistics), 3);
-    mat[:, 0] = statistics;
-    mat[:, 2] = quantiles;
-
     uint32[[1]] indices (size (statistics));
     for (uint i = 0; i < size (statistics); i++) {
         indices[i] = (uint32) i;
     }
-    // Note: can't go from uint to float32
+
+    D FT[[2]] mat (size (statistics), 2);
+    mat[:, 0] = statistics;
     mat[:, 1] = (FT) indices;
-
     mat = sort (mat, 0 :: uint);
-    D bool[[1]] comp = mat[:, 0] >= mat[:, 2];
 
-    for (uint i = 0; i < size (comp); i++) {
-        bool compPub = declassify (comp[i]);
-        if (compPub) {
+    // Reverse
+    FT tmp;
+    uint n = size (quantiles);
+    for (uint i = 0; i < n / 2; ++i) {
+        tmp = quantiles[i];
+        quantiles[i] = quantiles[n - i - 1];
+        quantiles[n - i - 1] = tmp;
+    }
+
+    D bool[[1]] comp = mat[:, 0] >= quantiles;
+
+    for (uint i = 0; i < n; ++i) {
+        if (declassify (comp[i]))
             return (uint) mat[i :, 1];
-        }
     }
 
     D uint[[1]] res;
@@ -1079,13 +1083,25 @@ D uint[[1]] _benjaminiHochberg (D FT[[1]] statistics,
  *  @{
  *  @brief Perform the Benjamini-Hochberg procedure for false
  *  discovery rate control.
+
  *  @note If multiple variables of a dataset are used for testing a
  *  hypothesis then this procedure will help avoid false discoveries
- *  (incorrectly rejected null hypothesis). This procedure is only
- *  correct when the alternative hypothesis is of the upper tail kind.
+ *  (incorrectly rejected null hypothesis). This procedure does
+ *  comparisons of the form t >= q where t is the test statistic and q
+ *  is a critical quantile. This means it can only be used for tests
+ *  that have that form of comparison (upper tail). For example, when
+ *  using the "greater" hypothesis t-test which checks if the mean of
+ *  the first distribution exceeds the mean of the second.
  *  @note **D** - shared3p protection domain
  *  @param statistics - vector of calculated test statistics
- *  @param quantiles - vector of critical values for the test statistics
+ *  @param quantiles - vector of critical values of the test
+ *  statistics. The i-th value should be Q(i / k ⋅ alpha) where k is
+ *  the number of tests, alpha is the significance level and Q is the
+ *  quantile function of the distribution of the test statistic. Note
+ *  that you have to use the quantile function correctly depending on
+ *  your test. For example, when using the "greater" hypothesis
+ *  t-test, the decision is 1 - P(t) < alpha which means the quantiles
+ *  should be calculated as 1 - Q(p), not Q(p).
  *  @return returns the indices of the tests for which the null
  *  hypothesis is rejected
  */
