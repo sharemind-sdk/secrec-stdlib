@@ -159,17 +159,26 @@ D Fix[[2]] _fixMatrixMultiplication(D Fix[[2]] x, D Fix[[2]] y) {
 	return result;
 }
 
-template<domain D : shared3p, type Fix>
-D Fix _invSqrtFix(D Fix x) {
-    D Fix x1;
+template<domain D : shared3p>
+D uint64 _invSqrtFix(D uint64 x) {
+    D uint64 x1;
     __syscall("shared3p::sqrt_fix64_vec", __domainid (D), x, x1);
-    D Fix x2;
+    D uint64 x2;
     __syscall("shared3p::inv_fix64_vec", __domainid (D), x1, x2);
     return x2;
 }
 
-template <type T, dim N, domain D>
-D T[[N]] _power(D T[[N]] x, uint e) {
+template<domain D : shared3p>
+D uint32 _invSqrtFix(D uint32 x) {
+    D uint32 x1;
+    __syscall("shared3p::sqrt_fix32_vec", __domainid (D), x, x1);
+    D uint32 x2;
+    __syscall("shared3p::inv_fix32_vec", __domainid (D), x1, x2);
+    return x2;
+}
+
+template <type T, type UT, dim N, domain D>
+D T[[N]] _power(D T[[N]] x, UT e) {
     if (e == 0) {
         D T[[N]] one = 1;
         return one;
@@ -188,12 +197,26 @@ uint64 pubDoubleToFix(float64 x, uint radix_point) {
     return (uint64) round(x * (float64) _power(2, radix_point));
 }
 
-uint _getRadix(uint64 x) {
+uint32 pubDoubleToFix(float64 x, uint32 radix_point) {
+    return (uint32) round(x * (float64) _power(2, radix_point));
+}
+
+uint64 _getRadix(uint64 x) {
     return 32;
 }
 
-uint _getRadix(uint32 x) {
+uint32 _getRadix(uint32 x) {
     return 16;
+}
+
+uint64 _getDivisor(uint64 radix) {
+    // This is 1/2^12 as a fixed point number
+    return 1 << (radix - 12);
+}
+
+uint32 _getDivisor(uint32 radix) {
+    // This is 1/2^6 as a fixed point number
+    return 1 << (radix - 6);
 }
 
 /*
@@ -220,19 +243,19 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
     D Fix[[2]] vDivisor(shape(X)[0], 1);
 
     Fix proxy;
-    uint radix = _getRadix(proxy);
-
-    // This is 1/2^12 as a fixed point number. They are used to
-    // shorten vectors before normalizing to avoid overflow.
-    pDivisor = 1 << (radix - 12);
-    vDivisor = 1 << (radix - 12);
+    Fix radix = _getRadix(proxy);
+    // The divisor is used to shorten vectors before normalisation to
+    // avoid overflow.
+    Fix divisor = _getDivisor(radix);
+    pDivisor = divisor;
+    vDivisor = divisor;
 
     // todo: optimize, use k sum
     // Center
-    uint64 invRows = pubDoubleToFix(1.0 / (float64) shape(R)[0], radix);
-    D uint64 invRowsPriv = invRows;
+    Fix invRows = pubDoubleToFix(1.0 / (float64) shape(R)[0], radix);
+    D Fix invRowsPriv = invRows;
     for (uint i = 0; i < shape(R)[1]; ++i) {
-        D uint64 mu = _mulFix(sum(R[:, i]), invRowsPriv);
+        D Fix mu = _mulFix(sum(R[:, i]), invRowsPriv);
         R[:, i] -= mu;
     }
 
@@ -248,7 +271,7 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
 
             if (k > 0) {
                 // Orthogonality correction
-                D uint64[[2]] A = _fixMatrixMultiplication(transpose(P[:, 0:k]), p);
+                D Fix[[2]] A = _fixMatrixMultiplication(transpose(P[:, 0:k]), p);
                 p = p - _fixMatrixMultiplication(P[:, 0:k], A);
             }
 
