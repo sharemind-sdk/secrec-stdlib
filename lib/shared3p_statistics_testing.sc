@@ -672,6 +672,11 @@ _RankResult<D, T, FT> _rank (D T[[1]] data, D T[[1]] multiplier) {
 }
 
 /*
+ * TODO: should we also have exact versions of Wilcoxon and
+ * Mann-Whitney tests? Currently we use large sample approximation.
+ */
+
+/*
  * Reference: Nonparametric Statistical Methods
  */
 template <domain D : shared3p, type T, type FT>
@@ -823,8 +828,8 @@ D FT[[1]] _mannWhitneyU (D T[[1]] sample1,
     mat = sortingNetworkSort (mat, 0 :: uint);
 
     // Note: can't go from uint64 to float32
-    D uint32 n1 = sum ((uint32) ia1);
-    D uint32 n2 = sum ((uint32) ia2);
+    D T n1 = sum ((T) ia1);
+    D T n2 = sum ((T) ia2);
     D FT n1n2 = (FT) (n1 * n2);
     uint N = shape (mat)[0];
     D FT sigmaUSqr = n1n2 * (FT) (N + 1) / 12;
