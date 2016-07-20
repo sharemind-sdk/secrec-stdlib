@@ -46,7 +46,7 @@ bool gspca_test (T data) {
 	T error = sqrt (sum (flat * flat));
 	print(error);
 
-	if (error > 0.001)
+	if (error > 0.05)
 		return false;
 
 	return true;
@@ -56,7 +56,7 @@ bool gspca_test (T data) {
 void main () {
 	string test_prefix = "GSPCA";
 	//if the input is 32 bit, the function crahses
-	test (test_prefix, false, 0::float32);
+	test (test_prefix, gspca_test (0::float32), 0::float32);
 	test (test_prefix, gspca_test (0::float64), 0::float64);
 
 	test_report ();

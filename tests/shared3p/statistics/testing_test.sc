@@ -10,7 +10,7 @@
  * Alternatively, this file may be used under the terms of the GNU Lesser
  * General Public License version 3 as published by the Free Software
  * Foundation and appearing in the file LICENSE.LGPLv3 included in the
- * packaging of this file.  Please review the following information to
+ * packaging of this file. Please review the following information to
  * ensure the GNU Lesser General Public License version 3 requirements
  * will be met: http://www.gnu.org/licenses/lgpl-3.0.html.
  *
@@ -21,12 +21,13 @@ import stdlib;
 import shared3p;
 import shared3p_statistics_testing;
 import test_utility;
+import shared3p_sort;
 
 domain pd_shared3p shared3p;
 
 
 template<type T, type G>
-bool tTest_test_samples(T data, G data2) {
+bool tTest_test_samples (T data, G data2) {
 	pd_shared3p T[[1]] a = {2, 2, 3, 3, 4, 5, 3, 2, 2, 1, 1};
 	pd_shared3p T[[1]] b = {2, 2, 4, 4, 3, 5, 3, 2, 2, 1, 1};
 
@@ -44,7 +45,7 @@ bool tTest_test_samples(T data, G data2) {
 
 
 template<type T, type G>
-bool tTest_test(T data, G data2) {
+bool tTest_test (T data, G data2) {
 	pd_shared3p T[[1]] a = {2, 2, 3, 3, 4, 5, 3, 2, 2, 1, 1, 2, 2, 4, 4, 3, 5, 3, 2, 2, 1, 1};
 
 	pd_shared3p bool[[1]] cases (22) = true;
@@ -64,7 +65,7 @@ bool tTest_test(T data, G data2) {
 
 
 template<type T, type G>
-bool tTest_test_paired(T data, G data2) {
+bool tTest_test_paired (T data, G data2) {
 	pd_shared3p T[[1]] a = {2, 2, 3, 3, 4, 5, 3, 2, 2, 1, 1};
 	pd_shared3p T[[1]] b = {2, 2, 4, 4, 3, 5, 3, 2, 2, 1, 1};
 
@@ -94,7 +95,7 @@ bool multiple_testing_test (T data) {
 
 
 template<type T, type G>
-bool mann_whitney_u_test(T data, G data2) {
+bool mann_whitney_u_test (T data, G data2) {
 	pd_shared3p T[[1]] a = {2, 2, 3, 3, 4, 5, 3, 2, 2, 1, 1};
 	pd_shared3p T[[1]] b = {2, 2, 4, 4, 3, 5, 3, 2, 2, 1, 1};
 
@@ -112,7 +113,7 @@ bool mann_whitney_u_test(T data, G data2) {
 
 
 template<type T, type G>
-bool wilcoxon_rank_sum_test(T data, G data2) {
+bool wilcoxon_rank_sum_test (T data, G data2) {
 	pd_shared3p T[[1]] a = {2, 2, 3, 3, 4, 5, 3, 2, 2, 1, 1};
 	pd_shared3p T[[1]] b = {2, 2, 4, 4, 3, 5, 3, 2, 2, 1, 1};
 
@@ -122,20 +123,16 @@ bool wilcoxon_rank_sum_test(T data, G data2) {
 	G[[1]] test_result2 = declassify (wilcoxonRankSum (a, mask, b, mask, true, 1));
 	G[[1]] test_result3 = declassify (wilcoxonRankSum (a, mask, b, mask, true, 2));
 
-	G[[1]] test_result = declassify(wilcoxonRankSum(a, mask, b, mask, false, 1));
+	G error1 = (test_result1[1] + 0.101983412047351) / 0.101983412047351;
+	G error2 = (test_result2[1] + 0.16997235341225) / 0.16997235341225;
+	G error3 = (test_result3[1] - 0.101983412047351) / 0.101983412047351;
 
-	G error1 = (test_result[0] - 58.5) / 58.5;
-	G error2 = (test_result[1] - 0.55408061721400503) / 0.55408061721400503;
-
-	if (!isNegligible(error1) || !isNegligible(error1))
-		return false;
-
-	return true;
+	return isNegligible (error1) && isNegligible (error2) && isNegligible (error3);
 }
 
 
 template<type T, type G>
-bool wilcoxon_signed_rank_test(T data, G data2) {
+bool wilcoxon_signed_rank_test (T data, G data2) {
 	pd_shared3p T[[1]] a = {2, 2, 3, 3, 4, 5, 3, 2, 2, 1, 1};
 	pd_shared3p T[[1]] b = {2, 2, 4, 4, 3, 5, 3, 2, 2, 1, 1};
 
@@ -145,12 +142,13 @@ bool wilcoxon_signed_rank_test(T data, G data2) {
 	G[[1]] test_result2 = declassify (wilcoxonSignedRank (a, b, mask, true, 1));
 	G[[1]] test_result3 = declassify (wilcoxonSignedRank (a, b, mask, true, 2));
 
-	G[[1]] test_result = declassify(wilcoxonSignedRank(a, b, mask, false, 1));
+	G error1 = (test_result1[1] + 0.288675134594813) / 0.288675134594813;
+	G error2 = (test_result2[1] + 0.866025403784439) / 0.866025403784439;
+	G error3 = (test_result3[1] - 0.288675134594813) / 0.288675134594813;
 
-	printVector(test_result);
+	return isNegligible (error1) && isNegligible (error2) && isNegligible (error3);
+}
 
-	G error1 = (test_result[0] - 2) / 2;
-	G error2 = (test_result[1] - 0.806761884614384) / 0.806761884614384;
 
 template<type T, type G>
 bool chi_squared_test (T data, G data2) {
@@ -187,8 +185,8 @@ void main () {
 	test (test_prefix, multiple_testing_test (0::float64), 0::float64);
 
 	test_prefix = "MannWhitneyU";
-	test(test_prefix, mann_whitney_u_test(0::int32, 0::float32), 0::float32);
-	test(test_prefix, mann_whitney_u_test(0::int64, 0::float64), 0::float64);
+	test (test_prefix, mann_whitney_u_test (0::int32, 0::float32), 0::float32);
+	test (test_prefix, mann_whitney_u_test (0::int64, 0::float64), 0::float64);
 
 	test_prefix = "WilcoxonRankSum";
 	test (test_prefix, wilcoxon_rank_sum_test (0::int32, 0::float32), 0::int32);
