@@ -134,9 +134,8 @@ void main() {
     test(test_prefix, cast_type_to_bool(0::int16), 0::int16, true);
     test(test_prefix, cast_type_to_bool(0::int32), 0::int32, true);
     test(test_prefix, cast_type_to_bool(0::int64), 0::int64, true);
-    // TODO
-//    test(test_prefix, cast_type_to_bool(0::float32), 0::float32, true);
-//    test(test_prefix, cast_type_to_bool(0::float64), 0::float64, true);
+    test(test_prefix, cast_type_to_bool(0::float32), 0::float32, true);
+    test(test_prefix, cast_type_to_bool(0::float64), 0::float64, true);
 
     {
         uint8[[1]] a = {0, 100, 200, 255};
@@ -454,35 +453,35 @@ void main() {
         float32[[1]] a = {-3.40282e+38,0.0,1.17549e-38,1.0,3.40282e+38};
         {
             uint8[[1]] b = {UINT8_MIN,0,0,1,UINT8_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::uint8);
+            test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::uint8);
         }
         {
             uint16[[1]] b = {UINT16_MIN,0,0,1,UINT16_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::uint16);
+            test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::uint16);
         }
         {
             uint32[[1]] b = {UINT32_MIN,0,0,1,UINT32_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::uint32);
+            test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::uint32);
         }
         {
             uint64[[1]] b = {UINT64_MIN,0,0,1,UINT64_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::uint64);
+            test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::uint64);
         }
         {
             int8[[1]] b = {INT8_MIN,0,0,1,INT8_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::int8);
+            test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::int8);
         }
         {
             int16[[1]] b = {INT16_MIN,0,0,1,INT16_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::int16);
+            test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::int16);
         }
         {
             int32[[1]] b = {INT32_MIN,0,0,1,INT32_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::int32);
+            test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::int32);
         }
         {
             int64[[1]] b = {INT64_MIN,0,0,1,INT64_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::int64);
+            test(test_prefix, cast_type_to_type(a, b), 0::float32, 0::int64);
         }
         {
             float64[[1]] b = {-3.40282e+38,0,1.17549e-38,1,3.40282e+38};
@@ -493,35 +492,35 @@ void main() {
         float64[[1]] a = {-1.79769e+308,0.0,2.22507e-308,1.0,1.79769e+308};
         {
             uint8[[1]] b = {UINT8_MIN,0,0,1,UINT8_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::uint8);
+            test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::uint8);
         }
         {
             uint16[[1]] b = {UINT16_MIN,0,0,1,UINT16_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::uint16);
+            test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::uint16);
         }
         {
             uint32[[1]] b = {UINT32_MIN,0,0,1,UINT32_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::uint32);
+            test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::uint32);
         }
         {
             uint64[[1]] b = {UINT64_MIN,0,0,1,UINT64_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::uint64);
+            test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::uint64);
         }
         {
             int8[[1]] b = {INT8_MIN,0,0,1,INT8_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::int8);
+            test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::int8);
         }
         {
             int16[[1]] b = {INT16_MIN,0,0,1,INT16_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::int16);
+            test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::int16);
         }
         {
             int32[[1]] b = {INT32_MIN,0,0,1,INT32_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::int32);
+            test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::int32);
         }
         {
             int64[[1]] b = {INT64_MIN,0,0,1,INT64_MAX};
-            //test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::int64);
+            test(test_prefix, cast_type_to_type(a, b), 0::float64, 0::int64);
         }
         {
             float32[[1]] b = {-1.79769e+308,0.0,2.22507e-308,1.0,1.79769e+308};

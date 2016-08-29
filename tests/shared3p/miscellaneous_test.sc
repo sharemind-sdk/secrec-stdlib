@@ -26,39 +26,17 @@ import test_utility;
 
 domain pd_shared3p shared3p;
 
-template<type T>
-T random_float(T data){
-    T rand = 1;
-    for(uint i = 0; i < 2; ++i){
-        pd_shared3p uint32 temp;
-        pd_shared3p int8 temp2;
-        while(declassify(temp) == 0 || declassify(temp2) == 0){
-            temp = randomize(temp);
-            temp2 = randomize(temp2);
-        }
-        T scalar = (T) declassify(temp);
-        T scalar2 = (T) declassify(temp2);
-        if((i % 2) == 0){
-            rand *= scalar;
-            rand *= scalar2;
-        }
-        else{
-            rand /= scalar;
-            rand /= scalar2;
-        }
-    }
-    return rand;
+// NOTE: This is a hack to generate somewhat random floats.
+template <domain D : shared3p>
+D float32[[1]] randomize(D float32[[1]] arr) {
+    D uint[[1]] tmp(size(arr));
+    return (float32)declassify(randomize(tmp)) / (float32)declassify(randomize(tmp));
 }
 
-template<domain D: shared3p,type T>
-D T[[1]] random(D T[[1]] data){
-    uint x_shape = shape(data)[0];
-    T[[1]] temp (x_shape);
-    for(uint i = 0; i < x_shape;++i){
-        temp[i] = random_float(0::T);
-    }
-    D T[[1]] result = temp;
-    return result;
+template <domain D : shared3p>
+D float64[[1]] randomize(D float64[[1]] arr) {
+    D uint[[1]] tmp(size(arr));
+    return (float64)declassify(randomize(tmp)) / (float64)declassify(randomize(tmp));
 }
 
 template<domain D, type T>
@@ -128,10 +106,8 @@ void main(){
         { pd_shared3p xor_uint16 b; test(test_prefix, cast_bool_to_type(b), a, b); }
         { pd_shared3p xor_uint32 b; test(test_prefix, cast_bool_to_type(b), a, b); }
         { pd_shared3p xor_uint64 b; test(test_prefix, cast_bool_to_type(b), a, b); }
-//        { pd_shared3p float32 b; test(test_prefix, cast_bool_to_type(b), a, b); }
-        { pd_shared3p float32 b; test(test_prefix, false, a, b); }
-//        { pd_shared3p float64 b; test(test_prefix, cast_bool_to_type(b), a, b); }
-        { pd_shared3p float64 b; test(test_prefix, false, a, b); }
+        { pd_shared3p float32 b; test(test_prefix, cast_bool_to_type(b), a, b); }
+        { pd_shared3p float64 b; test(test_prefix, cast_bool_to_type(b), a, b); }
         { pd_shared3p uint8 b; test(test_prefix, cast_type_to_bool(b), b, a); }
         { pd_shared3p uint16 b; test(test_prefix, cast_type_to_bool(b), b, a); }
         { pd_shared3p uint32 b; test(test_prefix, cast_type_to_bool(b), b, a); }
@@ -148,10 +124,8 @@ void main(){
         { pd_shared3p xor_uint32 b; test(test_prefix, false, b, a); }
 //        { pd_shared3p xor_uint64 b; test(test_prefix, cast_type_to_bool(b), b, a); }
         { pd_shared3p xor_uint64 b; test(test_prefix, false, b, a); }
-//        { pd_shared3p float32 b; test(test_prefix, cast_type_to_bool(b), b, a); }
-        { pd_shared3p float32 b; test(test_prefix, false, b, a); }
-//        { pd_shared3p float64 b; test(test_prefix, cast_type_to_bool(b), b, a); }
-        { pd_shared3p float64 b; test(test_prefix, false, b, a); }
+        { pd_shared3p float32 b; test(test_prefix, cast_type_to_bool(b), b, a); }
+        { pd_shared3p float64 b; test(test_prefix, cast_type_to_bool(b), b, a); }
     }
 
     {
@@ -892,43 +866,35 @@ void main(){
         pd_shared3p float32[[1]] a = {-3.40282e+38,0.0,1.17549e-38,1.0,3.40282e+38};
         {
             pd_shared3p uint8[[1]] b = {UINT8_MIN,0,0,1,UINT8_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p uint16[[1]] b = {UINT16_MIN,0,0,1,UINT16_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p uint32[[1]] b = {UINT32_MIN,0,0,1,UINT32_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p uint64[[1]] b = {UINT64_MIN,0,0,1,UINT64_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p int8[[1]] b = {INT8_MIN,0,0,1,INT8_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p int16[[1]] b = {INT16_MIN,0,0,1,INT16_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p int32[[1]] b = {INT32_MIN,0,0,1,INT32_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p int64[[1]] b = {INT64_MIN,0,0,1,INT64_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p xor_uint8[[1]] b = {UINT8_MIN,0,0,1,UINT8_MAX};
@@ -959,43 +925,35 @@ void main(){
         pd_shared3p float64[[1]] a = {-1.79769e+308,0.0,2.22507e-308,1.0,1.79769e+308};
         {
             pd_shared3p uint8[[1]] b = {UINT8_MIN,0,0,1,UINT8_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p uint16[[1]] b = {UINT16_MIN,0,0,1,UINT16_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p uint32[[1]] b = {UINT32_MIN,0,0,1,UINT32_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p uint64[[1]] b = {UINT64_MIN,0,0,1,UINT64_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p int8[[1]] b = {INT8_MIN,0,0,1,INT8_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p int16[[1]] b = {INT16_MIN,0,0,1,INT16_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p int32[[1]] b = {INT32_MIN,0,0,1,INT32_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p int64[[1]] b = {INT64_MIN,0,0,1,INT64_MAX};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
         {
             pd_shared3p xor_uint8[[1]] b = {UINT8_MIN,0,0,1,UINT8_MAX};
@@ -1019,8 +977,7 @@ void main(){
         }
         {
             pd_shared3p float32[[1]] b = {-1.79769e+308,0.0,2.22507e-308,1.0,1.79769e+308};
-//            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
+            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
     }
 
