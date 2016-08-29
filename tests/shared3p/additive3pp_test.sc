@@ -114,12 +114,6 @@ bool test_sum2(T data){
 
 template<type T>
 bool test_product(T data){
-    /**
-    \todo product does not take 0 element vectors as parameters
-    {
-        pd_shared3p T[[1]] vec (0);
-        pd_shared3p T vec2 = product(vec);
-    }*/
     pd_shared3p T[[1]] temp (10);
     temp = randomize(temp);
     T[[1]] vec = declassify(temp);
@@ -361,65 +355,6 @@ bool test_ceiling(){
 }
 
 void main(){
-// TODO Remove this test? It either works or asserts.
-//    print("Classify");
-//    {
-//        print("uint8");
-//        uint8 a = 5; pd_shared3p uint8 b = classify(a);
-//        print("SUCCESS!");
-//        succeeded_tests = succeeded_tests + 1;
-//        all_tests = all_tests +1;
-//    }
-//    {
-//        print("uint16");
-//        uint16 a = 5; pd_shared3p uint16 b = classify(a);
-//        print("SUCCESS!");
-//        succeeded_tests = succeeded_tests + 1;
-//        all_tests = all_tests +1;
-//    }
-//    {
-//        print("uint32");
-//        uint32 a = 5; pd_shared3p uint32 b = classify(a);
-//        print("SUCCESS!");
-//        succeeded_tests = succeeded_tests + 1;
-//        all_tests = all_tests +1;
-//    }
-//    {
-//        print("uint64/uint");
-//        uint a = 5; pd_shared3p uint b = classify(a);
-//        print("SUCCESS!");
-//        succeeded_tests = succeeded_tests + 1;
-//        all_tests = all_tests +1;
-//    }
-//    {
-//        print("int8");
-//        int8 a = 5; pd_shared3p int8 b = classify(a);
-//        print("SUCCESS!");
-//        succeeded_tests = succeeded_tests + 1;
-//        all_tests = all_tests +1;
-//    }
-//    {
-//        print("int16");
-//        int16 a = 5; pd_shared3p int16 b = classify(a);
-//        print("SUCCESS!");
-//        succeeded_tests = succeeded_tests + 1;
-//        all_tests = all_tests +1;
-//    }
-//    {
-//        print("int32");
-//        int32 a = 5; pd_shared3p int32 b = classify(a);
-//        print("SUCCESS!");
-//        succeeded_tests = succeeded_tests + 1;
-//        all_tests = all_tests +1;
-//    }
-//    {
-//        print("int64/int");
-//        int a = 5; pd_shared3p int b = classify(a);
-//        print("SUCCESS!");
-//        succeeded_tests = succeeded_tests + 1;
-//        all_tests = all_tests +1;
-//    }
-
     string test_prefix = "Sign";
     test(test_prefix, test_sign(0::int8), 0::int8);
     test(test_prefix, test_sign(0::int16), 0::int16);
