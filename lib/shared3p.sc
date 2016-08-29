@@ -64,7 +64,8 @@ kind shared3p;
 * \defgroup shared3p_publish publish
 * \defgroup shared3p_bit_extract bit extraction
 * \defgroup shared3p_reshare reshare
-* \defgroup shared3p_choose choose
+* \defgroup shared3p_choose1 choose(single condition)
+* \defgroup shared3p_choose2 choose(multiple conditions)
 */
 
 /** \addtogroup shared3p
@@ -2896,7 +2897,45 @@ D uint64 [[2]] reshare (D xor_uint64[[2]] input) {
 
 /**
  * @}
- * \addtogroup shared3p_choose
+ * \addtogroup shared3p_choose1
+ *  @{
+ *  @brief Function for obliviously choosing one of the inputs
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param cond - a boolean scalar
+ *  @return returns one of the input arrays that was obliviously chosen with the condition. if **true**, array **first** is returned else **second** is returned
+ */
+
+template <domain D : shared3p, dim N, type T>
+D T[[N]] _chooseXorUint (D bool cond, D T[[N]] first, D T[[N]] second) {
+    assert (shapesAreEqual (first, second));
+    D T cond2 = (T)cond;
+    return cond2 & (first ^ second) ^ second;
+}
+
+template <domain D, dim N>
+D xor_uint8[[N]] choose(D bool cond, D xor_uint8[[N]] first, D xor_uint8[[N]] second) {
+    return _chooseXorUint (cond, first, second);
+}
+
+template <domain D, dim N>
+D xor_uint16[[N]] choose(D bool cond, D xor_uint16[[N]] first, D xor_uint16[[N]] second) {
+    return _chooseXorUint (cond, first, second);
+}
+
+template <domain D, dim N>
+D xor_uint32[[N]] choose(D bool cond, D xor_uint32[[N]] first, D xor_uint32[[N]] second) {
+    return _chooseXorUint (cond, first, second);
+}
+
+template <domain D, dim N>
+D xor_uint64[[N]] choose(D bool cond, D xor_uint64[[N]] first, D xor_uint64[[N]] second) {
+    return _chooseXorUint (cond, first, second);
+}
+
+/**
+ * @}
+ * \addtogroup shared3p_choose2
  *  @{
  *  @brief Function for obliviously choosing pointwise from the inputs
  *  @note **D** - shared3p protection domain
