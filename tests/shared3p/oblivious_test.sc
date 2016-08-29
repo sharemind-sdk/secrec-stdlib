@@ -286,11 +286,10 @@ void main(){
     { pd_shared3p int16 t; test(test_prefix, choice_test1(t), t); }
     { pd_shared3p int32 t; test(test_prefix, choice_test1(t), t); }
     { pd_shared3p int64 t; test(test_prefix, choice_test1(t), t); }
-    // TODO not currently not supported
-//    { pd_shared3p xor_uint8 t; test(test_prefix, choice_test1(t), t); }
-//    { pd_shared3p xor_uint16 t; test(test_prefix, choice_test1(t), t); }
-//    { pd_shared3p xor_uint32 t; test(test_prefix, choice_test1(t), t); }
-//    { pd_shared3p xor_uint64 t; test(test_prefix, choice_test1(t), t); }
+    { pd_shared3p xor_uint8 t; test(test_prefix, choice_test1(t), t); }
+    { pd_shared3p xor_uint16 t; test(test_prefix, choice_test1(t), t); }
+    { pd_shared3p xor_uint32 t; test(test_prefix, choice_test1(t), t); }
+    { pd_shared3p xor_uint64 t; test(test_prefix, choice_test1(t), t); }
 
     test_prefix = "Oblivious choice matrix condition";
     { pd_shared3p bool t; test(test_prefix, choice_test2(t), t); }
