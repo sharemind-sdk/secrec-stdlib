@@ -181,7 +181,8 @@ bool ne(D bool t) {
 
 void main(){
     string test_prefix = "Operator >";
-    { pd_shared3p bool t; test(test_prefix, gt(t), t); }
+//    { pd_shared3p bool t; test(test_prefix, gt(t), t); }
+    { pd_shared3p bool t; test(test_prefix, false, t); }
     { pd_shared3p uint8 t; test(test_prefix, gt(t), t); }
     { pd_shared3p uint16 t; test(test_prefix, gt(t), t); }
     { pd_shared3p uint32 t; test(test_prefix, gt(t), t); }
@@ -198,7 +199,8 @@ void main(){
     { pd_shared3p xor_uint64 t; test(test_prefix, gt(t), t); }
 
     test_prefix = "Operator <";
-    { pd_shared3p bool t; test(test_prefix, lt(t), t); }
+//    { pd_shared3p bool t; test(test_prefix, lt(t), t); }
+    { pd_shared3p bool t; test(test_prefix, false, t); }
     { pd_shared3p uint8 t; test(test_prefix, lt(t), t); }
     { pd_shared3p uint16 t; test(test_prefix, lt(t), t); }
     { pd_shared3p uint32 t; test(test_prefix, lt(t), t); }
@@ -215,7 +217,8 @@ void main(){
     { pd_shared3p xor_uint64 t; test(test_prefix, lt(t), t); }
 
     test_prefix = "Operator >=";
-    { pd_shared3p bool t; test(test_prefix, gt_or_eq(t), t); }
+//    { pd_shared3p bool t; test(test_prefix, gt_or_eq(t), t); }
+    { pd_shared3p bool t; test(test_prefix, false, t); }
     { pd_shared3p uint8 t; test(test_prefix, gt_or_eq(t), t); }
     { pd_shared3p uint16 t; test(test_prefix, gt_or_eq(t), t); }
     { pd_shared3p uint32 t; test(test_prefix, gt_or_eq(t), t); }
@@ -232,7 +235,8 @@ void main(){
     { pd_shared3p xor_uint64 t; test(test_prefix, gt_or_eq(t), t); }
 
     test_prefix = "Operator <=";
-    { pd_shared3p bool t; test(test_prefix, lt_or_eq(t), t); }
+//    { pd_shared3p bool t; test(test_prefix, lt_or_eq(t), t); }
+    { pd_shared3p bool t; test(test_prefix, false, t); }
     { pd_shared3p uint8 t; test(test_prefix, lt_or_eq(t), t); }
     { pd_shared3p uint16 t; test(test_prefix, lt_or_eq(t), t); }
     { pd_shared3p uint32 t; test(test_prefix, lt_or_eq(t), t); }
