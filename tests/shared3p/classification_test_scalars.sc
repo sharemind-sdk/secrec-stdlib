@@ -39,24 +39,6 @@ bool test_classification_xor(D T priv, T2 pub){
     return declassify(priv) == pub;
 }
 
-//template <type T>
-//void test_0a(T pub){
-//    pd_shared3p T priv;
-//    priv = pub;
-//    succeeded_tests = succeeded_tests + 1;
-//    all_tests = all_tests +1;
-//    print("SUCCESS!");
-//}
-//
-//template <domain D : shared3p, type T>
-//void test_0b(D T priv){
-//    public T pub;
-//    pub = declassify(priv);
-//    succeeded_tests = succeeded_tests + 1;
-//    all_tests = all_tests +1;
-//    print("SUCCESS!");
-//}
-
 template <type T>
 bool rand_test(T pub, uint32 nr) {
     public bool result = true;
@@ -71,81 +53,6 @@ bool rand_test(T pub, uint32 nr) {
 }
 
 void main() {
-//    string test_prefix = "PUBLIC -> PRIVATE conversions throws no errors";
-//    {
-//        public bool pub = true;
-//        test_0a(pub);
-//    }
-//    {
-//        public uint8 pub = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public uint16 pub = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public uint32 pub = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public uint pub = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public int8 pub = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public int16 pub = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public int32 pub = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public int pub = 1;
-//        test_0a(pub);
-//    }
-//    test_prefix = "PRIVATE -> PUBLIC conversion throws no errors";
-//    {
-//        pd_shared3p bool priv = false;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p uint8 priv = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p uint16 priv = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p uint32 priv = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p uint priv = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p int8 priv = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p int16 priv = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p int32 priv = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p int priv = 0;
-//        test_0b(priv);
-//    }
-
     string test_prefix = "PUBLIC -> PRIVATE -> PUBLIC conversion with (0)";
     test(test_prefix, test_classification(false), true);
     test(test_prefix, test_classification(0::uint8), 0::uint8);

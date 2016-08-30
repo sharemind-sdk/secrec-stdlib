@@ -40,24 +40,6 @@ bool test_classification_xor(D T[[N]] priv, T2[[N]] pub){
     return all(declassify(priv) == pub);
 }
 
-//template <type T, dim N>
-//void test_0a(T[[N]] pub){
-//    pd_shared3p T[[N]] priv;
-//    priv = pub;
-//    succeeded_tests = succeeded_tests + 1;
-//    all_tests = all_tests +1;
-//    print("SUCCESS!");
-//}
-//
-//template <domain D : shared3p, type T, dim N>
-//void test_0b(D T[[N]] priv){
-//    public T[[N]] pub;
-//    pub = declassify(priv);
-//    succeeded_tests = succeeded_tests + 1;
-//    all_tests = all_tests +1;
-//    print("SUCCESS!");
-//}
-
 template <type T, dim N>
 T[[N]] randomize(T[[N]] pub){
     pd_shared3p T[[N]] priv = pub;
@@ -67,101 +49,6 @@ T[[N]] randomize(T[[N]] pub){
 }
 
 void main() {
-//    print("TEST 0a: PUBLIC -> PRIVATE conversions throws no errors");
-//    {
-//        public bool[[1]] pub (5) = true;
-//        test_0a(pub);
-//    }
-//    {
-//        public uint8[[1]] pub (5) = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public uint16[[1]] pub (5) = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public uint32[[1]] pub (5) = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public uint[[1]] pub (5) = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public int8[[1]] pub (5) = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public int16[[1]] pub (5) = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public int32[[1]] pub (5) = 1;
-//        test_0a(pub);
-//    }
-//    {
-//        public int[[1]] pub (5) = 1;
-//        test_0a(pub);
-//    }
-//    print("TEST 0b: PRIVATE -> PUBLIC conversion throws no errors");
-//    {
-//        pd_shared3p bool[[1]] priv (5) = false;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p uint8[[1]] priv (5) = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p uint16[[1]] priv (5) = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p uint32[[1]] priv (5) = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p uint[[1]] priv (5) = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p int8[[1]] priv (5) = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p int16[[1]] priv (5) = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p int32[[1]] priv (5) = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p int[[1]] priv (5) = 0;
-//        test_0b(priv);
-//    }
-//    {
-//        pd_shared3p xor_uint8[[1]] priv (5) = 0;
-//        uint8[[1]] pub (5) = 0;
-//        test_classification_xor(priv,pub);
-//    }
-//    {
-//        pd_shared3p xor_uint16[[1]] priv (5) = 0;
-//        uint16[[1]] pub (5) = 0;
-//        test_classification_xor(priv,pub);
-//    }
-//    {
-//        pd_shared3p xor_uint32[[1]] priv (5) = 0;
-//        uint32[[1]] pub (5) = 0;
-//        test_classification_xor(priv,pub);
-//    }
-//    {
-//        pd_shared3p xor_uint64[[1]] priv (5) = 0;
-//        uint64[[1]] pub (5) = 0;
-//        test_classification_xor(priv,pub);
-//    }
-
     string test_prefix = "PUBLIC -> PRIVATE -> PUBLIC conversion with MAX values";
     {
         uint8[[1]] pub (5) = UINT8_MAX;

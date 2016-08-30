@@ -169,21 +169,6 @@ bool test_sum2(T data){
 }
 
 void main(){
-//    print("TEST 1: Classify");
-//    {
-//        print("float32");
-//        float32 a = random_float(0::float32); pd_shared3p float32 b = classify(a);
-//        print("SUCCESS!");
-//        succeeded_tests = succeeded_tests + 1;
-//        all_tests = all_tests +1;
-//    }
-//    {
-//        print("float64");
-//        float64 a = random_float(0::float64); pd_shared3p float64 b = classify(a);
-//        print("SUCCESS!");
-//        succeeded_tests = succeeded_tests + 1;
-//        all_tests = all_tests +1;
-//    }
     string test_prefix = "Sum";
     test(test_prefix, test_sum(0::float32), 0::float32);
     test(test_prefix, test_sum(0::float64), 0::float64);

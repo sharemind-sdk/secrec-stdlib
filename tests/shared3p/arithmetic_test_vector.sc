@@ -441,13 +441,11 @@ void main(){
     test_prefix = "Division with two private values";
     {
         pd_shared3p uint8[[1]] a(15) = 15, b(15) = 174, c(15) = 11;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     {
         pd_shared3p uint16[[1]] a(15) = 175, b(15) = 45876, c(15) = 262;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     {
         pd_shared3p uint32[[1]] a(15) = 2398, b(15) = 21798357, c(15) = 9090;
@@ -455,19 +453,16 @@ void main(){
     }
     {
         pd_shared3p uint64[[1]] a(15) = 2578953, b(15) = 1872698523698, c(15) = 726146;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     test_prefix = "Division with one private one public value";
     {
         pd_shared3p uint8[[1]] a(15) = 15; uint8[[1]] b(15) = 174; pd_shared3p uint8[[1]] c(15) = 11;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     {
         pd_shared3p uint16[[1]] a(15) = 175; uint16[[1]] b(15) = 45876; pd_shared3p uint16[[1]] c(15) = 262;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     {
         pd_shared3p uint32[[1]] a(15) = 2398; uint32[[1]] b(15) = 21798357; pd_shared3p uint32[[1]] c(15) = 9090;
@@ -475,19 +470,16 @@ void main(){
     }
     {
         pd_shared3p uint64[[1]] a(15) = 2578953; uint64[[1]] b(15) = 1872698523698; pd_shared3p uint64[[1]] c(15) = 726146;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     test_prefix = "Division with one private one public value(2)";
     {
         pd_shared3p uint8[[1]] a(15) = 15; uint8[[1]] b(15) = 174; pd_shared3p uint8[[1]] c(15) = 0;
-//        test(test_prefix, declassify(a/b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a/b) == declassify(c), c);
     }
     {
         pd_shared3p uint16[[1]] a(15) = 175; uint16[[1]] b(15) = 45876; pd_shared3p uint16[[1]] c(15) = 0;
-//        test(test_prefix, declassify(a/b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a/b) == declassify(c), c);
     }
     {
         pd_shared3p uint32[[1]] a(15) = 2398; uint32[[1]] b(15) = 21798357; pd_shared3p uint32[[1]] c(15) = 0;
@@ -495,19 +487,16 @@ void main(){
     }
     {
         pd_shared3p uint64[[1]] a(15) = 2578953; uint64[[1]] b(15) = 1872698523698; pd_shared3p uint64[[1]] c(15) = 0;
-//        test(test_prefix, declassify(a/b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a/b) == declassify(c), c);
     }
     test_prefix = "0 divided with random private values";
     {
         pd_shared3p uint8[[1]] a(15) = 15, b(15) = 0, c(15) = 0;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     {
         pd_shared3p uint16[[1]] a(15) = 175, b(15) = 0, c(15) = 0;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     {
         pd_shared3p uint32[[1]] a(15) = 2398, b(15) = 0, c(15) = 0;
@@ -515,19 +504,16 @@ void main(){
     }
     {
         pd_shared3p uint64[[1]] a(15) = 2578953, b(15) = 0, c(15) = 0;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     test_prefix = "Division accuracy private";
     {
         pd_shared3p uint8[[1]] a(15) = UINT8_MAX, b(15) = UINT8_MAX -1, c(15) = 0;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     {
         pd_shared3p uint16[[1]] a(15) = UINT16_MAX, b(15) = UINT16_MAX -1, c(15) = 0;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
     {
         pd_shared3p uint32[[1]] a(15) = UINT32_MAX, b(15) = UINT32_MAX -1, c(15) = 0;
@@ -535,40 +521,17 @@ void main(){
     }
     {
         pd_shared3p uint64[[1]] a(15) = UINT64_MAX, b(15) = UINT64_MAX-1, c(15) = 0;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int8[[1]] a(15) = INT8_MAX, b(15) = INT8_MAX-1, c(15) = 0;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int16[[1]] a(15) = INT16_MAX, b(15) = INT16_MAX-1, c(15) = 0;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int32[[1]] a(15) = INT32_MAX, b(15) = INT32_MAX-1, c(15) = 0;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int64[[1]] a(15) = INT64_MAX, b(15) = INT64_MAX-1, c(15) = 0;
-//        test(test_prefix, declassify(b/a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b/a) == declassify(c), c);
     }
 
     test_prefix = "Modulo private values";
     {
         pd_shared3p uint8[[1]] b(15) = 15, a(15) = 174, c(15) = 9;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
     }
     {
         pd_shared3p uint16[[1]] b(15) = 175, a(15) = 45876, c(15) = 26;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
     }
     {
         pd_shared3p uint32[[1]] b(15) = 2398, a(15) = 21798357, c(15) = 537;
@@ -576,40 +539,17 @@ void main(){
     }
     {
         pd_shared3p uint64[[1]] b(15) = 2578953, a(15) = 1872698523698, c(15) = 2118560;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int8[[1]] b(15) = -25, a(15) = 50, c(15) = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int16[[1]] b(15) = -2264, a(15) = 22468, c(15) = 2092;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int32[[1]] b(15) = -12549, a(15) = 21485747, c(15) = 1859;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int64[[1]] b(15) = 2954, a(15) = 93214654775807, c(15) = 257;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
     }
 
     test_prefix = "Modulo with private and public values";
     {
         pd_shared3p uint8[[1]] b(15) = 15; uint8[[1]] a(15) = 174; pd_shared3p uint8[[1]] c(15) = 9;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
     }
     {
         pd_shared3p uint16[[1]] b(15) = 175; uint16[[1]] a(15) = 45876; pd_shared3p uint16[[1]] c(15) = 26;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
     }
     {
         pd_shared3p uint32[[1]] b(15) = 2398; uint32[[1]] a(15) = 21798357; pd_shared3p uint32[[1]] c(15) = 537;
@@ -617,40 +557,17 @@ void main(){
     }
     {
         pd_shared3p uint64[[1]] b(15) = 2578953; uint64[[1]] a(15) = 1872698523698; pd_shared3p uint64[[1]] c(15) = 2118560;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int8[[1]] b(15) = -25; int8[[1]] a(15) = 50; pd_shared3p int8[[1]] c(15) = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int16[[1]] b(15) = -2264; int16[[1]] a(15) = 22468; pd_shared3p int16[[1]] c(15) = 2092;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int32[[1]] b(15) = -12549; int32[[1]] a(15) = 21485747; pd_shared3p int32[[1]] c(15) = 1859;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int64[[1]] b(15) = 2954; int64[[1]] a(15) = 93214654775807; pd_shared3p int64[[1]] c(15) = 257;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
     }
 
     test_prefix = "Modulo with private and public values(2)";
     {
         pd_shared3p uint8[[1]] b(15) = 174; uint8[[1]] a(15) = 15; pd_shared3p uint8[[1]] c(15) = 9;
-//        test(test_prefix, declassify(b%a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b%a) == declassify(c), c);
     }
     {
         pd_shared3p uint16[[1]] b(15) = 45876; uint16[[1]] a(15) = 175 ; pd_shared3p uint16[[1]] c(15) = 26;
-//        test(test_prefix, declassify(b%a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b%a) == declassify(c), c);
     }
     {
         pd_shared3p uint32[[1]] b(15) = 21798357; uint32[[1]] a(15) = 2398 ; pd_shared3p uint32[[1]] c(15) = 537;
@@ -658,56 +575,29 @@ void main(){
     }
     {
         pd_shared3p uint64[[1]] b(15) = 1872698523698; uint64[[1]] a(15) = 2578953; pd_shared3p uint64[[1]] c(15) = 2118560;
-//        test(test_prefix, declassify(b%a) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int8[[1]] b(15) = 50; int8[[1]] a(15) = -25; pd_shared3p int8[[1]] c(15) = 0;
-//        test(test_prefix, declassify(b%a) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int16[[1]] b(15) = 22468; int16[[1]] a(15) = -2264; pd_shared3p int16[[1]] c(15) = 2092;
-//        test(test_prefix, declassify(b%a) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int32[[1]] b(15) = 21485747; int32[[1]] a(15) = -12549; pd_shared3p int32[[1]] c(15) = 1859;
-//        test(test_prefix, declassify(b%a) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int64[[1]] b(15) = 93214654775807; int64[[1]] a(15) = 2954; pd_shared3p int64[[1]] c(15) = 257;
-//        test(test_prefix, declassify(b%a) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(b%a) == declassify(c), c);
     }
 
     test_prefix = "Modulo with important private values";
     {
         pd_shared3p uint8[[1]] b(15) = 1, a(15) = 0, c(15) = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
 
         b = 1;  a = 1;  c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
 
         b = UINT8_MAX;  a = UINT8_MAX;  c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
     }
     {
         pd_shared3p uint16[[1]] b(15) = 1, a(15) = 0, c(15) = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
 
         b = 1;  a = 1; c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
 
         b = UINT16_MAX;a = UINT16_MAX;c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
     }
     {
         pd_shared3p uint32[[1]] b(15) = 1, a(15) = 0, c(15) = 0;
@@ -721,68 +611,13 @@ void main(){
     }
     {
         pd_shared3p uint64[[1]] b(15) = 1, a(15) = 0, c(15) = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
 
         b = 1; a = 1;c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
 
         b = UINT64_MAX; a = UINT64_MAX;  c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int8[[1]] b(15) = 1, a(15) = 0, c(15) = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-
-        b = 1;  a = 1;  c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-
-        b = INT8_MAX;  a = INT8_MAX;  c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int16[[1]] b(15) = 1, a(15) = 0, c(15) = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-
-        b = 1;a = 1;c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-
-        b = INT16_MAX;a = INT16_MAX;c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int32[[1]] b(15) = 1, a(15) = 0, c(15) = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-
-        b = 1;a = 1;c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-
-        b = INT32_MAX;a = INT32_MAX;c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-    }
-    {
-        pd_shared3p int64[[1]] b(15) = 1, a(15) = 0, c(15) = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-
-        b = 1;a = 1;c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
-
-        b = INT64_MAX;a = INT64_MAX;c = 0;
-//        test(test_prefix, declassify(a%b) == declassify(c), c);
-        test(test_prefix, false, c);
+        test(test_prefix, declassify(a%b) == declassify(c), c);
     }
 
     test_report();
