@@ -124,6 +124,40 @@ bool test_reshare(D T data){
     return true;
 }
 
+template<domain D, type T, type U, type V>
+void convTest(string name, D T[[1]] x, D U dummy, V[[1]] y) {
+   D U[[1]] z = reshare(x);
+   test(name, all(declassify(z) == y));
+}
+
+void int8ToXor8Test() {
+   pd_shared3p int8[[1]] x (10) = {55, -45, -113, 85, 87, -73, -27, -15, -56, -109};
+   pd_shared3p xor_uint8 dummy = 0;
+   uint8[[1]] y (10) = {55, 211, 143, 85, 87, 183, 229, 241, 200, 147};
+   convTest("[int8] Int to xor", x, dummy, y);
+}
+
+void int16ToXor16Test() {
+   pd_shared3p int16[[1]] x (10) = {-18258, -25463, 24586, -27999, -6621, 5760, -4876, -24920, -12355, 9882};
+   pd_shared3p xor_uint16 dummy = 0;
+   uint16[[1]] y (10) = {47278, 40073, 24586, 37537, 58915, 5760, 60660, 40616, 53181, 9882};
+   convTest("[int16] Int to xor", x, dummy, y);
+}
+
+void int32ToXor32Test() {
+   pd_shared3p int32[[1]] x (10) = {657010390, -390652091, 679742933, 464949106, 909901862, 412333247, 212339037, -1002137623, 1549870009, 1207921783};
+   pd_shared3p xor_uint32 dummy = 0;
+   uint32[[1]] y (10) = {657010390, 3904315205, 679742933, 464949106, 909901862, 412333247, 212339037, 3292829673, 1549870009, 1207921783};
+   convTest("[int32] Int to xor", x, dummy, y);
+}
+
+void int64ToXor64Test() {
+   pd_shared3p int64[[1]] x (10) = {6911461533151042471, -4221554645635911083, -6518402290555174768, -5813548148959267251, -5163294253093278263, -6093998330166406275, -5965183803573730444, -6658553995594222000, 4007016438257298880, -6634279755582745257};
+   pd_shared3p xor_uint64 dummy = 0;
+   uint64[[1]] y (10) = {6911461533151042471, 14225189428073640533, 11928341783154376848, 12633195924750284365, 13283449820616273353, 12352745743543145341, 12481560270135821172, 11788190078115329616, 4007016438257298880, 11812464318126806359};
+   convTest("[int64] Int to xor", x, dummy, y);
+}
+
 void main() {
     string test_prefix = "Min";
     { pd_shared3p xor_uint8 t; test(test_prefix, test_min(t), t); }
@@ -154,6 +188,9 @@ void main() {
     { pd_shared3p xor_uint16 t; test(test_prefix, test_reshare(t), t); }
     { pd_shared3p xor_uint32 t; test(test_prefix, test_reshare(t), t); }
     { pd_shared3p xor_uint64 t; test(test_prefix, test_reshare(t), t); }
-
+    int8ToXor8Test();
+    int16ToXor16Test();
+    int32ToXor32Test();
+    int64ToXor64Test();
     test_report();
 }
