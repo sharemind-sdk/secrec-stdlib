@@ -1062,13 +1062,6 @@ D float64[[N]] operator * (D float64[[N]] arr, float64[[N]] pubArr) {
     return arr;
 }
 
-
-/*******************************
-    divc
-********************************/
-
-// Divc on uint8 and uint16 is unstable and produces wrong results. Worst case scenario results in a total crash of miners.
-/*
 template <domain D : shared3p>
 D uint8 operator / (D uint8 a, uint8 b) {
     __syscall ("shared3p::divc_uint8_vec", __domainid (D),
@@ -1130,7 +1123,6 @@ D uint16[[N]] operator / (D uint16[[N]] arr, uint16[[N]] pubArr) {
        arr, __cref pubArr, arr);
     return arr;
 }
-*/
 
 template <domain D : shared3p>
 D uint32 operator / (D uint32 a, uint32 b) {
