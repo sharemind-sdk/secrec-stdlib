@@ -90,6 +90,107 @@ bool cast_type_to_type(D1 T1 [[N]] t1, D2 T2 [[N]] t2) {
     return all(declassify(c) == declassify(t2));
 }
 
+template<domain D, type T, type U>
+void convTest(string name1, string name2, D T[[1]] x, U[[1]] y) {
+   test("[$name1\, $name2\] Casting values", all(declassify((U)(x)) == y));
+}
+
+void float32ToInt8Test() {
+   pd_shared3p float32[[1]] x (10) = {0.0, 1.17549e-38, 1.0, -98.12907, 4.871303, 110.6676, -53.25512, 62.77517, -101.5022, -64.87247};
+   int8[[1]] y (10) = {0, 0, 1, -98, 4, 110, -53, 62, -101, -64};
+   convTest("float32", "int8", x, y);
+}
+
+void float32ToInt16Test() {
+   pd_shared3p float32[[1]] x (10) = {0.0, 1.17549e-38, 1.0, -22670.28, -14073.18, -26256.64, -25024.43, -11851.27, -17813.15, 25735.13};
+   int16[[1]] y (10) = {0, 0, 1, -22670, -14073, -26256, -25024, -11851, -17813, 25735};
+   convTest("float32", "int16", x, y);
+}
+
+void float32ToInt32Test() {
+   pd_shared3p float32[[1]] x (10) = {0.0, 1.17549e-38, 1.0, 4473403, 4593648, 8278661, -2754798, 206693, -181742, -8189004};
+   int32[[1]] y (10) = {0, 0, 1, 4473403, 4593648, 8278661, -2754798, 206693, -181742, -8189004};
+   convTest("float32", "int32", x, y);
+}
+
+void float32ToInt64Test() {
+   pd_shared3p float32[[1]] x (10) = {0.0, 1.17549e-38, 1.0, 6279086, -2838606, -6011487, 1842222, -7904507, -863255, 2482582};
+   int64[[1]] y (10) = {0, 0, 1, 6279086, -2838606, -6011487, 1842222, -7904507, -863255, 2482582};
+   convTest("float32", "int64", x, y);
+}
+
+void float32ToUint8Test() {
+   pd_shared3p float32[[1]] x (10) = {0.0, 1.17549e-38, 1.0, 155.2418, 92.17343, 141.0221, 89.2679, 18.87935, 125.2439, 49.74959};
+   uint8[[1]] y (10) = {0, 0, 1, 155, 92, 141, 89, 18, 125, 49};
+   convTest("float32", "uint8", x, y);
+}
+
+void float32ToUint16Test() {
+   pd_shared3p float32[[1]] x (10) = {0.0, 1.17549e-38, 1.0, 7425.207, 45462.6, 15092.68, 37815.58, 7813.595, 44092.13, 48335.55};
+   uint16[[1]] y (10) = {0, 0, 1, 7425, 45462, 15092, 37815, 7813, 44092, 48335};
+   convTest("float32", "uint16", x, y);
+}
+
+void float32ToUint32Test() {
+   pd_shared3p float32[[1]] x (10) = {0.0, 1.17549e-38, 1.0, 8889381, 4893845, 3320645, 5945922, 5821593, 1957735, 3780257};
+   uint32[[1]] y (10) = {0, 0, 1, 8889381, 4893845, 3320645, 5945922, 5821593, 1957735, 3780257};
+   convTest("float32", "uint32", x, y);
+}
+
+void float32ToUint64Test() {
+   pd_shared3p float32[[1]] x (10) = {0.0, 1.17549e-38, 1.0, 8673933, 3866533, 4536299, 548599, 3624221, 7360995, 5281006};
+   uint64[[1]] y (10) = {0, 0, 1, 8673933, 3866533, 4536299, 548599, 3624221, 7360995, 5281006};
+   convTest("float32", "uint64", x, y);
+}
+
+void float64ToInt8Test() {
+   pd_shared3p float64[[1]] x (10) = {0.0, 2.22507e-308, 1.0, 67.34256046636686, 18.53741706553278, -60.4708076984191, 56.26073831375213, -97.28398198151534, -48.52230757773533, 126.2882510850292};
+   int8[[1]] y (10) = {0, 0, 1, 67, 18, -60, 56, -97, -48, 126};
+   convTest("float64", "int8", x, y);
+}
+
+void float64ToInt16Test() {
+   pd_shared3p float64[[1]] x (10) = {0.0, 2.22507e-308, 1.0, 11692.83007815261, 27103.47913318653, 15818.07401064132, -1854.237357416921, -32742.02943785659, 12336.50976824283, 20923.09959576575};
+   int16[[1]] y (10) = {0, 0, 1, 11692, 27103, 15818, -1854, -32742, 12336, 20923};
+   convTest("float64", "int16", x, y);
+}
+
+void float64ToInt32Test() {
+   pd_shared3p float64[[1]] x (10) = {0.0, 2.22507e-308, 1.0, 840558046.4931513, -1119152181.010918, -455756238.6323327, 1788410751.531635, -186796018.4341952, 1066959045.484518, -186423360.2554765};
+   int32[[1]] y (10) = {0, 0, 1, 840558046, -1119152181, -455756238, 1788410751, -186796018, 1066959045, -186423360};
+   convTest("float64", "int32", x, y);
+}
+
+void float64ToInt64Test() {
+   pd_shared3p float64[[1]] x (10) = {0.0, 2.22507e-308, 1.0, 5137005476335485, 3672613797350584, 7042690447228970, 6300228234817817, 187448944969007, 5040321966315490, -2725190092593780};
+   int64[[1]] y (10) = {0, 0, 1, 5137005476335485, 3672613797350584, 7042690447228970, 6300228234817817, 187448944969007, 5040321966315490, -2725190092593780};
+   convTest("float64", "int64", x, y);
+}
+
+void float64ToUint8Test() {
+   pd_shared3p float64[[1]] x (10) = {0.0, 2.22507e-308, 1.0, 51.50023523556684, 97.10746737180505, 75.69393812851449, 110.9694163130094, 120.4210109385665, 97.71788043511429, 20.39361399614753};
+   uint8[[1]] y (10) = {0, 0, 1, 51, 97, 75, 110, 120, 97, 20};
+   convTest("float64", "uint8", x, y);
+}
+
+void float64ToUint16Test() {
+   pd_shared3p float64[[1]] x (10) = {0.0, 2.22507e-308, 1.0, 32012.0958706886, 8287.874108749479, 4696.2343674202, 42472.92206052255, 45267.09157779862, 3088.513566138094, 55044.45803370675};
+   uint16[[1]] y (10) = {0, 0, 1, 32012, 8287, 4696, 42472, 45267, 3088, 55044};
+   convTest("float64", "uint16", x, y);
+}
+
+void float64ToUint32Test() {
+   pd_shared3p float64[[1]] x (10) = {0.0, 2.22507e-308, 1.0, 625558523.7176411, 1528921474.993432, 1505113109.446223, 3167971255.016057, 2585586096.961693, 3506780783.089148, 1761146669.710629};
+   uint32[[1]] y (10) = {0, 0, 1, 625558523, 1528921474, 1505113109, 3167971255, 2585586096, 3506780783, 1761146669};
+   convTest("float64", "uint32", x, y);
+}
+
+void float64ToUint64Test() {
+   pd_shared3p float64[[1]] x (10) = {0.0, 2.22507e-308, 1.0, 590492966521176, 5916627273166019, 6161279570134107, 3579620507762477, 4977947794168105, 1556732877006147, 1516693833581697};
+   uint64[[1]] y (10) = {0, 0, 1, 590492966521176, 5916627273166019, 6161279570134107, 3579620507762477, 4977947794168105, 1556732877006147, 1516693833581697};
+   convTest("float64", "uint64", x, y);
+}
+
 void main(){
     string test_prefix = "Casting values";
     {
@@ -865,38 +966,6 @@ void main(){
     {
         pd_shared3p float32[[1]] a = {-3.40282e+38,0.0,1.17549e-38,1.0,3.40282e+38};
         {
-            pd_shared3p uint8[[1]] b = {UINT8_MIN,0,0,1,UINT8_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p uint16[[1]] b = {UINT16_MIN,0,0,1,UINT16_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p uint32[[1]] b = {UINT32_MIN,0,0,1,UINT32_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p uint64[[1]] b = {UINT64_MIN,0,0,1,UINT64_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p int8[[1]] b = {INT8_MIN,0,0,1,INT8_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p int16[[1]] b = {INT16_MIN,0,0,1,INT16_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p int32[[1]] b = {INT32_MIN,0,0,1,INT32_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p int64[[1]] b = {INT64_MIN,0,0,1,INT64_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
             pd_shared3p xor_uint8[[1]] b = {UINT8_MIN,0,0,1,UINT8_MAX};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
             test(test_prefix, false, a, b);
@@ -924,38 +993,6 @@ void main(){
     {
         pd_shared3p float64[[1]] a = {-1.79769e+308,0.0,2.22507e-308,1.0,1.79769e+308};
         {
-            pd_shared3p uint8[[1]] b = {UINT8_MIN,0,0,1,UINT8_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p uint16[[1]] b = {UINT16_MIN,0,0,1,UINT16_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p uint32[[1]] b = {UINT32_MIN,0,0,1,UINT32_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p uint64[[1]] b = {UINT64_MIN,0,0,1,UINT64_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p int8[[1]] b = {INT8_MIN,0,0,1,INT8_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p int16[[1]] b = {INT16_MIN,0,0,1,INT16_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p int32[[1]] b = {INT32_MIN,0,0,1,INT32_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
-            pd_shared3p int64[[1]] b = {INT64_MIN,0,0,1,INT64_MAX};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
-        {
             pd_shared3p xor_uint8[[1]] b = {UINT8_MIN,0,0,1,UINT8_MAX};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
             test(test_prefix, false, a, b);
@@ -975,11 +1012,27 @@ void main(){
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
             test(test_prefix, false, a, b);
         }
-        {
+        /*{
             pd_shared3p float32[[1]] b = {-1.79769e+308,0.0,2.22507e-308,1.0,1.79769e+308};
             test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
+        }*/
     }
-
+    float32ToInt8Test();
+    float32ToInt16Test();
+    float32ToInt32Test();
+    float32ToInt64Test();
+    float32ToUint8Test();
+    float32ToUint16Test();
+    float32ToUint32Test();
+    float32ToUint64Test();
+    float64ToInt8Test();
+    float64ToInt16Test();
+    float64ToInt32Test();
+    float64ToInt64Test();
+    float64ToUint8Test();
+    float64ToUint16Test();
+    float64ToUint32Test();
+    float64ToUint64Test();
     test_report();
 }
+
