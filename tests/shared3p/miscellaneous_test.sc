@@ -320,13 +320,9 @@ void main(){
         { pd_shared3p int32 b; test(test_prefix, cast_type_to_bool(b), b, a); }
         { pd_shared3p int64 b; test(test_prefix, cast_type_to_bool(b), b, a); }
 //        { pd_shared3p xor_uint8 b; test(test_prefix, cast_type_to_bool(b), b, a); }
-        { pd_shared3p xor_uint8 b; test(test_prefix, false, b, a); }
 //        { pd_shared3p xor_uint16 b; test(test_prefix, cast_type_to_bool(b), b, a); }
-        { pd_shared3p xor_uint16 b; test(test_prefix, false, b, a); }
 //        { pd_shared3p xor_uint32 b; test(test_prefix, cast_type_to_bool(b), b, a); }
-        { pd_shared3p xor_uint32 b; test(test_prefix, false, b, a); }
 //        { pd_shared3p xor_uint64 b; test(test_prefix, cast_type_to_bool(b), b, a); }
-        { pd_shared3p xor_uint64 b; test(test_prefix, false, b, a); }
         { pd_shared3p float32 b; test(test_prefix, cast_type_to_bool(b), b, a); }
         { pd_shared3p float64 b; test(test_prefix, cast_type_to_bool(b), b, a); }
     }
@@ -364,22 +360,18 @@ void main(){
         {
             pd_shared3p xor_uint8[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint16[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint32[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint64[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     {
@@ -415,22 +407,18 @@ void main(){
         {
             pd_shared3p xor_uint8[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint16[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint32[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint64[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     {
@@ -466,22 +454,18 @@ void main(){
         {
             pd_shared3p xor_uint8[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint16[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint32[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint64[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     {
@@ -517,22 +501,18 @@ void main(){
         {
             pd_shared3p xor_uint8[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint16[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint32[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint64[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     {
@@ -568,22 +548,18 @@ void main(){
         {
             pd_shared3p xor_uint8[[1]] b = {-128,-40,40,127};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint16[[1]] b = {-128,-40,40,127};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint32[[1]] b = {-128,-40,40,127};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint64[[1]] b = {-128,-40,40,127};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     {
@@ -619,22 +595,18 @@ void main(){
         {
             pd_shared3p xor_uint8[[1]] b = {-32768,-16325,12435,32767};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint16[[1]] b = {-32768,-16325,12435,32767};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint32[[1]] b = {-32768,-16325,12435,32767};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint64[[1]] b = {-32768,-16325,12435,32767};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     {
@@ -670,22 +642,18 @@ void main(){
         {
             pd_shared3p xor_uint8[[1]] b = {-2147483648,-483648,2147483,2147483647};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint16[[1]] b = {-2147483648,-483648,2147483,2147483647};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint32[[1]] b = {-2147483648,-483648,2147483,2147483647};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint64[[1]] b = {-2147483648,-483648,2147483,2147483647};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     {
@@ -721,22 +689,18 @@ void main(){
         {
             pd_shared3p xor_uint8[[1]] b = {-9223372036854775808,-7036854775808,9223372036854,9223372036854775807};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint16[[1]] b = {-9223372036854775808,-7036854775808,9223372036854,9223372036854775807};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint32[[1]] b = {-9223372036854775808,-7036854775808,9223372036854,9223372036854775807};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint64[[1]] b = {-9223372036854775808,-7036854775808,9223372036854,9223372036854775807};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     {
@@ -744,42 +708,34 @@ void main(){
         {
             pd_shared3p uint8[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p uint16[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p uint32[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p uint64[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int8[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int16[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int32[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int64[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint16[[1]] b = {0, 100, 200, 255};
@@ -796,12 +752,10 @@ void main(){
         {
             pd_shared3p float32[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p float64[[1]] b = {0, 100, 200, 255};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     {
@@ -809,42 +763,34 @@ void main(){
         {
             pd_shared3p uint8[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p uint16[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p uint32[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p uint64[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int8[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int16[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int32[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int64[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint8[[1]] b = {0,15385,38574,65535};
@@ -861,12 +807,10 @@ void main(){
         {
             pd_shared3p float32[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p float64[[1]] b = {0,15385,38574,65535};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     {
@@ -874,42 +818,34 @@ void main(){
         {
             pd_shared3p uint8[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p uint16[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p uint32[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p uint64[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int8[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int16[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int32[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int64[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint8[[1]] b = {0,21424,21525341,4294967295};
@@ -926,12 +862,10 @@ void main(){
         {
             pd_shared3p float32[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p float64[[1]] b = {0,21424,21525341,4294967295};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     {
@@ -939,42 +873,34 @@ void main(){
         {
             pd_shared3p uint8[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p uint16[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p uint32[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p uint64[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int8[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int16[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int32[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p int64[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint8[[1]] b = {0,55161532,142234215413552,18446744073709551615};
@@ -991,12 +917,10 @@ void main(){
         {
             pd_shared3p float32[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p float64[[1]] b = {0,55161532,142234215413552,18446744073709551615};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     {
@@ -1004,22 +928,18 @@ void main(){
         {
             pd_shared3p xor_uint8[[1]] b = {UINT8_MIN,0,0,1,UINT8_MAX};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint16[[1]] b = {UINT16_MIN,0,0,1,UINT16_MAX};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint32[[1]] b = {UINT32_MIN,0,0,1,UINT32_MAX};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint64[[1]] b = {UINT64_MIN,0,0,1,UINT64_MAX};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p float64[[1]] b = {-3.40282e+38,0,1.17549e-38,1,3.40282e+38};
@@ -1031,22 +951,18 @@ void main(){
         {
             pd_shared3p xor_uint8[[1]] b = {UINT8_MIN,0,0,1,UINT8_MAX};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint16[[1]] b = {UINT16_MIN,0,0,1,UINT16_MAX};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint32[[1]] b = {UINT32_MIN,0,0,1,UINT32_MAX};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
         {
             pd_shared3p xor_uint64[[1]] b = {UINT64_MIN,0,0,1,UINT64_MAX};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
-            test(test_prefix, false, a, b);
         }
     }
     float32ToInt8Test();
