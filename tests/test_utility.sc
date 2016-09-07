@@ -77,4 +77,3 @@ void test_report() {
     publish("test_count", all_tests);
     publish("passed_count", passed_tests);
 }
-
