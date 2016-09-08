@@ -95,6 +95,12 @@ void convTest(string name1, string name2, D T[[1]] x, U[[1]] y) {
    test("[$name1\, $name2\] Casting values", all(declassify((U)(x)) == y));
 }
 
+void float32ToFloat64Test() {
+    pd_shared3p float32[[1]] x = {0, 1, 5.8e9, 16, 3.38e2};
+    float64[[1]] y = {0, 1, 5.8e9, 16, 3.38e2};
+    convTest("float32", "float64", x, y);
+}
+
 void float32ToInt8Test() {
    pd_shared3p float32[[1]] x = {0.0, 1.17549e-38, 1.0, -98.12907, 4.871303, 110.6676, -53.25512, 62.77517, -101.5022, -64.87247};
    int8[[1]] y = {0, 0, 1, -98, 4, 110, -53, 62, -101, -64};
@@ -941,10 +947,6 @@ void main(){
             pd_shared3p xor_uint64[[1]] b = {UINT64_MIN,0,0,1,UINT64_MAX};
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
-        {
-            pd_shared3p float64[[1]] b = {-3.40282e+38,0,1.17549e-38,1,3.40282e+38};
-            test(test_prefix, cast_type_to_type(a, b), a, b);
-        }
     }
     {
         pd_shared3p float64[[1]] a = {-1.79769e+308,0.0,2.22507e-308,1.0,1.79769e+308};
@@ -965,6 +967,7 @@ void main(){
 //            test(test_prefix, cast_type_to_type(a, b), a, b);
         }
     }
+    float32ToFloat64Test();
     float32ToInt8Test();
     float32ToInt16Test();
     float32ToInt32Test();
