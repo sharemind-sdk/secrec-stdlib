@@ -52,8 +52,6 @@ bool fns_nth_test(T data, G data2) {
 	pd_shared3p bool[[1]] mask (10) = true;
 	mask[0] = false;
 
-	// TODO
-	/*
 	G[[1]] result (5) = declassify (fiveNumberSummaryNth (a, mask));
 
 	bool[[1]] test_results = {
@@ -65,10 +63,6 @@ bool fns_nth_test(T data, G data2) {
 	};
 
 	return all (test_results);
-	*/
-
-	//nthElement doesn't work anymore
-	return false;
 }
 
 
