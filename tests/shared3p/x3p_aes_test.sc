@@ -24,6 +24,10 @@ import test_utility;
 
 domain pd_shared3p shared3p;
 
+/*
+ * Test vectors from: http://csrc.nist.gov/publications/fips/fips197/fips-197.pdf
+ */
+
 void main(){
     string test_prefix = "aes128 key generation";
     {
@@ -42,39 +46,53 @@ void main(){
 
     test_prefix = "aes128 key expansion";
     {
-        bool result = true;
-        for(uint i = 2; i <= 10; i = i + 2){
-            pd_shared3p xor_uint32[[1]] key = aes128Genkey(i);
-            pd_shared3p xor_uint32[[1]] expandedKey = aes128ExpandKey(key);
+        pd_shared3p xor_uint32[[1]] key = {
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f
+        };
+        pd_shared3p xor_uint32[[1]] expandedKey1 = {
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f, // R0
+            0xd6aa74fd, 0xd2af72fa, 0xdaa678f1, 0xd6ab76fe, // R1
+            0xb692cf0b, 0x643dbdf1, 0xbe9bc500, 0x6830b3fe, // R2
+            0xb6ff744e, 0xd2c2c9bf, 0x6c590cbf, 0x0469bf41, // R3
+            0x47f7f7bc, 0x95353e03, 0xf96c32bc, 0xfd058dfd, // R4
+            0x3caaa3e8, 0xa99f9deb, 0x50f3af57, 0xadf622aa, // R5
+            0x5e390f7d, 0xf7a69296, 0xa7553dc1, 0x0aa31f6b, // R6
+            0x14f9701a, 0xe35fe28c, 0x440adf4d, 0x4ea9c026, // R7
+            0x47438735, 0xa41c65b9, 0xe016baf4, 0xaebf7ad2, // R8
+            0x549932d1, 0xf0855768, 0x1093ed9c, 0xbe2c974e, // R9
+            0x13111d7f, 0xe3944a17, 0xf307a78b, 0x4d2b30c5  // R10
+        };
 
-            if (size(expandedKey) != (i * 44)) {
-                result = false;
-                break;
-            }
-        }
-
-        test(test_prefix, result);
+        pd_shared3p xor_uint32[[1]] expandedKey2 = aes128ExpandKey(key);
+        test(test_prefix, all(declassify(expandedKey1) == declassify(expandedKey2)));
     }
 
     test_prefix = "Encrypt with aes128";
     {
-        pd_shared3p xor_uint32[[1]] plainText = {0x3243f6a8, 0x885a308d, 0x313198a2, 0xe0370734};
-        pd_shared3p xor_uint32[[1]] cipherText1 = {0x3925841d, 0x2dc09fb, 0xdc118597, 0x196a0b32};
+        pd_shared3p xor_uint32[[1]] plainText = {
+            0x00112233, 0x44556677, 0x8899aabb, 0xccddeeff
+        };
+        pd_shared3p xor_uint32[[1]] cipherText1 = {
+            0x69c4e0d8, 0x6a7b0430, 0xd8cdb780, 0x70b4c55a
+        };
+        pd_shared3p xor_uint32[[1]] key = {
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f
+        };
         pd_shared3p xor_uint32[[1]] expandedKey = {
-            0x2b7e1516, 0x28aed2a6, 0xabf71588, 0x09cf4f3c, // Round 0
-            0xa0fafe17, 0x88542cb1, 0x23a33939, 0x2a6c7605, // Round 1
-            0xf2c295f2, 0x7a96b943, 0x5935807a, 0x7359f67f, // Round 2
-            0x3d80477d, 0x4716fe3e, 0x1e237e44, 0x6d7a883b, // Round 3
-            0xef44a541, 0xa8525b7f, 0xb671253b, 0xdb0bad00, // Round 4
-            0xd4d1c6f8, 0x7c839d87, 0xcaf2b8bc, 0x11f915bc, // Round 5
-            0x6d88a37a, 0x110b3efd, 0xdbf98641, 0xca0093fd, // Round 6
-            0x4e54f70e, 0x5f5fc9f3, 0x84a64fb2, 0x4ea6dc4f, // Round 7
-            0xead27321, 0xb58dbad2, 0x312bf560, 0x7f8d292f, // Round 8
-            0xac7766f3, 0x19fadc21, 0x28d12941, 0x575c006e, // Round 9
-            0xd014f9a8, 0xc9ee2589, 0xe13f0cc8, 0xb6630ca6  // Round 10
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f, // R0
+            0xd6aa74fd, 0xd2af72fa, 0xdaa678f1, 0xd6ab76fe, // R1
+            0xb692cf0b, 0x643dbdf1, 0xbe9bc500, 0x6830b3fe, // R2
+            0xb6ff744e, 0xd2c2c9bf, 0x6c590cbf, 0x0469bf41, // R3
+            0x47f7f7bc, 0x95353e03, 0xf96c32bc, 0xfd058dfd, // R4
+            0x3caaa3e8, 0xa99f9deb, 0x50f3af57, 0xadf622aa, // R5
+            0x5e390f7d, 0xf7a69296, 0xa7553dc1, 0x0aa31f6b, // R6
+            0x14f9701a, 0xe35fe28c, 0x440adf4d, 0x4ea9c026, // R7
+            0x47438735, 0xa41c65b9, 0xe016baf4, 0xaebf7ad2, // R8
+            0x549932d1, 0xf0855768, 0x1093ed9c, 0xbe2c974e, // R9
+            0x13111d7f, 0xe3944a17, 0xf307a78b, 0x4d2b30c5  // R10
         };
 
-        pd_shared3p xor_uint32[[1]] cipherText2 = aes128EncryptEcb(expandedKey,plainText);
+        pd_shared3p xor_uint32[[1]] cipherText2 = aes128EncryptEcb(expandedKey, plainText);
         test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
     }
 
@@ -95,41 +113,59 @@ void main(){
 
     test_prefix = "aes192 key expansion";
     {
-        bool result = true;
-        for(uint i = 2; i <= 10; i = i + 2){
-            pd_shared3p xor_uint32[[1]] key = aes192Genkey(i);
-            pd_shared3p xor_uint32[[1]] expandedKey = aes192ExpandKey(key);
+        pd_shared3p xor_uint32[[1]] key = {
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f,
+            0x10111213, 0x14151617
+        };
+        pd_shared3p xor_uint32[[1]] expandedKey1 = {
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f, // R0
+            0x10111213, 0x14151617, 0x5846f2f9, 0x5c43f4fe, // R1
+            0x544afef5, 0x5847f0fa, 0x4856e2e9, 0x5c43f4fe, // R2
+            0x40f949b3, 0x1cbabd4d, 0x48f043b8, 0x10b7b342, // R3
+            0x58e151ab, 0x04a2a555, 0x7effb541, 0x6245080c, // R4
+            0x2ab54bb4, 0x3a02f8f6, 0x62e3a95d, 0x66410c08, // R5
+            0xf5018572, 0x97448d7e, 0xbdf1c6ca, 0x87f33e3c, // R6
+            0xe5109761, 0x83519b69, 0x34157c9e, 0xa351f1e0, // R7
+            0x1ea0372a, 0x99530916, 0x7c439e77, 0xff12051e, // R8
+            0xdd7e0e88, 0x7e2fff68, 0x608fc842, 0xf9dcc154, // R9
+            0x859f5f23, 0x7a8d5a3d, 0xc0c02952, 0xbeefd63a, // R10
+            0xde601e78, 0x27bcdf2c, 0xa223800f, 0xd8aeda32, // R11
+            0xa4970a33, 0x1a78dc09, 0xc418c271, 0xe3a41d5d  // R12
+        };
 
-            if (size(expandedKey) != (i * 52)) {
-                result = false;
-                break;
-            }
-        }
-
-        test(test_prefix, result);
+        pd_shared3p xor_uint32[[1]] expandedKey2 = aes192ExpandKey(key);
+        test(test_prefix, all(declassify(expandedKey1) == declassify(expandedKey2)));
     }
 
     test_prefix = "Encrypt with aes192";
     {
-        pd_shared3p xor_uint32[[1]] plainText = {0x681c7acc, 0x1cdfa764, 0x8625d98c, 0xe535075a};
-        pd_shared3p xor_uint32[[1]] cipherText1 = {0xf58ba066, 0x2b2a7bcc, 0xf48583fa, 0xa27bd0e4};
+        pd_shared3p xor_uint32[[1]] plainText = {
+            0x00112233, 0x44556677, 0x8899aabb, 0xccddeeff
+        };
+        pd_shared3p xor_uint32[[1]] cipherText1 = {
+            0xdda97ca4, 0x864cdfe0, 0x6eaf70a0, 0xec0d7191
+        };
+        pd_shared3p xor_uint32[[1]] key = {
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f,
+            0x10111213, 0x14151617
+        };
         pd_shared3p xor_uint32[[1]] expandedKey = {
-            0x3c3b6fb8, 0x726aa8a0, 0x1970c952, 0x751813d1, // Round 0
-            0x68d6dd73, 0x635b198d, 0xbaf38a8c, 0x501f0d3f, // Round 1
-            0xf871c74d, 0xb83be256, 0xca3e738d, 0xa87d149e, // Round 2
-            0xf147ea32, 0x66bd8dc8, 0x1b642f8f, 0x658b4ad7, // Round 3
-            0x509b7128, 0x91a40b2d, 0x3f199ff9, 0x140f7f23, // Round 4
-            0xd8383c76, 0x7c1082ba, 0x3b5142df, 0x69a8251e, // Round 5
-            0x9d809aee, 0xe3db62e5, 0x16c77228, 0xce86a297, // Round 6
-            0xbc9189e9, 0x7869b689, 0x6adc4ca2, 0x1d081dea, // Round 7
-            0xdac5af93, 0xdd1698c1, 0x39d61bfd, 0xac76771d, // Round 8
-            0xcf111ab3, 0x26dc3fc,  0xbe55753f, 0x71a773ef, // Round 9
-            0xa05d271c, 0x492b1739, 0x8e1c8825, 0xe3ee2a1e, // Round 10
-            0xac42b230, 0xbf2e928f, 0x53e97b92, 0x7c7fca25, // Round 11
-            0xecdb3c4a, 0xdb4a9382, 0x4dcaf277, 0xe9554c62  // Round 12
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f, // R0
+            0x10111213, 0x14151617, 0x5846f2f9, 0x5c43f4fe, // R1
+            0x544afef5, 0x5847f0fa, 0x4856e2e9, 0x5c43f4fe, // R2
+            0x40f949b3, 0x1cbabd4d, 0x48f043b8, 0x10b7b342, // R3
+            0x58e151ab, 0x04a2a555, 0x7effb541, 0x6245080c, // R4
+            0x2ab54bb4, 0x3a02f8f6, 0x62e3a95d, 0x66410c08, // R5
+            0xf5018572, 0x97448d7e, 0xbdf1c6ca, 0x87f33e3c, // R6
+            0xe5109761, 0x83519b69, 0x34157c9e, 0xa351f1e0, // R7
+            0x1ea0372a, 0x99530916, 0x7c439e77, 0xff12051e, // R8
+            0xdd7e0e88, 0x7e2fff68, 0x608fc842, 0xf9dcc154, // R9
+            0x859f5f23, 0x7a8d5a3d, 0xc0c02952, 0xbeefd63a, // R10
+            0xde601e78, 0x27bcdf2c, 0xa223800f, 0xd8aeda32, // R11
+            0xa4970a33, 0x1a78dc09, 0xc418c271, 0xe3a41d5d  // R12
         };
 
-        pd_shared3p xor_uint32[[1]] cipherText2 = aes192EncryptEcb(expandedKey,plainText);
+        pd_shared3p xor_uint32[[1]] cipherText2 = aes192EncryptEcb(expandedKey, plainText);
         test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
     }
 
@@ -150,43 +186,63 @@ void main(){
 
     test_prefix = "aes256 key expansion";
     {
-        bool result = true;
-        for(uint i = 2; i <= 10; i = i + 2){
-            pd_shared3p xor_uint32[[1]] key = aes256Genkey(i);
-            pd_shared3p xor_uint32[[1]] expandedKey = aes256ExpandKey(key);
+        pd_shared3p xor_uint32[[1]] key = {
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f,
+            0x10111213, 0x14151617, 0x18191a1b, 0x1c1d1e1f
+        };
+        pd_shared3p xor_uint32[[1]] expandedKey1 = {
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f, // R0
+            0x10111213, 0x14151617, 0x18191a1b, 0x1c1d1e1f, // R1
+            0xa573c29f, 0xa176c498, 0xa97fce93, 0xa572c09c, // R2
+            0x1651a8cd, 0x0244beda, 0x1a5da4c1, 0x0640bade, // R3
+            0xae87dff0, 0x0ff11b68, 0xa68ed5fb, 0x03fc1567, // R4
+            0x6de1f148, 0x6fa54f92, 0x75f8eb53, 0x73b8518d, // R5
+            0xc656827f, 0xc9a79917, 0x6f294cec, 0x6cd5598b, // R6
+            0x3de23a75, 0x524775e7, 0x27bf9eb4, 0x5407cf39, // R7
+            0x0bdc905f, 0xc27b0948, 0xad5245a4, 0xc1871c2f, // R8
+            0x45f5a660, 0x17b2d387, 0x300d4d33, 0x640a820a, // R9
+            0x7ccff71c, 0xbeb4fe54, 0x13e6bbf0, 0xd261a7df, // R10
+            0xf01afafe, 0xe7a82979, 0xd7a5644a, 0xb3afe640, // R11
+            0x2541fe71, 0x9bf50025, 0x8813bbd5, 0x5a721c0a, // R12
+            0x4e5a6699, 0xa9f24fe0, 0x7e572baa, 0xcdf8cdea, // R13
+            0x24fc79cc, 0xbf0979e9, 0x371ac23c, 0x6d68de36  // R14
+        };
 
-            if (size(expandedKey) != (i * 60)) {
-                result = false;
-                break;
-            }
-        }
-
-        test(test_prefix, result);
+        pd_shared3p xor_uint32[[1]] expandedKey2 = aes256ExpandKey(key);
+        test(test_prefix, all(declassify(expandedKey1) == declassify(expandedKey2)));
     }
 
     test_prefix = "Encrypt with aes256";
     {
-        pd_shared3p xor_uint32[[1]] plainText = {0x6d7134dd, 0x13026986, 0xa43e0ada, 0x569c6b53};
-        pd_shared3p xor_uint32[[1]] cipherText1 = {0x91e3fd7c, 0x3221ec20, 0x64d8b896, 0xa0ccecab};
+        pd_shared3p xor_uint32[[1]] plainText = {
+            0x00112233, 0x44556677, 0x8899aabb, 0xccddeeff
+        };
+        pd_shared3p xor_uint32[[1]] cipherText1 = {
+            0x8ea2b7ca, 0x516745bf, 0xeafc4990, 0x4b496089
+        };
+        pd_shared3p xor_uint32[[1]] key = {
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f,
+            0x10111213, 0x14151617, 0x18191a1b, 0x1c1d1e1f
+        };
         pd_shared3p xor_uint32[[1]] expandedKey = {
-            0x605a1da2, 0xd45da6a3, 0xa39eec31, 0xabe0aa21, // Round 0
-            0xa20bbbf5, 0x569c6d22, 0x28e64d3d, 0xe9874a7,  // Round 1
-            0x47ab59a,  0x78e61a39, 0xbfea7174, 0xa5d6dd80, // Round 2
-            0xe2172627, 0x923cdd78, 0x86284505, 0xefe0327a, // Round 3
-            0x5942a762, 0x198e61bd, 0x693d5105, 0x65d77c3c, // Round 4
-            0xc2bf5a00, 0x50d98736, 0x8618cd8b, 0x70c4845f, // Round 5
-            0x110f6080, 0x6e13b0a6, 0xba7e951c, 0x88a459a0, // Round 6
-            0x588d230f, 0xc612f784, 0xfe2cd695, 0x8a18a4ba, // Round 7
-            0xe22a083e, 0x9c562fe0, 0xef07711b, 0x3e42832b, // Round 8
-            0x5af3d87e, 0x5ef9e2c5, 0x691c70c9, 0xbc6f3af0, // Round 9
-            0x3322b501, 0x57d2dce4, 0x2e46a983, 0xbcdfe4ed, // Round 10
-            0xb1aa7382, 0xc84e3060, 0x42b82e9d, 0x36b73484, // Round 11
-            0x88a22615, 0x80f947ab, 0xf2fa3c0b, 0x74a313ee, // Round 12
-            0xa7c7d21e, 0xacbf4bb1, 0xc531a785, 0xb599ae74, // Round 13
-            0x950df596, 0x51090640, 0x71010c90, 0x506b091c  // Round 14
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f, // R0
+            0x10111213, 0x14151617, 0x18191a1b, 0x1c1d1e1f, // R1
+            0xa573c29f, 0xa176c498, 0xa97fce93, 0xa572c09c, // R2
+            0x1651a8cd, 0x0244beda, 0x1a5da4c1, 0x0640bade, // R3
+            0xae87dff0, 0x0ff11b68, 0xa68ed5fb, 0x03fc1567, // R4
+            0x6de1f148, 0x6fa54f92, 0x75f8eb53, 0x73b8518d, // R5
+            0xc656827f, 0xc9a79917, 0x6f294cec, 0x6cd5598b, // R6
+            0x3de23a75, 0x524775e7, 0x27bf9eb4, 0x5407cf39, // R7
+            0x0bdc905f, 0xc27b0948, 0xad5245a4, 0xc1871c2f, // R8
+            0x45f5a660, 0x17b2d387, 0x300d4d33, 0x640a820a, // R9
+            0x7ccff71c, 0xbeb4fe54, 0x13e6bbf0, 0xd261a7df, // R10
+            0xf01afafe, 0xe7a82979, 0xd7a5644a, 0xb3afe640, // R11
+            0x2541fe71, 0x9bf50025, 0x8813bbd5, 0x5a721c0a, // R12
+            0x4e5a6699, 0xa9f24fe0, 0x7e572baa, 0xcdf8cdea, // R13
+            0x24fc79cc, 0xbf0979e9, 0x371ac23c, 0x6d68de36  // R14
         };
 
-        pd_shared3p xor_uint32[[1]] cipherText2 = aes256EncryptEcb(expandedKey,plainText);
+        pd_shared3p xor_uint32[[1]] cipherText2 = aes256EncryptEcb(expandedKey, plainText);
         test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
     }
 
