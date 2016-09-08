@@ -84,6 +84,31 @@ bool cast_type_to_bool(D T data) {
     return result;
 }
 
+template<domain D, type T>
+bool cast_float_to_bool(D T data) {
+    bool result = true;
+    D T[[1]] temp (10);
+    D T[[1]] a = randomize(temp);
+    a[0] = 0;
+    a[1] = 1;
+    a[2] = -1;
+
+    D bool[[1]] b (10) = (bool)a;
+
+    for (uint i = 0; i < 10; ++i) {
+        if (declassify(b[i]) == true && abs(declassify(a[i])) < 1.0) {
+            result = false;
+            break;
+        }
+        if (declassify(b[i]) == false && abs(declassify(a[i])) >= 1.0) {
+            result = false;
+            break;
+        }
+    }
+
+    return result;
+}
+
 template<domain D1, type T1, domain D2, type T2, dim N>
 bool cast_type_to_type(D1 T1 [[N]] t1, D2 T2 [[N]] t2) {
     D2 T2[[1]] c = (T2)(t1);
@@ -329,8 +354,8 @@ void main(){
 //        { pd_shared3p xor_uint16 b; test(test_prefix, cast_type_to_bool(b), b, a); }
 //        { pd_shared3p xor_uint32 b; test(test_prefix, cast_type_to_bool(b), b, a); }
 //        { pd_shared3p xor_uint64 b; test(test_prefix, cast_type_to_bool(b), b, a); }
-        { pd_shared3p float32 b; test(test_prefix, cast_type_to_bool(b), b, a); }
-        { pd_shared3p float64 b; test(test_prefix, cast_type_to_bool(b), b, a); }
+        { pd_shared3p float32 b; test(test_prefix, cast_float_to_bool(b), b, a); }
+        { pd_shared3p float64 b; test(test_prefix, cast_float_to_bool(b), b, a); }
     }
 
     {
