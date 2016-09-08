@@ -150,10 +150,10 @@ bool bl_strIsEmpty_test () {
 
 
 bool bl_strTrim_test () {
-	pd_shared3p xor_uint8[[1]] a = {35, 0, 0, 35};
+	pd_shared3p xor_uint8[[1]] a = {35, 36, 37, 38, 0, 0, 0, 0};
 
 	pd_shared3p xor_uint8[[1]] result = bl_strTrim (a);
-	pd_shared3p xor_uint8[[1]] expected_result = {35, 0, 0, 35};
+	pd_shared3p xor_uint8[[1]] expected_result = {35, 36, 37, 38};
 	printVector (declassify (result));
 
 	if ( size (result) != size (expected_result))
