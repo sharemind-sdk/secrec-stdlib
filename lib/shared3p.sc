@@ -2895,31 +2895,40 @@ D uint64 [[2]] reshare (D xor_uint64[[2]] input) {
  *  @return returns one of the input arrays that was obliviously chosen with the condition. if **true**, array **first** is returned else **second** is returned
  */
 
-template <domain D : shared3p, dim N, type T>
-D T[[N]] _chooseXorUint (D bool cond, D T[[N]] first, D T[[N]] second) {
-    assert (shapesAreEqual (first, second));
-    D T cond2 = (T)cond;
-    return cond2 & (first ^ second) ^ second;
-}
-
-template <domain D, dim N>
+template <domain D : shared3p, dim N>
 D xor_uint8[[N]] choose(D bool cond, D xor_uint8[[N]] first, D xor_uint8[[N]] second) {
-    return _chooseXorUint (cond, first, second);
+    D bool[[1]] cond2(size(first));
+    cond2 = cond;
+    D xor_uint8[[N]] out = first;
+    __syscall ("shared3p::choose_xor_uint8_vec", __domainid (D), cond2, first, second, out);
+    return out;
 }
 
-template <domain D, dim N>
+template <domain D : shared3p, dim N>
 D xor_uint16[[N]] choose(D bool cond, D xor_uint16[[N]] first, D xor_uint16[[N]] second) {
-    return _chooseXorUint (cond, first, second);
+    D bool[[1]] cond2(size(first));
+    cond2 = cond;
+    D xor_uint16[[N]] out = first;
+    __syscall ("shared3p::choose_xor_uint16_vec", __domainid (D), cond2, first, second, out);
+    return out;
 }
 
-template <domain D, dim N>
+template <domain D : shared3p, dim N>
 D xor_uint32[[N]] choose(D bool cond, D xor_uint32[[N]] first, D xor_uint32[[N]] second) {
-    return _chooseXorUint (cond, first, second);
+    D bool[[1]] cond2(size(first));
+    cond2 = cond;
+    D xor_uint32[[N]] out = first;
+    __syscall ("shared3p::choose_xor_uint32_vec", __domainid (D), cond2, first, second, out);
+    return out;
 }
 
-template <domain D, dim N>
+template <domain D : shared3p, dim N>
 D xor_uint64[[N]] choose(D bool cond, D xor_uint64[[N]] first, D xor_uint64[[N]] second) {
-    return _chooseXorUint (cond, first, second);
+    D bool[[1]] cond2(size(first));
+    cond2 = cond;
+    D xor_uint64[[N]] out = first;
+    __syscall ("shared3p::choose_xor_uint64_vec", __domainid (D), cond2, first, second, out);
+    return out;
 }
 
 /**
