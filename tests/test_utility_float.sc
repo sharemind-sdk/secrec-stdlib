@@ -21,8 +21,8 @@ module test_utility_float;
 
 import stdlib;
 
-float32 f32Precision = 1e-4;
-float64 f64Precision = 1e-12;
+float32 f32Precision = 1e-5;
+float64 f64Precision = 1e-14;
 
 template<domain D : shared3p, dim N>
 bool isRelativeErrorSmall(D float32[[N]] result, D float32[[N]] expected) {
