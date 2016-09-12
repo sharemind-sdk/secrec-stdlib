@@ -29,56 +29,30 @@ domain pd_shared3p shared3p;
 
 template<type T, type G>
 bool glm_test_gaussian (T data, G data2) {
-	pd_shared3p T[[1]] dependent = {1, 2, 1, 5};
-	pd_shared3p T[[2]] variables = reshape ({2, 2, 3,
-											 1, 3, 3,
-											 4, 1, 5,
-											 5, 1, 2
-											 }, 4, 3);
+    pd_shared3p T[[1]] dependent = {806, 386, -276, -515, 114};
+    pd_shared3p T[[2]] variables = reshape({151, 25, 53, 60, -43, -31, -162, 147, -47, 174}, 5, 2);
 
-	G[[1]] result = declassify (generalizedLinearModel (dependent, variables, 0, 5::uint));
+    G[[1]] correct = {5, 2, 1};
+	G[[1]] result = declassify (generalizedLinearModel (dependent, variables,
+                                                        GLM_FAMILY_GAUSSIAN,
+                                                        10 :: uint));
 
-	// Y = aX + b, where Y is the dependent, X is variables, a and b are the results from the variable
-	// b is the last element of the result
-	G[[2]] test = matrixMultiplication((G) declassify (variables), reshape (result[0:3], 3, 1)) + result[3];
-
-	G relative_error = sum (abs (transpose (test)[0, :] - (G) declassify (dependent))) / sum ((G) declassify (dependent));
-
-
-
-	if (!isNegligible (relative_error))
-		return false;
-
-	return true;
+    return isNegligible(sum(abs(result - correct)));
 }
 
 
-template<type T, type G>
-bool glm_test_binomial_logit (T data, G data2) {
-	pd_shared3p T[[1]] dependent = {0, 1, 0, 0, 1, 0, 0};
-	pd_shared3p T[[2]] variables = reshape ({0.3, 0.8, 0.35, 0.4, 0.7, 0.2, 0.5}, 7, 1);
+template<type T>
+bool glm_test_binomial_logit (T data) {
+    pd_shared3p T[[1]] dependent = {0.00113367185625001, 0.00311180891921009, 0.997806847193992, 0.922963127457546, 0.782679248264553, 0.43361973990276, 0.946321200496039, 0.115200611835863, 0.963834734242139, 0.999988944605178};
+    pd_shared3p T[[2]] variables = reshape({-1.42149803885464, -0.557889658238812, -1.49378731776404, -0.100165942116239, 1.01591698897896, -0.319788457730307, -0.118780028290195, 0.359068418383317, 0.385724119986289, -0.882424004426778, 0.212590405381168, -1.11001658081987, 0.380191620724843, -0.343798061757185, -0.718598533796575, -0.148564403655281, 0.250528207632885, 0.0100598851614594, 1.78537081279023, 0.161908970189403}, 10, 2);
 
-	G[[1]] result = declassify (generalizedLinearModel (dependent, variables, 1, 15::uint));
+    T[[1]] correct = {5, 3, 2};
+    T[[1]] result = declassify(generalizedLinearModel(dependent,
+                                                      variables,
+                                                      GLM_FAMILY_BINOMIAL_LOGIT,
+                                                      10 :: uint));
 
-	//p = exp(ax + b) / (1 + exp(ax + b))
-	//where p is the dependent, x is the variable, a and b are the regression results
-	G a = result[0];
-	G b = result[1];
-
-	bool[[1]] test_results (7) = false;
-	G probability;
-	G c;
-
-	//test every element individually if they match the dependent
-	for (uint i = 0; i < 7; i++) {
-		c = exp (declassify (variables[i, 0]) * a + b);
-		probability = c / (1 + c);
-		test_results[i] = isNegligible (probability - declassify (dependent[i]));
-	}
-	if(!all (test_results))
-		return false;
-
-	return true;
+    return isNegligible(sum(abs(result - correct)));
 }
 
 
@@ -89,8 +63,8 @@ void main () {
 	test (test_prefix, glm_test_gaussian (0::int64, 0::float64), 0::int64);
 
 	test_prefix = "GeneralizedLinearModel(Binomial Logit)";
-	test (test_prefix, glm_test_binomial_logit (0::float32, 0::float32), 0::int32);
-	test (test_prefix, glm_test_binomial_logit (0::float64, 0::float64), 0::int64);
+	test (test_prefix, glm_test_binomial_logit (0::float32), 0::float32);
+	test (test_prefix, glm_test_binomial_logit (0::float64), 0::float64);
 
 
 
