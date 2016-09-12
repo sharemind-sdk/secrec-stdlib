@@ -162,8 +162,6 @@ bool radix_index_test (D T data) {
 
 	D uint[[1]] expected_result = {1, 0, 2, 4, 6, 8, 9, 7, 5, 3};
 
-	printVector (declassify (result));
-
 	bool x = all (declassify (result == expected_result));
 
 	return x ;

@@ -54,7 +54,6 @@ bool[[1]] vmap_test (D T data) {
 	test_results[6] = vmap_erase_test 		(data, vmap_id);
 
 	test_results[0] = all (test_results[1:]);
-	printVector(test_results);
 
 	return test_results;
 }
@@ -154,8 +153,6 @@ bool vmap_erase_test (D T data, uint vmap_id) {
 	tdbVmapErase (vmap_id, "indexes");
 	uint result = tdbVmapCount (vmap_id, "indexes");
 	uint expected_result = 0;
-
-	print (result);
 
 	return result == expected_result;
 

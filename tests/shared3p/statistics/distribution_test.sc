@@ -76,9 +76,6 @@ bool heatmap_test (T data) {
 							   0, 2, 0,
 							   0, 0, 2};
 
-	print("Hold");
-	printVector(result[1, :]);
-
 	if (columns != 3 || rows != 3)
 		return false;
 

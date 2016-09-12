@@ -154,7 +154,6 @@ bool bl_strTrim_test () {
 
 	pd_shared3p xor_uint8[[1]] result = bl_strTrim (a);
 	pd_shared3p xor_uint8[[1]] expected_result = {35, 36, 37, 38};
-	printVector (declassify (result));
 
 	if ( size (result) != size (expected_result))
 		return false;
