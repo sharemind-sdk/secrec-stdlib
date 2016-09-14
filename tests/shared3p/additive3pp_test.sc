@@ -324,34 +324,38 @@ bool test_max3(T data){
     return all(control == result);
 }
 
-bool test_floor(){
-    //scalar
-    pd_shared3p float64[[1]] value = {15.892356329, 5.12974291, 7.5009235790235, -52.325623, -12.5002362, -1.873258};
-    float64[[1]] control = {15, 5, 7, -53, -13, -2};
-    for(uint i = 0; i < size(value); ++i){
-        float64 result = declassify(floor(value[i]));
-        if (control[i] != result)
-            return false;
-    }
-
-    //vector
-    float64[[1]] result = declassify(floor(value));
-    return all(control == result);
+template<domain D, type T>
+void testCeiling(string name, D T[[1]] x, T[[1]] y) {
+    test("[$name\] Ceiling", all(declassify(ceiling(x)) == y));
 }
 
-bool test_ceiling(){
-    //scalar
-    pd_shared3p float64[[1]] value = {15.892356329, 5.12974291, 7.5009235790235, -52.325623, -12.5002362, -1.873258};
-    float64[[1]] control = {16, 6, 8, -52, -12, -1};
-    for(uint i = 0; i < size(value); ++i){
-        float64 result = declassify(ceiling(value[i]));
-        if (control[i] != result)
-            return false;
-    }
+void testCeilingFloat32() {
+    pd_shared3p float32[[1]] x = {6.91e-13, -6.9e-32, -6.55e36, -7.34e23, -5.34e26, 5.73e23, -6.82, -7.85e-6, 7.07e-37, -8.91e-3};
+    float32[[1]] y = {1, 0, -6.55e36, -7.34e23, -5.34e26, 5.73e23, -6, 0, 1, 0};
+    testCeiling("float32", x, y);
+}
 
-    //vector
-    float64[[1]] result = declassify(ceiling(value));
-    return all(control == result);
+void testCeilingFloat64() {
+    pd_shared3p float64[[1]] x = {15.892356329, 5.12974291, 7.5009235790235, -52.325623, -12.5002362, -1.873258, -5.25e67, 5.2e-31, 2.71e114, 5.4e-77};
+    float64[[1]] y = {16, 6, 8, -52, -12, -1, -5.25e67, 1, 2.71e114, 1};
+    testCeiling("float64", x, y);
+}
+
+template<domain D, type T>
+void testFloor(string name, D T[[1]] x, T[[1]] y) {
+    test("[$name\] Floor", all(declassify(floor(x)) == y));
+}
+
+void testFloorFloat32() {
+    pd_shared3p float32[[1]] x = {8.90e-11, 5.18e30, -6.97e-19, 6.34e24, -3.11e-22, -2.31e-24, 4.84e7, 8.61e-13, 1.12e3, 5.82e31};
+    float32[[1]] y = {0, 5.18e30, -1, 6.34e24, -1, -1, 4.84e7, 0, 1.12e3, 5.82e31};
+    testFloor("float32", x, y);
+}
+
+void testFloorFloat64() {
+    pd_shared3p float64[[1]] x = {15.892356329, 5.12974291, 7.5009235790235, -52.325623, -12.5002362, -1.873258, -3.62e233, -3.89e240, 3.21e-240, 3.11e219};
+    float64[[1]] y = {15, 5, 7, -53, -13, -2, -3.62e233, -3.89e240, 0, 3.11e219};
+    testFloor("float64", x, y);
 }
 
 void main(){
@@ -498,12 +502,10 @@ void main(){
     test(test_prefix, test_max3(0::int32), 0::int32);
     test(test_prefix, test_max3(0::int64), 0::int64);
 
-    // Uncomment when SecreC is updated to support these Syscalls
-    test_prefix = "Floor";
-    test(test_prefix, test_floor());
-
-    test_prefix = "Ceiling";
-    test(test_prefix, test_ceiling());
+    testCeilingFloat32();
+    testCeilingFloat64();
+    testFloorFloat32();
+    testFloorFloat64();
 
     test_report();
 }
