@@ -96,9 +96,9 @@ void convTest(string name1, string name2, D T[[1]] x, U[[1]] y) {
 }
 
 void float32ToFloat64Test() {
-    pd_shared3p float32[[1]] x = {0, 1, 5.8e9, 16, 3.38e2};
-    float64[[1]] y = {0, 1, 5.8e9, 16, 3.38e2};
-    convTest("float32", "float64", x, y);
+    pd_shared3p float32[[1]] x = {1, 6.42e-7, -5.28e-30, 4.77e16, 3.12e14, 6.79e28, -6.54e37, -8.75e7, -3.48e37, 7.05e-31};
+    float64[[1]] y = {1, 6.42e-7, -5.28e-30, 4.77e16, 3.12e14, 6.79e28, -6.54e37, -8.75e7, -3.48e37, 7.05e-31};
+    test("[float32, float64] Casting values", all(abs(declassify((float64)(x)) / y - 1) < 1e-7));
 }
 
 void float32ToInt8Test() {
