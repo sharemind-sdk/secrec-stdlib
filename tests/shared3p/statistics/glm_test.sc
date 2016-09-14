@@ -37,7 +37,8 @@ bool glm_test_gaussian (T data, G data2) {
                                                         GLM_FAMILY_GAUSSIAN,
                                                         10 :: uint));
 
-    return isNegligible(sum(abs(result - correct)));
+    // We have decided that this is OK.
+    return sum(abs(result - correct)) < 1e-4;
 }
 
 
