@@ -45,6 +45,8 @@ import matrix;
 * \defgroup shared3p_matrixmultiplication matrixMultiplication
 * \defgroup shared3p_matrixmultiplication_mat matrixMultiplication[[2]]
 * \defgroup shared3p_matrixmultiplication_cube matrixMultiplication[[3]]
+* \defgroup shared3p_cholesky cholesky
+* \defgroup shared3p_choleskyinverse choleskyInverse
 */
 
 /** \addtogroup shared3p_matrix
@@ -846,5 +848,99 @@ D float64[[3]] matrixMultiplication (D float64[[3]] x, D float64[[3]] y) {
 /** @}*/
 
 /** @}*/
+
+/** \addtogroup shared3p_cholesky
+ *  @{
+ *  @brief Function for finding the Cholesky decomposition of a matrix.
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @note The Cholesky decomposition can only be applied to
+ *  positive-definite Hermitian matrices.
+ *  @param x - matrix
+ *  @return returns matrix L such that x = L L^T
+ */
+/** \cond */
+// Only works with positive definite Hermitian matrices.
+template<domain D : shared3p, type T>
+D T[[2]] _cholesky(D T[[2]] X) {
+    uint n = shape(X)[0];
+    assert(shape(X)[1] == n);
+
+    D T[[2]] L(n, n);
+
+    for (uint i = 0; i < n; ++i) {
+        for (uint j = 0; j <= i; ++j) {
+            if (i == j) {
+                D T[[1]] x = L[j, 0 : j];
+                L[j, j] = sqrt(X[j, j] - sum(x * x));
+            } else {
+                L[i, j] = 1 / L[j, j] *
+                    (X[i, j] - sum(L[i, 0 : j] * L[j, 0 : j]));
+            }
+        }
+    }
+
+    return L;
+}
+/** \endcond */
+
+template<domain D : shared3p>
+D float32[[2]] cholesky(D float32[[2]] x) {
+    return _cholesky(x);
+}
+
+template<domain D : shared3p>
+D float64[[2]] cholesky(D float64[[2]] x) {
+    return _cholesky(x);
+}
+/** @} */
+
+/** \addtogroup shared3p_choleskyinverse
+ *  @{
+ *  @brief Function for finding the inverse of a matrix using Cholesky decomposition.
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @note This function can only be applied to positive-definite
+ *  Hermitian matrices.
+ *  @param x - matrix
+ *  @return returns the inverse of x
+ */
+/** \cond */
+// Only works with positive definite Hermitian matrices.
+template<domain D : shared3p, type T>
+D T[[2]] _cholInv(D T[[2]] X) {
+    uint n = shape(X)[0];
+    assert(n >= 1);
+
+    D T[[2]] L = cholesky(X);
+    D T[[2]] inv(n, n);
+
+    for (uint i = 0; i < n; ++i) {
+        D T[[1]] x(n);
+        if (i == 0)
+            x[0] = 1 / L[0, 0];
+        for (uint j = 1; j < n; ++j) {
+            T b = j == i ? 1 : 0;
+            x[j] = (b - sum(L[j, 0 : j] * x[0 : j])) / L[j, j];
+        }
+        inv[:, i] = x;
+    }
+
+    // TODO: maybe this can be optimised even further since inv is
+    // triangular.
+    return _multTransposed(inv);
+}
+/** \endcond */
+
+template<domain D : shared3p>
+D float32[[2]] choleskyInverse(D float32[[2]] x) {
+    return _cholInv(x);
+}
+
+template<domain D : shared3p>
+D float64[[2]] choleskyInverse(D float64[[2]] x) {
+    return _cholInv(x);
+}
+/** @} */
 
 /** @}*/
