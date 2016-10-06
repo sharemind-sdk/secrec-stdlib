@@ -53,6 +53,7 @@ import stdlib;
 * \defgroup diag_matrixmultiplication_mat diagMatrixMultiplication[[2]]
 * \defgroup diag_matrixmultiplication_cube diagMatrixMultiplication[[3]]
 * \defgroup determinant determinant
+* \defgroup transposedmatrixmultiplication transposedMatrixMultiplication
 */
 
 /*******************************
@@ -1432,4 +1433,89 @@ float64[[2]] LupDecomposition (float64[[2]] mat) {
 * \endcond
 */
 /** @}*/
+
+/** \addtogroup transposedmatrixmultiplication
+ *  @{
+ *  @brief Function for multiplying X^T by X
+ *  @note **D** - any protection domain
+ *  @note Supported types \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @param x - matrix
+ *  @return returns transposed x multiplied by x
+ */
+/** \cond */
+// Multiples X^T * X
+template<domain D, type T>
+D T[[2]] _multTransposed(D T[[2]] x) {
+    uint n = shape(x)[1];
+    D T[[2]] res(n, n);
+
+    // Calculate upper triangle
+    for (uint j = 0; j < n; j++) {
+        for (uint i = 0; i <= j; i++) {
+            res[i, j] = dotProduct(x[:, i], x[:, j]);
+        }
+    }
+
+    // Mirror
+    for (uint i = 1; i < n; i++) {
+        for (uint j = 0; j < i; j++) {
+            res[i, j] = res[j, i];
+        }
+    }
+
+    return res;
+}
+/** \endcond */
+
+template<domain D>
+D uint8[[2]] transposedMatrixMultiplication(D uint8[[2]] x) {
+    return _multTransposed(x);
+}
+
+template<domain D>
+D uint16[[2]] transposedMatrixMultiplication(D uint16[[2]] x) {
+    return _multTransposed(x);
+}
+
+template<domain D>
+D uint32[[2]] transposedMatrixMultiplication(D uint32[[2]] x) {
+    return _multTransposed(x);
+}
+
+template<domain D>
+D uint64[[2]] transposedMatrixMultiplication(D uint64[[2]] x) {
+    return _multTransposed(x);
+}
+
+template<domain D>
+D int8[[2]] transposedMatrixMultiplication(D int8[[2]] x) {
+    return _multTransposed(x);
+}
+
+template<domain D>
+D int16[[2]] transposedMatrixMultiplication(D int16[[2]] x) {
+    return _multTransposed(x);
+}
+
+template<domain D>
+D int32[[2]] transposedMatrixMultiplication(D int32[[2]] x) {
+    return _multTransposed(x);
+}
+
+template<domain D>
+D int64[[2]] transposedMatrixMultiplication(D int64[[2]] x) {
+    return _multTransposed(x);
+}
+
+template<domain D>
+D float32[[2]] transposedMatrixMultiplication(D float32[[2]] x) {
+    return _multTransposed(x);
+}
+
+template<domain D>
+D float64[[2]] transposedMatrixMultiplication(D float64[[2]] x) {
+    return _multTransposed(x);
+}
+/** @} */
+
 /** @}*/
