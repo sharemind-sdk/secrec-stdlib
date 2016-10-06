@@ -36,6 +36,7 @@ import stdlib;
  * \defgroup shared3p_glm_constants constants
  * \defgroup shared3p_generalized_linear_model generalizedLinearModel
  * \defgroup shared3p_generalized_linear_model_method generalizedLinearModel(with method parameter)
+ * \defgroup shared3p_params_stderr parametersStandardErrors
  */
 
 /**
@@ -116,7 +117,7 @@ D FT[[1]] _glm(D FT[[1]] dependent,
         D FT[[2]] varsTransWeight;
         D FT[[2]] mulR(varCount, observationCount);
 
-        for (uint i = 0; i < varCount; i++)
+        for (uint i = 0; i < varCount; ++i)
             mulR[i, :] = weight[:, 0];
 
         varsTransWeight = varsTransposed * mulR;
@@ -254,6 +255,63 @@ D T[[1]] _dispatch(D T[[1]] dependent,
         return _glm(dependent, variables, family, iterations, GLM_SOLE_METHOD_LU_DECOMPOSITION, 0 :: uint);
     }
 }
+
+template<domain D : shared3p, type T>
+D T[[1]] _parametersStandardErrors(D T[[1]] dependent,
+                                   D T[[2]] vars,
+                                   D T[[1]] params,
+                                   int64 family)
+{
+    // Add a variable with all observations set to one. The parameter
+    // for this variable is the intercept.
+    D T[[2]] ones(shape(vars)[0], 1) = 1;
+    vars = cat(vars, ones, 1);
+
+    uint varCount = shape(vars)[1];
+    uint observationCount = shape(vars)[0];
+    D T[[2]] eta = matrixMultiplication(vars, _toCol(params));
+    D T[[2]] mu = _linkInverse(eta, family);
+    D T[[2]] derivative = _derivative(eta, family);
+    D T[[2]] variance = _variance(mu, family);
+    D T[[2]] weight = derivative * derivative / variance;
+    D T[[2]] mulR(varCount, observationCount);
+
+    for (uint i = 0; i < varCount; ++i)
+        mulR[i, :] = weight[:, 0];
+
+    D T[[2]] varsTransWeight = transpose(vars) * mulR;
+    D T[[2]] covMat(varCount, varCount);
+    D T[[1]] res(varCount);
+    D T[[2]] X = matrixMultiplication(varsTransWeight, vars);
+
+    if (varCount == 2) {
+        covMat = _invert2by2(X);
+    } else if (varCount == 3) {
+        covMat = _invert3by3(X);
+    } else if (varCount == 4) {
+        covMat = _invert4by4(X);
+    } else {
+        covMat = choleskyInverse(X);
+    }
+
+    for (uint i = 0; i < varCount; ++i) {
+        res[i] = covMat[i, i];
+    }
+
+    if (family == GLM_FAMILY_GAUSSIAN) {
+        // Estimate dispersion
+        D T[[2]] residuals = _toCol(dependent) - eta;
+        // No weights since they are all 1 for Gaussian
+        D T disp = sum((residuals * residuals)[:, 0]) / (T) (observationCount - varCount);
+        res *= disp;
+    } else if (family == GLM_FAMILY_BINOMIAL_LOGIT) {
+        // Dispersion is 1
+    } else {
+        assert(false); // Unknown family
+    }
+
+    return sqrt(res);
+}
 /** \endcond */
 
 /**
@@ -330,6 +388,63 @@ D float32[[1]] generalizedLinearModel(D float32[[1]] dependent, D float32[[2]] v
 template<domain D : shared3p>
 D float64[[1]] generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] variables, int64 family, uint iterations, int64 SOLEmethod, uint SOLEiterations) {
     return _glm(dependent, variables, family, iterations, SOLEmethod, SOLEiterations);
+}
+/** @} */
+
+/**
+ * \addtogroup shared3p_params_stderr
+ * @{
+ * @brief Estimate the standard errors of parameters of generalized
+ * linear models.
+ * @note **D** - shared3p protection domain
+ * @note Supported types - \ref int32 "int32" / \ref int64 "int64" /
+ * \ref float32 "float32" / \ref float64 "float64"
+ * @param dependent - sample vector of dependent variable
+ * @param variables - a matrix where each column is a sample of an
+ * explanatory variable
+ * @param parameters - parameters estimated by the GLM fitting
+ * procedure
+ * @param family - indicates the distribution of the dependent
+ * variable
+ * @return returns a vector with the standard errors of each
+ * parameter
+ *
+ * @leakage{None}
+ */
+template<domain D : shared3p>
+D float32[[1]] parametersStandardErrors(D int32[[1]] dependent,
+                                        D int32[[2]] variables,
+                                        D float32[[1]] parameters,
+                                        int64 family)
+{
+    return _parametersStandardErrors((float32) dependent, (float32) variables, parameters, family);
+}
+
+template<domain D : shared3p>
+D float64[[1]] parametersStandardErrors(D int64[[1]] dependent,
+                                        D int64[[2]] variables,
+                                        D float64[[1]] parameters,
+                                        int64 family)
+{
+    return _parametersStandardErrors((float64) dependent, (float64) variables, parameters, family);
+}
+
+template<domain D : shared3p>
+D float32[[1]] parametersStandardErrors(D float32[[1]] dependent,
+                                        D float32[[2]] variables,
+                                        D float32[[1]] parameters,
+                                        int64 family)
+{
+    return _parametersStandardErrors(dependent, variables, parameters, family);
+}
+
+template<domain D : shared3p>
+D float64[[1]] parametersStandardErrors(D float64[[1]] dependent,
+                                        D float64[[2]] variables,
+                                        D float64[[1]] parameters,
+                                        int64 family)
+{
+    return _parametersStandardErrors(dependent, variables, parameters, family);
 }
 /** @} */
 
