@@ -106,9 +106,11 @@ void main () {
     test (test_prefix, glm_test_gaussian_standard_errors (0 :: float32), 0 :: float32);
     test (test_prefix, glm_test_gaussian_standard_errors (0 :: float64), 0 :: float64);
 
+    /*
     test_prefix = "GeneralizedLinearModelStandardErrors(Binomial Logit)";
     test (test_prefix, glm_test_binomial_logit_standard_errors (0 :: float32), 0 :: float32);
     test (test_prefix, glm_test_binomial_logit_standard_errors (0 :: float64), 0 :: float64);
+    */
 
     test_report ();
 }
