@@ -316,11 +316,17 @@ D T[[1]] _gaussianElimination(D T[[2]] a, D T[[1]] b) {
     return b;
 }
 
+template<domain D : shared3p, type T>
+struct _luResult {
+    D T[[2]] mat;
+    uint[[1]] perm;
+}
+
 // Works with square matrices
 template<domain D : shared3p, type T>
-D T[[2]] _ludecomp(D T[[2]] a) {
+_luResult<D, T> _ludecomp(D T[[2]] a) {
     uint n = shape(a)[0];
-    T[[1]] rowPerms(n);
+    uint[[1]] rowPerms(n);
 
     for (uint i = 0; i < n; i++) {
         uint irow = _maxFirstLoc(a[i:, i]) + i;
@@ -331,7 +337,7 @@ D T[[2]] _ludecomp(D T[[2]] a) {
             a[i, :] = tmp;
         }
 
-        rowPerms[i] = (T) irow;
+        rowPerms[i] = irow;
         D T ipiv = inv(a[i, i]);
 
         for (uint m = i + 1; m < n; m++) {
@@ -342,12 +348,11 @@ D T[[2]] _ludecomp(D T[[2]] a) {
         }
     }
 
-    // todo: we have structs now, don't make rowPerms a float vector
-    D T[[2]] ret(n, n + 1);
-    ret[:, :n] = a;
-    ret[:, n] = rowPerms;
+    public _luResult<D, T> res;
+    res.mat = a;
+    res.perm = rowPerms;
 
-    return ret;
+    return res;
 }
 
 // Works with square matrices
@@ -366,23 +371,15 @@ D T[[1]] _solveLU(D T[[2]] a, D T[[1]] b) {
     a = mat[:, :n];
     b = mat[:, n];
 
-    mat = _ludecomp(a);
-    D T[[2]] lu = mat[:, :n];
-    D uint[[1]] q = (uint) mat[:, n];
+    public _luResult<D, T> luRes = _ludecomp(a);
+    D T[[2]] lu = luRes.mat;
+    uint[[1]] q = luRes.perm;
 
+    // Reorder b
     for (uint i = 0; i < n; i++) {
-        // Exchange b[i], b[q[i]]
-
-        uint[[1]] indices(n);
-        for (uint i = 0; i < n; i++) {
-            indices[i] = i;
-        }
-        D bool[[1]] filter = indices == q[i];
-
         D T tmp = b[i];
-        b[i] = sum((T) filter * b);
-        D T[[1]] newb(n) = tmp;
-        b = choose(filter, newb, b);
+        b[i] = b[q[i]];
+        b[q[i]] = tmp;
     }
 
     uint m = _firstNonZero(b) + 1 :: uint;
@@ -427,29 +424,6 @@ D T[[1]] _conjugateGradient(D T[[2]] a, D T[[1]] b, uint iterations) {
     return x[:, 0];
 }
 
-// Multiples X^T * X
-template<domain D : shared3p, type T>
-D T[[2]] _multTransposed(D T[[2]] x) {
-    uint n = shape(x)[1];
-    D T[[2]] res(n, n);
-
-    // Calculate upper triangle
-    for (uint j = 0; j < n; j++) {
-        for (uint i = 0; i <= j; i++) {
-            res[i, j] = dotProduct(x[:, i], x[:, j]);
-        }
-    }
-
-    // Mirror
-    for (uint i = 1; i < n; i++) {
-        for (uint j = 0; j < i; j++) {
-            res[i, j] = res[j, i];
-        }
-    }
-
-    return res;
-}
-
 // variable samples as columns
 template<domain D : shared3p, type T, type FT>
 D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method, uint iterations) {
@@ -457,7 +431,7 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method
     uint vars = shape(variables)[1];
 
     D T[[2]] xt = transpose(variables);
-    D T[[2]] a = _multTransposed(variables);
+    D T[[2]] a = transposedMatrixMultiplication(variables);
     D T[[2]] b = matrixMultiplication(xt, reshape(dependent, size(dependent), 1));
 
     // Modify a and b to account for the intercept. To get the
