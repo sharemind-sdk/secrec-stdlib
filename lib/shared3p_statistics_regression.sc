@@ -431,7 +431,7 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method
     uint vars = shape(variables)[1];
 
     D T[[2]] xt = transpose(variables);
-    D T[[2]] a = transposedMatrixMultiplication(variables);
+    D T[[2]] a = leftTransposedMultiplication(variables);
     D T[[2]] b = matrixMultiplication(xt, reshape(dependent, size(dependent), 1));
 
     // Modify a and b to account for the intercept. To get the
