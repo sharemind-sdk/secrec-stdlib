@@ -477,23 +477,23 @@ template <domain D, type T, type FT, type UT>
 D FT _chiSquared2Classes (D UT[[2]] contTable, T dummy)
 {
     D FT result;
-    D UT a, b, c, d;
+    D FT a, b, c, d;
 
-    a = contTable[0, 0];
-    b = contTable[0, 1];
-    c = contTable[1, 0];
-    d = contTable[1, 1];
+    a = (FT) contTable[0, 0];
+    b = (FT) contTable[0, 1];
+    c = (FT) contTable[1, 0];
+    d = (FT) contTable[1, 1];
 
-    D T x1;
-    D UT y1;
+    D FT x1;
+    D FT y1;
 
-    x1 = (T) (a * d) - (T) (b * c);
+    x1 = (a * d) - (b * c);
     x1 = x1 * x1;
-    x1 = x1 * (T) (a + b + c + d);
+    x1 = x1 * (a + b + c + d);
 
     y1 = (a + b) * (c + d) * (a + c) * (b + d);
 
-    result = (FT) x1 / (FT) y1;
+    result = x1 / y1;
 
     return result;
 }
@@ -501,7 +501,6 @@ D FT _chiSquared2Classes (D UT[[2]] contTable, T dummy)
 // For reference, see Test 43 in the book "100 Statistical Tests"
 template <domain D, type T, type FT, type UT>
 D FT _chiSquaredXClasses (D UT[[2]] contTable, T dummy) {
-
     // Calculate expected frequencies as {(row subtotal x column subtotal) / total}
     uint[[1]] shapeContingency = shape (contTable);
     uint k = shapeContingency[0];
