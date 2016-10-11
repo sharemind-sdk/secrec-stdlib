@@ -929,7 +929,7 @@ D T[[2]] _cholInv(D T[[2]] X) {
 
     // TODO: maybe this can be optimised even further since inv is
     // triangular.
-    return _multTransposed(inv);
+    return leftTransposedMultiplication(inv);
 }
 /** \endcond */
 
