@@ -280,19 +280,9 @@ D T[[1]] _parametersStandardErrors(D T[[1]] dependent,
         mulR[i, :] = weight[:, 0];
 
     D T[[2]] varsTransWeight = transpose(vars) * mulR;
-    D T[[2]] covMat(varCount, varCount);
-    D T[[1]] res(varCount);
     D T[[2]] X = matrixMultiplication(varsTransWeight, vars);
-
-    if (varCount == 2) {
-        covMat = _invert2by2(X);
-    } else if (varCount == 3) {
-        covMat = _invert3by3(X);
-    } else if (varCount == 4) {
-        covMat = _invert4by4(X);
-    } else {
-        covMat = choleskyInverse(X);
-    }
+    D T[[2]] covMat(varCount, varCount) = borderingInverse(X);
+    D T[[1]] res(varCount);
 
     for (uint i = 0; i < varCount; ++i) {
         res[i] = covMat[i, i];
