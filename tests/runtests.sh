@@ -18,37 +18,14 @@
 # For further information, please contact us at sharemind@cyber.ee.
 #
 
+# This script reads the following environment variables:
+# SHAREMIND_PATH (default: ..) Sharemind install prefix
+# LOG_PATH (default: runtests.sh.log) Test log
+# RUN_GDB (default: 1) Flag turning on/off GDB debugging (0 means on)
+
 # Exit status of piped commands is zero only if all commands succeed
 set -o pipefail
 set -e
-
-if [ ! -d "${SHAREMIND_PATH}" ]; then
-    echo 'Required environment variable SHAREMIND_PATH missing or does not point to a directory!' 1>&2
-    exit 1
-fi
-
-# Check for GDB
-RUN_GDB="${RUN_GDB:-1}"
-
-type gdb >/dev/null 2>&1
-HAVE_GDB="$?"
-
-# http://www.linuxjournal.com/content/use-bash-trap-statement-cleanup-temporary-files
-declare -a ON_EXIT_ITEMS
-
-function on_exit() {
-    for ITEM in "${ON_EXIT_ITEMS[@]}"; do
-        eval "${ITEM}"
-    done
-}
-
-function add_on_exit() {
-    local N=${#ON_EXIT_ITEMS[*]}
-    ON_EXIT_ITEMS["${N}"]="$*"
-    if [[ "${N}" -eq 0 ]]; then
-        trap on_exit EXIT
-    fi
-}
 
 # readlink on OS X does not behave as on Linux
 # http://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
@@ -79,16 +56,47 @@ else
     unset -v ABSS
 fi
 
-TEST_PATH="${ABSSP}"
+SHAREMIND_PATH="${SHAREMIND_PATH:-$ABSSP/..}"
+
+if [ ! -d "${SHAREMIND_PATH}" ]; then
+    echo 'Environment variable SHAREMIND_PATH does not point to a directory!' 1>&2
+    exit 1
+fi
+
+echo "SHAREMIND_PATH='${SHAREMIND_PATH}'"
+
+# Check for GDB
+RUN_GDB="${RUN_GDB:-1}"
+
+type gdb >/dev/null 2>&1
+HAVE_GDB="$?"
+
+# http://www.linuxjournal.com/content/use-bash-trap-statement-cleanup-temporary-files
+declare -a ON_EXIT_ITEMS
+
+function on_exit() {
+    for ITEM in "${ON_EXIT_ITEMS[@]}"; do
+        eval "${ITEM}"
+    done
+}
+
+function add_on_exit() {
+    local N=${#ON_EXIT_ITEMS[*]}
+    ON_EXIT_ITEMS["${N}"]="$*"
+    if [[ "${N}" -eq 0 ]]; then
+        trap on_exit EXIT
+    fi
+}
 
 if [ -z "${LOG_PATH}" ]; then
-    LOG_PATH="${TEST_PATH}/`basename "$0"`.log"
+    LOG_PATH="`basename "$0"`.log"
 fi
 
 if [ -d "${SHAREMIND_PATH}/lib" ]; then
   NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${SHAREMIND_PATH}/lib"
 fi
 
+TEST_PATH="${SHAREMIND_PATH}/lib/sharemind/test"
 SCC="${SHAREMIND_PATH}/bin/scc"
 STDLIB="${SHAREMIND_PATH}/lib/sharemind/stdlib"
 TEST_RUNNER="${SHAREMIND_PATH}/bin/SecreCTestRunner"
@@ -97,7 +105,7 @@ compile() {
     local SC="$1"
     local SB="$2"
 
-    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" "${SCC}" \
+    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" "${SCC}" \
         --include "${TEST_PATH}" --include "${STDLIB}" \
         --input "${SC}" --output "${SB}"
 }
@@ -117,7 +125,7 @@ run() {
     local SB_BN="$1"
     local TEST_NAME="$2"
     (cd "`dirname ${TEST_RUNNER}`" &&
-        ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
+        ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
                 "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
                         --logfile "${LOG_PATH}" --logmode append \
                     | sed "s#^#${TEST_NAME}#g") \
@@ -130,7 +138,7 @@ run_gdb() {
     local SB_BN="$1"
     local TEST_NAME="$2"
     (cd "`dirname ${TEST_RUNNER}`" &&
-        ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
+        ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
                 gdb -batch -quiet \
                     -ex 'run' \
                     -ex 'backtrace' \
@@ -176,7 +184,7 @@ run_testset() {
 }
 
 run_all() {
-    for TESTSET in `find "${ABSSP}" -mindepth 1 -maxdepth 1 -type d | sort`; do
+    for TESTSET in `find "${TEST_PATH}" -mindepth 1 -maxdepth 1 -type d | sort`; do
         run_testset "${TESTSET}"
     done
 }

@@ -22,28 +22,6 @@
 set -o pipefail
 set -e
 
-if [ ! -d "${SHAREMIND_PATH}" ]; then
-    echo 'Required environment variable SHAREMIND_PATH missing or does not point to a directory!' 1>&2
-    exit 1
-fi
-
-# http://www.linuxjournal.com/content/use-bash-trap-statement-cleanup-temporary-files
-declare -a ON_EXIT_ITEMS
-
-function on_exit() {
-    for ITEM in "${ON_EXIT_ITEMS[@]}"; do
-        eval "${ITEM}"
-    done
-}
-
-function add_on_exit() {
-    local N=${#ON_EXIT_ITEMS[*]}
-    ON_EXIT_ITEMS["${N}"]="$*"
-    if [[ "${N}" -eq 0 ]]; then
-        trap on_exit EXIT
-    fi
-}
-
 # readlink on OS X does not behave as on Linux
 # http://stackoverflow.com/questions/1055671/how-can-i-get-the-behavior-of-gnus-readlink-f-on-a-mac
 if [ `uname -s` = "Darwin" ]; then
@@ -73,22 +51,47 @@ else
     unset -v ABSS
 fi
 
-TEST_PATH="${ABSSP}"
+SHAREMIND_PATH="${SHAREMIND_PATH:-$ABSSP/..}"
+
+if [ ! -d "${SHAREMIND_PATH}" ]; then
+    echo 'Environment variable SHAREMIND_PATH does not point to a directory!' 1>&2
+    exit 1
+fi
+
+echo "SHAREMIND_PATH='${SHAREMIND_PATH}'"
+
+# http://www.linuxjournal.com/content/use-bash-trap-statement-cleanup-temporary-files
+declare -a ON_EXIT_ITEMS
+
+function on_exit() {
+    for ITEM in "${ON_EXIT_ITEMS[@]}"; do
+        eval "${ITEM}"
+    done
+}
+
+function add_on_exit() {
+    local N=${#ON_EXIT_ITEMS[*]}
+    ON_EXIT_ITEMS["${N}"]="$*"
+    if [[ "${N}" -eq 0 ]]; then
+        trap on_exit EXIT
+    fi
+}
 
 if [ -d "${SHAREMIND_PATH}/lib" ]; then
     NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${SHAREMIND_PATH}/lib"
 fi
 
+TEST_PATH="${SHAREMIND_PATH}/lib/sharemind/test"
 SCC="${SHAREMIND_PATH}/bin/scc"
 STDLIB="${SHAREMIND_PATH}/lib/sharemind/stdlib"
 EMULATOR="${SHAREMIND_PATH}/bin/Emulator"
-TEST_PARSER="${TEST_PATH}/emulatortestparser.py"
+TEST_PARSER="${SHAREMIND_PATH}/bin/emulatortestparser.py"
 
 compile() {
     local SC="$1"
     local SB="$2"
 
-    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" "${SCC}" \
+    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" "${SCC}" \
         --include "${TEST_PATH}" --include "${STDLIB}" \
         --input "${SC}" --output "${SB}"
 }
@@ -97,7 +100,7 @@ run() {
     local SB="$1"
     local TEST_NAME="$2"
     (cd "`dirname ${EMULATOR}`" &&
-        ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
+        ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
                 "./`basename ${EMULATOR}`" --conf=emulator.cfg \
                 --outFile=emulator.out --force "${SB}" \
                     | sed "s#^#${TEST_NAME}#g") \
@@ -136,7 +139,7 @@ run_testset() {
 }
 
 run_all() {
-    for TESTSET in `find "${ABSSP}" -mindepth 1 -maxdepth 1 -type d | sort`; do
+    for TESTSET in `find "${TEST_PATH}" -mindepth 1 -maxdepth 1 -type d | sort`; do
         run_testset "${TESTSET}"
     done
 }

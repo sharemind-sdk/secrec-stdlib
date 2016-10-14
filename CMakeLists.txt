@@ -48,3 +48,15 @@ ADD_CUSTOM_TARGET(stdlib_docs ALL
 
 INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/docs/html"
         DESTINATION "share/doc/sharemind/stdlib")
+
+# Stdlib tests:
+
+# Note that this globbing is done by cmake, not by make, hence sometimes clean might be required.
+FILE(GLOB SharemindStdlibTest_FILES "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sh"
+                                    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.py")
+INSTALL(PROGRAMS ${SharemindStdlibTest_FILES}
+        DESTINATION "bin")
+
+INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests/"
+        DESTINATION "lib/sharemind/test"
+        FILES_MATCHING PATTERN "*.sc")
