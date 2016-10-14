@@ -27,6 +27,12 @@ if [ ! -d "${SHAREMIND_PATH}" ]; then
     exit 1
 fi
 
+# Check for GDB
+RUN_GDB="${RUN_GDB:-1}"
+
+type gdb >/dev/null 2>&1
+HAVE_GDB="$?"
+
 # http://www.linuxjournal.com/content/use-bash-trap-statement-cleanup-temporary-files
 declare -a ON_EXIT_ITEMS
 
@@ -120,6 +126,26 @@ run() {
         )
 }
 
+run_gdb() {
+    local SB_BN="$1"
+    local TEST_NAME="$2"
+    (cd "`dirname ${TEST_RUNNER}`" &&
+        ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
+                gdb -batch -quiet \
+                    -ex 'run' \
+                    -ex 'backtrace' \
+                    -ex 'thread apply all backtrace' \
+                    -ex 'thread apply all backtrace full' \
+                    -ex 'info registers' \
+                    --args \
+                        "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
+                                --logfile "${LOG_PATH}" --logmode append \
+                            | sed "s#^#${TEST_NAME}#g") \
+             3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
+             3>&1 1>&2 2>&3 3>&-
+        )
+}
+
 run_test() {
     local SC="$1"
     local TEST="$2"
@@ -133,7 +159,11 @@ run_test() {
         TEST_NAME="[${TEST}]: "
     fi
 
-    compile "${SC}" "${SB}" && install "${SB}" "${SB_BN}" && run "${SB_BN}" "${TEST_NAME}"
+    if [ "${RUN_GDB}" -eq 0 ] && [ "${HAVE_GDB}" -eq 0 ]; then
+        compile "${SC}" "${SB}" && install "${SB}" "${SB_BN}" && run_gdb "${SB_BN}" "${TEST_NAME}"
+    else
+        compile "${SC}" "${SB}" && install "${SB}" "${SB_BN}" && run "${SB_BN}" "${TEST_NAME}"
+    fi
 }
 
 run_testset() {
