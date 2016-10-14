@@ -56,7 +56,7 @@ else
     unset -v ABSS
 fi
 
-SHAREMIND_PATH="${SHAREMIND_PATH:-$ABSSP/..}"
+SHAREMIND_PATH="${SHAREMIND_PATH:-${ABSSP}/..}"
 
 if [ ! -d "${SHAREMIND_PATH}" ]; then
     echo 'Environment variable SHAREMIND_PATH does not point to a directory!' 1>&2
