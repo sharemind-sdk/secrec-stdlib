@@ -93,14 +93,6 @@ ScanCursor keydb_scan_next(uint cursor) {
     return sc;
 }
 
-void scanDB(string pattern) {
-    ScanCursor sc = keydb_scan(pattern);
-    while(sc.cursor != 0) {
-        print(sc.key);
-        sc = keydb_scan_next(sc.cursor);
-    }
-}
-
 bool keydb_clean(string pattern) {
     bool ok;
     __syscall("keydb_clean", __cref pattern, __return ok);
