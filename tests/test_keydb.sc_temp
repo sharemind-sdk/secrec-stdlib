@@ -1,0 +1,121 @@
+import stdlib;
+import keydb;
+import shared3p_keydb;
+import shared3p_random;
+import test_utility_random;
+
+template <type T>
+void keydb_test(T proxy) {
+    T dummy = randomize(proxy);
+    keydb_set("test", dummy);
+    T other = keydb_get("test", proxy);
+    assert(dummy == other);
+}
+
+template <type T>
+void keydb_test(T[[1]] proxy) {
+    T[[1]] dummy(30);
+    dummy = randomize(dummy);
+    keydb_set("test", dummy);
+    T[[1]] other = keydb_get("test", proxy);
+    assert(all(dummy == other));
+}
+
+template <domain D, type T>
+void keydb_test(D T proxy) {
+    D T dummy = randomize(proxy);
+    keydb_set("test", dummy);
+    D T other = keydb_get("test", proxy);
+    assert(declassify(dummy == other));
+}
+
+template <domain D, type T>
+void keydb_test(D T[[1]] proxy) {
+    D T[[1]] random(30);
+    D T[[1]] dummy = randomize(random);
+    keydb_set("test", dummy);
+    D T[[1]] other = keydb_get("test", proxy);
+    assert(declassify(all(dummy == other)));
+}
+
+template <type T>
+void testWithType(T proxy) {
+    print("testWithType = $T");
+    T scalar;
+    T[[1]] array;
+    pd_shared3p T pd_scalar;
+    pd_shared3p T[[1]] pd_array;
+    print("public scalar");
+    keydb_test(scalar);
+    print("public array");
+    keydb_test(array);
+    print("private scalar");
+    keydb_test(pd_scalar);
+    print("private array");
+    keydb_test(pd_array);
+}
+
+void scanDB(string pattern) {
+    ScanCursor sc = keydb_scan(pattern);
+    while(sc.cursor != 0) {
+        print(sc.key);
+        sc = keydb_scan_next(sc.cursor);
+    }
+}
+
+void testWithAllTypes() {
+    {
+        bool typ;
+        testWithType(typ);
+    }
+    {
+        uint8 typ;
+        testWithType(typ);
+    }
+    {
+        int8 typ;
+        testWithType(typ);
+    }
+    {
+        uint16 typ;
+        testWithType(typ);
+    }
+    {
+        int16 typ;
+        testWithType(typ);
+    }
+    {
+        uint32 typ;
+        testWithType(typ);
+    }
+    {
+        int32 typ;
+        testWithType(typ);
+    }
+    {
+        uint64 typ;
+        testWithType(typ);
+    }
+    {
+        int64 typ;
+        testWithType(typ);
+    }
+    {
+        float32 typ;
+        testWithType(typ);
+    }
+    {
+        float64 typ;
+        testWithType(typ);
+    }
+}
+
+void main() {
+    keydb_connect("host");
+    scanDB("*");
+    assert(keydb_clean("*"));
+
+    testWithAllTypes();
+
+    keydb_disconnect();
+}
