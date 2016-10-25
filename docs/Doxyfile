@@ -743,44 +743,8 @@ WARN_LOGFILE           =
 # spaces.
 # Note: If this tag is empty the current directory is searched.
 
-INPUT                  = ../lib/table_database.sc \
-                         ../lib/shared3p_table_database.sc \
-                         ../lib/shared3p_statistics_distribution.sc \
-                         ../lib/shared3p_statistics_testing.sc \
-                         ../lib/shared3p_statistics_summary.sc \
-                         ../lib/shared3p_statistics_common.sc \
-                         ../lib/shared3p_statistics_outliers.sc \
-                         ../lib/shared3p_statistics_regression.sc \
-                         ../lib/shared3p_statistics_glm.sc \
-                         ../lib/shared3p_statistics_pca.sc \
-                         ../lib/shared3p_matrix.sc \
-                         ../lib/shared3p_random.sc \
-                         ../lib/shared3p_bloom.sc \
-                         ../lib/shared3p_sort.sc \
-                         ../lib/shared3p.sc \
-                         ../lib/matrix.sc \
-                         ../lib/oblivious.sc \
-                         ../lib/profiling.sc \
-                         ../lib/stdlib.sc \
-                         ../lib/shared3p_aes.sc \
-                         ../lib/shared3p_join.sc \
-                         ../lib/shared3p_string.sc \
-                         ../lib/shared3p.sc \
-                         ../lib/shared3p_oblivious.sc \
-                         ../lib/doc/code_structure.sc \
-                         ../lib/doc/types.sc \
-                         ../lib/doc/variables.sc \
-                         ../lib/doc/expressions.sc \
-                         ../lib/doc/arrays.sc \
-                         ../lib/doc/control_structures.sc \
-                         ../lib/doc/functions.sc \
-                         ../lib/doc/templates.sc \
-                         ../lib/doc/modules.sc \
-                         ../lib/doc/structs.sc \
-                         ../lib/doc/data_types.sc \
-                         ../lib/doc/operators.sc \
-                         ../lib/doc/main.sc \
-						 ../lib/doc/table_database.sc
+INPUT                  = ../lib \
+                         ../lib/doc
 
 # This tag can be used to specify the character encoding of the source files
 # that doxygen parses. Internally doxygen uses the UTF-8 encoding. Doxygen uses
@@ -800,38 +764,7 @@ INPUT_ENCODING         = UTF-8
 # *.md, *.mm, *.dox, *.py, *.f90, *.f, *.for, *.tcl, *.vhd, *.vhdl, *.ucf,
 # *.qsf, *.as and *.js.
 
-FILE_PATTERNS          = *.c \
-                         *.cc \
-                         *.cxx \
-                         *.cpp \
-                         *.c++ \
-                         *.d \
-                         *.java \
-                         *.ii \
-                         *.ixx \
-                         *.ipp \
-                         *.i++ \
-                         *.inl \
-                         *.h \
-                         *.hh \
-                         *.hxx \
-                         *.hpp \
-                         *.h++ \
-                         *.idl \
-                         *.odl \
-                         *.cs \
-                         *.php \
-                         *.php3 \
-                         *.inc \
-                         *.m \
-                         *.mm \
-                         *.dox \
-                         *.py \
-                         *.f90 \
-                         *.f \
-                         *.for \
-                         *.vhd \
-                         *.vhdl
+FILE_PATTERNS          = *.sc
 
 # The RECURSIVE tag can be used to specify whether or not subdirectories should
 # be searched for input files as well.
