@@ -21,10 +21,30 @@
 module shared3p_keydb;
 
 import stdlib;
-import keydb;
 import shared3p;
 /** \endcond */
 
+/**
+* @file
+* \defgroup shared3p_keydb shared3p_keydb.sc
+* \defgroup keydb_get keydb_get
+* \defgroup keydb_set keydb_set
+*/
+
+/** \addtogroup shared3p_keydb
+*@{
+* @brief Module with functions for randomizing values
+*/
+
+/** \addtogroup keydb_get
+ *  @{
+ *  @brief Get value stored in database.
+ *  @note **D** - shared3p protection domain
+ *  @note **T** - any \ref data_types "data" type
+ *  @param key - the public key of the value.
+ *  @param proxy - the datatype of the value.
+ *  @return the value stored in the database.
+ */
 template <domain D : shared3p, type T>
 D T keydb_get(string key, D T proxy) {
     uint num_bytes;
@@ -53,7 +73,16 @@ D T[[1]] keydb_get(string key, D T[[1]] proxy) {
     __syscall ("shared3p::set_shares_$T\_vec", __domainid(D), out, __cref bytes);
     return out;
 }
+/** @} */
 
+/** \addtogroup keydb_set
+ *  @{
+ *  @brief Store a new value in the database.
+ *  @note **D** - shared3p protection domain
+ *  @note **T** - any \ref data_types "data" type
+ *  @param key - the public key of the value.
+ *  @param value - the value to store.
+ */
 template <domain D : shared3p, type T>
 void keydb_set(string key, D T value) {
     uint64 t_size;
@@ -77,3 +106,6 @@ void keydb_set(string key, D T[[1]] value) {
     uint64 array = 1;
     __syscall("keydb_set", array, __cref key, __cref bytes);
 }
+/** @} */
+
+/** @} */
