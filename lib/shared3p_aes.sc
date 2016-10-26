@@ -217,6 +217,22 @@ D xor_uint32[[1]] aes192EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
     return cipherText;
 }
 
+/**
+* @param expandedKey - an aes192 expanded key of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey" and \ref aes_expandkey "aesExpandKey"
+* @param plainText - a \ref string "string" converted to a \ref xor_uint32 "xor_uint32" vector
+* @pre the size of **plainText** has to be dividable by AES192_Nb
+* @pre the size of **expandedKey** has to be (AES192_Nb * (AES192_Nr + 1))
+*/
+template <domain D : shared3p>
+D xor_uint32[[1]] aes192SingleKeyEncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {
+    assert(size(plainText) > 0);
+    assert((size(plainText) % AES192_Nb) == 0);
+    assert(size(expandedKey) == (AES192_Nb * (AES192_Nr + 1)));
+    D xor_uint32[[1]] cipherText (size(plainText));
+    __syscall("shared3p::aes192_single_key_xor_uint32_vec", __domainid(D), plainText, expandedKey, cipherText);
+    return cipherText;
+}
+
 /** @}*/
 
 /*******************************************************************************
@@ -282,6 +298,22 @@ D xor_uint32[[1]] aes256EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
     assert((size(plainText) / AES256_Nb) == (size(expandedKey) / (AES256_Nb * (AES256_Nr + 1))));
     D xor_uint32[[1]] cipherText (size(plainText));
     __syscall("shared3p::aes256_xor_uint32_vec", __domainid(D), plainText, expandedKey, cipherText);
+    return cipherText;
+}
+
+/**
+* @param expandedKey - an aes256 expanded key of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey" and \ref aes_expandkey "aesExpandKey"
+* @param plainText - a \ref string "string" converted to a \ref xor_uint32 "xor_uint32" vector
+* @pre the size of **plainText** has to be dividable by AES256_Nb
+* @pre the size of **expandedKey** has to be (AES256_Nb * (AES256_Nr + 1))
+*/
+template <domain D : shared3p>
+D xor_uint32[[1]] aes256SingleKeyEncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {
+    assert(size(plainText) > 0);
+    assert((size(plainText) % AES256_Nb) == 0);
+    assert(size(expandedKey) == (AES256_Nb * (AES256_Nr + 1)));
+    D xor_uint32[[1]] cipherText (size(plainText));
+    __syscall("shared3p::aes256_single_key_xor_uint32_vec", __domainid(D), plainText, expandedKey, cipherText);
     return cipherText;
 }
 
