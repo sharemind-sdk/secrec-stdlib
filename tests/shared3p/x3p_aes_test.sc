@@ -410,9 +410,6 @@ void main(){
         test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
     }
 
-/*
-    It turned out that there has been no such function!
-
     test_prefix = "Encrypt with single key aes192";
     {
         pd_shared3p xor_uint32[[1]] plainText = {
@@ -453,7 +450,6 @@ void main(){
         pd_shared3p xor_uint32[[1]] cipherText2 = aes192SingleKeyEncryptEcb(expandedKey, plainText);
         test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
     }
-*/
 
     test_prefix = "aes256 key generation";
     {
