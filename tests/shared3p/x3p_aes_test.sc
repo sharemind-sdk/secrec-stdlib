@@ -219,10 +219,14 @@ void main(){
     test_prefix = "Encrypt with single key aes128 (random key)";
     {
         pd_shared3p xor_uint32[[1]] plainText = {
-            0xdeef6f56, 0x0acdfc8a, 0x4a205720, 0x757cd1bd
+            0xdeef6f56, 0x0acdfc8a, 0x4a205720, 0x757cd1bd,
+            0x9b9898c9, 0xf9fbfbaa, 0x9b9898c9, 0xf9fbfbaa,
+            0x21751787, 0x3550620b, 0xacaf6b3c, 0xc61bf09b
         };
-        pd_shared3p xor_uint32[[1]] cipherText1 = {                                    //ciphertexts from semitrusted source
-            0xc5b482d8, 0x0c0b802c, 0xf9f8c2d2, 0x8b251068
+        pd_shared3p xor_uint32[[1]] cipherText1 = { //ciphertexts from semitrusted source
+            0xc5b482d8, 0x0c0b802c, 0xf9f8c2d2, 0x8b251068,
+            0x5E4DE239, 0x3D6B9C9E, 0x7F72C07F, 0xA957FCFD,
+            0xA3ECA7BB, 0x9A34BBA3, 0xB90C3B51, 0x45955079
         };
         pd_shared3p xor_uint32[[1]] key = {
             0x10a58869, 0xd74be5a3, 0x74cf867c, 0xfb473859 //expansion from trusted source
@@ -410,7 +414,7 @@ void main(){
         test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
     }
 
-    test_prefix = "Encrypt with single key aes192";
+    test_prefix = "Encrypt with single key aes192 (zero key)";
     {
         pd_shared3p xor_uint32[[1]] plainText = {
             0xffffffff, 0xffffffff, 0xffff8000, 0x00000000,
@@ -431,6 +435,7 @@ void main(){
             0x00000000, 0x00000000, 0x00000000, 0x00000000, //expansion self-assisted
             0x00000000, 0x00000000
         };
+
         pd_shared3p xor_uint32[[1]] expandedKey = {
             0x00000000, 0x00000000, 0x00000000, 0x00000000, // R0
             0x00000000, 0x00000000, 0x62636363, 0x62636363, // R1
@@ -450,6 +455,48 @@ void main(){
         pd_shared3p xor_uint32[[1]] cipherText2 = aes192SingleKeyEncryptEcb(expandedKey, plainText);
         test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
     }
+
+    test_prefix = "Encrypt with single key aes192 (random key)";
+    {
+        pd_shared3p xor_uint32[[1]] plainText = {
+            0x00112233, 0x44556677, 0x8899aabb, 0xccddeeff,
+            0x00112233, 0x44556677, 0x8899aabb, 0xccddeeff,
+            0x00112233, 0x44556677, 0x8899aabb, 0xccddeeff,
+            0x00112233, 0x44556677, 0x8899aabb, 0xccddeeff,
+            0x00112233, 0x44556677, 0x8899aabb, 0xccddeeff
+        };
+
+        pd_shared3p xor_uint32[[1]] cipherText1 = {
+            0xdda97ca4, 0x864cdfe0, 0x6eaf70a0, 0xec0d7191,
+            0xdda97ca4, 0x864cdfe0, 0x6eaf70a0, 0xec0d7191,
+            0xdda97ca4, 0x864cdfe0, 0x6eaf70a0, 0xec0d7191,
+            0xdda97ca4, 0x864cdfe0, 0x6eaf70a0, 0xec0d7191,
+            0xdda97ca4, 0x864cdfe0, 0x6eaf70a0, 0xec0d7191
+        };
+        pd_shared3p xor_uint32[[1]] key = {
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f, //expansion from trusted source
+            0x10111213, 0x14151617
+        };
+        pd_shared3p xor_uint32[[1]] expandedKey = {
+            0x00010203, 0x04050607, 0x08090a0b, 0x0c0d0e0f, // R0
+            0x10111213, 0x14151617, 0x5846f2f9, 0x5c43f4fe, // R1
+            0x544afef5, 0x5847f0fa, 0x4856e2e9, 0x5c43f4fe, // R2
+            0x40f949b3, 0x1cbabd4d, 0x48f043b8, 0x10b7b342, // R3
+            0x58e151ab, 0x04a2a555, 0x7effb541, 0x6245080c, // R4
+            0x2ab54bb4, 0x3a02f8f6, 0x62e3a95d, 0x66410c08, // R5
+            0xf5018572, 0x97448d7e, 0xbdf1c6ca, 0x87f33e3c, // R6
+            0xe5109761, 0x83519b69, 0x34157c9e, 0xa351f1e0, // R7
+            0x1ea0372a, 0x99530916, 0x7c439e77, 0xff12051e, // R8
+            0xdd7e0e88, 0x7e2fff68, 0x608fc842, 0xf9dcc154, // R9
+            0x859f5f23, 0x7a8d5a3d, 0xc0c02952, 0xbeefd63a, // R10
+            0xde601e78, 0x27bcdf2c, 0xa223800f, 0xd8aeda32, // R11
+            0xa4970a33, 0x1a78dc09, 0xc418c271, 0xe3a41d5d // R12
+        };
+
+        pd_shared3p xor_uint32[[1]] cipherText2 = aes192SingleKeyEncryptEcb(expandedKey, plainText);
+        test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
+    }
+
 
     test_prefix = "aes256 key generation";
     {
@@ -631,6 +678,94 @@ void main(){
         };
 
         pd_shared3p xor_uint32[[1]] cipherText2 = aes256EncryptEcb(expandedKey, plainText);
+        test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
+    }
+
+    test_prefix = "Encrypt with single key aes256 (zero key)";
+    {
+        pd_shared3p xor_uint32[[1]] plainText = {
+            0xffffffff, 0xffffffff, 0xffffff80, 0x00000000,
+            0xffffffff, 0xffffffff, 0xffffffff, 0xfc000000,
+            0xffffffff, 0xff800000, 0x00000000, 0x00000000,
+            0xffffff80, 0x00000000, 0x00000000, 0x00000000,
+            0xffffffff, 0xfffffff0, 0x00000000, 0x00000000
+        };
+
+        pd_shared3p xor_uint32[[1]] cipherText1 = {
+            0x55cfb3fb, 0x6d75cad0, 0x445bbc8d, 0xafa25b0f,
+            0x1f11d5d0, 0x355e0b55, 0x6ccdb6c7, 0xf5083b4d,
+            0x48c7d0e8, 0x0834ebdc, 0x35b6735f, 0x76b46c8b,
+            0x36aff0ef, 0x7bf32807, 0x72cf4cac, 0x80a0d2b2,
+            0xb1144ddf, 0xa7575521, 0x3390e7c5, 0x96660490
+        };
+        pd_shared3p xor_uint32[[1]] key = {
+            0x00000000, 0x00000000, 0x00000000, 0x00000000, //expansion self-assisted
+            0x00000000, 0x00000000, 0x00000000, 0x00000000
+        };
+
+        pd_shared3p xor_uint32[[1]] expandedKey = {
+            0x00000000, 0x00000000, 0x00000000, 0x00000000,
+            0x00000000, 0x00000000, 0x00000000, 0x00000000,
+            0x62636363, 0x62636363, 0x62636363, 0x62636363, 
+            0xaafbfbfb, 0xaafbfbfb, 0xaafbfbfb, 0xaafbfbfb, 
+            0x6f6c6ccf, 0x0d0f0fac, 0x6f6c6ccf, 0x0d0f0fac, 
+            0x7d8d8d6a, 0xd7767691, 0x7d8d8d6a, 0xd7767691, 
+            0x5354edc1, 0x5e5be26d, 0x31378ea2, 0x3c38810e, 
+            0x968a81c1, 0x41fcf750, 0x3c717a3a, 0xeb070cab, 
+            0x9eaa8f28, 0xc0f16d45, 0xf1c6e3e7, 0xcdfe62e9, 
+            0x2b312bdf, 0x6acddc8f, 0x56bca6b5, 0xbdbbaa1e, 
+            0x6406fd52, 0xa4f79017, 0x553173f0, 0x98cf1119, 
+            0x6dbba90b, 0x07767584, 0x51cad331, 0xec71792f,
+            0xe7b0e89c, 0x4347788b, 0x16760b7b, 0x8eb91a62, 
+            0x74ed0ba1, 0x739b7e25, 0x2251ad14, 0xce20d43b,
+            0x10f80a17, 0x53bf729c, 0x45c979e7, 0xcb706385
+        };
+
+        pd_shared3p xor_uint32[[1]] cipherText2 = aes256SingleKeyEncryptEcb(expandedKey, plainText);
+        test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
+    }
+
+    test_prefix = "Encrypt with single key aes256 (random key)";
+    {
+        pd_shared3p xor_uint32[[1]] plainText = {
+            0x21751787, 0x3550620B, 0xACAF6B3C, 0xC61BF09B,
+            0x2b312bdf, 0x6acddc8f, 0x56bca6b5, 0xbdbbaa1e, 
+            0x10f80a17, 0x53bf729c, 0x45c979e7, 0xcb706385,
+            0x62636363, 0x62636363, 0x62636363, 0x62636363,
+            0x544afef5, 0x5847f0fa, 0x4856e2e9, 0x5c43f4fe
+        };
+
+        pd_shared3p xor_uint32[[1]] cipherText1 = { //ciphertexts from semitrusted source
+            0x00B274E9, 0xFD6DB9AE, 0xE78CF7B3, 0x5A111DD1,
+            0x9106A76C, 0xD9B67BB3, 0x764AF392, 0xB8E39C30,
+            0x15275675, 0x13816B64, 0x6BF5B962, 0x5B4B5ED8,
+            0xAE797B0A, 0xA8FDD5F5, 0x2BC0F2C0, 0xC5405F5D,
+            0x62175C38, 0xD9B81041, 0x518C554B, 0x02341D23
+        };
+        pd_shared3p xor_uint32[[1]] key = {
+            0xdd7e0e88, 0x7e2fff68, 0x608fc842, 0xf9dcc154, //expansion self-assisted
+            0x544afef5, 0x5847f0fa, 0x4856e2e9, 0x5c43f4fe
+        };
+
+        pd_shared3p xor_uint32[[1]] expandedKey = {
+            0xdd7e0e88, 0x7e2fff68, 0x608fc842, 0xf9dcc154,
+            0x544afef5, 0x5847f0fa, 0x4856e2e9, 0x5c43f4fe,
+            0xc6c1b5c2, 0xb8ee4aaa, 0xd86182e8, 0x21bd43bc,
+            0xa930e490, 0xf177146a, 0xb921f683, 0xe562027d,
+            0x6eb64a1b, 0xd65800b1, 0x0e398259, 0x2f84c1e5,
+            0xbc6f9c49, 0x4d188823, 0xf4397ea0, 0x115b7cdd,
+            0x53a68b99, 0x85fe8b28, 0x8bc70971, 0xa443c894,
+            0xf575746b, 0xb86dfc48, 0x4c5482e8, 0x5d0ffe35,
+            0x2d1d1dd5, 0xa8e396fd, 0x23249f8c, 0x87675718,
+            0xe2f02fc6, 0x5a9dd38e, 0x16c95166, 0x4bc6af53,
+            0x8964f066, 0x2187669b, 0x02a3f917, 0x85c4ae0f,
+            0x75eccbb0, 0x2f71183e, 0x39b84958, 0x727ee60b,
+            0x5aeadb26, 0x7b6dbdbd, 0x79ce44aa, 0xfc0aeaa5,
+            0xc58b4cb6, 0xeafa5488, 0xd3421dd0, 0xa13cfbdb,
+            0xf1e56214, 0x8a88dfa9, 0xf3469b03, 0x0f4c71a6
+        };
+
+        pd_shared3p xor_uint32[[1]] cipherText2 = aes256SingleKeyEncryptEcb(expandedKey, plainText);
         test(test_prefix, all(declassify(cipherText1) == declassify(cipherText2)));
     }
 
