@@ -42,11 +42,10 @@ import shared3p;
  *  @note **D** - shared3p protection domain
  *  @note **T** - any \ref data_types "data" type
  *  @param key - the public key of the value.
- *  @param proxy - the datatype of the value.
  *  @return the value stored in the database.
  */
 template <domain D : shared3p, type T>
-D T keydb_get(string key, D T proxy) {
+D T keydb_get(string key) {
     uint num_bytes;
     uint obj;
     __syscall("keydb_get_size", obj, __cref key, __return num_bytes);
@@ -61,7 +60,7 @@ D T keydb_get(string key, D T proxy) {
 }
 
 template <domain D : shared3p, type T>
-D T[[1]] keydb_get(string key, D T[[1]] proxy) {
+D T[[1]] keydb_get(string key) {
     uint num_bytes;
     uint obj;
     __syscall("keydb_get_size", obj, __cref key, __return num_bytes);

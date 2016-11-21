@@ -85,14 +85,14 @@ void keydb_del(string key) {
  *  @brief Get value stored in database.
  *  @note **T** - any \ref data_types "data" type
  *  @param key - the public key of the value.
- *  @param proxy - the datatype of the value.
  *  @return the value stored in the database.
  */
 template <type T>
-T keydb_get(string key, T proxy) {
+T keydb_get(string key) {
     uint num_bytes;
     uint obj;
-    uint t_size = sizeof(proxy);
+    T dummy;
+    uint t_size = sizeof(dummy);
     __syscall("keydb_get_size", obj, __cref key, __return num_bytes);
     assert(num_bytes == t_size);
     T out;
@@ -101,7 +101,7 @@ T keydb_get(string key, T proxy) {
 }
 
 template <type T>
-T[[1]] keydb_get(string key, T[[1]] proxy) {
+T[[1]] keydb_get(string key) {
     uint num_bytes;
     uint obj;
     T dummy;
