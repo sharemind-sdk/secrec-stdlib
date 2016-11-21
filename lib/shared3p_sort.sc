@@ -1168,8 +1168,8 @@ D T[[1]] _sortingNetworkSort2 (D T[[1]] vector, D T[[1]] indices) {
         D T[[1]] compa = cat(first[:sizeOfStage], second[sizeOfStage:sizeOfStage*2]);
         D T[[1]] compb = cat(second[:sizeOfStage], first[sizeOfStage:sizeOfStage*2]);
         D bool[[1]] gte = compa >= compb;
-        D bool[[1]] exchangeFlagsVector = !gte[:sizeOfStage] ||
-            (first[:sizeOfStage] == second[:sizeOfStage] && gte[sizeOfStage:sizeOfStage*2]);
+        D bool[[1]] exchangeFlagsVector = !gte[:sizeOfStage] |
+            (first[:sizeOfStage] == second[:sizeOfStage] & gte[sizeOfStage:sizeOfStage*2]);
         exchangeFlagsVector = cat(cat(exchangeFlagsVector, exchangeFlagsVector), exchangeFlagsVector);
 
         D T[[1]] results  = choose(exchangeFlagsVector, first, second);
@@ -1544,9 +1544,9 @@ D T[[1]] _sortingNetworkSort3 (D T[[1]] vector, D T[[1]] indices) {
         compb = cat(second[:sizeOfStage], second[sizeOfStage:sizeOfStage*2]);
         D bool[[1]] eq = compa == compb;
 
-        D bool[[1]] exchangeFlagsVector = !(gte[:sizeOfStage]) ||
-            (eq[:sizeOfStage] && (!(gte[sizeOfStage:sizeOfStage*2]) ||
-                (eq[sizeOfStage:sizeOfStage*2] && gte[sizeOfStage*2:sizeOfStage*3])));
+        D bool[[1]] exchangeFlagsVector = !(gte[:sizeOfStage]) |
+            (eq[:sizeOfStage] & (!(gte[sizeOfStage:sizeOfStage*2]) |
+                (eq[sizeOfStage:sizeOfStage*2] & gte[sizeOfStage*2:sizeOfStage*3])));
         exchangeFlagsVector = cat(cat(cat(exchangeFlagsVector, exchangeFlagsVector),
                                       exchangeFlagsVector),
                                   exchangeFlagsVector);

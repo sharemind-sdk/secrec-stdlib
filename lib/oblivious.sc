@@ -91,7 +91,7 @@ D T[[N]] choose(bool cond, D T[[N]] first, D T[[N]] second) {
 template <domain D, dim N>
 D bool[[N]] choose(D bool cond, D bool[[N]] first, D bool[[N]] second) {
     assert(shapesAreEqual(first,second));
-    return (cond && (first ^ second)) ^ second;
+    return (cond & (first ^ second)) ^ second;
 }
 
 /** \cond */
@@ -170,7 +170,7 @@ D float64[[N]] choose(D bool cond, D float64[[N]] first, D float64[[N]] second) 
 template <domain D, dim N>
 D bool[[N]] choose(D bool[[N]] cond, D bool[[N]] first, D bool[[N]] second) {
     assert (shapesAreEqual (cond, first, second));
-    return (cond && (first ^ second)) ^ second;
+    return (cond & (first ^ second)) ^ second;
 }
 
 /** \cond */

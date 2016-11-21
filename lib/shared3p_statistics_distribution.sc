@@ -290,7 +290,7 @@ D T[[2]] _heatmap (D T[[1]] x,
 
     // If either data vector has a missing sample then we are missing
     // a point on the plot.
-    D bool[[1]] isAvailable = xIsAvailable && yIsAvailable;
+    D bool[[1]] isAvailable = xIsAvailable & yIsAvailable;
 
     // Cut two samples with one mask.
     D T[[2]] mat (dataSize, 2);
@@ -350,7 +350,7 @@ D T[[2]] _heatmap (D T[[1]] x,
             zcoords[:dataSize] = j;
             zcoords[dataSize:] = i;
             D bool[[1]] eq = zcoords == bins;
-            eq = eq[:dataSize] && eq[dataSize:];
+            eq = eq[:dataSize] & eq[dataSize:];
             z[i, j] = (T) sum ((UT) eq);
         }
     }

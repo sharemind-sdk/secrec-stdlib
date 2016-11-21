@@ -380,7 +380,7 @@ D bool bl_strEquals (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
         return bl_strEquals (t, s);
     }
 
-    return all (s == t[:n]) && bl_strIsEmpty (t[n:]);
+    return all (s == t[:n]) & bl_strIsEmpty (t[n:]);
 }
 /** @}*/
 /** \addtogroup findsortingpermutation
@@ -553,7 +553,7 @@ D uint bl_strLevenshtein (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
             D uint r = bl_strLength (s);
             D uint c = bl_strLength (t);
             result = (uint) (r == 0) * c + (uint) (c == 0) * r;
-            indexMask = (uint) ((r == ridx + 1) && (c == cidx + 1));
+            indexMask = (uint) ((r == ridx + 1) & (c == cidx + 1));
         }
     }
 
@@ -618,12 +618,12 @@ D bool[[1]] bl_strEqPrefixes (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
             off += m;
         }
 
-        eqs = reshape ((strs == pats) || (pats == 0), n, m);
+        eqs = reshape ((strs == pats) | (pats == 0), n, m);
     }
 
     D bool[[1]] acc (n) = true;
     for (uint i = 0; i < m; ++ i) {
-        acc = acc && eqs[:, i];
+        acc = acc & eqs[:, i];
     }
 
     return acc;
@@ -788,7 +788,7 @@ D bool kl_strIsLessThan (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     if (n == m) {
         D uint x = truePrefixLength (s >= t);
         D uint y = truePrefixLength (s == t);
-        return x == y && (x != n);
+        return x == y & (x != n);
     }
     else
     if (n < m) {
@@ -859,7 +859,7 @@ D bool[[1]] kl_strEqPrefixes (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
 
     D bool [[1]] acc (n - m + 1) = true;
     for (uint i = 0; i < m; ++ i) {
-        acc = acc && eqs[:, i];
+        acc = acc & eqs[:, i];
     }
 
     return acc;

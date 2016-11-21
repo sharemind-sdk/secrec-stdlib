@@ -142,7 +142,7 @@ uint _firstNonZero(D T[[1]] x) {
     D uint idx = 0;
 
     for (uint i = 0; i < size(x); i++) {
-        D bool cond = x[i] != 0 && !found;
+        D bool cond = x[i] != 0 & !found;
         D bool t = true;
         D uint secret = i;
         found = choose(cond, t, found);

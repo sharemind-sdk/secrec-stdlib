@@ -661,7 +661,7 @@ _RankResult<D, T, FT> _rank (D T[[1]] data, D T[[1]] multiplier) {
     D bool[[1]] unique(size(data));
     unique[0] = true;
     unique[1:] = data[1:] != data[:size(data) - 1];
-    D bool[[1]] filter = (counts != 1) && unique;
+    D bool[[1]] filter = (counts != 1) & unique;
     counts = counts * (T) filter;
 
     public _RankResult<D, T, FT> res;
@@ -941,7 +941,7 @@ D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
 
     // Pairs whose difference is zero are dropped
     D T[[1]] differences = sample1 - sample2;
-    filter = filter && (differences != 0);
+    filter = filter & (differences != 0);
 
     D T[[2]] bothSamples (size (sample1), 2);
     bothSamples[:, 0] = sample1;

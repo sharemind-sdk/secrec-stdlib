@@ -19,8 +19,8 @@
 
 import test_utility;
 import stdlib;
+import shared3p;
 
-kind shared3p;
 domain pd_shared3p shared3p;
 
 template<domain D, type T>

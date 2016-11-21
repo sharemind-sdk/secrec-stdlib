@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Cybernetica
+ * Copyright (C) 2016 Cybernetica
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
@@ -20,15 +20,31 @@
 /**
 * \cond
 */
-
 module shared3p;
 
 import stdlib;
 
-kind shared3p;
+kind shared3p {
+    type bool;
+    type uint8;
+    type uint16;
+    type uint32;
+    type uint64;
+    type int8;
+    type int16;
+    type int32;
+    type int64;
+    type float32;
+    type float64;
+    type xor_uint8 { public = uint8 };
+    type xor_uint16 { public = uint16 };
+    type xor_uint32 { public = uint32 };
+    type xor_uint64 { public = uint64 };
+}
 /**
 * \endcond
 */
+
 /**
 * @file
 * \defgroup shared3p shared3p.sc
@@ -740,647 +756,7 @@ D uint truePrefixLength (D bool [[1]] arr) {
 
     return sum (arr);
 }
-
 /** @}*/
-
-/*******************************
-    mulc
-********************************/
-
-/**
-* \cond
-*/
-
-template <domain D : shared3p>
-D uint8 operator * (D uint8 a, uint8 b) {
-    __syscall ("shared3p::mulc_uint8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D uint8[[1]] operator * (D uint8[[1]] a, uint8[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_uint8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D uint8[[N]] operator * (D uint8[[N]] arr, uint8 pubScalar) {
-    uint8[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::mulc_uint8_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D uint8[[N]] operator * (D uint8[[N]] arr, uint8[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::mulc_uint8_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D uint16 operator * (D uint16 a, uint16 b) {
-    __syscall ("shared3p::mulc_uint16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D uint16[[1]] operator * (D uint16[[1]] a, uint16[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_uint16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D uint16[[N]] operator * (D uint16[[N]] arr, uint16 pubScalar) {
-    uint16[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::mulc_uint16_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D uint16[[N]] operator * (D uint16[[N]] arr, uint16[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::mulc_uint16_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D uint32 operator * (D uint32 a, uint32 b) {
-    __syscall ("shared3p::mulc_uint32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D uint32[[1]] operator * (D uint32[[1]] a, uint32[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_uint32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D uint32[[N]] operator * (D uint32[[N]] arr, uint32 pubScalar) {
-    uint32[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::mulc_uint32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D uint32[[N]] operator * (D uint32[[N]] arr, uint32[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::mulc_uint32_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D uint operator * (D uint a, uint b) {
-    __syscall ("shared3p::mulc_uint64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D uint[[1]] operator * (D uint[[1]] a, uint[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_uint64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D uint[[N]] operator * (D uint[[N]] arr, uint pubScalar) {
-    uint[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::mulc_uint64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D uint[[N]] operator * (D uint[[N]] arr, uint[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::mulc_uint64_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D int8 operator * (D int8 a, int8 b) {
-    __syscall ("shared3p::mulc_int8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D int8[[1]] operator * (D int8[[1]] a, int8[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_int8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D int8[[N]] operator * (D int8[[N]] arr, int8 pubScalar) {
-    int8[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::mulc_int8_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D int8[[N]] operator * (D int8[[N]] arr, int8[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::mulc_int8_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D int16 operator * (D int16 a, int16 b) {
-    __syscall ("shared3p::mulc_int16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D int16[[1]] operator * (D int16[[1]] a, int16[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_int16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D int16[[N]] operator * (D int16[[N]] arr, int16 pubScalar) {
-    int16[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::mulc_int16_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D int16[[N]] operator * (D int16[[N]] arr, int16[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::mulc_int16_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D int32 operator * (D int32 a, int32 b) {
-    __syscall ("shared3p::mulc_int32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D int32[[1]] operator * (D int32[[1]] a, int32[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_int32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D int32[[N]] operator * (D int32[[N]] arr, int32 pubScalar) {
-    int32[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::mulc_int32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D int32[[N]] operator * (D int32[[N]] arr, int32[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::mulc_int32_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D int operator * (D int a, int b) {
-    __syscall ("shared3p::mulc_int64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D int[[1]] operator * (D int[[1]] a, int[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_int64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D int[[N]] operator * (D int[[N]] arr, int pubScalar) {
-    int[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::mulc_int64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D int[[N]] operator * (D int[[N]] arr, int[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::mulc_int64_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D float32 operator * (D float32 a, float32 b) {
-    __syscall ("shared3p::mulc_float32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D float32[[1]] operator * (D float32[[1]] a, float32[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_float32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-
-template <domain D : shared3p, dim N>
-D float32[[N]] operator * (D float32[[N]] arr, float32 pubScalar) {
-    float32[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::mulc_float32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D float32[[N]] operator * (D float32[[N]] arr, float32[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::mulc_float32_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D float64 operator * (D float64 a, float64 b) {
-    __syscall ("shared3p::mulc_float64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D float64[[1]] operator * (D float64[[1]] a, float64[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::mulc_float64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D float64[[N]] operator * (D float64[[N]] arr, float64 pubScalar) {
-    float64[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::mulc_float64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D float64[[N]] operator * (D float64[[N]] arr, float64[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::mulc_float64_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D uint8 operator / (D uint8 a, uint8 b) {
-    __syscall ("shared3p::divc_uint8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D uint8[[1]] operator / (D uint8[[1]] a, uint8[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::divc_uint8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D uint8[[N]] operator / (D uint8[[N]] arr, uint8 pubScalar) {
-    uint8[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::divc_uint8_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D uint8[[N]] operator / (D uint8[[N]] arr, uint8[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::divc_uint8_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D uint16 operator / (D uint16 a, uint16 b) {
-    __syscall ("shared3p::divc_uint16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D uint16[[1]] operator / (D uint16[[1]] a, uint16[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::divc_uint16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D uint16[[N]] operator / (D uint16[[N]] arr, uint16 pubScalar) {
-    uint16[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::divc_uint16_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D uint16[[N]] operator / (D uint16[[N]] arr, uint16[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::divc_uint16_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D uint32 operator / (D uint32 a, uint32 b) {
-    __syscall ("shared3p::divc_uint32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D uint32[[1]] operator / (D uint32[[1]] a, uint32[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::divc_uint32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D uint32[[N]] operator / (D uint32[[N]] arr, uint32 pubScalar) {
-    uint32[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::divc_uint32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D uint32[[N]] operator / (D uint32[[N]] arr, uint32[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::divc_uint32_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D uint operator / (D uint a, uint b) {
-    __syscall ("shared3p::divc_uint64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D uint[[1]] operator / (D uint[[1]] a, uint[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::divc_uint64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D uint[[N]] operator / (D uint[[N]] arr, uint pubScalar) {
-    uint[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::divc_uint64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D uint[[N]] operator / (D uint[[N]] arr, uint[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::divc_uint64_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D float32 operator / (D float32 a, float32 b) {
-    __syscall ("shared3p::divc_float32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D float32[[1]] operator / (D float32[[1]] a, float32[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::divc_float32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D float32[[N]] operator / (D float32[[N]] arr, float32 pubScalar) {
-    float32[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::divc_float32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D float32[[N]] operator / (D float32[[N]] arr, float32[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::divc_float32_vec", __domainid (D),
-        a, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D float64 operator / (D float64 a, float64 b) {
-    __syscall ("shared3p::divc_float64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D float64[[1]] operator / (D float64[[1]] a, float64[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::divc_float64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D float64[[N]] operator / (D float64[[N]] arr, float64 pubScalar) {
-    float64[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::divc_float64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D float64[[N]] operator / (D float64[[N]] arr, float64[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::divc_float64_vec", __domainid (D),
-        a, __cref pubArr, arr);
-    return arr;
-}
-
-
-/*******************************
-    modc
-********************************/
-
-template <domain D : shared3p>
-D uint8 operator % (D uint8 a, uint8 b) {
-    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D uint8[[1]] operator % (D uint8[[1]] a, uint8[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D uint8[[N]] operator % (D uint8[[N]] arr, uint8 pubScalar) {
-    uint8[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D uint8[[N]] operator % (D uint8[[N]] arr, uint8[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::modc_uint8_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D uint16 operator % (D uint16 a, uint16 b) {
-    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D uint16[[1]] operator % (D uint16[[1]] a, uint16[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D uint16[[N]] operator % (D uint16[[N]] arr, uint16 pubScalar) {
-    uint16[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D uint16[[N]] operator % (D uint16[[N]] arr, uint16[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::modc_uint16_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D uint32 operator % (D uint32 a, uint32 b) {
-    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D uint32[[1]] operator % (D uint32[[1]] a, uint32[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D uint32[[N]] operator % (D uint32[[N]] arr, uint32 pubScalar) {
-    uint32[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D uint32[[N]] operator % (D uint32[[N]] arr, uint32[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::modc_uint32_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared3p>
-D uint operator % (D uint a, uint b) {
-    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p>
-D uint[[1]] operator % (D uint[[1]] a, uint[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared3p, dim N>
-D uint[[N]] operator % (D uint[[N]] arr, uint pubScalar) {
-    uint[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared3p, dim N>
-D uint[[N]] operator % (D uint[[N]] arr, uint[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared3p::modc_uint64_vec", __domainid (D),
-       arr, __cref pubArr, arr);
-    return arr;
-}
-
-/**
-* \endcond
-*/
-
 
 /*****************************************************
     inv, sqrt, sin, ln, exp, erf, isNegligible
@@ -3234,5 +2610,2131 @@ D xor_uint64[[N]] max (D xor_uint64[[N]] x, D xor_uint64[[N]] y) {
     return x;
 }
 /** @}*/
+
+/** \cond */
+
+/**********************************************************************
+ OPERATOR DEFINITIONS
+**********************************************************************/
+
+template <domain D : shared3p>
+D bool[[1]] operator ! (D bool[[1]] x) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::not_bool_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p, type T>
+D bool[[1]] operator == (D T[[1]] x, D T[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::eq_$T\_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p, type T>
+D bool[[1]] operator != (D T[[1]] x, D T[[1]] y) {
+    return !(x == y);
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D uint8[[1]] x, D uint8[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D uint16[[1]] x, D uint16[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D uint32[[1]] x, D uint32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D uint64[[1]] x, D uint64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D int8[[1]] x, D int8[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_int8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D int16[[1]] x, D int16[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_int16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D int32[[1]] x, D int32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_int32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D int64[[1]] x, D int64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_int64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D float32[[1]] x, D float32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_float32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D float64[[1]] x, D float64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_float64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D xor_uint8[[1]] x, D xor_uint8[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_xor_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D xor_uint16[[1]] x, D xor_uint16[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_xor_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D xor_uint32[[1]] x, D xor_uint32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_xor_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator < (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lt_xor_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D uint8[[1]] x, D uint8[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D uint16[[1]] x, D uint16[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D uint32[[1]] x, D uint32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D uint64[[1]] x, D uint64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D int8[[1]] x, D int8[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_int8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D int16[[1]] x, D int16[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_int16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D int32[[1]] x, D int32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_int32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D int64[[1]] x, D int64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_int64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D float32[[1]] x, D float32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_float32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D float64[[1]] x, D float64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_float64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D xor_uint8[[1]] x, D xor_uint8[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_xor_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D xor_uint16[[1]] x, D xor_uint16[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_xor_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D xor_uint32[[1]] x, D xor_uint32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_xor_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator > (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gt_xor_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D uint8[[1]] x, D uint8[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D uint16[[1]] x, D uint16[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D uint32[[1]] x, D uint32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D uint64[[1]] x, D uint64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D int8[[1]] x, D int8[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_int8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D int16[[1]] x, D int16[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_int16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D int32[[1]] x, D int32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_int32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D int64[[1]] x, D int64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_int64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D float32[[1]] x, D float32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_float32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D float64[[1]] x, D float64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_float64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D xor_uint8[[1]] x, D xor_uint8[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_xor_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D xor_uint16[[1]] x, D xor_uint16[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_xor_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D xor_uint32[[1]] x, D xor_uint32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_xor_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator <= (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::lte_xor_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D uint8[[1]] x, D uint8[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D uint16[[1]] x, D uint16[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D uint32[[1]] x, D uint32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D uint64[[1]] x, D uint64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D int8[[1]] x, D int8[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_int8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D int16[[1]] x, D int16[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_int16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D int32[[1]] x, D int32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_int32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D int64[[1]] x, D int64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_int64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D float32[[1]] x, D float32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_float32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D float64[[1]] x, D float64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_float64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D xor_uint8[[1]] x, D xor_uint8[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_xor_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D xor_uint16[[1]] x, D xor_uint16[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_xor_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D xor_uint32[[1]] x, D xor_uint32[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_xor_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator >= (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::gte_xor_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] operator + (D uint8[[1]] x, D uint8[[1]] y) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::add_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] operator + (D uint16[[1]] x, D uint16[[1]] y) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::add_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] operator + (D uint32[[1]] x, D uint32[[1]] y) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::add_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] operator + (D uint64[[1]] x, D uint64[[1]] y) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::add_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] operator + (D int8[[1]] x, D int8[[1]] y) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::add_int8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] operator + (D int16[[1]] x, D int16[[1]] y) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::add_int16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] operator + (D int32[[1]] x, D int32[[1]] y) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::add_int32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] operator + (D int64[[1]] x, D int64[[1]] y) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::add_int64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] operator + (D float32[[1]] x, D float32[[1]] y) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::add_float32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] operator + (D float64[[1]] x, D float64[[1]] y) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::add_float64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] operator - (D uint8[[1]] x, D uint8[[1]] y) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::sub_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] operator - (D uint16[[1]] x, D uint16[[1]] y) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::sub_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] operator - (D uint32[[1]] x, D uint32[[1]] y) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::sub_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] operator - (D uint64[[1]] x, D uint64[[1]] y) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::sub_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] operator - (D int8[[1]] x, D int8[[1]] y) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::sub_int8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] operator - (D int16[[1]] x, D int16[[1]] y) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::sub_int16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] operator - (D int32[[1]] x, D int32[[1]] y) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::sub_int32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] operator - (D int64[[1]] x, D int64[[1]] y) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::sub_int64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] operator - (D float32[[1]] x, D float32[[1]] y) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::sub_float32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] operator - (D float64[[1]] x, D float64[[1]] y) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::sub_float64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] operator * (D uint8[[1]] x, D uint8[[1]] y) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::mul_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] operator * (D uint16[[1]] x, D uint16[[1]] y) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::mul_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] operator * (D uint32[[1]] x, D uint32[[1]] y) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::mul_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] operator * (D uint64[[1]] x, D uint64[[1]] y) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::mul_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] operator * (D int8[[1]] x, D int8[[1]] y) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::mul_int8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] operator * (D int16[[1]] x, D int16[[1]] y) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::mul_int16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] operator * (D int32[[1]] x, D int32[[1]] y) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::mul_int32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] operator * (D int64[[1]] x, D int64[[1]] y) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::mul_int64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] operator * (D float32[[1]] x, D float32[[1]] y) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::mul_float32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] operator * (D float64[[1]] x, D float64[[1]] y) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::mul_float64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] operator % (D uint8[[1]] x, D uint8[[1]] y) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::mod_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] operator % (D uint16[[1]] x, D uint16[[1]] y) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::mod_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] operator % (D uint32[[1]] x, D uint32[[1]] y) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::mod_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] operator % (D uint64[[1]] x, D uint64[[1]] y) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::mod_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] operator / (D uint8[[1]] x, D uint8[[1]] y) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::div_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] operator / (D uint16[[1]] x, D uint16[[1]] y) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::div_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] operator / (D uint32[[1]] x, D uint32[[1]] y) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::div_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] operator / (D uint64[[1]] x, D uint64[[1]] y) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::div_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] operator / (D float32[[1]] x, D float32[[1]] y) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::div_float32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] operator / (D float64[[1]] x, D float64[[1]] y) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::div_float64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator | (D bool[[1]] x, D bool[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::or_bool_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint8[[1]] operator | (D xor_uint8[[1]] x, D xor_uint8[[1]] y) {
+    D xor_uint8[[1]] res (size (x));
+    __syscall ("shared3p::or_xor_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint16[[1]] operator | (D xor_uint16[[1]] x, D xor_uint16[[1]] y) {
+    D xor_uint16[[1]] res (size (x));
+    __syscall ("shared3p::or_xor_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint32[[1]] operator | (D xor_uint32[[1]] x, D xor_uint32[[1]] y) {
+    D xor_uint32[[1]] res (size (x));
+    __syscall ("shared3p::or_xor_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint64[[1]] operator | (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
+    D xor_uint64[[1]] res (size (x));
+    __syscall ("shared3p::or_xor_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator & (D bool[[1]] x, D bool[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::and_bool_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint8[[1]] operator & (D xor_uint8[[1]] x, D xor_uint8[[1]] y) {
+    D xor_uint8[[1]] res (size (x));
+    __syscall ("shared3p::and_xor_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint16[[1]] operator & (D xor_uint16[[1]] x, D xor_uint16[[1]] y) {
+    D xor_uint16[[1]] res (size (x));
+    __syscall ("shared3p::and_xor_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint32[[1]] operator & (D xor_uint32[[1]] x, D xor_uint32[[1]] y) {
+    D xor_uint32[[1]] res (size (x));
+    __syscall ("shared3p::and_xor_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint64[[1]] operator & (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
+    D xor_uint64[[1]] res (size (x));
+    __syscall ("shared3p::and_xor_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] operator ^ (D bool[[1]] x, D bool[[1]] y) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::xor_bool_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint8[[1]] operator ^ (D xor_uint8[[1]] x, D xor_uint8[[1]] y) {
+    D xor_uint8[[1]] res (size (x));
+    __syscall ("shared3p::xor_xor_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint16[[1]] operator ^ (D xor_uint16[[1]] x, D xor_uint16[[1]] y) {
+    D xor_uint16[[1]] res (size (x));
+    __syscall ("shared3p::xor_xor_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint32[[1]] operator ^ (D xor_uint32[[1]] x, D xor_uint32[[1]] y) {
+    D xor_uint32[[1]] res (size (x));
+    __syscall ("shared3p::xor_xor_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint64[[1]] operator ^ (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
+    D xor_uint64[[1]] res (size (x));
+    __syscall ("shared3p::xor_xor_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] operator << (D uint8[[1]] x, D uint8[[1]] y) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::shift_left_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] operator << (D uint16[[1]] x, D uint16[[1]] y) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::shift_left_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] operator << (D uint32[[1]] x, D uint32[[1]] y) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::shift_left_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] operator << (D uint64[[1]] x, D uint64[[1]] y) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::shift_left_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint8[[1]] operator << (D xor_uint8[[1]] x, D xor_uint8[[1]] y) {
+    D xor_uint8[[1]] res (size (x));
+    __syscall ("shared3p::shift_left_xor_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint16[[1]] operator << (D xor_uint16[[1]] x, D xor_uint16[[1]] y) {
+    D xor_uint16[[1]] res (size (x));
+    __syscall ("shared3p::shift_left_xor_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint32[[1]] operator << (D xor_uint32[[1]] x, D xor_uint32[[1]] y) {
+    D xor_uint32[[1]] res (size (x));
+    __syscall ("shared3p::shift_left_xor_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint64[[1]] operator << (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
+    D xor_uint64[[1]] res (size (x));
+    __syscall ("shared3p::shift_left_xor_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] operator >> (D uint8[[1]] x, D uint8[[1]] y) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::shift_right_uint8_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] operator >> (D uint16[[1]] x, D uint16[[1]] y) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::shift_right_uint16_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] operator >> (D uint32[[1]] x, D uint32[[1]] y) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::shift_right_uint32_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] operator >> (D uint64[[1]] x, D uint64[[1]] y) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::shift_right_uint64_vec", __domainid (D), x, y, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] operator * (D uint8[[1]] x, uint8[[1]] y) {
+    __syscall ("shared3p::mulc_uint8_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] operator * (D uint16[[1]] x, uint16[[1]] y) {
+    __syscall ("shared3p::mulc_uint16_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] operator * (D uint32[[1]] x, uint32[[1]] y) {
+    __syscall ("shared3p::mulc_uint32_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] operator * (D uint64[[1]] x, uint64[[1]] y) {
+    __syscall ("shared3p::mulc_uint64_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D int8[[1]] operator * (D int8[[1]] x, int8[[1]] y) {
+    __syscall ("shared3p::mulc_int8_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D int16[[1]] operator * (D int16[[1]] x, int16[[1]] y) {
+    __syscall ("shared3p::mulc_int16_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D int32[[1]] operator * (D int32[[1]] x, int32[[1]] y) {
+    __syscall ("shared3p::mulc_int32_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D int64[[1]] operator * (D int64[[1]] x, int64[[1]] y) {
+    __syscall ("shared3p::mulc_int64_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D float32[[1]] operator * (D float32[[1]] x, float32[[1]] y) {
+    __syscall ("shared3p::mulc_float32_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D float64[[1]] operator * (D float64[[1]] x, float64[[1]] y) {
+    __syscall ("shared3p::mulc_float64_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] operator * (uint8[[1]] x, D uint8[[1]] y) {
+    __syscall ("shared3p::mulc_uint8_vec", __domainid (D), __cref x, y, y);
+    return y;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] operator * (uint16[[1]] x, D uint16[[1]] y) {
+    __syscall ("shared3p::mulc_uint16_vec", __domainid (D), __cref x, y, y);
+    return y;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] operator * (uint32[[1]] x, D uint32[[1]] y) {
+    __syscall ("shared3p::mulc_uint32_vec", __domainid (D), __cref x, y, y);
+    return y;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] operator * (uint64[[1]] x, D uint64[[1]] y) {
+    __syscall ("shared3p::mulc_uint64_vec", __domainid (D), __cref x, y, y);
+    return y;
+}
+
+template <domain D : shared3p>
+D int8[[1]] operator * (int8[[1]] x, D int8[[1]] y) {
+    __syscall ("shared3p::mulc_int8_vec", __domainid (D), __cref x, y, y);
+    return y;
+}
+
+template <domain D : shared3p>
+D int16[[1]] operator * (int16[[1]] x, D int16[[1]] y) {
+    __syscall ("shared3p::mulc_int16_vec", __domainid (D), __cref x, y, y);
+    return y;
+}
+
+template <domain D : shared3p>
+D int32[[1]] operator * (int32[[1]] x, D int32[[1]] y) {
+    __syscall ("shared3p::mulc_int32_vec", __domainid (D), __cref x, y, y);
+    return y;
+}
+
+template <domain D : shared3p>
+D int64[[1]] operator * (int64[[1]] x, D int64[[1]] y) {
+    __syscall ("shared3p::mulc_int64_vec", __domainid (D), __cref x, y, y);
+    return y;
+}
+
+template <domain D : shared3p>
+D float32[[1]] operator * (float32[[1]] x, D float32[[1]] y) {
+    __syscall ("shared3p::mulc_float32_vec", __domainid (D), __cref x, y, y);
+    return y;
+}
+
+template <domain D : shared3p>
+D float64[[1]] operator * (float64[[1]] x, D float64[[1]] y) {
+    __syscall ("shared3p::mulc_float64_vec", __domainid (D), __cref x, y, y);
+    return y;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] operator / (D uint8[[1]] x, uint8[[1]] y) {
+    __syscall ("shared3p::divc_uint8_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] operator / (D uint16[[1]] x, uint16[[1]] y) {
+    __syscall ("shared3p::divc_uint16_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] operator / (D uint32[[1]] x, uint32[[1]] y) {
+    __syscall ("shared3p::divc_uint32_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] operator / (D uint64[[1]] x, uint64[[1]] y) {
+    __syscall ("shared3p::divc_uint64_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D float32[[1]] operator / (D float32[[1]] x, float32[[1]] y) {
+    __syscall ("shared3p::divc_float32_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D float64[[1]] operator / (D float64[[1]] x, float64[[1]] y) {
+    __syscall ("shared3p::divc_float64_vec", __domainid (D), x, __cref y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] operator - (D uint8[[1]] x) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::neg_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] operator - (D uint16[[1]] x) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::neg_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] operator - (D uint32[[1]] x) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::neg_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] operator - (D uint64[[1]] x) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::neg_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] operator - (D int8[[1]] x) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::neg_int8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] operator - (D int16[[1]] x) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::neg_int16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] operator - (D int32[[1]] x) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::neg_int32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] operator - (D int64[[1]] x) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::neg_int64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] operator - (D float32[[1]] x) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::neg_float32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] operator - (D float64[[1]] x) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::neg_float64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint8[[1]] operator ~ (D xor_uint8[[1]] x) {
+    D xor_uint8[[1]] res (size (x));
+    __syscall ("shared3p::inv_xor_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint16[[1]] operator ~ (D xor_uint16[[1]] x) {
+    D xor_uint16[[1]] res (size (x));
+    __syscall ("shared3p::inv_xor_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint32[[1]] operator ~ (D xor_uint32[[1]] x) {
+    D xor_uint32[[1]] res (size (x));
+    __syscall ("shared3p::inv_xor_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint64[[1]] operator ~ (D xor_uint64[[1]] x) {
+    D xor_uint64[[1]] res (size (x));
+    __syscall ("shared3p::inv_xor_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] cast (D bool[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D uint8[[1]] cast (D uint8[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D uint16[[1]] cast (D uint16[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D uint32[[1]] cast (D uint32[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D uint64[[1]] cast (D uint64[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D int8[[1]] cast (D int8[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D int16[[1]] cast (D int16[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D int32[[1]] cast (D int32[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D int64[[1]] cast (D int64[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D float32[[1]] cast (D float32[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D float64[[1]] cast (D float64[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D xor_uint8[[1]] cast (D xor_uint8[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D xor_uint16[[1]] cast (D xor_uint16[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D xor_uint32[[1]] cast (D xor_uint32[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D xor_uint64[[1]] cast (D xor_uint64[[1]] x) { return x; }
+
+template <domain D : shared3p>
+D bool[[1]] cast (D uint8[[1]] x) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint8_to_bool_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] cast (D uint16[[1]] x) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint16_to_bool_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] cast (D uint32[[1]] x) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint32_to_bool_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] cast (D uint64[[1]] x) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint64_to_bool_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] cast (D int8[[1]] x) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::conv_int8_to_bool_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] cast (D int16[[1]] x) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::conv_int16_to_bool_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] cast (D int32[[1]] x) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::conv_int32_to_bool_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] cast (D int64[[1]] x) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::conv_int64_to_bool_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] cast (D float32[[1]] x) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::conv_float32_to_bool_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D bool[[1]] cast (D float64[[1]] x) {
+    D bool[[1]] res (size (x));
+    __syscall ("shared3p::conv_float64_to_bool_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] cast (D bool[[1]] x) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] cast (D bool[[1]] x) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] cast (D bool[[1]] x) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] cast (D bool[[1]] x) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] cast (D bool[[1]] x) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_int8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] cast (D bool[[1]] x) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_int16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] cast (D bool[[1]] x) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_int32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] cast (D bool[[1]] x) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_int64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] cast (D bool[[1]] x) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_float32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] cast (D bool[[1]] x) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_float64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] cast (D uint8[[1]] x) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint8_to_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] cast (D uint8[[1]] x) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint8_to_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] cast (D uint8[[1]] x) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint8_to_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] cast (D uint8[[1]] x) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint8_to_int8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] cast (D uint8[[1]] x) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint8_to_int16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] cast (D uint8[[1]] x) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint8_to_int32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] cast (D uint8[[1]] x) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint8_to_int64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] cast (D uint8[[1]] x) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint8_to_float32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] cast (D uint8[[1]] x) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint8_to_float64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] cast (D uint16[[1]] x) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint16_to_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] cast (D uint16[[1]] x) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint16_to_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] cast (D uint16[[1]] x) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint16_to_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] cast (D uint16[[1]] x) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint16_to_int8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] cast (D uint16[[1]] x) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint16_to_int16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] cast (D uint16[[1]] x) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint16_to_int32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] cast (D uint16[[1]] x) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint16_to_int64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] cast (D uint16[[1]] x) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint16_to_float32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] cast (D uint16[[1]] x) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint16_to_float64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] cast (D uint32[[1]] x) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint32_to_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] cast (D uint32[[1]] x) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint32_to_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] cast (D uint32[[1]] x) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint32_to_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] cast (D uint32[[1]] x) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint32_to_int8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] cast (D uint32[[1]] x) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint32_to_int16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] cast (D uint32[[1]] x) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] cast (D uint32[[1]] x) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint32_to_int64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] cast (D uint32[[1]] x) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint32_to_float32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] cast (D uint32[[1]] x) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint32_to_float64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] cast (D uint64[[1]] x) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint64_to_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] cast (D uint64[[1]] x) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint64_to_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] cast (D uint64[[1]] x) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint64_to_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] cast (D uint64[[1]] x) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint64_to_int8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] cast (D uint64[[1]] x) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint64_to_int16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] cast (D uint64[[1]] x) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint64_to_int32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] cast (D uint64[[1]] x) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] cast (D uint64[[1]] x) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint64_to_float32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] cast (D uint64[[1]] x) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::conv_uint64_to_float64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] cast (D int8[[1]] x) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_int8_to_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] cast (D int8[[1]] x) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_int8_to_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] cast (D int8[[1]] x) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_int8_to_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] cast (D int8[[1]] x) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_int8_to_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] cast (D int8[[1]] x) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::conv_int8_to_int16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] cast (D int8[[1]] x) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::conv_int8_to_int32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] cast (D int8[[1]] x) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::conv_int8_to_int64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] cast (D int8[[1]] x) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::conv_int8_to_float32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] cast (D int8[[1]] x) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::conv_int8_to_float64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] cast (D int16[[1]] x) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_int16_to_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] cast (D int16[[1]] x) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_int16_to_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] cast (D int16[[1]] x) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_int16_to_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] cast (D int16[[1]] x) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_int16_to_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] cast (D int16[[1]] x) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::conv_int16_to_int8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] cast (D int16[[1]] x) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::conv_int16_to_int32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] cast (D int16[[1]] x) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::conv_int16_to_int64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] cast (D int16[[1]] x) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::conv_int16_to_float32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] cast (D int16[[1]] x) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::conv_int16_to_float64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] cast (D int32[[1]] x) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_int32_to_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] cast (D int32[[1]] x) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_int32_to_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] cast (D int32[[1]] x) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_int32_to_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] cast (D int32[[1]] x) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_int32_to_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] cast (D int32[[1]] x) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::conv_int32_to_int8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] cast (D int32[[1]] x) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::conv_int32_to_int16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] cast (D int32[[1]] x) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::conv_int32_to_int64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] cast (D int32[[1]] x) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::conv_int32_to_float32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] cast (D int32[[1]] x) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::conv_int32_to_float64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] cast (D int64[[1]] x) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_int64_to_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] cast (D int64[[1]] x) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_int64_to_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] cast (D int64[[1]] x) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_int64_to_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] cast (D int64[[1]] x) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_int64_to_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] cast (D int64[[1]] x) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::conv_int64_to_int8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] cast (D int64[[1]] x) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::conv_int64_to_int16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] cast (D int64[[1]] x) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::conv_int64_to_int32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] cast (D int64[[1]] x) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::conv_int64_to_float32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] cast (D int64[[1]] x) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::conv_int64_to_float64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] cast (D float32[[1]] x) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_float32_to_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] cast (D float32[[1]] x) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_float32_to_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] cast (D float32[[1]] x) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_float32_to_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] cast (D float32[[1]] x) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_float32_to_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] cast (D float32[[1]] x) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::conv_float32_to_int8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] cast (D float32[[1]] x) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::conv_float32_to_int16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] cast (D float32[[1]] x) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::conv_float32_to_int32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] cast (D float32[[1]] x) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::conv_float32_to_int64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float64[[1]] cast (D float32[[1]] x) {
+    D float64[[1]] res (size (x));
+    __syscall ("shared3p::conv_float32_to_float64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] cast (D float64[[1]] x) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_float64_to_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] cast (D float64[[1]] x) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_float64_to_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] cast (D float64[[1]] x) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_float64_to_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] cast (D float64[[1]] x) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_float64_to_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int8[[1]] cast (D float64[[1]] x) {
+    D int8[[1]] res (size (x));
+    __syscall ("shared3p::conv_float64_to_int8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int16[[1]] cast (D float64[[1]] x) {
+    D int16[[1]] res (size (x));
+    __syscall ("shared3p::conv_float64_to_int16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int32[[1]] cast (D float64[[1]] x) {
+    D int32[[1]] res (size (x));
+    __syscall ("shared3p::conv_float64_to_int32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D int64[[1]] cast (D float64[[1]] x) {
+    D int64[[1]] res (size (x));
+    __syscall ("shared3p::conv_float64_to_int64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D float32[[1]] cast (D float64[[1]] x) {
+    D float32[[1]] res (size (x));
+    __syscall ("shared3p::conv_float64_to_float32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint8[[1]] cast (D bool[[1]] x) {
+    D xor_uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_xor_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint16[[1]] cast (D bool[[1]] x) {
+    D xor_uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_xor_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint32[[1]] cast (D bool[[1]] x) {
+    D xor_uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_xor_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint64[[1]] cast (D bool[[1]] x) {
+    D xor_uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_bool_to_xor_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint8[[1]] cast (D xor_uint8[[1]] x) {
+    D uint8[[1]] res (size (x));
+    __syscall ("shared3p::reshare_xor_uint8_to_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint16[[1]] cast (D xor_uint16[[1]] x) {
+    D uint16[[1]] res (size (x));
+    __syscall ("shared3p::reshare_xor_uint16_to_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint32[[1]] cast (D xor_uint32[[1]] x) {
+    D uint32[[1]] res (size (x));
+    __syscall ("shared3p::reshare_xor_uint32_to_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D uint64[[1]] cast (D xor_uint64[[1]] x) {
+    D uint64[[1]] res (size (x));
+    __syscall ("shared3p::reshare_xor_uint64_to_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint8[[1]] cast (D uint8[[1]] x) {
+    D xor_uint8[[1]] res (size (x));
+    __syscall ("shared3p::reshare_uint8_to_xor_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint16[[1]] cast (D uint16[[1]] x) {
+    D xor_uint16[[1]] res (size (x));
+    __syscall ("shared3p::reshare_uint16_to_xor_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint32[[1]] cast (D uint32[[1]] x) {
+    D xor_uint32[[1]] res (size (x));
+    __syscall ("shared3p::reshare_uint32_to_xor_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint64[[1]] cast (D uint64[[1]] x) {
+    D xor_uint64[[1]] res (size (x));
+    __syscall ("shared3p::reshare_uint64_to_xor_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint16[[1]] cast (D xor_uint8[[1]] x) {
+    D xor_uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_xor_uint8_to_xor_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint32[[1]] cast (D xor_uint8[[1]] x) {
+    D xor_uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_xor_uint8_to_xor_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint64[[1]] cast (D xor_uint8[[1]] x) {
+    D xor_uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_xor_uint8_to_xor_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint8[[1]] cast (D xor_uint16[[1]] x) {
+    D xor_uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_xor_uint16_to_xor_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint32[[1]] cast (D xor_uint16[[1]] x) {
+    D xor_uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_xor_uint16_to_xor_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint64[[1]] cast (D xor_uint16[[1]] x) {
+    D xor_uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_xor_uint16_to_xor_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint8[[1]] cast (D xor_uint32[[1]] x) {
+    D xor_uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_xor_uint32_to_xor_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint16[[1]] cast (D xor_uint32[[1]] x) {
+    D xor_uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_xor_uint32_to_xor_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint64[[1]] cast (D xor_uint32[[1]] x) {
+    D xor_uint64[[1]] res (size (x));
+    __syscall ("shared3p::conv_xor_uint32_to_xor_uint64_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint8[[1]] cast (D xor_uint64[[1]] x) {
+    D xor_uint8[[1]] res (size (x));
+    __syscall ("shared3p::conv_xor_uint64_to_xor_uint8_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint16[[1]] cast (D xor_uint64[[1]] x) {
+    D xor_uint16[[1]] res (size (x));
+    __syscall ("shared3p::conv_xor_uint64_to_xor_uint16_vec", __domainid (D), x, res);
+    return res;
+}
+
+template <domain D : shared3p>
+D xor_uint32[[1]] cast (D xor_uint64[[1]] x) {
+    D xor_uint32[[1]] res (size (x));
+    __syscall ("shared3p::conv_xor_uint64_to_xor_uint32_vec", __domainid (D), x, res);
+    return res;
+}
+
+/** \endcond */
+
 /** @}*/
 /** @}*/

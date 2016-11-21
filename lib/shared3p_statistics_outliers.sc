@@ -76,7 +76,7 @@ D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvail
 
     D bool[[1]] highFilter = (FT) data < quantiles;
 
-    return lowFilter && highFilter && isAvailable;
+    return lowFilter & highFilter & isAvailable;
 }
 /** \endcond */
 
@@ -125,7 +125,7 @@ D bool[[1]] _outlierDetectionMAD (D T[[1]] data,
     D FT mad = _MAD (cutData, constant);
     D FT[[1]] dist = abs ((FT) data - m);
 
-    return (dist < lambda * mad) && isAvailable;
+    return (dist < lambda * mad) & isAvailable;
 }
 /** \endcond */
 
