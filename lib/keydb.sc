@@ -26,6 +26,8 @@ import stdlib;
 /** @file
  *  \defgroup keydb keydb.sc
  *  \defgroup keydb_connect keydb_connect(string)
+ *  \defgroup keydb_disconnect keydb_disconnect(void)
+ *  \defgroup keydb_del keydb_del(string)
  *  \defgroup keydb_get keydb_get(string, proxy)
  *  \defgroup keydb_set keydb_set(string, value)
  *  \defgroup keydb_scan keydb_scan(string)
@@ -51,6 +53,8 @@ struct ScanCursor {
 /** \addtogroup keydb_connect
  *  @{
  *  @brief Connect to a Redis host.
+ *  @param host - the name of the host to connect to. Must match one in the
+ *  module configuration.
  */
 void keydb_connect(string host) {
     __syscall ("keydb_connect", __cref host);
@@ -63,6 +67,16 @@ void keydb_connect(string host) {
  */
 void keydb_disconnect() {
     __syscall ("keydb_disconnect");
+}
+/** @} */
+
+/** \addtogroup keydb_del
+ *  @{
+ *  @brief Delete a value from the database.
+ *  @param key - the public key of the value to be deleted.
+ */
+void keydb_del(string key) {
+    __syscall ("keydb_del", __cref key);
 }
 /** @} */
 
