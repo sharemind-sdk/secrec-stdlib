@@ -1167,7 +1167,7 @@ D bool min (D bool x, D bool y) {
 template <domain D>
 D bool[[1]] min (D bool[[1]] x, D bool[[1]] y) {
     assert(size(x) == size(y));
-    return x && y;
+    return x & y;
 }
 
 template <type T>
@@ -1404,7 +1404,7 @@ D T max (T x, T y) {
 template <domain D>
 D bool[[1]] max (D bool[[1]] x, D bool[[1]] y) {
     assert(size(x) == size(y));
-    return x || y;
+    return x | y;
 }
 /**
 * \endcond
