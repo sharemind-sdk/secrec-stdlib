@@ -98,6 +98,8 @@ int64 INT64_MIN = -9223372036854775808;
 * \defgroup exp exp
 * \defgroup ln ln
 * \defgroup isnegligible isNegligible
+* \defgroup substring substring
+* \defgroup isprefixof_string isPrefixOf
 */
 
 /** \addtogroup stdlib
@@ -1686,6 +1688,37 @@ D bool[[1]] isNegligible (D float64[[1]] a) {
     return _isNegligible (a);
 }
 
-/** @}*/
+/** @} */
+
+
+/** \addtogroup substring
+ *  @{
+ *  @brief Function for getting a substring of a string.
+ *  @param x input string
+ *  @param s start position
+ *  @param e end position
+ *  @return returns the substring spanning the indices [s, e)
+ */
+string substring(string x, uint s, uint e) {
+    assert(s < e);
+    assert(e <= strlen(x));
+    uint8[[1]] bytes = __bytes_from_string(x);
+    return __string_from_bytes(bytes[s : e]);
+}
+/** @} */
+
+/** \addtogroup isprefixof_string
+ *  @{
+ *  @brief Function for checking if a string is a prefix of another string.
+ *  @param a prefix string
+ *  @param b other string
+ *  @return returns true if a is a prefix of b and false otherwise
+ */
+bool isPrefixOf(string a, string b) {
+    if (strlen(a) > strlen(b))
+        return false;
+    return a == substring(b, 0 :: uint, strlen(a));
+}
+/** @} */
 
 /** @}*/
