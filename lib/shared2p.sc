@@ -94,7 +94,7 @@ D T[[N]] classify(T[[N]] value) {
     sign, abs
 ********************************/
 
-/** \addtogroup sign
+/** \addtogroup shared2p_sign
  *  @{
  *  @brief Function for determining the sign of values
  *  @note **D** - shared2p protection domain
