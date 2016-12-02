@@ -139,7 +139,7 @@ run_gdb() {
     local TEST_NAME="$2"
     (cd "`dirname ${TEST_RUNNER}`" &&
         ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
-                gdb -batch -quiet \
+                gdb -return-child-result -batch -quiet \
                     -ex 'run' \
                     -ex 'backtrace' \
                     -ex 'thread apply all backtrace' \
