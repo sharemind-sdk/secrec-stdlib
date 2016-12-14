@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -29,26 +29,29 @@ Variables in SecreC consist of lowercase and uppercase Latin characters, undersc
 
 Variables are declared by writing a type annotation followed by one or more variable names. Optionally, it is possible to assign a value right after the variable declaration by writing an expression after the assignment sign. All declared variables are assigned reasonable default values. For integers this value is 0, for booleans it is **false**.
 
-Listing 6.3: Some variable declarations
+Listing 6.6: Some variable declarations
 \code
-	kind shared3p ;
-	domain sharemind_test_pd shared3p ;
-	domain private shared3p ;
-	void main () {
-		int x; // assigned default value
-		int y = 5;
-		private uint8 z;
-		sharemind_test_pd bool secret = true;
-		uint i, j = 2, k;
-		return ;
-	}
+    kind shared3p {
+        type bool;
+        type uint8;
+    }
+    domain sharemind_test_pd shared3p;
+    domain private shared3p;
+    void main () {
+        int x; // assigned default value
+        int y = 5;
+        private uint8 z;
+        sharemind_test_pd bool secret = true;
+        uint i, j = 2, k;
+        return ;
+    }
 \endcode
 
-As previously mentioned, types are formed by writing security domain before the data type, and **public** may be omitted. 
+As previously mentioned, types are formed by writing security domain before the data type, and **public** may be omitted.
  Array declarations allow the shape (sizes of dimensions) to be specified after the variable name between parenthesis. Initial shape may be non-static and can be an arbitrary public integer expression.
 The shape is specified with public signed integer type.
 
-Listing 6.4: Array declarations
+Listing 6.5: Array declarations
 \code
 	int [[1]] vector (100); // vector of 100 elements
 	bool [[2]] mat (3, 4) = true; // constant true 3x4 matrix
@@ -59,7 +62,7 @@ Listing 6.4: Array declarations
 
 It is possible to define an empty array by not specifying the shape, or by having any of the dimensions have no elements. If an array definition is immediately followed by an assignment, and the shape is not specified then the shape is inherited from the right hand side expression.
 
-Listing 6.5: (Non)empty arrays
+Listing 6.6: (Non)empty arrays
 \code
 	int [[1]] empty ; // empty array
 	int [[1]] over9000 (9001);
@@ -88,7 +91,7 @@ Table 1: Operator precedence
 
 The scope of a variable always ends with the containing statement block. Variables with same name can not be declared within the same scope, but can be overshadowed by declaring a new variable with same name in a deeper nested scope. Global variables never fall out of scope, and can not be overshadowed. Privacy domains, and domain kinds can not be overshadowed. Variables with the same names can be declared in non-overlapping scopes.
 
-Listing 6.6: Variable overshadowing
+Listing 6.7: Variable overshadowing
 \code
 	int x = 1;
 	{ // nested scope
