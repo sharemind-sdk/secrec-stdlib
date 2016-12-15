@@ -25,7 +25,21 @@ module shared2p;
 
 import stdlib;
 
-kind shared2p;
+kind shared2p {
+    type bool;
+    type uint8;
+    type uint16;
+    type uint32;
+    type uint64;
+    type int8;
+    type int16;
+    type int32;
+    type int64;
+    type xor_uint8 { public = uint8 };
+    type xor_uint16 { public = uint16 };
+    type xor_uint32 { public = uint32 };
+    type xor_uint64 { public = uint64 };
+}
 /**
 * \endcond
 */
@@ -132,7 +146,7 @@ D int[[N]] sign (D int[[N]] x) {
  *  @{
  *  @brief Function for finding absolute values
  *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @param x - an array of any dimension
  *  @return returns an array of equal shape, size and dimension, where all values are the absolute values of the input array at that position
  */
@@ -169,19 +183,6 @@ D uint[[N]] abs (D int[[N]] x) {
     return y;
 }
 
-template<domain D : shared2p, dim N>
-D float32[[N]] abs (D float32[[N]] value) {
-    D float32[[N]] out = value;
-    __syscall("shared2p::abs_float32_vec", __domainid (D), value, out);
-    return out;
-}
-
-template<domain D : shared2p, dim N>
-D float64[[N]] abs (D float64[[N]] value) {
-    D float64[[N]] out = value;
-    __syscall("shared2p::abs_float64_vec", __domainid (D), value, out);
-    return out;
-}
 /** @}*/
 
 /*******************************
@@ -191,14 +192,14 @@ D float64[[N]] abs (D float64[[N]] value) {
  *  @{
  *  @brief Functions for finding sums
  *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  */
 
 /** \addtogroup shared2p_sum_vec
  *  @{
  *  @brief Function for finding the sum of all the elements in a vector
  *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @note We are using a system call for summing vectors as it's very common
  *  operation, and the performance overhead of manually summing is in the
  *  range of 100 to 200 times slower.
@@ -275,28 +276,13 @@ D int sum (D int[[1]] vec) {
     return out;
 }
 
-
-template <domain D : shared2p>
-D float32 sum (D float32[[1]] vec) {
-    D float32 out;
-    __syscall ("shared2p::sum_float32_vec", __domainid (D), vec, out);
-    return out;
-}
-
-template <domain D : shared2p>
-D float64 sum (D float64[[1]] vec) {
-    D float64 out;
-    __syscall ("shared2p::sum_float64_vec", __domainid (D), vec, out);
-    return out;
-}
-
 /** @}*/
 
 /** \addtogroup shared2p_sum_k
  *  @{
  *  @brief Function for finding the sum of all elements in the input vector in specified parts.
  *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @pre the length of the input array must be a multiple of **k**
  *  @param vec - The input array of subarrays to sum. The subarrays are stacked one after another and are all of the same size.
  *  @param k - The number of subarrays in the input array.
@@ -374,23 +360,6 @@ D int[[1]] sum (D int[[1]] vec, uint k) {
     assert(k > 0 && size(vec) % k == 0);
     D int[[1]] out (k);
     __syscall ("shared2p::sum_int64_vec", __domainid (D), vec, out);
-    return out;
-}
-
-
-template <domain D : shared2p>
-D float32[[1]] sum (D float32[[1]] vec, uint k) {
-    assert(k > 0 && size(vec) % k == 0);
-    D float32[[1]] out (k);
-    __syscall ("shared2p::sum_float32_vec", __domainid (D), vec, out);
-    return out;
-}
-
-template <domain D : shared2p>
-D float64[[1]] sum (D float64[[1]] vec, uint k) {
-    assert(k > 0 && size(vec) % k == 0);
-    D float64[[1]] out (k);
-    __syscall ("shared2p::sum_float64_vec", __domainid (D), vec, out);
     return out;
 }
 
@@ -706,16 +675,8 @@ D uint8[[1]] operator * (D uint8[[1]] a, uint8[[1]] b) {
     return a;
 }
 
-template <domain D : shared2p, dim N>
-D uint8[[N]] operator * (D uint8[[N]] arr, uint8 pubScalar) {
-    uint8[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared2p::mulc_uint8_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared2p, dim N>
-D uint8[[N]] operator * (D uint8[[N]] arr, uint8[[N]] pubArr) {
+template <domain D : shared2p>
+D uint8[[1]] operator * (D uint8[[1]] arr, uint8[[1]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
     __syscall ("shared2p::mulc_uint8_vec", __domainid (D),
         arr, __cref pubArr, arr);
@@ -939,69 +900,6 @@ D int[[N]] operator * (D int[[N]] arr, int[[N]] pubArr) {
     return arr;
 }
 
-template <domain D : shared2p>
-D float32 operator * (D float32 a, float32 b) {
-    __syscall ("shared2p::mulc_float32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared2p>
-D float32[[1]] operator * (D float32[[1]] a, float32[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared2p::mulc_float32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-
-template <domain D : shared2p, dim N>
-D float32[[N]] operator * (D float32[[N]] arr, float32 pubScalar) {
-    float32[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared2p::mulc_float32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared2p, dim N>
-D float32[[N]] operator * (D float32[[N]] arr, float32[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared2p::mulc_float32_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared2p>
-D float64 operator * (D float64 a, float64 b) {
-    __syscall ("shared2p::mulc_float64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared2p>
-D float64[[1]] operator * (D float64[[1]] a, float64[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared2p::mulc_float64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared2p, dim N>
-D float64[[N]] operator * (D float64[[N]] arr, float64 pubScalar) {
-    float64[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared2p::mulc_float64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared2p, dim N>
-D float64[[N]] operator * (D float64[[N]] arr, float64[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared2p::mulc_float64_vec", __domainid (D),
-        arr, __cref pubArr, arr);
-    return arr;
-}
-
 
 /*******************************
     divc
@@ -1131,68 +1029,6 @@ D uint[[N]] operator / (D uint[[N]] arr, uint[[N]] pubArr) {
     assert(shapesAreEqual(arr,pubArr));
     __syscall ("shared2p::divc_uint64_vec", __domainid (D),
         arr, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared2p>
-D float32 operator / (D float32 a, float32 b) {
-    __syscall ("shared2p::divc_float32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared2p>
-D float32[[1]] operator / (D float32[[1]] a, float32[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared2p::divc_float32_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared2p, dim N>
-D float32[[N]] operator / (D float32[[N]] arr, float32 pubScalar) {
-    float32[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared2p::divc_float32_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared2p, dim N>
-D float32[[N]] operator / (D float32[[N]] arr, float32[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared2p::divc_float32_vec", __domainid (D),
-        a, __cref pubArr, arr);
-    return arr;
-}
-
-template <domain D : shared2p>
-D float64 operator / (D float64 a, float64 b) {
-    __syscall ("shared2p::divc_float64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared2p>
-D float64[[1]] operator / (D float64[[1]] a, float64[[1]] b) {
-    assert(size(a) == size(b));
-    __syscall ("shared2p::divc_float64_vec", __domainid (D),
-        a, __cref b, a);
-    return a;
-}
-
-template <domain D : shared2p, dim N>
-D float64[[N]] operator / (D float64[[N]] arr, float64 pubScalar) {
-    float64[[1]] pubVec (size(arr)) = pubScalar;
-    __syscall ("shared2p::divc_float64_vec", __domainid (D),
-        arr, __cref pubVec, arr);
-    return arr;
-}
-
-template <domain D : shared2p, dim N>
-D float64[[N]] operator / (D float64[[N]] arr, float64[[N]] pubArr) {
-    assert(shapesAreEqual(arr,pubArr));
-    __syscall ("shared2p::divc_float64_vec", __domainid (D),
-        a, __cref pubArr, arr);
     return arr;
 }
 
@@ -1333,194 +1169,6 @@ D uint[[N]] operator % (D uint[[N]] arr, uint[[N]] pubArr) {
 */
 
 
-/*****************************************************
-    inv, sqrt, sin, ln, exp, erf, isNegligible
-*****************************************************/
-
-/** \addtogroup shared2p_inv
- *  @{
- *  @brief Function for inversing a value
- *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns the inversed values of the input array
- */
-
-template <domain D : shared2p, dim N>
-D float32[[N]] inv (D float32[[N]] x) {
-    __syscall ("shared2p::inv_float32_vec", __domainid (D), x, x);
-    return x;
-}
-
-template <domain D : shared2p, dim N>
-D float64[[N]] inv (D float64[[N]] x) {
-    __syscall ("shared2p::inv_float64_vec", __domainid (D), x, x);
-    return x;
-}
-
-/** @}*/
-/** \addtogroup shared2p_sqrt
- *  @{
- *  @brief Function for finding the square root of a value
- *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns the square roots of the input array
- */
-
-template <domain D : shared2p, dim N>
-D float32[[N]] sqrt (D float32[[N]] x) {
-    __syscall ("shared2p::sqrt_float32_vec", __domainid (D), x, x);
-    return x;
-}
-
-template <domain D : shared2p, dim N>
-D float64[[N]] sqrt (D float64[[N]] x) {
-    __syscall ("shared2p::sqrt_float64_vec", __domainid (D), x, x);
-    return x;
-}
-
-/** @}*/
-/** \addtogroup shared2p_sin
- *  @{
- *  @brief Function for finding the sine of a value
- *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns the sines of the input array
- */
-
-template <domain D : shared2p, dim N>
-D float32[[N]] sin (D float32[[N]] x) {
-    __syscall ("shared2p::sin_float32_vec", __domainid (D), x, x);
-    return x;
-}
-
-template <domain D : shared2p, dim N>
-D float64[[N]] sin (D float64[[N]] x) {
-    __syscall ("shared2p::sin_float64_vec", __domainid (D), x, x);
-    return x;
-}
-
-/** @}*/
-/** \addtogroup shared2p_ln
- *  @{
- *  @brief Function for finding the natural logarithm of a value
- *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns the natural logarithms of the input array
- */
-
-template <domain D : shared2p, dim N>
-D float32[[N]] ln (D float32[[N]] x) {
-    __syscall ("shared2p::ln_float32_vec", __domainid (D), x, x);
-    return x;
-}
-
-template <domain D : shared2p, dim N>
-D float64[[N]] ln (D float64[[N]] x) {
-    __syscall ("shared2p::ln_float64_vec", __domainid (D), x, x);
-    return x;
-}
-
-/** @}*/
-/** \addtogroup shared2p_exp
- *  @{
- *  @brief Function for finding exp(x)
- *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns the exponents of the input array
- */
-
-template <domain D : shared2p, dim N>
-D float32[[N]] exp (D float32[[N]] x) {
-    __syscall ("shared2p::exp_float32_vec", __domainid (D), x, x);
-    return x;
-}
-
-template <domain D : shared2p, dim N>
-D float64[[N]] exp (D float64[[N]] x) {
-    __syscall ("shared2p::exp_float64_vec", __domainid (D), x, x);
-    return x;
-}
-
-/** @}*/
-/** \addtogroup shared2p_erf
- *  @{
- *  @brief Function for finding the value of error function
- *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns the error functions of the input array
- */
-
-template <domain D : shared2p, dim N>
-D float32[[N]] erf (D float32[[N]] x) {
-    __syscall ("shared2p::erf_float32_vec", __domainid (D), x, x);
-    return x;
-}
-
-template <domain D : shared2p, dim N>
-D float64[[N]] erf (D float64[[N]] x) {
-    __syscall ("shared2p::erf_float64_vec", __domainid (D), x, x);
-    return x;
-}
-
-/** @}*/
-/** \addtogroup shared2p_isnegligible
- *  @{
- *  @brief Function for finding if the error is small enough to neglect
- *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns **true** if the error is small enough to neglect
- *  @return returns **false** if the error is not small enough
- *  @note isNegligible checks up to the 5th place after the comma
- *  @note this does not quite match public isNegligible
- */
-
-/**
-* @param a - a scalar of supported type
-* @return returns **true** if the error is small enough to neglect
-* @return returns **false** if the error is not small enough
-*/
-template <domain D : shared2p>
-D bool isNegligible (D float32 a) {
-    D bool out;
-    __syscall ("shared2p::isnegligible_float32_vec", __domainid (D), a, out);
-    return out;
-}
-
-/**
-* @param a - a scalar of supported type
-* @return returns **true** if the error is small enough to neglect
-* @return returns **false** if the error is not small enough
-*/
-template <domain D : shared2p>
-D bool isNegligible (D float64 a) {
-    D bool out;
-    __syscall ("shared2p::isnegligible_float64_vec", __domainid (D), a, out);
-    return out;
-}
-
-/**
-* @param a - a vector of supported type
-* @return returns a vector where each element of the input vector has been evaluated, whether the error is small enough to neglect or not
-*/
-template <domain D : shared2p>
-D bool[[1]] isNegligible (D float32[[1]] a) {
-    D bool[[1]] out (size (a));
-    __syscall ("shared2p::isnegligible_float32_vec", __domainid (D), a, out);
-    return out;
-}
-
-/**
-* @param a - a vector of supported type
-* @return returns a vector where each element of the input vector has been evaluated, whether the error is small enough to neglect or not
-*/
-template <domain D : shared2p>
-D bool[[1]] isNegligible (D float64[[1]] a) {
-    D bool[[1]] out (size (a));
-    __syscall ("shared2p::isnegligible_float64_vec", __domainid (D), a, out);
-    return out;
-}
-/** @}*/
-
 /*******************************
     Min, max
 ********************************/
@@ -1609,20 +1257,6 @@ D int min (D int[[1]] x) {
     __syscall ("shared2p::vecmin_uint64_vec", __domainid (D), in, out);
     out -= 9223372036854775808;
     return (int)out;
-}
-template<domain D : shared2p>
-D float32 min (D float32[[1]] x) {
-    assert (size (x) > 0);
-    D float32 out;
-    __syscall ("shared2p::vecmin_float32_vec", __domainid (D), x, out);
-    return out;
-}
-template<domain D : shared2p>
-D float64 min (D float64[[1]] x) {
-    assert (size (x) > 0);
-    D float64 out;
-    __syscall ("shared2p::vecmin_float64_vec", __domainid (D), x, out);
-    return out;
 }
 
 /** @}*/
@@ -1727,7 +1361,7 @@ D int[[1]] min (D int[[1]] x, uint k) {
  *  @{
  *  @brief Function for finding the pointwise minimum of 2 arrays
  *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @returns an array with the pointwise minimum of each element in the two input vectors
  *  @pre both input vectors are of equal length
  */
@@ -1783,16 +1417,6 @@ D int min (D int x, D int y) {
     __syscall ("shared2p::min_uint64_vec", __domainid (D), in1, in2, in1);
     in1 -= 9223372036854775808;
     return (int)in1;
-}
-template <domain D : shared2p>
-D float32 min (D float32 x, D float32 y) {
-    __syscall ("shared2p:min_float32_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared2p>
-D float64 min (D float64 x, D float64 y) {
-    __syscall ("shared2p:min_float64_vec", __domainid (D), x, y, x);
-    return x;
 }
 
 template <domain D : shared2p>
@@ -1855,19 +1479,6 @@ D int[[1]] min (D int[[1]] x, D int[[1]] y) {
     in1 -= 9223372036854775808;
     return (int)in1;
 }
-template<domain D : shared2p>
-D float32[[1]] min(D float32[[1]] x, D float32[[1]] y) {
-    assert(size(x) == size(y));
-    __syscall ("shared2p::min_float32_vec", __domainid (D), x, y, x);
-    return x;
-}
-
-template<domain D : shared2p>
-D float64[[1]] min(D float64[[1]] x, D float64[[1]] y) {
-    assert(size(x) == size(y));
-    __syscall ("shared2p::min_float64_vec", __domainid (D), x, y, x);
-    return x;
-}
 
 template <domain D : shared2p, dim N>
 D uint8[[N]] min (D uint8[[N]] x, D uint8[[N]] y) {
@@ -1928,18 +1539,6 @@ D int[[N]] min (D int[[N]] x, D int[[N]] y) {
     __syscall ("shared2p::min_uint64_vec", __domainid (D), in1, in2, in1);
     in1 -= 9223372036854775808;
     return (int)in1;
-}
-template<domain D : shared2p, dim N>
-D float32[[N]] min(D float32[[N]] x, D float32[[N]] y) {
-    assert(size(x) == size(y));
-    __syscall ("shared2p::min_float32_vec", __domainid (D), x, y, x);
-    return x;
-}
-template<domain D : shared2p, dim N>
-D float64[[N]] min(D float64[[N]] x, D float64[[N]] y) {
-    assert(size(x) == size(y));
-    __syscall ("shared2p::min_float64_vec", __domainid (D), x, y, x);
-    return x;
 }
 
 /** @}*/
@@ -2030,20 +1629,6 @@ D int max (D int[[1]] x) {
     __syscall ("shared2p::vecmax_uint64_vec", __domainid (D), in, out);
     out -= 9223372036854775808;
     return (int)out;
-}
-template<domain D : shared2p>
-D float32 max(D float32[[1]] x) {
-    assert (size (x) > 0);
-    D float32 out;
-    __syscall ("shared2p::vecmax_float32_vec", __domainid (D), x, out);
-    return out;
-}
-template<domain D : shared2p>
-D float64 max(D float64[[1]] x) {
-    assert (size (x) > 0);
-    D float64 out;
-    __syscall ("shared2p::vecmax_float64_vec", __domainid (D), x, out);
-    return out;
 }
 
 /** @}*/
@@ -2149,7 +1734,7 @@ D int[[1]] max (D int[[1]] x, uint k) {
  *  @{
  *  @brief Function for finding the pointwise maximum of 2 arrays
  *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @returns an array with the pointwise maximum of each element in the two input vectors
  *  @pre both input vectors are of equal length
  */
@@ -2205,16 +1790,6 @@ D int max (D int x, D int y) {
     __syscall ("shared2p::max_uint64_vec", __domainid (D), in1, in2, in1);
     in1 -= 9223372036854775808;
     return (int)in1;
-}
-template <domain D : shared2p>
-D float32 max (D float32 x, D float32 y) {
-    __syscall ("shared2p::max_float32_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared2p>
-D float64 max (D float64 x, D float64 y) {
-    __syscall ("shared2p::max_float64_vec", __domainid (D), x, y, x);
-    return x;
 }
 
 template <domain D : shared2p>
@@ -2277,18 +1852,6 @@ D int[[1]] max (D int[[1]] x, D int[[1]] y) {
     in1 -= 9223372036854775808;
     return (int)in1;
 }
-template <domain D : shared2p>
-D float32[[1]] max (D float32[[1]] x, D float32[[1]] y) {
-    assert (size (x) == size (y));
-    __syscall ("shared2p::max_float32_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared2p>
-D float64[[1]] max (D float64[[1]] x, D float64[[1]] y) {
-    assert (size (x) == size (y));
-    __syscall ("shared2p::max_float64_vec", __domainid (D), x, y, x);
-    return x;
-}
 
 template <domain D : shared2p, dim N>
 D uint8[[N]] max (D uint8[[N]] x, D uint8[[N]] y) {
@@ -2350,107 +1913,10 @@ D int[[N]] max (D int[[N]] x, D int[[N]] y) {
     in1 -= 9223372036854775808;
     return (int)in1;
 }
-template <domain D : shared2p, dim N>
-D float32[[N]] max (D float32[[N]] x, D float32[[N]] y) {
-    assert (size (x) == size (y));
-    __syscall ("shared2p::max_float32_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared2p, dim N>
-D float64[[N]] max (D float64[[N]] x, D float64[[N]] y) {
-    assert (size (x) == size (y));
-    __syscall ("shared2p::max_float64_vec", __domainid (D), x, y, x);
-    return x;
-}
 
 /** @}*/
 /** @}*/
-/** \addtogroup shared2p_floor
- *  @{
- *  @brief Functions for rounding a value downwards
- *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref float32 "float32" \ref float64 "float64"
- *  @return returns the downwards rounded value of the input scalar/vector
- */
 
-/**
-* @param value - input scalar of supported type
-*/
-template <domain D : shared2p>
-D float32 floor (D float32 value) {
-    D float32 out;
-    __syscall("shared2p::floor_float32_vec", __domainid( D ), value, out);
-    return out;
-}
-
-template <domain D : shared2p>
-D float64 floor (D float64 value) {
-    D float64 out;
-    __syscall("shared2p::floor_float64_vec", __domainid( D ), value, out);
-    return out;
-}
-
-/**
-* @param arr - input vector of supported type
-*/
-template <domain D : shared2p>
-D float32[[1]] floor (D float32[[1]] arr) {
-    D float32[[1]] out (size (arr));
-    __syscall("shared2p::floor_float32_vec", __domainid( D ), arr, out);
-    return out;
-}
-
-template <domain D : shared2p>
-D float64[[1]] floor (D float64[[1]] arr) {
-    D float64[[1]] out (size (arr));
-    __syscall("shared2p::floor_float64_vec", __domainid( D ), arr, out);
-    return out;
-}
-
-/** @}*/
-/** \addtogroup shared2p_ceiling
- *  @{
- *  @brief Functions for rounding a value upwards
- *  @note **D** - shared2p protection domain
- *  @note Supported types - \ref float32 "float32" \ref float64 "float64"
- *  @return returns the upwards rounded value of the input scalar/vector
- */
-
-/**
-* @param value - input scalar of supported type
-*/
-template <domain D : shared2p>
-D float32 ceiling (D float32 value) {
-    D float32 out;
-    __syscall("shared2p::ceiling_float32_vec", __domainid( D ), value, out);
-    return out;
-}
-
-template <domain D : shared2p>
-D float64 ceiling (D float64 value) {
-    D float64 out;
-    __syscall("shared2p::ceiling_float64_vec", __domainid( D ), value, out);
-    return out;
-}
-
-/**
-* @param arr - input vector of supported type
-*/
-template <domain D : shared2p>
-D float32[[1]] ceiling (D float32[[1]] arr) {
-    D float32[[1]] out (size (arr));
-    __syscall("shared2p::ceiling_float32_vec", __domainid( D ), arr, out);
-    return out;
-}
-
-template <domain D : shared2p>
-D float64[[1]] ceiling (D float64[[1]] arr) {
-    D float64[[1]] out (size (arr));
-    __syscall("shared2p::ceiling_float64_vec", __domainid( D ), arr, out);
-    return out;
-}
-
-/** @}*/
 /** \addtogroup shared2p_argument
  *  @{
  *  @brief Function for accessing the named program arguments of shared2p types.
