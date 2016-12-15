@@ -18,7 +18,7 @@
  */
 
 /**
-@page functions Functions
+@page functions_doc Functions
 @brief Functions in SecreC
 
 @section functions Functions
