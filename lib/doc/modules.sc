@@ -25,7 +25,7 @@
 
 SecreC supports very simple module system. A module name can be declared with **module** keyword, and module can be imported using a **import** keyword. Filename of the module must match with the modules name. Imported modules are searched within paths specified to the compiler. Importing a module will make all of the global symbols defined within the imported module visible. Modules can not be separately compiled and linked, they simply offer a way to break code into components.
 
-Listing 6.33: Module syntax
+Listing 1: Module syntax
 \code
 module shared3p;
 import common;

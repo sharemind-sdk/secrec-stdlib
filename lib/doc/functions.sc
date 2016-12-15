@@ -26,7 +26,7 @@
 The function (also referred to as a procedure) header specifies the return type, name, types and names of the formal parameters, and body consisting of a list of statements. The same naming rules that applied to variable names apply to function identifiers. All functions have to be defined before they can be called, or in other words, a body of a function can only make calls to itself and to previously defined functions. Procedures have a global scope, and it is not possible to define nested functions. Every SecreC program has to define a special function called “main” with return type void taking no parameters. This function is called when the program execution starts. 
 Arguments to a function call are always evaluated from left to right and are passed by value.
 
-Listing 6.28: Parameter passing
+Listing 1: Parameter passing
 \code
 void do_nothing (int x, int y) {}
 void change (int x) { x = 42; }
@@ -48,7 +48,7 @@ The execution of a function can be stopped and values can be returned using a re
 
 Declared function can be overloaded by the number of parameters, parameter types, or even by return type. For example, it is possible to define a functions with the same name for summing values of arrays of different dimensionalities.
 
-Listing 6.29: Summing values
+Listing 2: Summing values
 \code
 	int sum (int [[1]] arr) { ... }
 	int sum (int [[2]] arr) { ... }

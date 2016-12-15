@@ -36,9 +36,9 @@ multiplication, (d) / for division, (e) % for modulo, and (f) - for numeric unar
  Arithmetic operators can be called on mixed security typed parameters. The resulting security type
 is always the stricter of parameters, and the value with the looser security type is implicitly classified. If operator is called on mixed security typed parameters a type error is raised. Calling binary operators on
 expressions of mixed data types is forbidden, and requires explicit data type cast. The types of arithmetic
-operators are informally described in Table 2.
+operators are informally described in Table 1.
 
-Table 2: Public scalar operator types
+Table 1: Public scalar operator types
 
 | Operator          | Return        | Parameters           |
 | :---------------- | :------------ | :------------------- |
@@ -62,7 +62,7 @@ into public space. To avoid leaking information in such manner the logical expre
 SecreC does not support implicit type casts, but does support explicit C-style data-type conversion. To perform a type cast a parenthesised data-type is written before an expression. Non-zero integer typed values cast to **true** boolean type, and zero values casts to **false**. Conversely, booleans cast to 1 in case
 of **true** and 0 in case of **false**. Non-public data type conversions are allowed.
 
-Listing 6.7: Data type conversion
+Listing 1: Data type conversion
 \code
 	int i = 0;
 	bool b = true;
@@ -74,7 +74,7 @@ Listing 6.7: Data type conversion
 Due to lack of implicit type casts, and support for function overloading by return type it’s sometimes required to specify a type of an expression explicitly. For example, if a procedure is over-loaded by multiple different return types, an explicit type annotation is required to disambiguate the function call.
 To annotate an expression with a type, the type is written after double colon following the expression. If the type annotation expression type checks, then it evaluates to given type.
 
-Listing 6.8: Type annotations
+Listing 2: Type annotations
 \code
 	int g (int x, int y) { ... }
 	sharemind_test_pd int g (int x, int y) { ... }
@@ -88,7 +88,7 @@ Listing 6.8: Type annotations
 
 The ternary expressions take three arguments the first of which is a boolean value. If the first argument evaluates to **true** then the value of the second branch is returned. Otherwise, if the first argument evaluates to **false** , the value of the third branch is returned.
 
-Listing 6.9: Use of ternary operator
+Listing 3: Use of ternary operator
 \code
 	int i = 1;
 	int x = i < 1 ? 0 : 42;
@@ -109,7 +109,7 @@ arrays, even the shape of the left hand side is overwritten. The assignment oper
 variable. For example, to increment a variable i by two we can write i += 2 or, similarly, i -= 1 to decrement it by one. If the right hand side of any assignment expression is public, but the left hand side
 is non-public then the public data is first implicitly classified before the assignment is performed.
 
-Listing 6.10: Assignment operators
+Listing 4: Assignment operators
 \code
 	public int i;
 	private int secret ;
@@ -123,7 +123,7 @@ Listing 6.10: Assignment operators
 
 SecreC supports both prefix and postfix increment and decrement operators. We write ++ i or i ++ to increment a variable i by one. The difference between the two methods is that the prefix increment first increments the value and then returns it, while the postfix increment first returns a copy of the value of the variable and then increments it. The same holds for the decrement operator.
 
-Listing 6.11: Increment and decrement operators
+Listing 5: Increment and decrement operators
 \code
 	int i = 5;
 	int j;
@@ -136,7 +136,7 @@ Listing 6.11: Increment and decrement operators
 
 The only way to move private data into a public memory space is via the **declassify** operator. The declassify construct takes a private argument with any kind of data type and returns the value with the same data type in public security domain. In order to forbid expressions such as **declassify**(**declassify**(x)), the arguments of declassify are not implicitly classified.
 
-Listing 6.12: Declassify example
+Listing 6: Declassify example
 \code
 	private int val;
 	// read the val from database

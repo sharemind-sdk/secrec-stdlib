@@ -27,7 +27,7 @@ SecreC supports basic data structures currently intended to be used for returnin
 
 For example, to two-dimensional integer elements can be implemented as a structure with two integer fields x and y.
 
-Listing 6.34: Example of a data structure definition
+Listing 1: Example of a data structure definition
 \code
     struct elem2d {
         int x;
@@ -41,7 +41,7 @@ Listing 6.34: Example of a data structure definition
 
 The language also supports polymorphic structures. A structure may have various type-level parameters that all need to be specified whenever a structure with that name is used. The previous structure can be declared type-polymorphically in which case, when defining data of that type, the type parameter has to be specified as well.
 
-Listing 6.35: Example of a type-polymorhic data structure
+Listing 2: Example of a type-polymorhic data structure
 \code
     template <type T>
     struct elem2d {
@@ -56,7 +56,7 @@ Listing 6.35: Example of a type-polymorhic data structure
 
 Structures may also be polymorphic over protection domains.
 
-Listing 6.36: Example of a domain-polymorphic data structure
+Listing 3: Example of a domain-polymorphic data structure
 \code
     template <domain D, type T>
     struct elem2d {

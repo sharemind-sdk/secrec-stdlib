@@ -26,7 +26,7 @@
 
 When defining a protection domain kind we must also define operators if we wish to compute with private values from that kind. Operator definitions are almost like normal function definitions with a special name. For example, we can use a template function with a template domain argument to write a definition for all domains of the same kind. The following is an example of the multiplication operator.
 
-Listing 1
+Listing 1: Multiplication operator definition example
 
     template <domain D : shared3p>
     D uint64[[1]] operator * (D uint64[[1]] x, D uint64[[1]] y) {
@@ -37,7 +37,7 @@ Listing 1
 
 The compiler can implicitly reshape matrices and scalars into vectors and use a definition with vector arguments. It can also classify one of the arguments if it is public. Thus only a definition with two private vector arguments is required. It is possible to overload a definition. That is, write a definition for some specific combination of argument types. For example, when the second argument is public, we can write the following definition.
 
-Listing 2
+Listing 2: Example of a definition with a public argument
 
     template <domain D : shared3p>
     D uint64[[1]] operator * (D uint64[[1]] x, uint64[[1]] y) {
@@ -51,7 +51,7 @@ Note that it is not possible to add new operators. Only built-in operators can a
 
 We must also define type conversions (cast operators) similarly. An example follows.
 
-Listing 3
+Listing 3: Example of a cast definition
 
     template <domain D : shared3p>
     D bool[[1]] cast (D uint64[[1]] x) {

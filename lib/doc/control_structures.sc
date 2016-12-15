@@ -31,7 +31,7 @@ Most statements in SecreC are separated by a semicolon, and after normal executi
 The if-construct is the simplest of the control flow-modifying statements and executes a statement if the conditional expression evaluates to **true** . To avoid information leakage from the control flow, the conditional expression is forced to have a public boolean type. Multiple statements can be conditionally
 evaluated with one if statement by combining them into single block.
 
-Listing 6.22: if statements
+Listing 1: if statements
 \code
 	//general form of if statement :
 
@@ -54,7 +54,7 @@ The if statement may be followed by the **else** keyword and another statement w
 The while statement is the simplest way of looping in SecreC. The body of a while statement is executed repeatedly as long as the condition is met. The conditional expression is evaluated and checked every time before evaluating the statement. For example, if the expression evaluates to false immediately,
 the statement is not executed at all.
 
-Listing 6.23: Loop through numbers from 1 to 10
+Listing 2: Loop through numbers from 1 to 10
 \code
 	int i = 1;
 	while (i <= 10) {
@@ -67,7 +67,7 @@ Listing 6.23: Loop through numbers from 1 to 10
 The do-while construct is very similar to while. The only difference besides syntax is that the condition is checked every time after the execution of the statement instead of before. This means that the
 statement is evaluated at least once.
 
-Listing 6.24: Loop through numbers from 1 to 10
+Listing 3: Loop through numbers from 1 to 10
 \code
 	int i = 1;
 	do {
@@ -79,7 +79,7 @@ Listing 6.24: Loop through numbers from 1 to 10
 
 The for statement allows the programmer to specify an initialization expression (or declaration), a conditional expression and a step expression. Initialization is performed before looping is started, the statement is only executed if conditional is **true** and looping is stopped otherwise. The step expression is executed each time after the statement body.
 
-Listing 6.25: Loop through numbers from 1 to 10
+Listing 4: Loop through numbers from 1 to 10
 \code
 	for (int i = 1; i <= 10; ++ i) {
 		// this is the body of the statement
@@ -92,7 +92,7 @@ Every component of the for construct, other than the body, may be omitted. If th
 
 The break statement ends the execution of current while, do-while or for loops.
 
-Listing 6.26: Loop through numbers from 1 to 10
+Listing 5: Loop through numbers from 1 to 10
 \code
 	int i = 1;
 	while (true) {
@@ -114,7 +114,7 @@ The return statement (further discussed in the section about functions) breaks t
 
 The language supports statement for asserting a public boolean condition. The assert statement is purely for asserting properties that are supposed to hold, but are not immediately obvious. This offers some primitive safety guarantees and eases debugging by failing the program as early as possible in case of incorrect behaviour. If assertion fails the execution of the program is halted.
 
-Listing 6.27: Assert statement
+Listing 6: Assert statement
 \code
 int f () { ... }
 

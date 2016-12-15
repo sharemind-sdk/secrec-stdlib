@@ -32,7 +32,7 @@ less. Like in Fortran arrays in SecreC are always stored as a contiguous block o
 
  There are two ways to assign arrays. If the left hand side is a variable then its data and shape are rewritten with that of the right hand side expression. This allows the developer to change the size of an array dynamically. A static check is performed to guarantee that dimensionalities of both sides match. If a scalar is assigned to an array, the assignment is performed point-wise.
 
-Listing 6.13: Examples of array assignments
+Listing 1: Examples of array assignments
 \code
 	int [[1]] full; // empty right now
 	int [[1]] arr (10);
@@ -44,7 +44,7 @@ Listing 6.13: Examples of array assignments
 
 Arithmetic, logical and relational operations all operate point-wise on arrays. Additionally, where context allows, scalar values are converted into properly sized arrays implicitly. For example scalars at right hand side of array assignment expressions are converted to constant arrays, and all arithmetic, relational and boolean operators convert scalars to arrays implicitly.
 
-Listing 6.14: Array expressions
+Listing 2: Array expressions
 \code
 	int [[1]] a (10);
 	int [[1]] b (10);
@@ -63,7 +63,7 @@ are performed to guarantee that indices are within array bounds. Indexing of var
 Let us first consider the case of indexing a single dimensional array. Indexing with a public integer returns a value in the array at that position, if it is within the bounds. Run-time error is raised otherwise.
 Like in C, indices always start at zero.
 
-Listing 6.15: Indexing
+Listing 3: Indexing
 \code
 	int [[1]] arr (5) = 1;
 	int val = arr [0]; // val == 1
@@ -75,7 +75,7 @@ falling between the bounds denoted by that slice. A dynamic check is performed t
 Another way of using slice indexing is in the left hand side of an assignment in which case the region specified by indices is overwritten by the value of the right-hand-side. The assignment is only performed if the shapes of both sides match (an error is raised otherwise). The assignment of a scalar value has the
 expected point-wise behavior.
 
-Listing 6.16: Indexing with slices
+Listing 4: Indexing with slices
 \code
 	int [[1]] arr (5);
 	arr [1:4] = 1;
@@ -97,7 +97,7 @@ of any type. Computing the size of an array takes—in the worst case— a linea
 in the number of dimensions. If invoked on scalars the size expression always evaluates to 1, and the
 subexpression will be evaluated.
 
-Listing 6.17: Size expression
+Listing 5: Size expression
 \code
 	int [[3]] arr (2, 3, 5);
 	// size (arr) == 2*3*5
@@ -113,7 +113,7 @@ Returns the sizes of dimensions of the argument array as a public integer vector
 is not restricted in any way. If called on scalar value, an empty array is returned. The subexpression is
 always evaluated, even if the value of it is not required.
 
-Listing 6.18: Shape expression
+Listing 6: Shape expression
 \code
 	int [[3]] arr (2, 3, 5);
 	int [[1]] s = shape (arr ); // == [2, 3, 5]
@@ -128,7 +128,7 @@ last argument has to be a public integer literal. The argument arrays must have 
 same data type. The last argument has to be between zero and the number of dimensions of arguments.
 The last argument may be omitted in which case it is implicitly assumed to be zero.
 
-Listing 6.19: Concatenation of arrays
+Listing 7: Concatenation of arrays
 \code
 	int [[1]] a (5) = 0;
 	int [[1]] b (5) = 1;
@@ -150,7 +150,7 @@ that the number of elements in the old and new arrays are equal. The returned ar
 and the security type of the original array. A common idiom is to combine the use of reshape and size
 for flattening multi-dimensional arrays into a vector form.
 
-Listing 6.20: Array flattening
+Listing 8: Array flattening
 \code
 	int [[2]] mat (5, 5);
 	int [[1]] arr = reshape (mat , size (mat ));
@@ -161,7 +161,7 @@ It is possible to use reshape to create a temporary constant array from a scalar
 This supplies a convenient tool for changing both the size and value of an already created array, or for
 constructing temporary constant arrays of given size.
 
-Listing 6.21: Temporary constant array
+Listing 9: Temporary constant array
 \code
 	int [[1]] arr (100);
 	// some computation on arr

@@ -27,7 +27,7 @@ SecreC supports a basic file-based table database system intended for storing an
 
 Before creating a table a connection must be opened to the data source with the function \link table_database::tdbOpenConnection tdbOpenConnection\endlink. The name of the data source is set in Sharemind's configuration. Before opening a new connection to a different data source make sure the old connection has been closed with \link table_database::tdbCloseConnection tdbCloseConnection\endlink. A simple table with a uniform data type can be created with the function \link shared3p_table_database::tdbTableCreate tdbTableCreate\endlink. 
 
-Listing 6.37: Creating an empty table
+Listing 1: Creating an empty table
 
 \code
 	//creating an empty table with 3 columns of type int32 and protection domain shared3p
@@ -62,7 +62,7 @@ Values added to the vmap can be either fixed lenght or variable length. Variable
 
 When creating a table instead of specifing a data type and the number of columns a vmap can be used. The vmap must contain a type and string for every column with the parameters "types" and "names" respectively. Data can be inserted to the table with tdbInsertRow but instead of a vector a vmap can be used. The vmap must have values with the parameter "values" that are the same type as their respective column in the table. Every batch in the vmap corresponds to a single row in the table. 
 
-Listing 6.38: Creating a table with a vector map
+Listing 2: Creating a table with a vector map
 
 \code
 	import shared3p;

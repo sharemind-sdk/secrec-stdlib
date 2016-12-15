@@ -32,7 +32,7 @@ scalar.
 Privacy types in SecreC are classified into public, and non-public security domains. Public types can be optionally annotated with keyword **public**, and non-public types are annotated with a privacy domain. Security domains are declared in global scope using a keyword **domain**. Every privacy domain belongs
 to some privacy domain kind. The distinction between privacy domains, and privacy kinds is necessary because it’s possible to have data in different privacy domains of the same kind. Security domain kinds are defined in global scope using the **kind** keyword. A kind definition gives a name to the kind and lists the data types supported by the kind. A data type definition has a name and an optional corresponding public type for expressions where public values are implicitly classified such as adding a private and a public value. For types with a name matching a public data type, the corresponding public type must be the matching type. The public type argument can be omitted for built in data types. In that case the public type with the same name will be the corresponding public type. Most users should not need to define a kind as this is provided by the implementer of the protocol set. The following is an example definition of a kind with the data types **bool**, **uint64** and **xor_uint64** (non-standard type):
 
-Listing 6.2: Kind definition
+Listing 1: Kind definition
 
     kind shared3p {
         type bool; // public type will be bool
@@ -43,7 +43,7 @@ Listing 6.2: Kind definition
  To declare a privacy domain kind, and two domains that belong to that kind we could write the
 following in the global scope:
 
-Listing 6.3: Different protection domains of the same kind
+Listing 2: Different protection domains of the same kind
 
 	domain sharemind_test_pd shared3p;
 	domain my_pd shared3p;
