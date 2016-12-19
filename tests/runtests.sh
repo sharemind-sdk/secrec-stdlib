@@ -155,7 +155,7 @@ run_gdb() {
     local TEST_NAME="$2"
     local PIDFILE=`mktemp --tmpdir sharemind_stlib_runtests.$$.XXXXXXXXXX.pid`
     add_on_exit "rm -f ${PIDFILE}"
-    add_on_sigterm "test -f ${PIDFILE} && kill -SIGTERM \$(cat ${PIDFILE})"
+    add_on_sigterm "test -f ${PIDFILE} && kill -SIGTERM \$(cat ${PIDFILE}) && sleep 5"
     (
         cd "`dirname ${TEST_RUNNER}`" &&
         (
