@@ -615,7 +615,7 @@ D bool all (D bool[[1]] vec) {
     uint n = size (vec);
     D bool result = true;
     for (uint i = 0; i<n; ++i) {
-        result = result && vec[i];
+        result = result & vec[i];
     }
     return result;
 }
