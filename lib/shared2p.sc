@@ -57,13 +57,6 @@ kind shared2p {
 * \defgroup shared2p_any any
 * \defgroup shared2p_all all
 * \defgroup shared2p_trueprefixlength truePrefixLength
-* \defgroup shared2p_inv inv
-* \defgroup shared2p_sqrt sqrt
-* \defgroup shared2p_sin sin
-* \defgroup shared2p_ln ln
-* \defgroup shared2p_exp exp
-* \defgroup shared2p_erf erf
-* \defgroup shared2p_isnegligible isNegligible
 * \defgroup shared2p_min min
 * \defgroup shared2p_min_vec min
 * \defgroup shared2p_min_k min(parts)
@@ -72,8 +65,6 @@ kind shared2p {
 * \defgroup shared2p_max_vec max
 * \defgroup shared2p_max_k max(parts)
 * \defgroup shared2p_max_2 max(2 vectors)
-* \defgroup shared2p_floor floor
-* \defgroup shared2p_ceiling ceiling
 * \defgroup shared2p_argument argument
 * \defgroup shared2p_publish publish
 * \defgroup shared2p_bit_extract bit extraction
