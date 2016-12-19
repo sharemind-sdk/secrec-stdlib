@@ -74,17 +74,33 @@ HAVE_GDB="$?"
 # http://www.linuxjournal.com/content/use-bash-trap-statement-cleanup-temporary-files
 declare -a ON_EXIT_ITEMS
 
-function on_exit() {
+on_exit() {
     for ITEM in "${ON_EXIT_ITEMS[@]}"; do
         eval "${ITEM}"
     done
 }
 
-function add_on_exit() {
+add_on_exit() {
     local N=${#ON_EXIT_ITEMS[*]}
     ON_EXIT_ITEMS["${N}"]="$*"
     if [[ "${N}" -eq 0 ]]; then
         trap on_exit EXIT
+    fi
+}
+
+declare -a ON_SIGTERM_ITEMS
+
+on_sigterm() {
+    for ITEM in "${ON_SIGTERM_ITEMS[@]}"; do
+        eval "${ITEM}"
+    done
+}
+
+add_on_sigterm() {
+    local N=${#ON_SIGTERM_ITEMS[*]}
+    ON_SIGTERM_ITEMS["${N}"]="$*"
+    if [[ "${N}" -eq 0 ]]; then
+        trap "on_sigterm; trap - SIGTERM; kill -SIGTERM $$" SIGTERM
     fi
 }
 
@@ -137,21 +153,34 @@ run() {
 run_gdb() {
     local SB_BN="$1"
     local TEST_NAME="$2"
-    (cd "`dirname ${TEST_RUNNER}`" &&
-        ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
-                gdb -return-child-result -batch -quiet \
-                    -ex 'run' \
-                    -ex 'backtrace' \
-                    -ex 'thread apply all backtrace' \
-                    -ex 'thread apply all backtrace full' \
-                    -ex 'info registers' \
-                    --args \
+    local PIDFILE=`mktemp --tmpdir sharemind_stlib_runtests.$$.XXXXXXXXXX.pid`
+    add_on_exit "rm -f ${PIDFILE}"
+    add_on_sigterm "test -f ${PIDFILE} && kill -SIGTERM \$(cat ${PIDFILE})"
+    (
+        cd "`dirname ${TEST_RUNNER}`" &&
+        (
+            (
+                (
+                    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
                         "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
-                                --logfile "${LOG_PATH}" --logmode append \
-                            | sed "s#^#${TEST_NAME}#g") \
-             3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
-             3>&1 1>&2 2>&3 3>&-
-        )
+                        --logfile "${LOG_PATH}" --logmode append &
+                    local PID="$!"
+                    echo "${PID}" > "${PIDFILE}"
+                    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
+                        gdb -return-child-result -batch -quiet \
+                        -ex "continue" \
+                        -ex "backtrace" \
+                        -ex "thread apply all backtrace" \
+                        -ex "thread apply all backtrace full" \
+                        -ex "info registers" \
+                        -ex "kill" \
+                        -ex "quit" \
+                        -p "${PID}"
+                ) | sed "s#^#${TEST_NAME}#g"
+            ) 3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g"
+        ) 3>&1 1>&2 2>&3 3>&-;
+    )
+    rm "${PIDFILE}"
 }
 
 run_test() {
