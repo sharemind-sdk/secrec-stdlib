@@ -786,16 +786,6 @@ D xor_uint64[[2]] sortingNetworkSort (D xor_uint64[[2]] matrix, uint column) {
 /**
  * \cond
  */
-template <domain D>
-D uint[[1]] iota (uint n) {
-    uint [[1]] out (n);
-
-    for (uint i = 0; i < n; ++ i)
-        out[i] = i;
-
-    return out;
-}
-
 template <domain D : shared3p, type T>
 D T[[1]] _sortingNetworkSort (D T[[1]] vector, D T[[1]] indices) {
     uint[[1]] sortnet = generateSortingNetwork(size(vector));

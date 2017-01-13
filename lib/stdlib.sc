@@ -100,6 +100,7 @@ int64 INT64_MIN = -9223372036854775808;
 * \defgroup isnegligible isNegligible
 * \defgroup substring substring
 * \defgroup isprefixof_string isPrefixOf
+* \defgroup iota iota
 */
 
 /** \addtogroup stdlib
@@ -1718,6 +1719,23 @@ bool isPrefixOf(string a, string b) {
     if (strlen(a) > strlen(b))
         return false;
     return a == substring(b, 0 :: uint, strlen(a));
+}
+/** @} */
+
+/** \addtogroup iota
+ *  @{
+ *  @brief Function for generating a vector of consecutive integers.
+ *  @param n length of the vector
+ *  @return returns a length n vector of consecutive integers.
+ */
+template <domain D>
+D uint[[1]] iota (uint n) {
+    uint [[1]] out (n);
+
+    for (uint i = 0; i < n; ++ i)
+        out[i] = i;
+
+    return out;
 }
 /** @} */
 
