@@ -54,9 +54,12 @@ import profiling;
 * \defgroup radix_sort_vector radixSort(vector)
 * \defgroup radix_sort_index radixSortWithIndex
 * \defgroup radix_sort_matrix radixSort(matrix)
+* \defgroup unsafe_sort unsafeSort
 * \defgroup quick_sort quicksort
 * \defgroup quick_sort_vector quicksort(vector)
+* \defgroup quick_sort_vector_direction quicksort(vector, direction)
 * \defgroup quick_sort_matrix quicksort(matrix)
+* \defgroup quick_sort_matrix_direction quicksort(matrix, direction)
 * \defgroup quick_quick_sort quickquicksort
 * \defgroup quick_quick_sort_vector quickquicksort(vector)
 * \defgroup quick_quick_sort_matrix quickquicksort(matrix)
@@ -2337,64 +2340,103 @@ D uint64[[2]] radixSort(D uint64[[2]] array, uint column1) {
     return result;
 }
 /** @}*/
+/** @}*/
 
 /**
-* \cond
-*/
+ * \cond
+ */
+template<domain D : shared3p, type T>
+uint[[1]] _unsafeSort(D T[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    assert(size(vec) == size(indices));
 
-template <domain D>
-D xor_uint64[[1]] _partition(D xor_uint64[[1]] array) {
-    uint32 compareSectType = newSectionType ("quicksort_comparison");
-    uint32 declassifySectType = newSectionType ("quicksort_declassify");
-    uint32 partitionSectType = newSectionType ("quicksort_partition");
+    uint[[1]] perm = iota(size(vec));
+    __syscall("shared3p::stable_sort_$T\_vec",
+              __domainid(D), vec, indices, ascending, __ref perm);
 
-    uint m = size (array);
+    return perm;
+}
+/**
+ * \endcond
+ */
 
-    uint32 partitionSect = startSection(partitionSectType, m);
-
-    uint i = -1; // This works as i is always increased before use
-
-    // Do all comparisons in parallel:
-    uint32 compareSect = startSection(compareSectType, m);
-    D xor_uint64[[1]] lastElement (m-1);
-    lastElement = array[m-1];
-    D bool[[1]] comp = (array[0:m-1] <= lastElement);
-    endSection(compareSect);
-
-    uint32 declassifySect = startSection(declassifySectType, m);
-    bool[[1]] publicComp = declassify(comp);
-    endSection(declassifySect);
-
-    for (uint j = 0; j < m - 1; j++) {
-        if (publicComp[j] == true) {
-            i = i + 1;
-            // Swap a[i] and a[j]
-            D xor_uint64 tmp = array[i];
-            array[i] = array[j];
-            array[j] = tmp;
-        }
-    }
-    uint p = i + 1;
-    // Swap a[p] and a[m]
-    D xor_uint64 tmp = array[p];
-    array[p] = array[m-1];
-    array[m-1] = tmp;
-
-    // Make result vector
-    D xor_uint64[[1]] result (m + 1);
-    result[0] = p;
-    result[1:] = array[:];
-
-    endSection(partitionSect);
-
-    return result;
+/** \addtogroup unsafe_sort
+ *  @{
+ *  @brief Function for sorting a vector if the vector has been shuffled
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param vec - input vector
+ *  @param indices - an index vector indicating which indice an
+ *  element of the shuffled vector originated from
+ *  @param ascending - a boolean indicating if the vector should be
+ *  sorted in ascending order
+ *  @return returns the sort permutation. The ith value of the
+ *  permutation is the index of the input value that is in the ith
+ *  position after sorting.
+ *  @leakage{This function uses the quicksort algorithm and
+ *  declassifies the results of comparisons. This function is only
+ *  safe if the vector has been shuffled. The number of equal elements
+ *  is leaked.}
+ */
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D xor_uint8[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
 }
 
-/**
-* \endcond
-*/
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D xor_uint16[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
 
-/** @}*/
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D xor_uint32[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
+
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D xor_uint64[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
+
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D uint8[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
+
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D uint16[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
+
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D uint32[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
+
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D uint64[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
+
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D int8[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
+
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D int16[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
+
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D int32[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
+
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D int64[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
+/** @} */
 
 /*******************************************************************************
 ********************************************************************************
@@ -2415,123 +2457,44 @@ D xor_uint64[[1]] _partition(D xor_uint64[[1]] array) {
 /**
 * \cond
 */
+template<domain D : shared3p, type T>
+D T[[1]] _quicksort(D T[[1]] vec, bool ascending) {
+    uint[[1]] idx = iota(size(vec));
+    D xor_uint64[[1]] ind = idx;
 
-template <domain D>
-D xor_uint64[[1]] _quicksort(D xor_uint64[[1]] array) {
-    uint m = size (array);
+    D uint8[[1]] k(32);
+    k = randomize(k);
+    vec = shuffle(vec, k);
+    ind = shuffle(ind, k);
 
-    if (m <= 1) {
-        return array;
+    uint[[1]] p = unsafeSort(vec, ind, ascending);
+    D T[[1]] res(size(vec));
+    for (uint i = 0; i < size(res); ++i) {
+        res[i] = vec[p[i]];
     }
 
-    D xor_uint64[[1]] part = _partition(array);
-
-    // Unpack partition results
-    uint p = declassify(part[0]);
-    array[:] = part[1:];
-
-    D xor_uint64[[1]] newArray (m);
-
-    newArray[0:p] = _quicksort(array[0:p]);
-    newArray[p] = array[p];
-    newArray[p+1:] = _quicksort(array[p+1:]);
-
-    return newArray;
+    return res;
 }
 
-template <domain D>
-D xor_uint64[[1]] _partition(D xor_uint64[[1]] array, D xor_uint64[[1]] indexVector, uint columns) {
-    assert(size(array) == size(indexVector));
+template<domain D : shared3p, type T>
+D T[[2]] _quicksort(D T[[2]] matrix, uint column, bool ascending) {
+    uint[[1]] matShape = shape(matrix);
+    assert(matShape[1] > column);
+    uint[[1]] idx = iota(matShape[0]);
+    D xor_uint64[[1]] ind = idx;
 
-    uint32 compareSectType = newSectionType ("quicksort_comparison");
-    uint32 declassifySectType = newSectionType ("quicksort_declassify");
-    uint32 partitionSectType = newSectionType ("quicksort_partition");
+    D uint8[[1]] k(32);
+    k = randomize(k);
+    matrix = shuffleRows(matrix, k);
+    ind = shuffle(ind, k);
 
-    uint m = size (array);
-
-    // columns parameter is only used here for profiling
-    uint32 partitionSect = startSection(partitionSectType, m*columns);
-
-    uint i = -1; // This works as i is always increased before use
-
-    // Do all comparisons in parallel:
-    uint32 compareSect = startSection(compareSectType, m*columns);
-    D xor_uint64[[1]] lastElement (m-1);
-    lastElement = array[m-1];
-    D bool[[1]] comp = (array[0:m-1] <= lastElement);
-    endSection(compareSect);
-
-    uint32 declassifySect = startSection(declassifySectType, m*columns);
-    bool[[1]] publicComp = declassify(comp);
-    endSection(declassifySect);
-
-    for (uint j = 0; j < m - 1; j++) {
-        if (publicComp[j] == true) {
-            i = i + 1;
-            // Swap a[i] and a[j], make the same change in indexVector
-            D xor_uint64 tmp = array[i];
-            array[i] = array[j];
-            array[j] = tmp;
-            D xor_uint64 tmp2 = indexVector[i];
-            indexVector[i] = indexVector[j];
-            indexVector[j] = tmp2;
-        }
-    }
-    uint p = i + 1;
-    // Swap a[p] and a[m], make the same change in indexVector
-    D xor_uint64 tmp = array[p];
-    array[p] = array[m-1];
-    array[m-1] = tmp;
-    D xor_uint64 tmp2 = indexVector[p];
-    indexVector[p] = indexVector[m-1];
-    indexVector[m-1] = tmp2;
-
-    // Make result vector
-    D xor_uint64[[1]] result (2*m + 1);
-    result[0] = p;
-    result[1:m+1] = array[:];
-    result[m+1:] = indexVector[:];
-
-    endSection(partitionSect);
-
-    return result;
-}
-
-template <domain D>
-D xor_uint64[[1]] _quicksort(D xor_uint64[[1]] array, D xor_uint64[[1]] indexVector, uint columns) {
-    assert(size(array) == size(indexVector));
-
-    uint m = size (array);
-
-    // Make result vector:
-    D xor_uint64[[1]] result (2*m);
-
-    if (m <= 1) {
-        result[:m] = array[:];
-        result[m:] = indexVector[:];
-        return result;
+    uint[[1]] p = unsafeSort(matrix[:, column], ind, ascending);
+    D T[[2]] res(matShape[0], matShape[1]);
+    for (uint i = 0; i < matShape[0]; ++i) {
+        res[i, :] = matrix[p[i], :];
     }
 
-    D xor_uint64[[1]] part = _partition(array, indexVector, columns);
-
-    // Unpack partition results
-    uint p = declassify(part[0]);
-    array[:] = part[1:m+1];
-    indexVector[:] = part[m+1:];
-
-    D xor_uint64[[1]] first = _quicksort(array[:p], indexVector[:p], columns);
-    D xor_uint64[[1]] second = _quicksort(array[p+1:], indexVector[p+1:], columns);
-
-    // Repack results:
-    result[:p] = first[:p];
-    result[p] = array[p];
-    result[p+1:m] = second[:m-p-1];
-
-    result[m:m+p] = first[p:];
-    result[m+p] = indexVector[p];
-    result[m+p+1:] = second[m-p-1:];
-
-    return result;
+    return res;
 }
 /**
 * \endcond
@@ -2540,77 +2503,284 @@ D xor_uint64[[1]] _quicksort(D xor_uint64[[1]] array, D xor_uint64[[1]] indexVec
 /** \addtogroup quick_sort_matrix
  *  @{
  *  @brief Functions for sorting rows in a matrix using the quicksort algorithm
- *  @note **D** - all protection domains
- *  @note Supported types -  \ref xor_uint64 "xor_uint64"
- *  @param array - a vector of supported type
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param matrix - a matrix of supported type
  *  @param column - the index of the sorting column
- *  @return returns a matrix where the input matrix rows are sorted based on values of the specified column 
+ *  @return returns a matrix where the input matrix rows are sorted based on values of the specified column
  *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
  */
-template <domain D>
-D xor_uint64[[2]] quicksort(D xor_uint64[[2]] matrix, uint column1) {
-    uint[[1]] matShape = shape(matrix);
-
-    assert(matShape[1] > column1);
-
-    // Shuffle the matrix
-    uint32 shuffleSectType = newSectionType ("quicksort_shuffle");
-    uint32 shuffleSect = startSection(shuffleSectType, matShape[0]);
-    D xor_uint64[[2]] shuffledMatrix = shuffleRows(matrix);
-    endSection(shuffleSect);
-
-    uint32 sortSectType = newSectionType ("quicksort_sort");
-    uint32 sortSect = startSection(sortSectType, matShape[0]);
-
-    // Construct index vector
-    D xor_uint64[[1]] indexVector (matShape[0]);
-    for (uint i = 0; i < matShape[0]; ++i) {
-        indexVector[i] = i;
-    }
-
-    // Pick column and sort
-    D xor_uint64[[1]] columnToSort = shuffledMatrix[:,column1];
-    D xor_uint64[[1]] sorted = _quicksort(columnToSort, indexVector, matShape[1]);
-    indexVector[:] = sorted[matShape[0]:];
-
-    // Reorder the rest of the matrix by index vector
-    uint[[1]] publicIndexVector = declassify(indexVector);
-    for (uint i = 0; i < matShape[0]; i++) {
-        matrix[i,:] = shuffledMatrix[publicIndexVector[i],:];
-    }
-    endSection (sortSect);
-
-    return matrix;
+template<domain D : shared3p>
+D xor_uint8[[2]] quicksort(D xor_uint8[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
 }
 
+template<domain D : shared3p>
+D xor_uint16[[2]] quicksort(D xor_uint16[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+
+template<domain D : shared3p>
+D xor_uint32[[2]] quicksort(D xor_uint32[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+
+template<domain D : shared3p>
+D xor_uint64[[2]] quicksort(D xor_uint64[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+
+template<domain D : shared3p>
+D uint8[[2]] quicksort(D uint8[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+
+template<domain D : shared3p>
+D uint16[[2]] quicksort(D uint16[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+
+template<domain D : shared3p>
+D uint32[[2]] quicksort(D uint32[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+
+template<domain D : shared3p>
+D uint64[[2]] quicksort(D uint64[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+
+template<domain D : shared3p>
+D int8[[2]] quicksort(D int8[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+
+template<domain D : shared3p>
+D int16[[2]] quicksort(D int16[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+
+template<domain D : shared3p>
+D int32[[2]] quicksort(D int32[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+
+template<domain D : shared3p>
+D int64[[2]] quicksort(D int64[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+/** @}*/
+
+/** \addtogroup quick_sort_matrix_direction
+ *  @{
+ *  @brief Functions for sorting rows in a matrix using the quicksort algorithm
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param matrix - a matrix of supported type
+ *  @param column - the index of the sorting column
+ *  @param ascending - a boolean indicating if the input should be sorted in ascending order
+ *  @return returns a matrix where the input matrix rows are sorted based on values of the specified column
+ *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ */
+template<domain D : shared3p>
+D xor_uint8[[2]] quicksort(D xor_uint8[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
+template<domain D : shared3p>
+D xor_uint16[[2]] quicksort(D xor_uint16[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
+template<domain D : shared3p>
+D xor_uint32[[2]] quicksort(D xor_uint32[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
+template<domain D : shared3p>
+D xor_uint64[[2]] quicksort(D xor_uint64[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
+template<domain D : shared3p>
+D uint8[[2]] quicksort(D uint8[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
+template<domain D : shared3p>
+D uint16[[2]] quicksort(D uint16[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
+template<domain D : shared3p>
+D uint32[[2]] quicksort(D uint32[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
+template<domain D : shared3p>
+D uint64[[2]] quicksort(D uint64[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
+template<domain D : shared3p>
+D int8[[2]] quicksort(D int8[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
+template<domain D : shared3p>
+D int16[[2]] quicksort(D int16[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
+template<domain D : shared3p>
+D int32[[2]] quicksort(D int32[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
+template<domain D : shared3p>
+D int64[[2]] quicksort(D int64[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
 /** @}*/
 
 /** \addtogroup quick_sort_vector
  *  @{
  *  @brief Functions for sorting values in a matrix using the quicksort algorithm
- *  @note **D** - all protection domains
- *  @note Supported types -  \ref xor_uint64 "xor_uint64"
- *  @param array - a vector of supported type
- *  @return returns a vector where the values are sorted from smallest to greatest 
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param vector - a vector of supported type
+ *  @return returns the input vector sorted in ascending order
  *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
  */
-template <domain D>
-D xor_uint64[[1]] quicksort(D xor_uint64[[1]] array) {
-    uint32 shuffleSectType = newSectionType ("quicksort_shuffle");
-
-    uint32 shuffleSect = startSection(shuffleSectType, size(array));
-    array = shuffle(array);
-    endSection(shuffleSect);
-
-    uint32 sortSectType = newSectionType ("quicksort_sort");
-    uint32 sortSect = startSection(sortSectType, size(array));
-
-    array = _quicksort(array);
-    endSection (sortSect);
-    return array;
+template<domain D : shared3p>
+D xor_uint8[[1]] quicksort(D xor_uint8[[1]] vec) {
+    return _quicksort(vec, true);
 }
 
+template<domain D : shared3p>
+D xor_uint16[[1]] quicksort(D xor_uint16[[1]] vec) {
+    return _quicksort(vec, true);
+}
 
+template<domain D : shared3p>
+D xor_uint32[[1]] quicksort(D xor_uint32[[1]] vec) {
+    return _quicksort(vec, true);
+}
+
+template<domain D : shared3p>
+D xor_uint64[[1]] quicksort(D xor_uint64[[1]] vec) {
+    return _quicksort(vec, true);
+}
+
+template<domain D : shared3p>
+D uint8[[1]] quicksort(D uint8[[1]] vec) {
+    return _quicksort(vec, true);
+}
+
+template<domain D : shared3p>
+D uint16[[1]] quicksort(D uint16[[1]] vec) {
+    return _quicksort(vec, true);
+}
+
+template<domain D : shared3p>
+D uint32[[1]] quicksort(D uint32[[1]] vec) {
+    return _quicksort(vec, true);
+}
+
+template<domain D : shared3p>
+D uint64[[1]] quicksort(D uint64[[1]] vec) {
+    return _quicksort(vec, true);
+}
+
+template<domain D : shared3p>
+D int8[[1]] quicksort(D int8[[1]] vec) {
+    return _quicksort(vec, true);
+}
+
+template<domain D : shared3p>
+D int16[[1]] quicksort(D int16[[1]] vec) {
+    return _quicksort(vec, true);
+}
+
+template<domain D : shared3p>
+D int32[[1]] quicksort(D int32[[1]] vec) {
+    return _quicksort(vec, true);
+}
+
+template<domain D : shared3p>
+D int64[[1]] quicksort(D int64[[1]] vec) {
+    return _quicksort(vec, true);
+}
+/** @}*/
+
+/** \addtogroup quick_sort_vector_direction
+ *  @{
+ *  @brief Functions for sorting values in a matrix using the quicksort algorithm
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param vector - a vector of supported type
+ *  @return returns the sorted input vector
+ *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ */
+template<domain D : shared3p>
+D xor_uint8[[1]] quicksort(D xor_uint8[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D xor_uint16[[1]] quicksort(D xor_uint16[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D xor_uint32[[1]] quicksort(D xor_uint32[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D xor_uint64[[1]] quicksort(D xor_uint64[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D uint8[[1]] quicksort(D uint8[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D uint16[[1]] quicksort(D uint16[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D uint32[[1]] quicksort(D uint32[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D uint64[[1]] quicksort(D uint64[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D int8[[1]] quicksort(D int8[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D int16[[1]] quicksort(D int16[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D int32[[1]] quicksort(D int32[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D int64[[1]] quicksort(D int64[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
 /** @}*/
 /** @}*/
 
