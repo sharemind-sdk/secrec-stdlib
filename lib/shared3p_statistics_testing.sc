@@ -700,7 +700,7 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
 
     // Remove unavailable elements and sort
     mat = _cut (mat, cat (ia1, ia2));
-    mat = sortingNetworkSort (mat, 0 :: uint);
+    mat = quicksort (mat, 0 :: uint);
 
     uint N = shape (mat)[0];
     assert (N > 1);
@@ -824,7 +824,7 @@ D FT[[1]] _mannWhitneyU (D T[[1]] sample1,
 
     // Remove unavailable elements and sort
     mat = _cut (mat, cat (ia1, ia2));
-    mat = sortingNetworkSort (mat, 0 :: uint);
+    mat = quicksort (mat, 0 :: uint);
 
     // Note: can't go from uint64 to float32
     D T n1 = sum ((T) ia1);
@@ -958,7 +958,7 @@ D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
     D T[[2]] signAndMagnitude (n, 2);
     signAndMagnitude[:, 0] = signs;
     signAndMagnitude[:, 1] = absDiffs;
-    signAndMagnitude = sortingNetworkSort(signAndMagnitude, 1 :: uint);
+    signAndMagnitude = quicksort (signAndMagnitude, 1 :: uint);
     signs = signAndMagnitude[:, 0];
     absDiffs = signAndMagnitude[:, 1];
 

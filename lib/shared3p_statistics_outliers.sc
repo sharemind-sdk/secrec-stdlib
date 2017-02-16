@@ -43,13 +43,28 @@ import shared3p;
  */
 
 /** \cond */
+template<domain D : shared3p, type T>
+D T[[1]] _outliersSortHelper (D T[[1]] x) {
+    return quicksort (x);
+}
+
+template<domain D : shared3p>
+D float32[[1]] _outliersSortHelper (D float32[[1]] x) {
+    return sortingNetworkSort (x);
+}
+
+template<domain D : shared3p>
+D float64[[1]] _outliersSortHelper (D float64[[1]] x) {
+    return sortingNetworkSort (x);
+}
+
 template<domain D : shared3p, type T, type FT>
 D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvailable) {
     assert (0 < p);
     assert (p < 1);
 
     D T[[1]] cutData = cut (data, isAvailable);
-    D T[[1]] sortedData = sortingNetworkSort (cutData);
+    D T[[1]] sortedData = _outliersSortHelper (cutData);
     uint cutSize = size (cutData);
     uint dataSize = size (data);
     D bool[[1]] result;

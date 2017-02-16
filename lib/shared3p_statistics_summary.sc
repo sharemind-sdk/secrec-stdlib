@@ -48,8 +48,7 @@ import stdlib;
  * \defgroup mad_constant MAD(constant)
  * \defgroup mad_filter MAD(filter)
  * \defgroup mad_filter_constant MAD(filter, constant)
- * \defgroup five_number_summary_sn fiveNumberSummarySn
- * \defgroup five_number_summary_nth fiveNumberSummaryNth
+ * \defgroup five_number_summary fiveNumberSummary
  * \defgroup covariance covariance
  * \defgroup covariance_filter covariance(filter)
  */
@@ -110,7 +109,7 @@ D int64 maximum (D int64[[1]] data, D bool[[1]] isAvailable) {
 
 /** \addtogroup mean
  *  @{
- *  @brief Find the mean of a vector 
+ *  @brief Find the mean of a vector
  *  @note **D** - any protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @param data - input vector (the function may overflow if the input is too big)
@@ -361,12 +360,11 @@ D float64 MAD (D int64[[1]] data, D bool[[1]] mask, float64 constant) {
 
 /** \cond */
 // This algorithm is Q7 from the article Sample Quantiles in Statistical Packages
-// Uses sorting networks for sorting
 template <domain D, type T, type FT>
-D FT[[1]] _fiveNumberSummarySn (D T[[1]] data, D bool[[1]] isAvailable) {
+D FT[[1]] _fiveNumberSummary (D T[[1]] data, D bool[[1]] isAvailable) {
 	D FT [[1]] result (5);
 	D T[[1]] cutDatabase = cut (data, isAvailable);
-	D T[[1]] sortedDatabase = sortingNetworkSort (cutDatabase);
+	D T[[1]] sortedDatabase = quicksort (cutDatabase);
 
  	uint sortedSize = size (sortedDatabase);
 
@@ -422,12 +420,11 @@ D FT[[1]] _fiveNumberSummarySn (D T[[1]] data, D bool[[1]] isAvailable) {
 }
 /** \endcond */
 
-/** \addtogroup five_number_summary_sn
+/** \addtogroup five_number_summary
  *  @{
  *  @brief Find the minimum, lower quartile, median, upper quartile and maximum of a sample
  *  @note **D** - any protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @note This version sorts the input using a sorting network.
  *  @note A version of this function which hides the sample size was
  *  implemented for the paper "Going Beyond Millionaires:
  *  Privacy-Preserving Statistical Analysis" but is not included due
@@ -441,100 +438,12 @@ D FT[[1]] _fiveNumberSummarySn (D T[[1]] data, D bool[[1]] isAvailable) {
  *  @leakage{Leaks the amount of values in isAvailable}
  */
 template<domain D>
-D float32[[1]] fiveNumberSummarySn (D int32[[1]] data, D bool[[1]] isAvailable) {
-    return _fiveNumberSummarySn (data, isAvailable);
+D float32[[1]] fiveNumberSummary (D int32[[1]] data, D bool[[1]] isAvailable) {
+    return _fiveNumberSummary (data, isAvailable);
 }
 template<domain D>
-D float64[[1]] fiveNumberSummarySn (D int64[[1]] data, D bool[[1]] isAvailable) {
-    return _fiveNumberSummarySn (data, isAvailable);
-}
-/** @} */
-
-/** \cond */
-// This algorithm is Q7 from the article Sample Quantiles in Statistical Packages
-// Uses the n-th element algorithm instead of sorting
-template<domain D : shared3p, type T, type FT>
-D FT[[1]] _fiveNumberSummaryNth (D T[[1]] data, D bool[[1]] isAvailable){
-	D FT [[1]] result (5);
-	D T[[1]] cutDatabase = cut (data, isAvailable);
- 	uint cutSize = size (cutDatabase);
-
-	if (cutSize < 5){
-		for (uint i = 0; i < 5; i=i+1){
-			result[i] = (FT) 0;
-		}
-		return result;
-	}
-
-	// We are using integer division.
-	// Note that the formula gives us which position holds the value but we have to subtract 1 as our indices start from 0
-
-	// Q_p = (1 - gamma) * X[j] + gamma * X[j + 1]
-	// j = floor((n - 1) * p) + 1
-	// gamma = (n-1) * p - floor((n - 1) * p)
-	// gamma is the fraction part of ((n-1) * p)
-
-	// lq(0.25), me(0.5), uq(0.75)
-	uint[[1]] parA (3), parB (3), floorP (3), j (3);
-	parA[0 : 2] = (cutSize - 1);
-	parA[2] = (cutSize - 1) * 3;
-	parB[0] = 4;
-	parB[1] = 2;
-	parB[2] = 4;
-	floorP = parA / parB;
-	j = floorP;
-
-	FT[[1]] gammaA (3), gammaB (3), gammaRes (3), oneMinusGamma (3);
-	gammaA[0 : 3] = (FT) (cutSize - 1);
-	gammaB[0] = 0.25;
-	gammaB[1] = 0.5;
-	gammaB[2] = 0.75;
-	gammaRes = gammaA * gammaB;
-	gammaRes = gammaRes - (FT) floorP;
-	oneMinusGamma = 1.0 - gammaRes;
-
-	// The data in the cut database is already shuffled, so we can use the nth algotithm without shuffling
-
-	result[0] = (FT) nthElement (cutDatabase, 0 :: uint, false); // minimum
-	result[4] = (FT) nthElement (cutDatabase, cutSize - 1, false); // maximum
-
-	D FT[[1]] floatParA (6), floatParB (6), floatParRes (6);
-	for (uint i = 0; i < 3; i = i + 1) {
-		floatParA[i] = oneMinusGamma[i];
-		floatParA[i + 3] = gammaRes[i];
-		floatParB[i] = (FT) nthElement (cutDatabase, j[i], false);
-		if (j[i] + 1 >= size (cutDatabase))
-            floatParB[i + 3] = (FT) nthElement (cutDatabase, j[i], false);
-        else
-            floatParB[i + 3] = (FT) nthElement (cutDatabase, j[i] + 1, false);
-	}
-	floatParRes = floatParA * floatParB;
-	result[1 : 4] = floatParRes[0 : 3] + floatParRes[3 : 6];
-
-	return result;
-}
-/** \endcond */
-
-/** \addtogroup five_number_summary_nth
- *  @{
- *  @brief Find the minimum, lower quartile, median, upper quartile and maximum of a sample
- *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @note This version does not sort the input but uses the nthElement function instead.
- *  @param data - input sample
- *  @param isAvailable - vector indicating which elements of the input sample are available
- *  @return returns a vector containing the minimum, lower quartile,
- *  median, upper quartile and maximum of the input sample (in that
- *  order). If the input size is less than five, a vector of zeroes is
- *  returned.
- */
-template<domain D : shared3p>
-D float32[[1]] fiveNumberSummaryNth (D int32[[1]] data, D bool[[1]] isAvailable) {
-    return _fiveNumberSummaryNth (data, isAvailable);
-}
-template<domain D : shared3p>
-D float64[[1]] fiveNumberSummaryNth (D int64[[1]] data, D bool[[1]] isAvailable) {
-    return _fiveNumberSummaryNth (data, isAvailable);
+D float64[[1]] fiveNumberSummary (D int64[[1]] data, D bool[[1]] isAvailable) {
+    return _fiveNumberSummary (data, isAvailable);
 }
 /** @} */
 
@@ -642,11 +551,26 @@ D FT _variance (D T[[1]] data, D bool[[1]] mask, D FT meanValue) {
 	return result;
 }
 
+template<domain D : shared3p, type T>
+D T[[1]] _summarySortHelper (D T[[1]] x) {
+    return quicksort (x);
+}
+
+template<domain D : shared3p>
+D float32[[1]] _summarySortHelper (D float32[[1]] x) {
+    return sortingNetworkSort (x);
+}
+
+template<domain D : shared3p>
+D float64[[1]] _summarySortHelper (D float64[[1]] x) {
+    return sortingNetworkSort (x);
+}
+
 /* Data must be shuffled! */
 template<domain D : shared3p, type T, type FT>
 D FT _median (D T[[1]] data) {
     uint dataSize = size (data);
-    D T[[1]] sortedData = sortingNetworkSort(data);
+    D T[[1]] sortedData = _summarySortHelper (data);
 
     if (dataSize % 2 == 0) {
         uint j = dataSize / 2;
