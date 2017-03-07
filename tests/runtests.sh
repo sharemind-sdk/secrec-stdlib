@@ -200,7 +200,7 @@ main() {
     done
 }
 
-if [ "x$1" = "x" ]; then
+if [ -z "$1" ]; then
     main all
 elif [ -f "$1" ]; then
     main test "$1"
