@@ -63,29 +63,13 @@ if [ ! -d "${SHAREMIND_PATH}" ]; then
     exit 1
 fi
 
+CACHE_DIR="${SHAREMIND_PATH}/tmp/runtests_cache"
 
 # Check for GDB
 RUN_GDB="${RUN_GDB:-1}"
 
 type gdb >/dev/null 2>&1
 HAVE_GDB="$?"
-
-# http://www.linuxjournal.com/content/use-bash-trap-statement-cleanup-temporary-files
-declare -a ON_EXIT_ITEMS
-
-function on_exit() {
-    for ITEM in "${ON_EXIT_ITEMS[@]}"; do
-        eval "${ITEM}"
-    done
-}
-
-function add_on_exit() {
-    local N=${#ON_EXIT_ITEMS[*]}
-    ON_EXIT_ITEMS["${N}"]="$*"
-    if [[ "${N}" -eq 0 ]]; then
-        trap on_exit EXIT
-    fi
-}
 
 if [ -z "${LOG_PATH}" ]; then
     LOG_PATH="`basename "$0"`.log"
@@ -100,25 +84,32 @@ SCC="${SHAREMIND_PATH}/bin/scc"
 STDLIB="${SHAREMIND_PATH}/lib/sharemind/stdlib"
 TEST_RUNNER="${SHAREMIND_PATH}/bin/SecreCTestRunner"
 
-compile() {
+
+compile_and_install() {
     local SC="$1"
-    local SB="$2"
+    local SC_BN=`basename "$SC"`
+    local SB_BN="${SC_BN%.sc}.sb"
+    local SB="${CACHE_DIR}/$SB_BN"
 
-    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" "${SCC}" \
-        --include "${TEST_PATH}" --include "${STDLIB}" \
-        --input "${SC}" --output "${SB}"
-}
+    # Compile:
+    if [ "$SC" -nt "$SB" ]; then
+        if [ ! -d "${CACHE_DIR}" ]; then
+            echo "Creating compile cache at \"${CACHE_DIR}\""
+            mkdir -p "${CACHE_DIR}"
+        fi
+        echo "[scc] $SB_BN"
+        LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" "${SCC}" \
+            --include "${TEST_PATH}" --include "${STDLIB}" \
+            --input "${SC}" --output "${SB}"
+    fi
 
-install() {
-    local SOURCE="$1"
-    local TARGET_FILENAME="$2"
-
+    # Install
     for I in `seq 1 3`; do
         local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
         mkdir -p "${SCRIPTS_PATH}"
-        local TARGET="${SCRIPTS_PATH}/${TARGET_FILENAME}"
-        if [ "$SOURCE" -nt "$TARGET" ]; then
-            cp -f "$SOURCE" "$TARGET"
+        local TARGET="${SCRIPTS_PATH}/${SB_BN}"
+        if [ "$SB" -nt "$TARGET" ]; then
+            cp -f "$SB" "$TARGET"
         fi
     done
 }
@@ -156,20 +147,17 @@ run_gdb() {
         )
 }
 
-run_test() {
+run() {
     local SC="$1"
     local TEST="$2"
     local SC_BN=`basename "${SC}"`
     local SB_BN="${SC_BN%.sc}.sb"
-    local SB=`mktemp --tmpdir sharemind_stlib_runtests.$$.XXXXXXXXXX.sb`
-    add_on_exit "rm \"${SB}\""
 
     local TEST_NAME="[${SC}]: "
     if [ -n "${TEST}" ]; then
         TEST_NAME="[${TEST}]: "
     fi
 
-    compile "${SC}" "${SB}" && install "${SB}" "${SB_BN}" && \
     if [ "${RUN_GDB}" -eq 0 ] && [ "${HAVE_GDB}" -eq 0 ]; then
         run_gdb "${SB_BN}" "${TEST_NAME}"
     else
@@ -177,26 +165,39 @@ run_test() {
     fi
 }
 
-run_testset() {
+declare -A TESTS
+
+scan_test() {
+    TESTS[$(basename $1)]="$1"
+}
+
+scan_testset() {
     local TESTSET=`echo "$1" | sed 's/\/\+$//'`
     local TESTSET_BN=`basename "${TESTSET}"`
     local TESTSET_PREFIX="${TESTSET::-${#TESTSET_BN}}"
     for TEST in `find "${TESTSET}" -mindepth 1 -type f -name "*.sc" | sort`; do
-        run_test "${TEST}" "${TEST:${#TESTSET_PREFIX}}"
+        TESTS["${TEST:${#TESTSET_PREFIX}}"]="$TEST"
     done
 }
 
-run_all() {
+scan_all() {
     for TESTSET in `find "${TEST_PATH}" -mindepth 1 -maxdepth 1 -type d | sort`; do
-        run_testset "${TESTSET}"
+        scan_testset "${TESTSET}"
     done
 }
 
 main() {
     echo "SHAREMIND_PATH=$SHAREMIND_PATH"
-    RUN_NAME="$1"
+    SCAN_NAME="$1"
     shift
-    run_${RUN_NAME} "$@"
+    scan_${SCAN_NAME} "$@"
+    IFS=$'\n' SORTED_TEST_NAMES=($(sort <<<"${!TESTS[*]}"))
+    unset IFS
+    for TEST_NAME in "${SORTED_TEST_NAMES[@]}"; do
+        compile_and_install "${TESTS[$TEST_NAME]}"
+    done
+    for TEST_NAME in "${SORTED_TEST_NAMES[@]}"; do
+        run "${TESTS[$TEST_NAME]}" "$TEST_NAME"
     done
 }
 
