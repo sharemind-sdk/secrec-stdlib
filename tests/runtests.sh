@@ -111,13 +111,16 @@ compile() {
 }
 
 install() {
-    local ORIGIN="$1"
+    local SOURCE="$1"
     local TARGET_FILENAME="$2"
 
     for I in `seq 1 3`; do
         local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
         mkdir -p "${SCRIPTS_PATH}"
-        cp "${ORIGIN}" "${SCRIPTS_PATH}/${TARGET_FILENAME}"
+        local TARGET="${SCRIPTS_PATH}/${TARGET_FILENAME}"
+        if [ "$SOURCE" -nt "$TARGET" ]; then
+            cp -f "$SOURCE" "$TARGET"
+        fi
     done
 }
 
