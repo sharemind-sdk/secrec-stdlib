@@ -121,7 +121,7 @@ install() {
     done
 }
 
-run() {
+run_normal() {
     local SB_BN="$1"
     local TEST_NAME="$2"
     (cd "`dirname ${TEST_RUNNER}`" &&
@@ -171,7 +171,7 @@ run_test() {
     if [ "${RUN_GDB}" -eq 0 ] && [ "${HAVE_GDB}" -eq 0 ]; then
         run_gdb "${SB_BN}" "${TEST_NAME}"
     else
-        run "${SB_BN}" "${TEST_NAME}"
+        run_normal "${SB_BN}" "${TEST_NAME}"
     fi
 }
 
