@@ -203,4 +203,5 @@ else
     echo "Usage of `basename "$0"`:"
     echo "runtests.sh [filename.sc]"
     echo "If no filename is specified, all tests will be run."
+    exit 1
 fi
