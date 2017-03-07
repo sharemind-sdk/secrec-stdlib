@@ -63,7 +63,6 @@ if [ ! -d "${SHAREMIND_PATH}" ]; then
     exit 1
 fi
 
-echo "SHAREMIND_PATH='${SHAREMIND_PATH}'"
 
 # Check for GDB
 RUN_GDB="${RUN_GDB:-1}"
@@ -193,12 +192,20 @@ run_all() {
     done
 }
 
+main() {
+    echo "SHAREMIND_PATH=$SHAREMIND_PATH"
+    RUN_NAME="$1"
+    shift
+    run_${RUN_NAME} "$@"
+    done
+}
+
 if [ "x$1" = "x" ]; then
-    run_all
+    main all
 elif [ -f "$1" ]; then
-    run_test "$1"
+    main test "$1"
 elif [ -d "$1" ]; then
-    run_testset "$1"
+    main testset "$1"
 else
     echo "Usage of `basename "$0"`:"
     echo "runtests.sh [filename.sc]"
