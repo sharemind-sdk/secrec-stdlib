@@ -84,35 +84,50 @@ SCC="${SHAREMIND_PATH}/bin/scc"
 STDLIB="${SHAREMIND_PATH}/lib/sharemind/stdlib"
 TEST_RUNNER="${SHAREMIND_PATH}/bin/SecreCTestRunner"
 
+declare -A BYTECODES
 
-compile_and_install() {
+install() {
+    SOURCE="$1"
+    TARGET_FN="$2"
+    for I in `seq 1 3`; do
+        local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
+        mkdir -p "${SCRIPTS_PATH}"
+        local TARGET="${SCRIPTS_PATH}/${TARGET_FN}"
+        if [ "$SOURCE" -nt "$TARGET" ]; then
+            cp -f "$SOURCE" "$TARGET"
+        fi
+    done
+}
+
+uninstall() {
+    TARGET_FN="$1"
+    for I in `seq 1 3`; do
+        local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
+        local TARGET="${SCRIPTS_PATH}/${TARGET_FN}"
+        rm -f "$TARGET"
+    done
+}
+
+compile() {
     local SC="$1"
     local TEST_NAME="$2"
     local SC_BN=`basename "$SC"`
     local SB_BN="${SC_BN%.sc}.sb"
-    local SB="${CACHE_DIR}/$SB_BN"
+    local HASH=$(sha512sum "$SC"|awk '{print $1}')
+    local SB_DIR="${CACHE_DIR}/$HASH"
+    local SB="${SB_DIR}/$SB_BN"
 
-    # Compile:
     if [ "$SC" -nt "$SB" ]; then
         if [ ! -d "${CACHE_DIR}" ]; then
             echo "Creating compile cache at \"${CACHE_DIR}\""
-            mkdir -p "${CACHE_DIR}"
         fi
+        mkdir -p "$SB_DIR"
         echo "[scc] $TEST_NAME"
         LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" "${SCC}" \
             --include "${TEST_PATH}" --include "${STDLIB}" \
-            --input "${SC}" --output "${SB}"
+            --input "${SC}" --output "${SB}" || exit
     fi
-
-    # Install
-    for I in `seq 1 3`; do
-        local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
-        mkdir -p "${SCRIPTS_PATH}"
-        local TARGET="${SCRIPTS_PATH}/${SB_BN}"
-        if [ "$SB" -nt "$TARGET" ]; then
-            cp -f "$SB" "$TARGET"
-        fi
-    done
+    BYTECODES["$TEST_NAME"]="$SB"
 }
 
 run_normal() {
@@ -149,21 +164,16 @@ run_gdb() {
 }
 
 run() {
-    local SC="$1"
-    local TEST="$2"
-    local SC_BN=`basename "${SC}"`
-    local SB_BN="${SC_BN%.sc}.sb"
-
-    local TEST_NAME="[${SC}]: "
-    if [ -n "${TEST}" ]; then
-        TEST_NAME="[${TEST}]: "
-    fi
-
+    local TEST_NAME="$1"
+    local SB=${BYTECODES["$TEST_NAME"]}
+    local TEST_BN=$(basename "${TEST_NAME%.sc}.sb")
+    install "$SB" "$TEST_BN"
     if [ "${RUN_GDB}" -eq 0 ] && [ "${HAVE_GDB}" -eq 0 ]; then
-        run_gdb "${SB_BN}" "${TEST_NAME}"
+        run_gdb "$TEST_BN" "[${TEST_NAME}]: "
     else
-        run_normal "${SB_BN}" "${TEST_NAME}"
+        run_normal "$TEST_BN" "[${TEST_NAME}]: "
     fi
+    uninstall "$TEST_BN"
 }
 
 declare -A TESTS
@@ -195,10 +205,10 @@ main() {
     IFS=$'\n' SORTED_TEST_NAMES=($(sort <<<"${!TESTS[*]}"))
     unset IFS
     for TEST_NAME in "${SORTED_TEST_NAMES[@]}"; do
-        compile_and_install "${TESTS[$TEST_NAME]}" "$TEST_NAME"
+        compile "${TESTS[$TEST_NAME]}" "$TEST_NAME"
     done
     for TEST_NAME in "${SORTED_TEST_NAMES[@]}"; do
-        run "${TESTS[$TEST_NAME]}" "$TEST_NAME"
+        run "$TEST_NAME"
     done
 }
 
