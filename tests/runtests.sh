@@ -87,6 +87,7 @@ TEST_RUNNER="${SHAREMIND_PATH}/bin/SecreCTestRunner"
 
 compile_and_install() {
     local SC="$1"
+    local TEST_NAME="$2"
     local SC_BN=`basename "$SC"`
     local SB_BN="${SC_BN%.sc}.sb"
     local SB="${CACHE_DIR}/$SB_BN"
@@ -97,7 +98,7 @@ compile_and_install() {
             echo "Creating compile cache at \"${CACHE_DIR}\""
             mkdir -p "${CACHE_DIR}"
         fi
-        echo "[scc] $SB_BN"
+        echo "[scc] $TEST_NAME"
         LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" "${SCC}" \
             --include "${TEST_PATH}" --include "${STDLIB}" \
             --input "${SC}" --output "${SB}"
@@ -194,7 +195,7 @@ main() {
     IFS=$'\n' SORTED_TEST_NAMES=($(sort <<<"${!TESTS[*]}"))
     unset IFS
     for TEST_NAME in "${SORTED_TEST_NAMES[@]}"; do
-        compile_and_install "${TESTS[$TEST_NAME]}"
+        compile_and_install "${TESTS[$TEST_NAME]}" "$TEST_NAME"
     done
     for TEST_NAME in "${SORTED_TEST_NAMES[@]}"; do
         run "${TESTS[$TEST_NAME]}" "$TEST_NAME"
