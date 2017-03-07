@@ -167,10 +167,11 @@ run_test() {
         TEST_NAME="[${TEST}]: "
     fi
 
+    compile "${SC}" "${SB}" && install "${SB}" "${SB_BN}" && \
     if [ "${RUN_GDB}" -eq 0 ] && [ "${HAVE_GDB}" -eq 0 ]; then
-        compile "${SC}" "${SB}" && install "${SB}" "${SB_BN}" && run_gdb "${SB_BN}" "${TEST_NAME}"
+        run_gdb "${SB_BN}" "${TEST_NAME}"
     else
-        compile "${SC}" "${SB}" && install "${SB}" "${SB_BN}" && run "${SB_BN}" "${TEST_NAME}"
+        run "${SB_BN}" "${TEST_NAME}"
     fi
 }
 
