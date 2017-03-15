@@ -63,8 +63,11 @@ kind shared3p {
 * \defgroup shared3p_sqrt sqrt
 * \defgroup shared3p_sin sin
 * \defgroup shared3p_ln ln
+* \defgroup shared3p_log log
+* \defgroup shared3p_log10 log10
 * \defgroup shared3p_exp exp
 * \defgroup shared3p_erf erf
+* \defgroup shared3p_pow pow
 * \defgroup shared3p_isnegligible isNegligible
 * \defgroup shared3p_min min
 * \defgroup shared3p_min_vec min
@@ -826,8 +829,8 @@ D float64[[N]] sin (D float64[[N]] x) {
     __syscall ("shared3p::sin_float64_vec", __domainid (D), x, x);
     return x;
 }
-
 /** @}*/
+
 /** \addtogroup shared3p_ln
  *  @{
  *  @brief Function for finding the natural logarithm of a value
@@ -836,7 +839,6 @@ D float64[[N]] sin (D float64[[N]] x) {
  *  @return returns the natural logarithms of the input array
  *  @leakage{None}
  */
-
 template <domain D : shared3p, dim N>
 D float32[[N]] ln (D float32[[N]] x) {
     __syscall ("shared3p::ln_float32_vec", __domainid (D), x, x);
@@ -848,8 +850,49 @@ D float64[[N]] ln (D float64[[N]] x) {
     __syscall ("shared3p::ln_float64_vec", __domainid (D), x, x);
     return x;
 }
-
 /** @}*/
+
+/** \addtogroup shared3p_log
+ *  @{
+ *  @brief Function for finding the logarithm of a value
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @return x input
+ *  @return b logarithm base
+ *  @return returns the logarithms of the input array
+ *  @leakage{None}
+ */
+template <domain D : shared3p, dim N>
+D float32[[N]] log (D float32[[N]] x, D float32[[N]] b) {
+    return ln (x) / ln (b);
+}
+
+template <domain D : shared3p, dim N>
+D float64[[N]] log (D float64[[N]] x, D float64[[N]] b) {
+    return ln (x) / ln (b);
+}
+/** @} */
+
+/** \addtogroup shared3p_log10
+ *  @{
+ *  @brief Function for finding the base 10 logarithm of a value
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @return x input
+ *  @return returns the base 10 logarithms of the input array
+ *  @leakage{None}
+ */
+template <domain D : shared3p, dim N>
+D float32[[N]] log10 (D float32[[N]] x) {
+    return ln (x) / 2.302585092994046;
+}
+
+template <domain D : shared3p, dim N>
+D float64[[N]] log10 (D float64[[N]] x) {
+    return ln (x) / 2.302585092994046;
+}
+/** @} */
+
 /** \addtogroup shared3p_exp
  *  @{
  *  @brief Function for finding exp(x)
@@ -870,8 +913,8 @@ D float64[[N]] exp (D float64[[N]] x) {
     __syscall ("shared3p::exp_float64_vec", __domainid (D), x, x);
     return x;
 }
-
 /** @}*/
+
 /** \addtogroup shared3p_erf
  *  @{
  *  @brief Function for finding the value of error function
@@ -892,8 +935,28 @@ D float64[[N]] erf (D float64[[N]] x) {
     __syscall ("shared3p::erf_float64_vec", __domainid (D), x, x);
     return x;
 }
-
 /** @}*/
+
+/** \addtogroup shared3p_pow
+ *  @{
+ *  @brief Function for computing values of the power function
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @param a base
+ *  @param b exponent
+ *  @return returns the b-th powers of vector a
+ */
+template <domain D : shared3p, dim N>
+D float32[[N]] pow (D float32[[N]] a, D float32[[N]] b) {
+    return exp (ln (a) * b);
+}
+
+template <domain D : shared3p, dim N>
+D float64[[N]] pow (D float64[[N]] a, D float64[[N]] b) {
+    return exp (ln (a) * b);
+}
+/** @} */
+
 /** \addtogroup shared3p_isnegligible
  *  @{
  *  @brief Function for finding if the error is small enough to neglect
