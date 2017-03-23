@@ -2361,7 +2361,9 @@ uint[[1]] _unsafeSort(D T[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
 
 /** \addtogroup unsafe_sort
  *  @{
- *  @brief Function for sorting a vector if the vector has been shuffled
+ *  @brief Function for sorting a vector if the vector has been
+ *  shuffled
+ *  @note unsafeSort is stable
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param vec - input vector
@@ -2372,10 +2374,7 @@ uint[[1]] _unsafeSort(D T[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
  *  @return returns the sort permutation. The ith value of the
  *  permutation is the index of the input value that is in the ith
  *  position after sorting.
- *  @leakage{This function uses the quicksort algorithm and
- *  declassifies the results of comparisons. This function is only
- *  safe if the vector has been shuffled. The number of equal elements
- *  is leaked.}
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 uint[[1]] unsafeSort(D xor_uint8[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
@@ -2449,9 +2448,10 @@ uint[[1]] unsafeSort(D int64[[1]] vec, D xor_uint64[[1]] indices, bool ascending
 /** \addtogroup quick_sort
  *  @{
  *  @brief Functions for sorting values using the quicksort algorithm
+ *  @note quicksort is stable
  *  @note **D** - all protection domains
  *  @note Supported types - \ref xor_uint64 "xor_uint64"
- *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ *  @leakage{None}
  */
 
 /**
@@ -2502,13 +2502,15 @@ D T[[2]] _quicksort(D T[[2]] matrix, uint column, bool ascending) {
 
 /** \addtogroup quick_sort_matrix
  *  @{
- *  @brief Functions for sorting rows in a matrix using the quicksort algorithm
+ *  @brief Functions for sorting rows in a matrix using the quicksort
+ *  algorithm
+ *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param matrix - a matrix of supported type
  *  @param column - the index of the sorting column
  *  @return returns a matrix where the input matrix rows are sorted based on values of the specified column
- *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D xor_uint8[[2]] quicksort(D xor_uint8[[2]] matrix, uint column) {
@@ -2574,13 +2576,14 @@ D int64[[2]] quicksort(D int64[[2]] matrix, uint column) {
 /** \addtogroup quick_sort_matrix_direction
  *  @{
  *  @brief Functions for sorting rows in a matrix using the quicksort algorithm
+ *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param matrix - a matrix of supported type
  *  @param column - the index of the sorting column
  *  @param ascending - a boolean indicating if the input should be sorted in ascending order
  *  @return returns a matrix where the input matrix rows are sorted based on values of the specified column
- *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D xor_uint8[[2]] quicksort(D xor_uint8[[2]] matrix, uint column, bool ascending) {
@@ -2646,11 +2649,12 @@ D int64[[2]] quicksort(D int64[[2]] matrix, uint column, bool ascending) {
 /** \addtogroup quick_sort_vector
  *  @{
  *  @brief Functions for sorting values in a matrix using the quicksort algorithm
+ *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param vector - a vector of supported type
  *  @return returns the input vector sorted in ascending order
- *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D xor_uint8[[1]] quicksort(D xor_uint8[[1]] vec) {
@@ -2716,11 +2720,12 @@ D int64[[1]] quicksort(D int64[[1]] vec) {
 /** \addtogroup quick_sort_vector_direction
  *  @{
  *  @brief Functions for sorting values in a matrix using the quicksort algorithm
+ *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param vector - a vector of supported type
  *  @return returns the sorted input vector
- *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D xor_uint8[[1]] quicksort(D xor_uint8[[1]] vec, bool ascending) {
@@ -2795,6 +2800,7 @@ D int64[[1]] quicksort(D int64[[1]] vec, bool ascending) {
 /** \addtogroup quick_quick_sort
  *  @{
  *  @brief Functions for sorting values using the quicksort algorithm
+ *  @deprecated Use quicksort
  *  @note **D** - all protection domains
  *  @note Supported types - \ref xor_uint64 "xor_uint64"
  *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
@@ -2905,6 +2911,7 @@ D T[[1]] _quickquicksort(D T[[1]] array) {
 /** \addtogroup quick_quick_sort_vector
  *  @{
  *  @brief Functions for sorting values in a matrix using the quicksort algorithm
+ *  @deprecated Use quicksort
  *  @note **D** - all protection domains
  *  @note Supported types -  \ref uint64 "uint64" / \ref xor_uint64 "xor_uint64"
  *  @param array - a vector of supported type
@@ -3085,6 +3092,7 @@ D T[[2]] _quickquicksort(D T[[2]] matrix, uint column1) {
 /** \addtogroup quick_quick_sort_matrix
  *  @{
  *  @brief Functions for sorting rows in a matrix using the qucikquicksort algorithm
+ *  @deprecated Use quicksort
  *  @note **D** - all protection domains
  *  @note Supported types -  \ref uint64 "uint64" / \ref xor_uint64 "xor_uint64"
  *  @param array - a vector of supported type
