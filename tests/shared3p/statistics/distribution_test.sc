@@ -34,7 +34,7 @@ bool discrete_distribution_test (T data) {
 	mask[0] = false;
 
 	pd_shared3p T x = 2;
-	pd_shared3p T[[2]] distribution = discreteDistributionCount (a, mask, x, maximum(a, mask));
+	pd_shared3p T[[2]] distribution = discreteDistributionCount (a, mask, x, maximum(a, mask), 3 :: uint);
 
 	if (declassify (sum (distribution[1, :])) != 7)
 		return false;
@@ -51,7 +51,7 @@ bool discrete_distribution_test_step (T data) {
 
 	pd_shared3p T x = 2;
 	pd_shared3p T step = 3;
-	pd_shared3p T[[2]] distribution = discreteDistributionCount (a, mask, x, maximum (a, mask), step);
+	pd_shared3p T[[2]] distribution = discreteDistributionCount (a, mask, x, maximum (a, mask), step, 3 :: uint);
 
 	if (declassify (sum (distribution[1, :])) != 2)
 		return false;
