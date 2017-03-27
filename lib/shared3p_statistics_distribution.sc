@@ -47,7 +47,7 @@ import stdlib;
 /** \cond */
 // Sturges' formula calculates the number of breaks in the histogram
 // k = ceiling (log2(n) + 1)
-uint64 _getNoOfBreaks (uint64 sizeData){
+uint64 _getNoOfBreaks (uint64 sizeData) {
     uint64 k = 1;
 
     for (uint powOf2 = 2; powOf2 < sizeData; powOf2 = powOf2 * 2) {
@@ -224,13 +224,13 @@ D T[[2]] _discreteDistributionCount (D T[[1]] data,
                                      D bool[[1]] isAvailable,
                                      D T min,
                                      D T max,
-                                     D T stepSize)
+                                     D T stepSize,
+                                     uint K)
 {
     D T[[1]] cutData = cut (data, isAvailable);
     uint sizeData = size (cutData);
 
-    // Why exactly 5? Should it be bigger than 5?
-    if (sizeData < 5) {
+    if (sizeData < K) {
         D T[[2]] result;
         return result;
     }
@@ -421,6 +421,7 @@ D int64[[2]] histogram (D int64[[1]] data, D bool[[1]] isAvailable) {
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @param min - fixed lowest value in returned matrix (lower values from input vector are discarded)
  *  @param max - fixed highest value in returned matrix (higher values from input vector are discarded)
+ *  @param K - minimum input size
  *  @return returns a matrix where the first row contains discrete distribution values
  *  and the second row contains counts for each value
  *  @leakage{Leaks the amount of discrete distribution values}
@@ -429,15 +430,15 @@ D int64[[2]] histogram (D int64[[1]] data, D bool[[1]] isAvailable) {
  * In most of the use cases stepsize is 1, so can omit that from parameters for ease of use.
  */
 template<domain D>
-D int32[[2]] discreteDistributionCount (D int32[[1]] data, D bool[[1]] isAvailable, D int32 min, D int32 max) {
+D int32[[2]] discreteDistributionCount (D int32[[1]] data, D bool[[1]] isAvailable, D int32 min, D int32 max, uint K) {
     D int32 one = 1;    // No better idea at the moment.
-    return discreteDistributionCount (data, isAvailable, min, max, one);
+    return discreteDistributionCount (data, isAvailable, min, max, one, K);
 }
 
 template<domain D>
-D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailable, D int64 min, D int64 max) {
+D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailable, D int64 min, D int64 max, uint K) {
     D int64 one = 1;    // No better idea at the moment.
-    return discreteDistributionCount (data, isAvailable, min, max, one);
+    return discreteDistributionCount (data, isAvailable, min, max, one, K);
 }
 /** @} */
 
@@ -453,6 +454,7 @@ D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailab
  *  @param stepSize - difference between adjacent values in returned matrix
  *  (values in returned matrix are: min, min + stepSize, min + 2*stepSize, min + 3*stepSize, ...).
  *  Other values from input vector are discarded.
+ *  @param K - minimum input size
  *  @return returns a matrix where the first row contains discrete distribution values
  *  and the second row contains counts for each value
  *  @leakage{Leaks the amount of discrete distribution values}
@@ -462,13 +464,13 @@ D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailab
  * a) instead of min/max/stepSize give vector of possible values.
  */
 template<domain D>
-D int32[[2]] discreteDistributionCount (D int32[[1]] data, D bool[[1]] isAvailable, D int32 min, D int32 max, D int32 stepSize) {
-    return _discreteDistributionCount (data, isAvailable, min, max, stepSize);
+D int32[[2]] discreteDistributionCount (D int32[[1]] data, D bool[[1]] isAvailable, D int32 min, D int32 max, D int32 stepSize, uint K) {
+    return _discreteDistributionCount (data, isAvailable, min, max, stepSize, K);
 }
 
 template<domain D>
-D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailable, D int64 min, D int64 max, D int64 stepSize) {
-    return _discreteDistributionCount (data, isAvailable, min, max, stepSize);
+D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailable, D int64 min, D int64 max, D int64 stepSize, uint K) {
+    return _discreteDistributionCount (data, isAvailable, min, max, stepSize, K);
 }
 
 /** @} */
