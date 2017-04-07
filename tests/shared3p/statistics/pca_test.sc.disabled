@@ -56,12 +56,10 @@ bool gspca_test (T data) {
 void main () {
     // TODO: Currently we don't support fixed point values in all shared3p
     // modules. The current implementation of PCA uses fixed point values.
-    /*
 	string test_prefix = "GSPCA";
 	//if the input is 32 bit, the function crahses
 	test (test_prefix, gspca_test (0::float32), 0::float32);
 	test (test_prefix, gspca_test (0::float64), 0::float64);
-    */
 
 	test_report ();
 }
