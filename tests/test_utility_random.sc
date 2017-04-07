@@ -66,23 +66,3 @@ float64[[1]] randomize(float64[[1]] data) {
         data[i] = random_float(0::float64);
     return data;
 }
-
-template <domain D : shared3p>
-D float32 randomize(D float32 data) {
-    return classify(random_float(declassify(data)));
-}
-
-template <domain D : shared3p>
-D float64 randomize(D float64 data) {
-    return classify(random_float(declassify(data)));
-}
-
-template <domain D : shared3p>
-D float32[[1]] randomize(D float32[[1]] data) {
-    return classify(randomize(declassify(data)));
-}
-
-template <domain D : shared3p>
-D float64[[1]] randomize(D float64[[1]] data) {
-    return classify(randomize(declassify(data)));
-}
