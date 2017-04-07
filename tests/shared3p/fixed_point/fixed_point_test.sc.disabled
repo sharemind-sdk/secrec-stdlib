@@ -191,7 +191,6 @@ bool fix_inv_test (uint64 data) {
 void main () {
     // TODO: Currently we don't support fixed point values in all shared3p
     // modules.
-    /*
 	test ("Fixed point conversion", fix_conv_test (0::uint32), 0::uint32);
 	test ("Fixed point conversion", fix_conv_test (0::uint64), 0::uint64);
 
@@ -203,7 +202,6 @@ void main () {
 
 	test ("Fixed point invert", fix_inv_test (0::uint32), 0::uint32);
 	test ("Fixed point invert", fix_inv_test (0::uint64), 0::uint64);
-    */
 
 	test_report();
 }
