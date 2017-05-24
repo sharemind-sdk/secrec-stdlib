@@ -20,7 +20,8 @@
 
 # This script reads the following environment variables:
 # SHAREMIND_PATH (default: ..) Sharemind install prefix
-# LOG_PATH (default: runtests.sh.log) Test log
+# SHAREMIND_TEST_LOG_PATH (default: .) Directory path for test logs
+# SHAREMIND_TEST_LOG_FILE (default: stdlibtests.log) Test log filename
 # RUN_GDB (default: 1) Flag turning on/off GDB debugging (0 means on)
 
 # Exit status of piped commands is zero only if all commands succeed
@@ -71,9 +72,20 @@ RUN_GDB="${RUN_GDB:-1}"
 type gdb >/dev/null 2>&1
 HAVE_GDB="$?"
 
-if [ -z "${LOG_PATH}" ]; then
-    LOG_PATH="`basename "$0"`.log"
+if [ -z "${SHAREMIND_TEST_LOG_PATH}" ]; then
+    SHAREMIND_TEST_LOG_PATH="."
 fi
+
+if [ ! -d "${SHAREMIND_TEST_LOG_PATH}" ]; then
+  echo "SHAREMIND_TEST_LOG_PATH does not point to a directory!" 2>&1
+  exit 1
+fi
+
+if [ -z "${SHAREMIND_TEST_LOG_FILE}" ] ; then
+    SHAREMIND_TEST_LOG_FILE="stdlibtests.log"
+fi
+
+TEST_LOG_FILE_PATH="${SHAREMIND_TEST_LOG_PATH}/${SHAREMIND_TEST_LOG_FILE}"
 
 if [ -d "${SHAREMIND_PATH}/lib" ]; then
   NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${SHAREMIND_PATH}/lib"
@@ -136,7 +148,7 @@ run_normal() {
     (cd "`dirname ${TEST_RUNNER}`" &&
         ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
                 "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
-                        --logfile "${LOG_PATH}" --logmode append \
+                        --logfile "${TEST_LOG_FILE_PATH}" --logmode append \
                     | sed "s#^#${TEST_NAME}#g") \
              3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
              3>&1 1>&2 2>&3 3>&-
@@ -156,7 +168,7 @@ run_gdb() {
                     -ex 'info registers' \
                     --args \
                         "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
-                                --logfile "${LOG_PATH}" --logmode append \
+                                --logfile "${TEST_LOG_FILE_PATH}" --logmode append \
                             | sed "s#^#${TEST_NAME}#g") \
              3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
              3>&1 1>&2 2>&3 3>&-
