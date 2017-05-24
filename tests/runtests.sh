@@ -82,7 +82,7 @@ fi
 TEST_PATH="${SHAREMIND_PATH}/lib/sharemind/test"
 SCC="${SHAREMIND_PATH}/bin/scc"
 STDLIB="${SHAREMIND_PATH}/lib/sharemind/stdlib"
-TEST_RUNNER="${SHAREMIND_PATH}/bin/SecreCTestRunner"
+TEST_RUNNER="${SHAREMIND_PATH}/bin/sharemind-secrec-test-runner"
 
 declare -A BYTECODES
 
