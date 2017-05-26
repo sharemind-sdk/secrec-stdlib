@@ -21,7 +21,7 @@
 # This script reads the following environment variables:
 # SHAREMIND_PATH (default: ..) Sharemind install prefix
 # SHAREMIND_TEST_LOG_PATH (default: .) Directory path for test logs
-# SHAREMIND_TEST_LOG_FILE (default: stdlibtests.log) Test log filename
+# SHAREMIND_TEST_LOG_FILE (default: ${SHAREMIND_TEST_LOG_PATH}/stdlibtests.log) Test log filename
 # RUN_GDB (default: 1) Flag turning on/off GDB debugging (0 means on)
 
 # Exit status of piped commands is zero only if all commands succeed
@@ -81,11 +81,7 @@ if [ ! -d "${SHAREMIND_TEST_LOG_PATH}" ]; then
   exit 1
 fi
 
-if [ -z "${SHAREMIND_TEST_LOG_FILE}" ] ; then
-    SHAREMIND_TEST_LOG_FILE="stdlibtests.log"
-fi
-
-TEST_LOG_FILE_PATH="${SHAREMIND_TEST_LOG_PATH}/${SHAREMIND_TEST_LOG_FILE}"
+TEST_LOG_FILE_PATH="${SHAREMIND_TEST_LOG_FILE:-${SHAREMIND_TEST_LOG_PATH}/stdlibtests.log}"
 
 if [ -d "${SHAREMIND_PATH}/lib" ]; then
   NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${SHAREMIND_PATH}/lib"
