@@ -24,8 +24,8 @@ import test_utility;
 domain pd_shared3p shared3p;
 
 template<domain D, type T>
-bool eq(D T t) {
-    D T [[1]] a = 0, b = 1;
+bool eq(D T t, uint n) {
+    D T [[1]] a(n) = 0, b(n) = 1;
     bool [[1]] result = {
         all(declassify(a == a)),
         !any(declassify(a == b)),
@@ -37,8 +37,8 @@ bool eq(D T t) {
 }
 
 template<domain D>
-bool eq(D bool t) {
-    D bool [[1]] a = false, b = true;
+bool eq(D bool t, uint n) {
+    D bool [[1]] a(n) = false, b(n) = true;
     bool [[1]] result = {
         all(declassify(a == a)),
         !any(declassify(a == b)),
@@ -50,8 +50,8 @@ bool eq(D bool t) {
 }
 
 template<domain D, type T>
-bool gt(D T t) {
-    D T [[1]] a = 0, b = 1;
+bool gt(D T t, uint n) {
+    D T [[1]] a(n) = 0, b(n) = 1;
     bool [[1]] result = {
         !any(declassify(a > a)),
         !any(declassify(a > b)),
@@ -63,8 +63,8 @@ bool gt(D T t) {
 }
 
 template<domain D>
-bool gt(D bool t) {
-    D bool [[1]] a = false, b = true;
+bool gt(D bool t, uint n) {
+    D bool [[1]] a(n) = false, b(n) = true;
     bool [[1]] result = {
         !any(declassify(a > a)),
         !any(declassify(a > b)),
@@ -76,8 +76,8 @@ bool gt(D bool t) {
 }
 
 template<domain D, type T>
-bool gt_or_eq(D T t) {
-    D T [[1]] a = 0, b = 1;
+bool gt_or_eq(D T t, uint n) {
+    D T [[1]] a(n) = 0, b(n) = 1;
     bool [[1]] result = {
         all(declassify(a >= a)),
         !any(declassify(a >= b)),
@@ -89,8 +89,8 @@ bool gt_or_eq(D T t) {
 }
 
 template<domain D>
-bool gt_or_eq(D bool t) {
-    D bool [[1]] a = false, b = true;
+bool gt_or_eq(D bool t, uint n) {
+    D bool [[1]] a(n) = false, b(n) = true;
     bool [[1]] result = {
         all(declassify(a >= a)),
         !any(declassify(a >= b)),
@@ -102,8 +102,8 @@ bool gt_or_eq(D bool t) {
 }
 
 template<domain D, type T>
-bool lt(D T t) {
-    D T [[1]] a = 0, b = 1;
+bool lt(D T t, uint n) {
+    D T [[1]] a(n) = 0, b(n) = 1;
     bool [[1]] result = {
         !any(declassify(a < a)),
         all(declassify(a < b)),
@@ -115,8 +115,8 @@ bool lt(D T t) {
 }
 
 template<domain D>
-bool lt(D bool t) {
-    D bool [[1]] a = false, b = true;
+bool lt(D bool t, uint n) {
+    D bool [[1]] a(n) = false, b(n) = true;
     bool [[1]] result = {
         !any(declassify(a < a)),
         all(declassify(a < b)),
@@ -128,8 +128,8 @@ bool lt(D bool t) {
 }
 
 template<domain D, type T>
-bool lt_or_eq(D T t) {
-    D T [[1]] a = 0, b = 1;
+bool lt_or_eq(D T t, uint n) {
+    D T [[1]] a(n) = 0, b(n) = 1;
     bool [[1]] result = {
         all(declassify(a <= a)),
         all(declassify(a <= b)),
@@ -141,8 +141,8 @@ bool lt_or_eq(D T t) {
 }
 
 template<domain D>
-bool lt_or_eq(D bool t) {
-    D bool [[1]] a = false, b = true;
+bool lt_or_eq(D bool t, uint n) {
+    D bool [[1]] a(n) = false, b(n) = true;
     bool [[1]] result = {
         all(declassify(a <= a)),
         all(declassify(a <= b)),
@@ -154,8 +154,8 @@ bool lt_or_eq(D bool t) {
 }
 
 template<domain D, type T>
-bool ne(D T t) {
-    D T [[1]] a = 0, b = 1;
+bool ne(D T t, uint n) {
+    D T [[1]] a(n) = 0, b(n) = 1;
     bool [[1]] result = {
         !any(declassify(a != a)),
         all(declassify(a != b)),
@@ -167,8 +167,8 @@ bool ne(D T t) {
 }
 
 template<domain D>
-bool ne(D bool t) {
-    D bool [[1]] a = false, b = true;
+bool ne(D bool t, uint n) {
+    D bool [[1]] a(n) = false, b(n) = true;
     bool [[1]] result = {
         !any(declassify(a != a)),
         all(declassify(a != b)),
@@ -180,107 +180,115 @@ bool ne(D bool t) {
 }
 
 void main(){
-    string test_prefix = "Operator >";
-//    { pd_shared3p bool t; test(test_prefix, gt(t), t); }
-    { pd_shared3p uint8 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p uint16 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p uint32 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p uint64 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p int8 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p int16 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p int32 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p int64 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p float32 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p float64 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p xor_uint8 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p xor_uint16 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p xor_uint32 t; test(test_prefix, gt(t), t); }
-    { pd_shared3p xor_uint64 t; test(test_prefix, gt(t), t); }
+    uint[[1]] sizes = {0, 1, 15};
 
-    test_prefix = "Operator <";
-//    { pd_shared3p bool t; test(test_prefix, lt(t), t); }
-    { pd_shared3p uint8 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p uint16 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p uint32 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p uint64 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p int8 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p int16 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p int32 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p int64 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p float32 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p float64 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p xor_uint8 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p xor_uint16 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p xor_uint32 t; test(test_prefix, lt(t), t); }
-    { pd_shared3p xor_uint64 t; test(test_prefix, lt(t), t); }
+    string test_prefix;
+    
+    for (uint i = 0; i < size(sizes); ++ i) {
+        uint n = sizes[i];
 
-    test_prefix = "Operator >=";
-//    { pd_shared3p bool t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p uint8 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p uint16 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p uint32 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p uint64 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p int8 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p int16 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p int32 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p int64 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p float32 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p float64 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p xor_uint8 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p xor_uint16 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p xor_uint32 t; test(test_prefix, gt_or_eq(t), t); }
-    { pd_shared3p xor_uint64 t; test(test_prefix, gt_or_eq(t), t); }
+        test_prefix = "Operator > (len $n)";
+        // { pd_shared3p bool t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p uint8 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p uint16 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p uint32 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p uint64 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p int8 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p int16 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p int32 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p int64 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p float32 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p float64 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p xor_uint8 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p xor_uint16 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p xor_uint32 t; test(test_prefix, gt(t, n), t); }
+        { pd_shared3p xor_uint64 t; test(test_prefix, gt(t, n), t); }
 
-    test_prefix = "Operator <=";
-//    { pd_shared3p bool t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p uint8 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p uint16 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p uint32 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p uint64 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p int8 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p int16 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p int32 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p int64 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p float32 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p float64 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p xor_uint8 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p xor_uint16 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p xor_uint32 t; test(test_prefix, lt_or_eq(t), t); }
-    { pd_shared3p xor_uint64 t; test(test_prefix, lt_or_eq(t), t); }
+        test_prefix = "Operator < (len $n)";
+        // { pd_shared3p bool t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p uint8 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p uint16 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p uint32 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p uint64 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p int8 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p int16 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p int32 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p int64 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p float32 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p float64 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p xor_uint8 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p xor_uint16 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p xor_uint32 t; test(test_prefix, lt(t, n), t); }
+        { pd_shared3p xor_uint64 t; test(test_prefix, lt(t, n), t); }
 
-    test_prefix = "Operator ==";
-    { pd_shared3p bool t; test(test_prefix, eq(t), t); }
-    { pd_shared3p uint8 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p uint16 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p uint32 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p uint64 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p int8 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p int16 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p int32 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p int64 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p float32 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p float64 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p xor_uint8 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p xor_uint16 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p xor_uint32 t; test(test_prefix, eq(t), t); }
-    { pd_shared3p xor_uint64 t; test(test_prefix, eq(t), t); }
+        test_prefix = "Operator >= (len $n)";
+        // { pd_shared3p bool t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p uint8 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p uint16 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p uint32 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p uint64 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p int8 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p int16 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p int32 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p int64 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p float32 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p float64 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p xor_uint8 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p xor_uint16 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p xor_uint32 t; test(test_prefix, gt_or_eq(t, n), t); }
+        { pd_shared3p xor_uint64 t; test(test_prefix, gt_or_eq(t, n), t); }
 
-    test_prefix = "Operator !=";
-    { pd_shared3p bool t; test(test_prefix, ne(t), t); }
-    { pd_shared3p uint8 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p uint16 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p uint32 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p uint64 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p int8 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p int16 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p int32 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p int64 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p float32 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p float64 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p xor_uint8 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p xor_uint16 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p xor_uint32 t; test(test_prefix, ne(t), t); }
-    { pd_shared3p xor_uint64 t; test(test_prefix, ne(t), t); }
+        test_prefix = "Operator <= (len $n)";
+        // { pd_shared3p bool t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p uint8 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p uint16 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p uint32 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p uint64 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p int8 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p int16 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p int32 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p int64 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p float32 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p float64 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p xor_uint8 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p xor_uint16 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p xor_uint32 t; test(test_prefix, lt_or_eq(t, n), t); }
+        { pd_shared3p xor_uint64 t; test(test_prefix, lt_or_eq(t, n), t); }
+
+        test_prefix = "Operator == (len $n)";
+        { pd_shared3p bool t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p uint8 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p uint16 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p uint32 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p uint64 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p int8 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p int16 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p int32 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p int64 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p float32 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p float64 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p xor_uint8 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p xor_uint16 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p xor_uint32 t; test(test_prefix, eq(t, n), t); }
+        { pd_shared3p xor_uint64 t; test(test_prefix, eq(t, n), t); }
+
+        test_prefix = "Operator != (len $n)";
+        { pd_shared3p bool t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p uint8 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p uint16 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p uint32 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p uint64 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p int8 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p int16 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p int32 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p int64 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p float32 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p float64 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p xor_uint8 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p xor_uint16 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p xor_uint32 t; test(test_prefix, ne(t, n), t); }
+        { pd_shared3p xor_uint64 t; test(test_prefix, ne(t, n), t); }
+    }
 
     test_report();
 }
