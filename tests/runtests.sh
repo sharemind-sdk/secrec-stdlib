@@ -143,7 +143,7 @@ run_normal() {
     local TEST_NAME="$2"
     (cd "`dirname ${TEST_RUNNER}`" &&
         ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
-                "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
+                "./`basename ${TEST_RUNNER}`" --conf controller.cfg --file "${SB_BN}" \
                         --logfile "${TEST_LOG_FILE_PATH}" --logmode append \
                     | sed "s#^#${TEST_NAME}#g") \
              3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
@@ -163,7 +163,7 @@ run_gdb() {
                     -ex 'thread apply all backtrace full' \
                     -ex 'info registers' \
                     --args \
-                        "./`basename ${TEST_RUNNER}`" --file "${SB_BN}" \
+                        "./`basename ${TEST_RUNNER}`" --conf controller.cfg --file "${SB_BN}" \
                                 --logfile "${TEST_LOG_FILE_PATH}" --logmode append \
                             | sed "s#^#${TEST_NAME}#g") \
              3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
