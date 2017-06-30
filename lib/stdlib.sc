@@ -100,6 +100,7 @@ int64 INT64_MIN = -9223372036854775808;
 * \defgroup isnegligible isNegligible
 * \defgroup substring substring
 * \defgroup isprefixof_string isPrefixOf
+* \defgroup issuffixof_string isSuffixOf
 * \defgroup iota iota
 */
 
@@ -1719,6 +1720,22 @@ bool isPrefixOf(string a, string b) {
     if (strlen(a) > strlen(b))
         return false;
     return a == substring(b, 0 :: uint, strlen(a));
+}
+/** @} */
+
+/** \addtogroup issuffixof_string
+ *  @{
+ *  @brief Function for checking if a string is a suffix of another string.
+ *  @param a suffix string
+ *  @param b other string
+ *  @return returns true if a is a suffix of b and false otherwise
+ */
+bool isSuffixOf(string a, string b) {
+    uint lena = strlen(a);
+    uint lenb = strlen(b);
+    if (lena > lenb)
+        return false;
+    return a == substring(b, lenb - lena, lenb);
 }
 /** @} */
 
