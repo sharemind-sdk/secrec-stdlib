@@ -39,6 +39,7 @@ import stdlib;
  * \defgroup tdb_vmap_get_batch_count tdbVmapGetBatchCount
  * \defgroup tdb_open_connection tdbOpenConnection
  * \defgroup tdb_close_connection tdbCloseConnection
+ * \defgroup tdb_get_table_names tdbGetTableNames
  * \defgroup tdb_table_create tdbTableCreate
  * \defgroup tdb_table_delete tdbTableDelete
  * \defgroup tdb_table_exists tdbTableExists
@@ -254,6 +255,20 @@ void tdbOpenConnection (string datasource) {
  */
 void tdbCloseConnection (string datasource) {
     __syscall ("tdb_close", __cref datasource);
+}
+/** @} */
+
+/** \addtogroup tdb_get_table_names
+ *  @{
+ *  @brief Get the names of tables in a data source
+ *  @param datasource - data source name
+ *  @return returns a vector map with the vector "names" consisting of
+ *  the table names
+ */
+uint64 tdbGetTableNames(string datasource) {
+    uint64 rv = 0;
+    __syscall ("tdb_table_names", __cref datasource, __return rv);
+    return rv;
 }
 /** @} */
 
