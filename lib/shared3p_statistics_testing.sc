@@ -510,12 +510,12 @@ D FT _chiSquaredXClasses (D UT[[2]] contTable, T dummy) {
     rowSums[0] = sum (contTable [: , 0]);
     rowSums[1] = sum (contTable [: , 1]);
     D UT total = rowSums[0] + rowSums[1];
-    D UT[[1]] mulParA (2 * k), mulParB (2 * k), mulParRes (2 * k);
+    D FT[[1]] mulParA (2 * k), mulParB (2 * k), mulParRes (2 * k);
 
-    mulParA [0 : k] = colSums;
-    mulParA [k : 2 * k] = colSums;
-    mulParB [0 : k] = rowSums[0];
-    mulParB [k : 2 * k] = rowSums[1];
+    mulParA [0 : k] = (FT) colSums;
+    mulParA [k : 2 * k] = (FT) colSums;
+    mulParB [0 : k] = (FT) rowSums[0];
+    mulParB [k : 2 * k] = (FT) rowSums[1];
     mulParRes = mulParA * mulParB;
 
     D FT[[1]] totals (k * 2) = (FT) total;
