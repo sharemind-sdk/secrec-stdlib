@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -30,11 +30,11 @@ Supported types: \ref bool "bool" / \ref uint8 / \ref uint16 / \ref uint32 / \re
 
 | type     | operators              |
 | :------: | :--------------------: |
-| bool     | > , < , >= , <= , == , != |
-| uint8:   | + , - , * , / , % , > , < , >= , <= , == , != |
-| uint16:  | + , - , * , / , % , > , < , >= , <= , == , != |
-| uint32:  | + , - , * , / , % , > , < , >= , <= , == , != |
-| uint64:  | + , - , * , / , % , > , < , >= , <= , == , != |
+| bool     | > , < , >= , <= , == , !=, &, \|, ^, ! |
+| uint8:   | + , - , * , / , % , > , < , >= , <= , == , !=, &, \|, ^, ~, <<, >> |
+| uint16:  | + , - , * , / , % , > , < , >= , <= , == , !=, &, \|, ^, ~, <<, >> |
+| uint32:  | + , - , * , / , % , > , < , >= , <= , == , !=, &, \|, ^, ~, <<, >> |
+| uint64:  | + , - , * , / , % , > , < , >= , <= , == , !=, &, \|, ^, ~, <<, >> |
 | int8:    | + , - , * , / , % , > , < , >= , <= , == , != |
 | int16:   | + , - , * , / , % , > , < , >= , <= , == , != |
 | int32:   | + , - , * , / , % , > , < , >= , <= , == , != |
@@ -66,21 +66,21 @@ Supported types: \ref bool "bool" / \ref uint8 / \ref uint16 / \ref uint32 / \re
 
 | type        | operators              |
 | :---------: | :--------------------: |
-| bool        | == , != |
-| uint8:      | + , - , * , > , < , >= , <= , == , != |
-| uint16:     | + , - , * , > , < , >= , <= , == , != |
-| uint32:     | + , - , * , / , > , < , >= , <= , == , != |
-| uint64:     | + , - , * , / , > , < , >= , <= , == , != |
+| bool        | == , !=, &, \|, ^, ! |
+| uint8:      | + , - , * , / , % , > , < , >= , <= , == , !=, <<, >> |
+| uint16:     | + , - , * , / , % , > , < , >= , <= , == , !=, <<, >> |
+| uint32:     | + , - , * , / , % , > , < , >= , <= , == , !=, <<, >> |
+| uint64:     | + , - , * , / , % , > , < , >= , <= , == , !=, <<, >> |
 | int8:       | + , - , * , > , < , >= , <= , == , != |
 | int16:      | + , - , * , > , < , >= , <= , == , != |
 | int32:      | + , - , * , > , < , >= , <= , == , != |
 | int64:      | + , - , * , > , < , >= , <= , == , != |
-| float32:    | + , - , * , / , == , != |
-| float64:    | + , - , * , / , == , != |
-| xor_uint8:  | > , < , >= , <= , == , != |
-| xor_uint16: | > , < , >= , <= , == , != |
-| xor_uint32: | > , < , >= , <= , == , != |
-| xor_uint64: | > , < , >= , <= , == , != |
+| float32:    | + , - , * , / , > , < , >= , <= , == , != |
+| float64:    | + , - , * , / , > , < , >= , <= , == , != |
+| xor_uint8:  | > , < , >= , <= , == , !=, &, \|, ^, ~, <<, >> |
+| xor_uint16: | > , < , >= , <= , == , !=, &, \|, ^, ~, <<, >> |
+| xor_uint32: | > , < , >= , <= , == , !=, &, \|, ^, ~, <<, >> |
+| xor_uint64: | > , < , >= , <= , == , !=, &, \|, ^, ~, <<, >> |
 
 @subsection shared3p_cast casting
 
@@ -103,4 +103,4 @@ Supported types: \ref bool "bool" / \ref uint8 / \ref uint16 / \ref uint32 / \re
 | xor_uint64: | - |
 
 */
- 
+

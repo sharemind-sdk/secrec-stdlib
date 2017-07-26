@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -31,31 +31,74 @@ feature is desirable in several data mining operations and simplifies the develo
 
 @subsection arithmetic_operators Arithmetic Operators
 
-SecreC supports the following arithmetic operators: (a) + for addition, (b) - for subtraction, (c) * for
-multiplication, (d) / for division, (e) % for modulo, and (f) - for numeric unary negation.
- Arithmetic operators can be called on mixed security typed parameters. The resulting security type
-is always the stricter of parameters, and the value with the looser security type is implicitly classified. If operator is called on mixed security typed parameters a type error is raised. Calling binary operators on
-expressions of mixed data types is forbidden, and requires explicit data type cast. The types of arithmetic
-operators are informally described in Table 1.
+SecreC supports the following arithmetic operators:
+
+-# `+` for addition,
+-# `-` for subtraction,
+-# `*` for multiplication,
+-# `/` for division,
+-# `%` for integer modulo,
+-# `-` for numeric unary negation, and
+-# `++`,`--` for incrementing/decrementing integers.
+
+Arithmetic operators can be called on mixed security typed parameters. The resulting security type
+is always the stricter of parameters, and the value with the looser security type is implicitly classified.
+Calling binary operators on expressions of mixed data types, however, is forbidden, and requires explicit data type cast.
+The types of arithmetic operators are informally described in Table 1.
 
 Table 1: Public scalar operator types
 
-| Operator          | Return        | Parameters           |
-| :---------------- | :------------ | :------------------- |
-| `&&,`\|\|`,!`     | **bool**      | **bool**             |
-| `<,>,<=,>=,==,!=` | **bool**      | Any types            |
-| `+,*,/,%,++`      | Argument type | Integer types        |
-| `-,--`            | Argument type | Signed integer types |
+| Operator          | Return        | Parameters                       |
+| :---------------- | :------------ | :------------------------------- |
+| `!`               | **bool**      | **bool**                         |
+| `&,`\|`,^`        | Argument type | **bool**, unsigned integer types |
+| `<<, >>, ~`       | Argument type | Unsigned integer types           |
+| `<,>,<=,>=,==,!=` | **bool**      | Any types                        |
+| `+,-,*,/,%,++,--` | Argument type | Integer and floating-point types |
+
+@subsection relational_operators Relational operators
+
+Following relational operators are supported:
+
+-# equality `==`,
+-# inequality `!=`,
+-# less-than `<`,
+-# less-or-equal `<=`,
+-# greater-than `>`, and
+-# greater-or-equal `>=`.
+
+Relational operators always return boolean value. Arguments can be of any built-in data type. Arguments have to be of the same data type, but
+can be called on mixed security types in which case the result is the stricter of the two. If needed scalars are implicitly converted to arrays.
 
 @subsection logical_operators Logical operators
 
-Following relational operators are supported: (a) == equality, (b) != inequality, (c) < less-than, (d) <= less-or-equal, (e) > greater-than, and (f) >= greater-or-equal. Relational operators always return boolean value. Arguments can be boolean, and integer typed. Arguments have to be of the same data type, but
-can be called on mixed security types in which case the result is the stricter of the two. If needed scalars are implicitly converted to arrays.
-SecreC supports following logical operations: (a) && for conjunction, (b) || for disjunction, and (c) ! for logical unary negation. All require arguments and return types to be boolean. As with arithmetic and relational expressions boolean expressions can be called on mixed security typed parameters, and
+SecreC supports following Boolean logic operations for the **bool** data type:
+
+-# `&` for conjunction,
+-# `|` for disjunction,
+-# `^` for exclusive-OR (XOR), and
+-# `!` for logical unary negation.
+
+All require arguments and return types to be boolean. As with arithmetic and relational expressions boolean expressions can be called on mixed security typed parameters, and
 implicit scalar to array conversion is performed when required. However, calling boolean expressions on mixed security types has an important caveat.
-It’s common for strict languages to evaluate logical boolean expressions lazily (known as *short-circuit evaluation* ). For example, if the first branch of conjunction expression evaluates to false the second branch is never evaluated. This is also the case in SecreC for boolean expressions called on
-public scalar values, but not if any of the arguments is private or scalar. The reason for this behavior is that any changes in control flow are publicly visible, and that can cause unwanted private data to leak
-into public space. To avoid leaking information in such manner the logical expression on private data always evaluate both branches. Due to the point-wise behavior a short-circuit evaluation is not possible for boolean expressions if one of the arguments is a non-scalar.
+It’s common for strict languages to evaluate logical boolean expressions lazily (known as *short-circuit evaluation* ).
+For example, if the first branch of conjunction expression evaluates to false the second branch is never evaluated.
+This is also the case in SecreC for boolean expressions called on public scalar values, but not if any of the arguments is private or scalar.
+The reason for this behavior is that any changes in control flow are publicly visible, and that can cause unwanted private data to leak
+into public space. To avoid leaking information in such manner the logical expression on private data always evaluate both branches.
+Due to the point-wise behavior a short-circuit evaluation is not possible for boolean expressions if one of the arguments is a non-scalar.
+
+@subsection bitwise_operators Bitwise operators
+
+The following operators are supported for bit manipulation of unsigned integer types:
+
+-# `&` for bitwise AND,
+-# `|` for bitwise OR,
+-# `^` for bitwise exclusive-OR (XOR),
+-# `~` for the bitwise complement (flips all bits), and
+-# `<< , >>` for bitwise left shift and right shift respectively.
+
+Bitwise expressions can be called on mixed security typed parameters, and implicit scalar to array conversion is performed when required.
 
 @subsection casting_operators Casting operators
 

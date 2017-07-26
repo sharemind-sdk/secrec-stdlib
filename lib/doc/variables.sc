@@ -84,8 +84,8 @@ Table 1: Operator precedence
 | 4     | `+,-`              |                             |               |
 | 5     | `<,>,<=,>=`        | Relational Operations       |               |
 | 6     | `==,!=`            |                             |               |
-| 7     | `&&`               | Logical conjunction         |               |
-| 8     | \|\|               | Logical disjunction         |               |
+| 7     | `&`                | Logical conjunction         |               |
+| 8     | \|                 | Logical disjunction         |               |
 | 9     | `?:`               | Ternary operator            | Right         |
 | 10    | `=,+=,-=,*=,/=,%=` | Assignment operations       |               |
 
