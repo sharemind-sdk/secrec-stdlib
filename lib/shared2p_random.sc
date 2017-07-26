@@ -30,7 +30,7 @@ import shared2p;
 /**
 * @file
 * \defgroup shared2p_random shared2p_random.sc
-* \defgroup randomize randomize
+* \defgroup s2p_randomize randomize
 */
 
 /** \addtogroup shared2p_random
@@ -44,7 +44,7 @@ import shared2p;
 ********************************/
 
 
-/** \addtogroup randomize
+/** \addtogroup s2p_randomize
  *  @{
  *  @brief Function for randomizing values
  *  @note **D** - shared2p protection domain
@@ -126,4 +126,4 @@ D xor_uint64[[N]] randomize(D xor_uint64[[N]] arr) {
 
 /** @}*/
 /** @}*/
- 
+
