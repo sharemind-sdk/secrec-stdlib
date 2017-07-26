@@ -269,12 +269,11 @@ D T[[2]] inverseShuffleColumns (D T[[2]] mat, D uint8[[1]] key) {
  *  @{
  *  @brief Function for randomizing values
  *  @note **D** - shared3p protection domain
- *  @note **T** - any \ref data_types "data" type
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param arr - an array of any dimension
  *  @return returns an array with randomized values
  *  @leakage{None}
  */
-
 template <domain D : shared3p, dim N>
 D bool[[N]] randomize(D bool[[N]] arr) {
     __syscall("shared3p::randomize_bool_vec", __domainid(D), arr);
@@ -352,6 +351,5 @@ D xor_uint64[[N]] randomize(D xor_uint64[[N]] arr) {
     __syscall("shared3p::randomize_xor_uint64_vec", __domainid(D), arr);
     return arr;
 }
-
 /** @}*/
 /** @}*/
