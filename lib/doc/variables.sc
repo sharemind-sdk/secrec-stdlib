@@ -71,24 +71,6 @@ Listing 3: (Non)empty arrays
 
 @subsection Scope
 
-Table 1: Operator precedence
-| Level | Operator           | Description                 | Associativity |
-| ----: | :----------------- | :-------------------------- | :------------ |
-| 1     | `++,--`            | Postfix increment/decrement | Left          |
-|       | `()`               | Function call               |               |
-|       | `[]`               | Array access                |               |
-| 2     | `++,--`            | Prefix increment/decrement  | Right         |
-|       | `!`                | Logical negotiation         |               |
-|       | `-`                | Unary negotiation           |               |
-| 3     | `*,/,%`            | Arithmetic operations       | Left          |
-| 4     | `+,-`              |                             |               |
-| 5     | `<,>,<=,>=`        | Relational Operations       |               |
-| 6     | `==,!=`            |                             |               |
-| 7     | `&`                | Logical conjunction         |               |
-| 8     | \|                 | Logical disjunction         |               |
-| 9     | `?:`               | Ternary operator            | Right         |
-| 10    | `=,+=,-=,*=,/=,%=` | Assignment operations       |               |
-
 The scope of a variable always ends with the containing statement block. Variables with same name can not be declared within the same scope, but can be overshadowed by declaring a new variable with same name in a deeper nested scope. Global variables never fall out of scope, and can not be overshadowed. Privacy domains, and domain kinds can not be overshadowed. Variables with the same names can be declared in non-overlapping scopes.
 
 Listing 4: Variable overshadowing
