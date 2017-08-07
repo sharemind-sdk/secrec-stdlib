@@ -25,11 +25,11 @@
 Table 1: Operator precedence from highest to lowest
 | Level | Operator                     | Description                 | Associativity |
 | ----: | :--------------------------- | :-------------------------- | :------------ |
-| 14    | `=,+=,-=,*=,/=,%=,&=,\|=,^=` | Assignment operators        | Right         |
+| 14    | `=,+=,-=,*=,/=,%=,&=,`\|`=,^=` | Assignment operators        | Right         |
 | 13    | `?:`                         | Ternary operator            | Left          |
-| 12    | `\|`                         | Logical disjunction         | Left          |
-| 11    | `&`                          | Logical conjunction         | Left          |
-| 10    | `\|`                         | Bitwise OR                  | Left          |
+| 12    | ` `\|` `\|` `                | Logical disjunction         | Left          |
+| 11    | `&&`                         | Logical conjunction         | Left          |
+| 10    | ` `\|` `                     | Bitwise OR                  | Left          |
 | 9     | `^`                          | Bitwise XOR                 | Left          |
 | 8     | `&`                          | Bitwise AND                 | Left          |
 | 7     | `==,!=`                      | Relational operators        | -             |
@@ -52,7 +52,7 @@ Supported types: \ref bool "bool" / \ref uint8 / \ref uint16 / \ref uint32 / \re
 
 | type     | operators              |
 | :------: | :--------------------: |
-| bool     | > , < , >= , <= , == , !=, &, \|, ^, ! |
+| bool     | > , < , >= , <= , == , !=, &&, \|\|, &, \|, ^, ! |
 | uint8:   | + , - , * , / , % , > , < , >= , <= , == , !=, &, \|, ^, ~, <<, >> |
 | uint16:  | + , - , * , / , % , > , < , >= , <= , == , !=, &, \|, ^, ~, <<, >> |
 | uint32:  | + , - , * , / , % , > , < , >= , <= , == , !=, &, \|, ^, ~, <<, >> |
@@ -117,12 +117,12 @@ Supported types: \ref bool "bool" / \ref uint8 / \ref uint16 / \ref uint32 / \re
 | int16:   | bool , uint16, float32/64 |
 | int32:   | bool , uint32, float32/64 |
 | int64:   | bool , uint64 |
-| float32: | - |
-| float64: | - |
-| xor_uint8:  | - |
-| xor_uint16: | - |
-| xor_uint32: | - |
-| xor_uint64: | - |
+| float32: | float64 |
+| float64: | float32 |
+| xor_uint8:  | xor_uint16, xor_uint32, xor_uint64 |
+| xor_uint16: | xor_uint8, xor_uint32, xor_uint64 |
+| xor_uint32: | xor_uint8, xor_uint16, xor_uint64 |
+| xor_uint64: | xor_uint8, xor_uint16, xor_uint32 |
 
 */
 

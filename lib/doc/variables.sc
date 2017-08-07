@@ -71,7 +71,7 @@ Listing 3: (Non)empty arrays
 
 @subsection Scope
 
-The scope of a variable always ends with the containing statement block. Variables with same name can not be declared within the same scope, but can be overshadowed by declaring a new variable with same name in a deeper nested scope. Global variables never fall out of scope, and can not be overshadowed. Privacy domains, and domain kinds can not be overshadowed. Variables with the same names can be declared in non-overlapping scopes.
+The scope of a variable always ends with the containing statement block. Variables with the same name can not be declared within the same scope, but can be overshadowed by declaring a new variable with same name in a deeper nested scope. Global variables never fall out of scope, and can not be overshadowed. Privacy domains, and domain kinds can not be overshadowed. Variables with the same names can be declared in non-overlapping scopes.
 
 Listing 4: Variable overshadowing
 \code

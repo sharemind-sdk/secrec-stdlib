@@ -51,6 +51,7 @@ Table 1: Public scalar operator types
 | Operator          | Return        | Parameters                       |
 | :---------------- | :------------ | :------------------------------- |
 | `!`               | **bool**      | **bool**                         |
+| `&&,`\|` `\|` `   | **bool**      | **bool**                         |
 | `&,`\|`,^`        | Argument type | **bool**, unsigned integer types |
 | `<<, >>, ~`       | Argument type | Unsigned integer types           |
 | `<,>,<=,>=,==,!=` | **bool**      | Any types                        |
@@ -74,8 +75,8 @@ can be called on mixed security types in which case the result is the stricter o
 
 SecreC supports following Boolean logic operations for the **bool** data type:
 
--# `&` for conjunction,
--# `|` for disjunction,
+-# `&&` for conjunction,
+-# `||` for disjunction,
 -# `^` for exclusive-OR (XOR), and
 -# `!` for logical unary negation.
 
@@ -85,8 +86,7 @@ It’s common for strict languages to evaluate logical boolean expressions lazil
 For example, if the first branch of conjunction expression evaluates to false the second branch is never evaluated.
 This is also the case in SecreC for boolean expressions called on public scalar values, but not if any of the arguments is private or scalar.
 The reason for this behavior is that any changes in control flow are publicly visible, and that can cause unwanted private data to leak
-into public space. To avoid leaking information in such manner the logical expression on private data always evaluate both branches.
-Due to the point-wise behavior a short-circuit evaluation is not possible for boolean expressions if one of the arguments is a non-scalar.
+into public space. To avoid leaking information in such manner, we do not support the short-circuited operators on private values. Bitwise conjunction and disjunction can be used instead which will evaluate to the same result but will always evaluate both branches. Due to the point-wise behavior a short-circuit evaluation is not possible for boolean expressions if one of the arguments is a non-scalar.
 
 @subsection bitwise_operators Bitwise operators
 
