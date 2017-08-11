@@ -69,7 +69,9 @@ CACHE_DIR="${SHAREMIND_PATH}/tmp/runtests_cache"
 # Check for GDB
 RUN_GDB="${RUN_GDB:-1}"
 
+set +e
 type gdb >/dev/null 2>&1
+set -e
 HAVE_GDB="$?"
 
 if [ -z "${SHAREMIND_TEST_LOG_PATH}" ]; then
