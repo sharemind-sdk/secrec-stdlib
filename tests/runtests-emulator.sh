@@ -77,8 +77,15 @@ function add_on_exit() {
     fi
 }
 
-if [ -d "${SHAREMIND_PATH}/lib" ]; then
-    NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}${SHAREMIND_PATH}/lib"
+if [ -d "${SHAREMIND_PATH}" ]; then
+  L=$(find "${SHAREMIND_PATH}" -name *.so -print0 | xargs -0 -n1 dirname | sort -u)
+  L=$(for d in $L; do echo -n "$(cd "$d"; pwd):"; done)
+  L="${L%:}"
+  if [ "$L" != "" ]; then
+    NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}$L"
+    echo "NEW_LD_LIBRARY_PATH=$NEW_LD_LIBRARY_PATH"
+  fi
+  unset -v L
 fi
 
 TEST_PATH="${SHAREMIND_PATH}/lib/sharemind/test"
