@@ -91,7 +91,6 @@ if [ -d "${SHAREMIND_PATH}" ]; then
   L="${L%:}"
   if [ "$L" != "" ]; then
     NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}$L"
-    echo "NEW_LD_LIBRARY_PATH=$NEW_LD_LIBRARY_PATH"
   fi
   unset -v L
 fi
