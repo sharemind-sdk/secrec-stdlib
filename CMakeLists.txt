@@ -43,10 +43,10 @@ INSTALL(FILES ${SharemindStdlib_FILES}
 # Stdlib documentation:
 
 ADD_CUSTOM_TARGET(stdlib_docs ALL
-                  COMMAND "./build_html.sh"
-                  WORKING_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/docs")
-
-INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/docs/html"
+                  COMMAND "${CMAKE_CURRENT_SOURCE_DIR}/docs/build_html.sh"
+                          "${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile"
+                  WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
+INSTALL(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated_docs/html"
         DESTINATION "share/doc/sharemind/stdlib")
 
 # Stdlib tests:

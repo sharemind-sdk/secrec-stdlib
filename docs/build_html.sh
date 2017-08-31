@@ -18,7 +18,7 @@
 # For further information, please contact us at sharemind@cyber.ee.
 #
 
-doxygen Doxyfile
+doxygen "$@"
 for file in $(grep -il "." html/*.html)
 do
 	sed '/.*<td class=\"paramtype\">.*<\/td>/ {
