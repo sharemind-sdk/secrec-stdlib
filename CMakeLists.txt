@@ -17,11 +17,16 @@
 # For further information, please contact us at sharemind@cyber.ee.
 #
 
-CMAKE_MINIMUM_REQUIRED(VERSION 2.8)
-PROJECT(SHAREMIND_STDLIB CXX)
+CMAKE_MINIMUM_REQUIRED(VERSION 3.0)
+PROJECT(SharemindStdlib VERSION 2.0.0 LANGUAGES NONE)
 
 INCLUDE("${CMAKE_CURRENT_SOURCE_DIR}/config.local" OPTIONAL)
 INCLUDE("${CMAKE_CURRENT_BINARY_DIR}/config.local" OPTIONAL)
+
+FIND_PACKAGE(SharemindCMakeHelpers REQUIRED)
+
+SharemindSetProjectVersion()
+
 
 FIND_PACKAGE(Doxygen REQUIRED)
 
@@ -38,7 +43,8 @@ ADD_CUSTOM_TARGET("include_SharemindStdlib_ALLFILES_in_IDE" SOURCES
 # Note that this globbing is done by cmake, not by make, hence sometimes clean might be required.
 FILE(GLOB SharemindStdlib_FILES "${CMAKE_CURRENT_SOURCE_DIR}/lib/*.sc")
 INSTALL(FILES ${SharemindStdlib_FILES}
-        DESTINATION "lib/sharemind/stdlib")
+        DESTINATION "lib/sharemind/stdlib"
+        COMPONENT "stdlib")
 
 # Stdlib documentation:
 
@@ -47,7 +53,8 @@ ADD_CUSTOM_TARGET(stdlib_docs ALL
                           "${CMAKE_CURRENT_SOURCE_DIR}/docs/Doxyfile"
                   WORKING_DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}")
 INSTALL(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated_docs/html"
-        DESTINATION "share/doc/sharemind/stdlib")
+        DESTINATION "share/doc/sharemind/stdlib"
+        COMPONENT "doc")
 
 # Stdlib tests:
 
@@ -55,8 +62,37 @@ INSTALL(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated_docs/html"
 FILE(GLOB SharemindStdlibTest_FILES "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sh"
                                     "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.py")
 INSTALL(PROGRAMS ${SharemindStdlibTest_FILES}
-        DESTINATION "bin")
+        DESTINATION "bin"
+        COMPONENT "tests")
 
 INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests/"
         DESTINATION "lib/sharemind/test"
+        COMPONENT "tests"
         FILES_MATCHING PATTERN "*.sc")
+
+
+# Packaging:
+SharemindSetupPackaging()
+SharemindAddComponentPackage("stdlib"
+    NAME "secrec-stdlib"
+    DESCRIPTION "SecreC Standard Library"
+    DEB_SECTION "devel"
+    DEB_DEPENDS
+        "secrec"
+)
+SharemindAddComponentPackage("doc"
+    NAME "secrec-stdlib-doc"
+    DESCRIPTION "SecreC Standard Library documentation"
+    DEB_SECTION "doc"
+)
+SharemindAddComponentPackage("tests"
+    NAME "secrec-stdlib-tests"
+    DESCRIPTION "SecreC Standard Library tests"
+    DEB_SECTION "misc"
+    DEB_DEPENDS
+        "bash"
+        "python"
+        "secrec"
+        "secrec-stdlib"
+)
+SharemindPackagingFinalize()
