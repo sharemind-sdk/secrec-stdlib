@@ -92,7 +92,7 @@ SharemindAddComponentPackage("tests"
     DEB_DEPENDS
         "bash"
         "python"
-        "secrec"
+        "scc (>= 2.0.0)"
         "secrec-stdlib"
 )
 SharemindPackagingFinalize()
