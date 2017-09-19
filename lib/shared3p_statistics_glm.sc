@@ -34,9 +34,11 @@ import stdlib;
  * @file
  * \defgroup shared3p_statistics_glm shared3p_statistics_glm.sc
  * \defgroup shared3p_glm_constants constants
+ * \defgroup shared3p_glm_result GLMResult
  * \defgroup shared3p_generalized_linear_model generalizedLinearModel
  * \defgroup shared3p_generalized_linear_model_method generalizedLinearModel(with method parameter)
  * \defgroup shared3p_params_stderr parametersStandardErrors
+ * \defgroup shared3p_glm_aic GLMAIC
  */
 
 /**
@@ -47,6 +49,24 @@ import stdlib;
  */
 
 /**
+ * \addtogroup shared3p_glm_result
+ * @{
+ * @brief GLM result type
+ */
+template<domain D, type T>
+struct GLMResult {
+    /** family parameter used in the GLM call */
+    int64 family;
+    /** fitted coefficients */
+    D T[[1]] coefficients;
+    /** means calculated from the fitted coefficients */
+    D T[[1]] means;
+    /** linear predictors calculated from the fitted coefficients */
+    D T[[1]] linearPredictors;
+}
+/** @} */
+
+/**
  * \addtogroup shared3p_glm_constants
  * @{
  * @brief constants
@@ -54,8 +74,8 @@ import stdlib;
  * of the dependent variable. The "SOLE method" constants specify the
  * algorithm used to solve systems of linear equations.
  */
-int64 GLM_FAMILY_GAUSSIAN        = 0;
-int64 GLM_FAMILY_BINOMIAL_LOGIT  = 1;
+int64 GLM_FAMILY_GAUSSIAN       = 0;
+int64 GLM_FAMILY_BINOMIAL_LOGIT = 1;
 
 int64 GLM_SOLE_METHOD_INVERT             = 0;
 int64 GLM_SOLE_METHOD_LU_DECOMPOSITION   = 1;
@@ -70,12 +90,13 @@ int64 GLM_SOLE_METHOD_CONJUGATE_GRADIENT = 3;
  * Models" by McCullagh and Nelder.
  */
 template<domain D : shared3p, type FT>
-D FT[[1]] _glm(D FT[[1]] dependent,
-               D FT[[2]] vars,
-               int64 family,
-               uint iterations,
-               int64 SOLEmethod,
-               uint SOLEiterations)
+GLMResult<D, FT>
+_glm(D FT[[1]] dependent,
+     D FT[[2]] vars,
+     int64 family,
+     uint iterations,
+     int64 SOLEmethod,
+     uint SOLEiterations)
 {
     assert(family == GLM_FAMILY_GAUSSIAN ||
            family == GLM_FAMILY_BINOMIAL_LOGIT);
@@ -147,19 +168,25 @@ D FT[[1]] _glm(D FT[[1]] dependent,
             p[:, 0] = _conjugateGradient(varsSOLE, dependentSOLE[:, 0], SOLEiterations);
         }
 
-        if (!(iteration < iterations))
-            break;
-
         // Update eta
         eta = matrixMultiplication(vars, p);
 
         // Update mu
         mu = _linkInverse(eta, family);
 
-        iteration++;
+        if (!(iteration < iterations))
+            break;
+
+        ++iteration;
     }
 
-    return p[:, 0];
+    public GLMResult<D, FT> res;
+    res.family = family;
+    res.coefficients = p[:, 0];
+    res.means = mu[:, 0];
+    res.linearPredictors = eta[:, 0];
+
+    return res;
 }
 
 template<domain D, type FT>
@@ -242,10 +269,11 @@ D T[[2]] _toCol(D T[[1]] vec) {
 }
 
 template<domain D : shared3p, type T>
-D T[[1]] _dispatch(D T[[1]] dependent,
-                   D T[[2]] variables,
-                   int64 family,
-                   uint iterations)
+GLMResult<D, T>
+_dispatch(D T[[1]] dependent,
+          D T[[2]] variables,
+          int64 family,
+          uint iterations)
 {
     uint varCount = shape(variables)[1];
 
@@ -316,26 +344,31 @@ D T[[1]] _parametersStandardErrors(D T[[1]] dependent,
  * explanatory variable
  * @param family - indicates the distribution of the dependent
  * variable
+ * @return returns \ref GLMResult structure
  * @param iterations - number of iterations of the GLM algorithm
  * @leakage{None}
  */
 template<domain D : shared3p>
-D float32[[1]] generalizedLinearModel(D int32[[1]] dependent, D int32[[2]] variables, int64 family, uint iterations) {
+GLMResult<D, float32>
+generalizedLinearModel(D int32[[1]] dependent, D int32[[2]] variables, int64 family, uint iterations) {
     return _dispatch((float32) dependent, (float32) variables, family, iterations);
 }
 
 template<domain D : shared3p>
-D float64[[1]] generalizedLinearModel(D int64[[1]] dependent, D int64[[2]] variables, int64 family, uint iterations) {
+GLMResult<D, float64>
+generalizedLinearModel(D int64[[1]] dependent, D int64[[2]] variables, int64 family, uint iterations) {
     return _dispatch((float64) dependent, (float64) variables, family, iterations);
 }
 
 template<domain D : shared3p>
-D float32[[1]] generalizedLinearModel(D float32[[1]] dependent, D float32[[2]] variables, int64 family, uint iterations) {
+GLMResult<D, float32>
+generalizedLinearModel(D float32[[1]] dependent, D float32[[2]] variables, int64 family, uint iterations) {
     return _dispatch(dependent, variables, family, iterations);
 }
 
 template<domain D : shared3p>
-D float64[[1]] generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] variables, int64 family, uint iterations) {
+GLMResult<D, float64>
+generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] variables, int64 family, uint iterations) {
     return _dispatch(dependent, variables, family, iterations);
 }
 /** @} */
@@ -357,26 +390,30 @@ D float64[[1]] generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] v
  * @param SOLEiterations - if the conjugate gradient method is used
  * for solving systems of linear equations, this parameter is the
  * number of iterations to use
- *
- *@leakage{None}
+ * @return returns \ref GLMResult structure
+ * @leakage{None}
  */
 template<domain D : shared3p>
-D float32[[1]] generalizedLinearModel(D int32[[1]] dependent, D int32[[2]] variables, int64 family, uint iterations, int64 SOLEmethod, uint SOLEiterations) {
+GLMResult<D, float32>
+generalizedLinearModel(D int32[[1]] dependent, D int32[[2]] variables, int64 family, uint iterations, int64 SOLEmethod, uint SOLEiterations) {
     return _glm((float32) dependent, (float32) variables, family, iterations, SOLEmethod, SOLEiterations);
 }
 
 template<domain D : shared3p>
-D float64[[1]] generalizedLinearModel(D int64[[1]] dependent, D int64[[2]] variables, int64 family, uint iterations, int64 SOLEmethod, uint SOLEiterations) {
+GLMResult<D, float64>
+generalizedLinearModel(D int64[[1]] dependent, D int64[[2]] variables, int64 family, uint iterations, int64 SOLEmethod, uint SOLEiterations) {
     return _glm((float64) dependent, (float64) variables, family, iterations, SOLEmethod, SOLEiterations);
 }
 
 template<domain D : shared3p>
-D float32[[1]] generalizedLinearModel(D float32[[1]] dependent, D float32[[2]] variables, int64 family, uint iterations, int64 SOLEmethod, uint SOLEiterations) {
+GLMResult<D, float32>
+generalizedLinearModel(D float32[[1]] dependent, D float32[[2]] variables, int64 family, uint iterations, int64 SOLEmethod, uint SOLEiterations) {
     return _glm(dependent, variables, family, iterations, SOLEmethod, SOLEiterations);
 }
 
 template<domain D : shared3p>
-D float64[[1]] generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] variables, int64 family, uint iterations, int64 SOLEmethod, uint SOLEiterations) {
+GLMResult<D, float64>
+generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] variables, int64 family, uint iterations, int64 SOLEmethod, uint SOLEiterations) {
     return _glm(dependent, variables, family, iterations, SOLEmethod, SOLEiterations);
 }
 /** @} */
@@ -435,6 +472,60 @@ D float64[[1]] parametersStandardErrors(D float64[[1]] dependent,
                                         int64 family)
 {
     return _parametersStandardErrors(dependent, variables, parameters, family);
+}
+/** @} */
+
+/** \cond */
+template<domain D : shared3p, type T>
+D T _glmaic(D T[[1]] y, GLMResult<D, T> glm) {
+    D T aic;
+    if (glm.family == GLM_FAMILY_GAUSSIAN) {
+        // The formula used in SPSS and in different course
+        // materials. Does not match R!
+        //
+        // AIC = n * ln(SSE / n) + 2 * k
+        D T[[1]] x = y - glm.means;
+        x = x * x;
+        D T n = (T) size(x);
+        aic = ln(sum(x) / n) * n + 2 * (T) size(glm.coefficients);
+    } else if (glm.family == GLM_FAMILY_BINOMIAL_LOGIT) {
+        D T ll = sum(y * ln(glm.means / (1 - glm.means)) + ln(1 - glm.means));
+        aic = 2 * (T) size(glm.coefficients) - 2 * ll;
+    } else {
+        assert(false); // Unknown family
+    }
+    return aic;
+}
+/** \endcond */
+
+/** \addtogroup shared3p_glm_aic
+ *  @{
+ *  @brief Compute the Akaike information criterion of a generalized
+ *  linear model
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" /
+ *  \ref float32 "float32" / \ref float64 "float64"
+ *  @param dependent - dependent variable
+ *  @param glm - structure returned by the model fitting function
+ */
+template<domain D : shared3p>
+D float32 GLMAIC(D int32[[1]] y, GLMResult<D, float32> glm) {
+    return _glmaic((float32) y, glm);
+}
+
+template<domain D : shared3p>
+D float64 GLMAIC(D int64[[1]] y, GLMResult<D, float64> glm) {
+    return _glmaic((float64) y, glm);
+}
+
+template<domain D : shared3p>
+D float32 GLMAIC(D float32[[1]] y, GLMResult<D, float32> glm) {
+    return _glmaic(y, glm);
+}
+
+template<domain D : shared3p>
+D float64 GLMAIC(D float64[[1]] y, GLMResult<D, float64> glm) {
+    return _glmaic(y, glm);
 }
 /** @} */
 

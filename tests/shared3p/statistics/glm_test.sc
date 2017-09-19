@@ -40,7 +40,7 @@ bool glm_test_gaussian (T proxy, G proxy2) {
     G[[1]] correct = {5, 2, 1};
     G[[1]] result = declassify (generalizedLinearModel (dependent, variables,
                                                         GLM_FAMILY_GAUSSIAN,
-                                                        1 :: uint));
+                                                        1 :: uint).coefficients);
 
     // We have decided that this is OK.
     return sum(abs(result - correct)) < 1e-4;
@@ -56,7 +56,7 @@ bool glm_test_binomial_logit (T proxy) {
     T[[1]] result = declassify(generalizedLinearModel(dependent,
                                                       variables,
                                                       GLM_FAMILY_BINOMIAL_LOGIT,
-                                                      10 :: uint));
+                                                      10 :: uint).coefficients);
 
     return isNegligible(sum(abs(result - correct)));
 }
@@ -68,7 +68,7 @@ bool glm_test_gaussian_standard_errors (T proxy) {
 
     pd_shared3p T[[1]] params = generalizedLinearModel (dependent, variables,
                                                         GLM_FAMILY_GAUSSIAN,
-                                                        1 :: uint);
+                                                        1 :: uint).coefficients;
 
     T[[1]] errors = declassify (parametersStandardErrors (dependent, variables,
                                                           params,
@@ -83,7 +83,7 @@ bool glm_test_binomial_logit_standard_errors (T proxy) {
 
     pd_shared3p T[[1]] params = generalizedLinearModel (dependent, variables,
                                                         GLM_FAMILY_BINOMIAL_LOGIT,
-                                                        10 :: uint);
+                                                        10 :: uint).coefficients;
 
     T[[1]] correct = {3.67933325304129, 2.81926692420377, 2.03066423930818};
     T[[1]] errors = declassify (parametersStandardErrors (dependent, variables,
