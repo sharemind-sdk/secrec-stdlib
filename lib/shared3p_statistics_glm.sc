@@ -39,6 +39,7 @@ import stdlib;
  * \defgroup shared3p_generalized_linear_model_method generalizedLinearModel(with method parameter)
  * \defgroup shared3p_params_stderr parametersStandardErrors
  * \defgroup shared3p_glm_aic GLMAIC
+ * \defgroup shared3p_glm_aic_direct GLMAIC(direct)
  */
 
 /**
@@ -496,6 +497,22 @@ D T _glmaic(D T[[1]] y, GLMResult<D, T> glm) {
     }
     return aic;
 }
+
+template<domain D : shared3p, type T>
+D T _glmaic(D T[[1]] y, D T[[2]] X, D T[[1]] coefficients, int64 family) {
+    uint rows = shape(X)[0];
+    uint cols = shape(X)[1];
+    D T[[2]] extended(rows, cols + 1);
+    extended[:, :cols] = X;
+    extended[:, cols] = 1;
+    D T[[2]] eta = _matrixMultiplication(extended, _toCol(coefficients));
+    D T[[1]] mu = _linkInverse(eta, family)[:, 0];
+    GLMResult<D, T> m;
+    m.family = family;
+    m.coefficients = coefficients;
+    m.means = mu;
+    return _glmaic(y, m);
+}
 /** \endcond */
 
 /** \addtogroup shared3p_glm_aic
@@ -509,23 +526,57 @@ D T _glmaic(D T[[1]] y, GLMResult<D, T> glm) {
  *  @param glm - structure returned by the model fitting function
  */
 template<domain D : shared3p>
-D float32 GLMAIC(D int32[[1]] y, GLMResult<D, float32> glm) {
-    return _glmaic((float32) y, glm);
+D float32 GLMAIC(D int32[[1]] dependent, GLMResult<D, float32> glm) {
+    return _glmaic((float32) dependent, glm);
 }
 
 template<domain D : shared3p>
-D float64 GLMAIC(D int64[[1]] y, GLMResult<D, float64> glm) {
-    return _glmaic((float64) y, glm);
+D float64 GLMAIC(D int64[[1]] dependent, GLMResult<D, float64> glm) {
+    return _glmaic((float64) dependent, glm);
 }
 
 template<domain D : shared3p>
-D float32 GLMAIC(D float32[[1]] y, GLMResult<D, float32> glm) {
-    return _glmaic(y, glm);
+D float32 GLMAIC(D float32[[1]] dependent, GLMResult<D, float32> glm) {
+    return _glmaic(dependent, glm);
 }
 
 template<domain D : shared3p>
-D float64 GLMAIC(D float64[[1]] y, GLMResult<D, float64> glm) {
-    return _glmaic(y, glm);
+D float64 GLMAIC(D float64[[1]] dependent, GLMResult<D, float64> glm) {
+    return _glmaic(dependent, glm);
+}
+/** @} */
+
+/** \addtogroup shared3p_glm_aic_direct
+ *  @{
+ *  @brief Compute the Akaike information criterion of a generalized
+ *  linear model
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" /
+ *  \ref float32 "float32" / \ref float64 "float64"
+ *  @param dependent - dependent variable
+ *  @param vars - independent variables (each column is a variable)
+ *  @param coefficients - model coefficients
+ *  @param family - indicates the distribution of the dependent
+ *  variable
+ */
+template<domain D : shared3p>
+D float32 GLMAIC(D int32[[1]] dependent, D int32[[2]] vars, D float32[[1]] coefficients, int64 family) {
+    return _glmaic((float32) dependent, (float32) vars, coefficients, family);
+}
+
+template<domain D : shared3p>
+D float64 GLMAIC(D int64[[1]] dependent, D int64[[2]] vars, D float64[[1]] coefficients, int64 family) {
+    return _glmaic((float64) dependent, (float64) vars, coefficients, family);
+}
+
+template<domain D : shared3p>
+D float32 GLMAIC(D float32[[1]] dependent, D float32[[2]] vars, D float32[[1]] coefficients, int64 family) {
+    return _glmaic(dependent, vars, coefficients, family);
+}
+
+template<domain D : shared3p>
+D float64 GLMAIC(D float64[[1]] dependent, D float64[[2]] vars, D float64[[1]] coefficients, int64 family) {
+    return _glmaic(dependent, vars, coefficients, family);
 }
 /** @} */
 
