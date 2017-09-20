@@ -37,7 +37,7 @@ import stdlib;
  * \defgroup shared3p_glm_result GLMResult
  * \defgroup shared3p_generalized_linear_model generalizedLinearModel
  * \defgroup shared3p_generalized_linear_model_method generalizedLinearModel(with method parameter)
- * \defgroup shared3p_params_stderr parametersStandardErrors
+ * \defgroup shared3p_glm_stderr glmStandardErrors
  * \defgroup shared3p_glm_aic GLMAIC
  * \defgroup shared3p_glm_aic_direct GLMAIC(direct)
  */
@@ -286,10 +286,10 @@ _dispatch(D T[[1]] dependent,
 }
 
 template<domain D : shared3p, type T>
-D T[[1]] _parametersStandardErrors(D T[[1]] dependent,
-                                   D T[[2]] vars,
-                                   D T[[1]] params,
-                                   int64 family)
+D T[[1]] _glmStandardErrors(D T[[1]] dependent,
+                            D T[[2]] vars,
+                            D T[[1]] params,
+                            int64 family)
 {
     // Add a variable with all observations set to one. The parameter
     // for this variable is the intercept.
@@ -420,9 +420,9 @@ generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] variables, int64
 /** @} */
 
 /**
- * \addtogroup shared3p_params_stderr
+ * \addtogroup shared3p_glm_stderr
  * @{
- * @brief Estimate the standard errors of parameters of generalized
+ * @brief Estimate the standard errors of coefficients of generalized
  * linear models.
  * @note **D** - shared3p protection domain
  * @note Supported types - \ref int32 "int32" / \ref int64 "int64" /
@@ -430,49 +430,49 @@ generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] variables, int64
  * @param dependent - sample vector of dependent variable
  * @param variables - a matrix where each column is a sample of an
  * explanatory variable
- * @param parameters - parameters estimated by the GLM fitting
+ * @param coefficients - coefficients estimated by the GLM fitting
  * procedure
  * @param family - indicates the distribution of the dependent
  * variable
  * @return returns a vector with the standard errors of each
- * parameter
+ * coefficient
  *
  * @leakage{None}
  */
 template<domain D : shared3p>
-D float32[[1]] parametersStandardErrors(D int32[[1]] dependent,
-                                        D int32[[2]] variables,
-                                        D float32[[1]] parameters,
-                                        int64 family)
+D float32[[1]] glmStandardErrors(D int32[[1]] dependent,
+                                 D int32[[2]] variables,
+                                 D float32[[1]] parameters,
+                                 int64 family)
 {
-    return _parametersStandardErrors((float32) dependent, (float32) variables, parameters, family);
+    return _glmStandardErrors((float32) dependent, (float32) variables, parameters, family);
 }
 
 template<domain D : shared3p>
-D float64[[1]] parametersStandardErrors(D int64[[1]] dependent,
-                                        D int64[[2]] variables,
-                                        D float64[[1]] parameters,
-                                        int64 family)
+D float64[[1]] glmStandardErrors(D int64[[1]] dependent,
+                                 D int64[[2]] variables,
+                                 D float64[[1]] parameters,
+                                 int64 family)
 {
-    return _parametersStandardErrors((float64) dependent, (float64) variables, parameters, family);
+    return _glmStandardErrors((float64) dependent, (float64) variables, parameters, family);
 }
 
 template<domain D : shared3p>
-D float32[[1]] parametersStandardErrors(D float32[[1]] dependent,
-                                        D float32[[2]] variables,
-                                        D float32[[1]] parameters,
-                                        int64 family)
+D float32[[1]] glmStandardErrors(D float32[[1]] dependent,
+                                 D float32[[2]] variables,
+                                 D float32[[1]] parameters,
+                                 int64 family)
 {
-    return _parametersStandardErrors(dependent, variables, parameters, family);
+    return _glmStandardErrors(dependent, variables, parameters, family);
 }
 
 template<domain D : shared3p>
-D float64[[1]] parametersStandardErrors(D float64[[1]] dependent,
-                                        D float64[[2]] variables,
-                                        D float64[[1]] parameters,
-                                        int64 family)
+D float64[[1]] glmStandardErrors(D float64[[1]] dependent,
+                                 D float64[[2]] variables,
+                                 D float64[[1]] parameters,
+                                 int64 family)
 {
-    return _parametersStandardErrors(dependent, variables, parameters, family);
+    return _glmStandardErrors(dependent, variables, parameters, family);
 }
 /** @} */
 
@@ -500,12 +500,9 @@ D T _glmaic(D T[[1]] y, GLMResult<D, T> glm) {
 
 template<domain D : shared3p, type T>
 D T _glmaic(D T[[1]] y, D T[[2]] X, D T[[1]] coefficients, int64 family) {
-    uint rows = shape(X)[0];
-    uint cols = shape(X)[1];
-    D T[[2]] extended(rows, cols + 1);
-    extended[:, :cols] = X;
-    extended[:, cols] = 1;
-    D T[[2]] eta = _matrixMultiplication(extended, _toCol(coefficients));
+    D T[[2]] ones(shape(X)[0], 1) = 1;
+    X = cat(X, ones, 1);
+    D T[[2]] eta = _matrixMultiplication(X, _toCol(coefficients));
     D T[[1]] mu = _linkInverse(eta, family)[:, 0];
     GLMResult<D, T> m;
     m.family = family;

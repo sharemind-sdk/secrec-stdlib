@@ -42,7 +42,7 @@ bool glm_test_gaussian (T proxy, G proxy2) {
                                                         GLM_FAMILY_GAUSSIAN,
                                                         1 :: uint).coefficients);
 
-    return isNegligible(sum(abs(result - correct)));
+    return isNegligible (sum (abs (result - correct)));
 }
 
 
@@ -52,11 +52,10 @@ bool glm_test_binomial_logit (T proxy) {
     pd_shared3p T[[2]] variables = (T) binomialVariables;
 
     T[[1]] correct = {4.49031902143858, 3.56005593083577, 2.84826778724822};
-    T[[1]] result = declassify(generalizedLinearModel(dependent,
-                                                      variables,
+    T[[1]] result = declassify(generalizedLinearModel(dependent, variables,
                                                       GLM_FAMILY_BINOMIAL_LOGIT,
                                                       10 :: uint).coefficients);
-    return isNegligible(sum(abs(result - correct)));
+    return isNegligible (sum (abs (result - correct)));
 }
 
 template<type T>
@@ -69,10 +68,9 @@ bool glm_test_gaussian_standard_errors (T proxy) {
                                                         1 :: uint).coefficients;
 
     T[[1]] correct = {0.0678241596985888, 0.0938740634943971, 9.14127043177142};
-    T[[1]] result = declassify (parametersStandardErrors (dependent, variables,
-                                                          params,
-                                                          GLM_FAMILY_GAUSSIAN));
-    return isNegligible(sum(abs(result - correct)));
+    T[[1]] result = declassify (glmStandardErrors (dependent, variables,
+                                                   params, GLM_FAMILY_GAUSSIAN));
+    return isNegligible (sum (abs (result - correct)));
 }
 
 template<type T>
@@ -85,18 +83,18 @@ bool glm_test_binomial_logit_standard_errors (T proxy) {
                                                         10 :: uint).coefficients;
 
     T[[1]] correct = {0.840839971932318, 0.660377881063293, 0.594330471217411};
-    T[[1]] errors = declassify (parametersStandardErrors (dependent, variables,
-                                                          params,
-                                                          GLM_FAMILY_BINOMIAL_LOGIT));
+    T[[1]] errors = declassify (glmStandardErrors (dependent, variables,
+                                                   params, GLM_FAMILY_BINOMIAL_LOGIT));
 
-    return isNegligible(sum(abs(correct - errors)));
+    return isNegligible (sum (abs (correct - errors)));
 }
 
 template<type T>
 bool glm_test_gauss_aic (T proxy) {
     pd_shared3p T[[1]] dependent = (T) gaussDependent;
     pd_shared3p T[[2]] variables = (T) gaussVariables;
-    GLMResult<pd_shared3p, T> m = generalizedLinearModel (dependent, variables, GLM_FAMILY_GAUSSIAN, 1 :: uint);
+    GLMResult<pd_shared3p, T> m = generalizedLinearModel (dependent, variables,
+                                                          GLM_FAMILY_GAUSSIAN, 1 :: uint);
     T aic = declassify (GLMAIC (dependent, m));
     T correct = 27.6760089698144;
     return isNegligible (abs (correct - aic) / correct);
@@ -106,7 +104,8 @@ template<type T>
 bool glm_test_binomial_aic (T proxy) {
     pd_shared3p T[[1]] dependent = (T) binomialDependent;
     pd_shared3p T[[2]] variables = (T) binomialVariables;
-    GLMResult<pd_shared3p, T> m = generalizedLinearModel (dependent, variables, GLM_FAMILY_BINOMIAL_LOGIT, 10 :: uint);
+    GLMResult<pd_shared3p, T> m = generalizedLinearModel (dependent, variables,
+                                                          GLM_FAMILY_BINOMIAL_LOGIT, 10 :: uint);
     T aic = declassify (GLMAIC (dependent, m));
     T correct = 88.4998910716803;
     return isNegligible (abs (correct - aic) / correct);
