@@ -139,8 +139,11 @@ _glm(D FT[[1]] dependent,
         D FT[[2]] varsTransWeight;
         D FT[[2]] mulR(varCount, observationCount);
 
-        for (uint i = 0; i < varCount; ++i)
-            mulR[i, :] = weight[:, 0];
+        for (uint i = 0; i < varCount; ++i) {
+            uint[[1]] indices = observationCount * i + iota(observationCount);
+            __syscall("shared3p::scatter_$FT\_vec", __domainid(D),
+                      weight, mulR, __cref indices);
+        }
 
         varsTransWeight = varsTransposed * mulR;
 
