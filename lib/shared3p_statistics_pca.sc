@@ -108,6 +108,20 @@ D uint64[[2]] _toFix(D float64[[2]] x) {
 }
 
 template<domain D : shared3p>
+D float32[[1]] _fromFix(D uint32[[1]] x) {
+    D float32[[1]] res(size(x));
+    __syscall("shared3p::fix32_to_float32", __domainid (D), x, res, 16 :: uint);
+    return res;
+}
+
+template<domain D : shared3p>
+D float64[[1]] _fromFix(D uint64[[1]] x) {
+    D float64[[1]] res(size(x));
+    __syscall("shared3p::fix64_to_float64", __domainid (D), x, res, 32 :: uint);
+    return res;
+}
+
+template<domain D : shared3p>
 D float32[[2]] _fromFix(D uint32[[2]] x) {
     D float32[[2]] res(shape(x)[0], shape(x)[1]);
     __syscall("shared3p::fix32_to_float32", __domainid (D), x, res, 16 :: uint);
@@ -390,6 +404,8 @@ PCAResult<D, float32> gspca(D float32[[2]] X, uint n_components,
     res.residual = _fromFix(resFix.residual);
     res.scores = _fromFix(resFix.scores);
     res.loads = _fromFix(resFix.loads);
+    res.variances = _fromFix(resFix.variances);
+    res.proportions = _fromFix(resFix.proportions);
 
     return res;
 }
@@ -405,6 +421,8 @@ PCAResult<D, float64> gspca(D float64[[2]] X, uint n_components,
     res.residual = _fromFix(resFix.residual);
     res.scores = _fromFix(resFix.scores);
     res.loads = _fromFix(resFix.loads);
+    res.variances = _fromFix(resFix.variances);
+    res.proportions = _fromFix(resFix.proportions);
 
     return res;
 }
