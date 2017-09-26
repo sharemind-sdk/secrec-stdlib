@@ -52,6 +52,8 @@ struct PCAResult {
     D T[[2]] residual;
     D T[[2]] loads;
     D T[[2]] scores;
+    D T[[1]] variances;
+    D T[[1]] proportions;
 }
 /** @} */
 
@@ -66,10 +68,14 @@ struct PCAResult {
  * covariance matrix. Can be used to project data to the principal
  * component space.
  * @note PCA_RETURN_SCORES - transformed input values.
+ * @note PCA_RETURN_VARIANCES - variances of principal components.
+ * @note PCA_RETURN_PROPORTIONS - proportion of variance explained by principal component.
  */
-uint8 PCA_RETURN_RESIDUAL = 1;
-uint8 PCA_RETURN_LOADS    = 2;
-uint8 PCA_RETURN_SCORES   = 4;
+uint8 PCA_RETURN_RESIDUAL    = 1;
+uint8 PCA_RETURN_LOADS       = 2;
+uint8 PCA_RETURN_SCORES      = 4;
+uint8 PCA_RETURN_VARIANCES   = 8;
+uint8 PCA_RETURN_PROPORTIONS = 16;
 /** @} */
 
 /** \cond */
@@ -157,6 +163,18 @@ D Fix[[2]] _fixMatrixMultiplication(D Fix[[2]] x, D Fix[[2]] y) {
 }
 
 template<domain D : shared3p>
+D uint32 _invFix(D uint32 x) {
+    __syscall("shared3p::inv_fix32_vec", __domainid(D), x, x);
+    return x;
+}
+
+template<domain D : shared3p>
+D uint64 _invFix(D uint64 x) {
+    __syscall("shared3p::inv_fix64_vec", __domainid(D), x, x);
+    return x;
+}
+
+template<domain D : shared3p>
 D uint64 _invSqrtFix(D uint64 x) {
     D uint64 x1;
     __syscall("shared3p::sqrt_fix64_vec", __domainid (D), x, x1);
@@ -227,8 +245,11 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
     bool wantResidual = (bool) (returnValues & PCA_RETURN_RESIDUAL);
     bool wantLoads = (bool) (returnValues & PCA_RETURN_LOADS);
     bool wantScores = (bool) (returnValues & PCA_RETURN_SCORES);
+    bool wantVariances = (bool) (returnValues & PCA_RETURN_VARIANCES);
+    bool wantProportions = (bool) (returnValues & PCA_RETURN_PROPORTIONS);
 
-    assert (wantResidual || wantLoads || wantScores);
+    assert (wantResidual || wantLoads || wantScores || wantVariances ||
+            (wantVariances && wantProportions));
     assert (n_components >= 1);
     assert (iterations >= 1);
 
@@ -318,6 +339,25 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
         res.scores = T;
     if (wantLoads)
         res.loads = P;
+
+    if (wantVariances || wantProportions) {
+        T = _mulFix(T, T);
+        Fix div = pubDoubleToFix(1 / (float64) shape(T)[0], radix);
+        D Fix[[1]] divs(shape(T)[1]) = div;
+        D Fix[[1]] vars = colSums(T);
+        // We don't need to subtract means because PCs are centered
+        res.variances = _mulFix(vars, divs);
+    }
+
+    if (wantProportions) {
+        assert(wantVariances);
+        // X is already centered
+        D Fix[[1]] div(shape(X)[1]) = invRowsPriv;
+        D Fix[[1]] variances = _mulFix(colSums(_mulFix(X, X)), div);
+        D Fix totalVarInv = _invFix(sum(variances));
+        div = totalVarInv;
+        res.proportions = _mulFix(res.variances, div);
+    }
 
     return res;
 }
