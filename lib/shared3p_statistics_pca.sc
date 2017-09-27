@@ -369,8 +369,8 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
         D Fix[[1]] div(shape(X)[1]) = invRowsPriv;
         D Fix[[1]] variances = _mulFix(colSums(_mulFix(X, X)), div);
         D Fix totalVarInv = _invFix(sum(variances));
-        div = totalVarInv;
-        res.proportions = _mulFix(res.variances, div);
+        D Fix[[1]] pcdiv(n_components) = totalVarInv;
+        res.proportions = _mulFix(res.variances, pcdiv);
     }
 
     return res;
