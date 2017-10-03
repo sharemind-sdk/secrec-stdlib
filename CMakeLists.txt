@@ -31,6 +31,7 @@ SharemindSetProjectVersion()
 FIND_PACKAGE(Doxygen REQUIRED)
 
 FILE(GLOB_RECURSE SharemindStdlib_ALLFILES
+     "${CMAKE_CURRENT_SOURCE_DIR}/docs/*"
      "${CMAKE_CURRENT_SOURCE_DIR}/lib/*.sc"
      "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sc"
      "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sh"
