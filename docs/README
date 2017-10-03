@@ -37,8 +37,8 @@ and finally install doxygen:
 "make install"
 
 5.
-The last thing that needs to be done, is to make sure the files "build_html.sh" and "Doxyfile" are in the same folder and that
-that the PROJECT_NUMBER on line 41 of "Doxyfile" is correct. Then, run:
+The last thing that needs to be done, is to make sure the files "build_html.sh" and "Doxyfile.in" are in the same folder and that
+that the PROJECT_NUMBER on line 41 of "Doxyfile.in" is correct. Then, run:
 
 "./build_html.sh"
 

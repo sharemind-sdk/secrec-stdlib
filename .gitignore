@@ -1,5 +1,7 @@
 tests/runtests.sh.log
 docs/html/
+docs/latex/
+docs/Doxyfile
 
 /build/
 /cmake_install.cmake
