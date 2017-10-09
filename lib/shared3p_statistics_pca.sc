@@ -288,7 +288,7 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
     D Fix invRowsPriv = invRows;
     for (uint i = 0; i < shape(X)[1]; ++i) {
         D Fix mu = _mulFix(sum(X[:, i]), invRowsPriv);
-        X[:, i] -= mu;
+        X[:, i] = X[:, i] - mu;
     }
     R = X;
 
