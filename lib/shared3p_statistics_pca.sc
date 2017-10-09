@@ -323,8 +323,7 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
 
             if (i == iterations - 1) {
                 t = v;
-                if (wantScores)
-                    T[:, k] = t[:, 0];
+                T[:, k] = t[:, 0];
             }
 
             {

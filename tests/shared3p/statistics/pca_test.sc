@@ -36,7 +36,7 @@ bool gspca_test (T data) {
     data[:, 0] = a;
     data[:, 1] = b;
 
-    PCAResult<pd_shared3p, T> result = gspca (data, 2::uint, 10::uint, PCA_RETURN_LOADS | PCA_RETURN_SCORES | PCA_RETURN_VARIANCES | PCA_RETURN_PROPORTIONS);
+    PCAResult<pd_shared3p, T> result = gspca (data, 2::uint, 10::uint, PCA_RETURN_LOADS | PCA_RETURN_VARIANCES | PCA_RETURN_PROPORTIONS);
 
     // Calculate the error
     T[[2]] publicData = declassify (data);
