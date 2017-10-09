@@ -267,7 +267,7 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
     assert (n_components >= 1);
     assert (iterations >= 1);
 
-    D Fix[[2]] R = X;
+    D Fix[[2]] R;
     D Fix[[2]] P(shape(X)[1], n_components);
     D Fix[[2]] T(shape(X)[0], n_components);
     D Fix[[2]] V(shape(X)[0], n_components);
@@ -284,12 +284,13 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
 
     // todo: optimize, use k sum
     // Center
-    Fix invRows = pubDoubleToFix(1.0 / (float64) shape(R)[0], radix);
+    Fix invRows = pubDoubleToFix(1.0 / (float64) shape(X)[0], radix);
     D Fix invRowsPriv = invRows;
-    for (uint i = 0; i < shape(R)[1]; ++i) {
-        D Fix mu = _mulFix(sum(R[:, i]), invRowsPriv);
-        R[:, i] -= mu;
+    for (uint i = 0; i < shape(X)[1]; ++i) {
+        D Fix mu = _mulFix(sum(X[:, i]), invRowsPriv);
+        X[:, i] -= mu;
     }
+    R = X;
 
     for (uint k = 0; k < n_components; ++k) {
         D Fix[[2]] t(shape(X)[0], 1);
