@@ -142,8 +142,8 @@ uint sizeof (float64 x)  { return 8; }
  *  @{
  *  @brief Function for accessing the named program arguments of public types.
  *  @note **T** - any \ref data_types "data" type
- *  @param name The name of the argument.
- *  @return returns the value associated with the argument specified by parameter name.
+ *  @param name - the name of the argument
+ *  @return the value associated with the argument specified by parameter name
  */
 
 /**
@@ -223,7 +223,8 @@ void publish (string name, string str) {
  *  @note **D** - all protection domains
  *  @note **N** - any array size of any dimension
  *  @note **T** - any \ref data_types "data" type
- *  @return returns a 1-dimensional flattened version of the input array with the same type
+ *  @param arr - input array
+ *  @return a 1-dimensional flattened version of the input array with the same type
  *  @return For example: {{1,2,3}{4,5,6}} -> {1,2,3,4,5,6}
  */
 
