@@ -1294,7 +1294,6 @@ D T max (D T scalar) {
 * @note **D** - all protection domains
 * @param vec - a 1-dimensional vector
 * @return returns the largest value in the vector
-* \cond
 */
 template <type T>
 T max (T[[1]] vec) {
@@ -1310,10 +1309,6 @@ T max (T[[1]] vec) {
     }
     return result;
 }
-
-/**
-* \endcond
-*/
 
 //does not work for floats, xor_uints
 /**
