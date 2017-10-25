@@ -379,16 +379,14 @@ uint tdbReadColumn(string datasource, string table, string column) {
  *  @param index - index of the column in the table
  *  @return returns a vector with the values in the column
  */
-/** \cond Doxygen_Suppress */
 template<type T>
-T[[1]] tdbReadColumn(string datasource, string table, uint64 index) {
+T[[1]] tdbReadColumn(string datasource, string table, uint index) {
     uint64 rv = 0;
     __syscall("tdb_read_col", __cref datasource, __cref table, index, __return rv);
     T[[1]] out = tdbVmapGetValue(rv, "values", 0 :: uint);
     tdbVmapDelete(rv);
     return out;
 }
-/** \endcond */
 /** @} */
 
 /** \addtogroup tdb_read_column_string_vec
