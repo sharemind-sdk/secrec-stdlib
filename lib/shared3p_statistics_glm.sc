@@ -53,6 +53,7 @@ import stdlib;
  * \addtogroup shared3p_glm_result
  * @{
  * @brief GLM result type
+ * \cond Doxygen_Suppress
  */
 template<domain D, type T>
 struct GLMResult {
@@ -65,7 +66,10 @@ struct GLMResult {
     /** linear predictors calculated from the fitted coefficients */
     D T[[1]] linearPredictors;
 }
-/** @} */
+/**
+ * \endcond
+ * @}
+ */
 
 /**
  * \addtogroup shared3p_glm_constants
