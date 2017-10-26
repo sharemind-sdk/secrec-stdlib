@@ -1662,19 +1662,18 @@ float64[[N]] ln(float64[[N]] x) {
  *  @brief Function for finding if the error is small enough to neglect
  *  @note **D** - any protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns **true** if the error is small enough to neglect
- *  @return returns **false** if the error is not small enough
+ *  @param a - input
+ *  @return **true** if the error is small enough to neglect
+ *  @return **false** if the error is not small enough
  *  @note isNegligible checks up to the 5th place after the comma
  *  @leakage{None}
  */
 
 /** \cond */
-
 template <domain D, type T, dim N>
 D bool[[N]] _isNegligible (D T[[N]] a) {
     return abs(a) < 1e-5;
 }
-
 /** \endcond */
 
 template <domain D>
