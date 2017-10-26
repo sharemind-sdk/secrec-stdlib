@@ -1615,8 +1615,11 @@ float64[[N]] erf(float64[[N]] x) {
 
 /** \addtogroup exp
  *  @{
+ *  @note **N** - any dimensionality
  *  @brief Exponential function.
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @param x - input array
+ *  @return exponential function applied to elements of the input array
  */
 template<dim N>
 float32[[N]] exp(float32[[N]] x) {

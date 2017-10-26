@@ -900,7 +900,8 @@ D float64[[N]] log10 (D float64[[N]] x) {
  *  @brief Function for finding exp(x)
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns the exponents of the input array
+ *  @param x - input array
+ *  @return exponential function applied to elements of the input array
  *  @leakage{None}
  */
 
