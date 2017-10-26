@@ -234,6 +234,7 @@ D T[[1]] _dotProduct (D T[[2]] x, D T[[2]] y) {
  *  @brief Function for finding the dot product of two vectors
  *  @note **D** - shared3p domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @param x, y - input vectors
  *  @return returns a scalar with the dot product of the two input vectors
  */
 
