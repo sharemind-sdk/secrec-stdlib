@@ -348,8 +348,8 @@ D T[[1]] _glmStandardErrors(D T[[1]] dependent,
  * explanatory variable
  * @param family - indicates the distribution of the dependent
  * variable
- * @return returns \ref GLMResult structure
  * @param iterations - number of iterations of the GLM algorithm
+ * @return \ref GLMResult structure
  * @leakage{None}
  */
 template<domain D : shared3p>
