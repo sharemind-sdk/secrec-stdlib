@@ -131,7 +131,8 @@ D T[[2]] _unitMatrix (uint n) {
  *  @{
  *  @brief Function for creating a unit matrix
  *  @note **D** - all protection domains
- *  @return returns an unit matrix of size n
+ *  @param n - number of rows/columns in the matrix
+ *  @return a unit matrix of size n
  */
 template <domain D>
 D bool[[2]] unitMatrix (uint n) {
