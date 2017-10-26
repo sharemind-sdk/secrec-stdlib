@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -21,17 +21,17 @@
 @page table_database Table database
 @brief Table databases in SecreC
 
-@section table_database Table database
+@section table_database_section Table database
 
-SecreC supports a basic file-based table database system intended for storing and organizing large amounts of data to be privately processed in SecreC. 
+SecreC supports a basic file-based table database system intended for storing and organizing large amounts of data to be privately processed in SecreC.
 
-Before creating a table a connection must be opened to the data source with the function \link table_database::tdbOpenConnection tdbOpenConnection\endlink. The name of the data source is set in Sharemind's configuration. Before opening a new connection to a different data source make sure the old connection has been closed with \link table_database::tdbCloseConnection tdbCloseConnection\endlink. A simple table with a uniform data type can be created with the function \link shared3p_table_database::tdbTableCreate tdbTableCreate\endlink. 
+Before creating a table a connection must be opened to the data source with the function \link table_database::tdbOpenConnection tdbOpenConnection\endlink. The name of the data source is set in Sharemind's configuration. Before opening a new connection to a different data source make sure the old connection has been closed with \link table_database::tdbCloseConnection tdbCloseConnection\endlink. A simple table with a uniform data type can be created with the function \link shared3p_table_database::tdbTableCreate tdbTableCreate\endlink.
 
 Listing 1: Creating an empty table
 
 \code
 	//creating an empty table with 3 columns of type int32 and protection domain shared3p
-	
+
 	import shared3p;
 	import shared3p_table_database;
 	import stdlib;
@@ -42,15 +42,15 @@ Listing 1: Creating an empty table
 	void main () {
 		string datasource = "DS1";
 		string table_name = "SimpleTable";
-	
+
 		tdbOpenConnection (datasource);
 		pd_shared3p int32 data_type;
-		
+
 		tdbTableCreate (datasource, table_name, data_type);
 	}
 \endcode
 
-Data is added to the table one row at a time with the function \link shared3p_table_database::tdbInsertRow tdbInsertRow\endlink. Each row is a vector with every element corresponding to a column in the table. Data is read from the table one column at a time with the function \link shared3p_table_database::tdbReadColumn tdbReadColumn\endlink. The identifier of the column can be the column's index or the name of the column. 
+Data is added to the table one row at a time with the function \link shared3p_table_database::tdbInsertRow tdbInsertRow\endlink. Each row is a vector with every element corresponding to a column in the table. Data is read from the table one column at a time with the function \link shared3p_table_database::tdbReadColumn tdbReadColumn\endlink. The identifier of the column can be the column's index or the name of the column.
 
 @subsection vmap Vector Map
 
@@ -60,7 +60,7 @@ Values added to the vmap can be either fixed lenght or variable length. Variable
 
 @subsection vmap_table Creating a table from a vector map
 
-When creating a table instead of specifing a data type and the number of columns a vmap can be used. The vmap must contain a type and string for every column with the parameters "types" and "names" respectively. Data can be inserted to the table with tdbInsertRow but instead of a vector a vmap can be used. The vmap must have values with the parameter "values" that are the same type as their respective column in the table. Every batch in the vmap corresponds to a single row in the table. 
+When creating a table instead of specifing a data type and the number of columns a vmap can be used. The vmap must contain a type and string for every column with the parameters "types" and "names" respectively. Data can be inserted to the table with tdbInsertRow but instead of a vector a vmap can be used. The vmap must have values with the parameter "values" that are the same type as their respective column in the table. Every batch in the vmap corresponds to a single row in the table.
 
 Listing 2: Creating a table with a vector map
 
@@ -138,19 +138,19 @@ Listing 2: Creating a table with a vector map
 			uint64 index = i;
 			pd_shared3p uint64 measurement = i * 10;
 			pd_shared3p bool have_measurement = true;
-			
+
 			if (i != 0) {
 				// This has to be called in-between rows
 				tdbVmapAddBatch(params);
 			}
-			
+
 			tdbVmapAddValue(params, "values", index);
 			tdbVmapAddValue(params, "values", measurement);
 			tdbVmapAddValue(params, "values", have_measurement);
     		}
-		
+
     		tdbInsertRow(ds, tbl, params);
-			
+
 	}
 \endcode
 

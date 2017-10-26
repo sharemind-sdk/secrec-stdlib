@@ -21,7 +21,7 @@
 @page variables Variables
 @brief Variables in SecreC
 
-@section variables Variables
+@section variables_section Variables
 
 Variables in SecreC consist of lowercase and uppercase Latin characters, underscores and decimal digits. The first character of a variable must not be a decimal digit. Reserved keywords are not allowed to be used as variable names.
 

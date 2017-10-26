@@ -22,7 +22,7 @@
 @page operatordefinitions Operator definitions
 @brief Operator definitions in the SecreC language.
 
-@section operatordefinitions Operator definitions
+@section operatordefinitions_section Operator definitions
 
 When defining a protection domain kind we must also define operators if we wish to compute with private values from that kind. Operator definitions are almost like normal function definitions with a special name. For example, we can use a template function with a template domain argument to write a definition for all domains of the same kind. The following is an example of the multiplication operator.
 

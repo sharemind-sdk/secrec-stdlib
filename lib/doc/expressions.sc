@@ -21,7 +21,7 @@
 @page expressions Expressions
 @brief Expressions in SecreC
 
-@section expressions Expressions
+@section expressions_section Expressions
 
 Many of the expressions implicitly operate point-wise on arrays and, in many cases, scalar values are
 automatically converted into a higher-dimensional array, if the size of resulting array is derivable from

@@ -21,7 +21,7 @@
 @page arrays Arrays
 @brief Arrays in SecreC
 
-@section arrays Arrays
+@section arrays_section Arrays
 
 SecreC is strongly focused on arrays, and the majority of arithmetic, relational and logical operations operate point-wise on them. The main motivation for this behaviour is that private operations are individually slow on some protection domain implementations, and usually require a great deal of network communication overhead. Performing private operations in parallel reduces the time cost involved.The network communication cost is reduced too, as it’s more efficient to send data in bulk rather than sending small packets individually for each operation.
  SecreC supports multidimensional rectangular arrays. The arrays are more similar to those in Fortran than those in C or Java. The main difference is that multi dimensional arrays in both C and Java are so called Iliffe vectors [Ili61] storing single dimensional vector of pointers to arrays of one dimension

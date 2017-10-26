@@ -21,7 +21,7 @@
 @page types Types
 @brief Types in SecreC
 
-@section types Types
+@section types_section Types
 
 SecreC is strongly and statically typed. There are two features that make SecreC type system unique. The type system is strongly focused on arrays, and all primitive data has privacy (security) type. Types in SecreC start with an optional security type, followed by the primitive data type and finally
 an optional array dimensionality type between double square brackets. For example, we can write: **int** for integers, private **bool** for booleans in security domain *private*, or **public** **int** [[5]] for public 5-dimensional integer array. The default security type is public, and the default dimensionality type is

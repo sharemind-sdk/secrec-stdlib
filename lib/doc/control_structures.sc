@@ -21,7 +21,7 @@
 @page control_structures Control structures
 @brief Control structures in SecreC
 
-@section control_structures Control structures
+@section control_structures_section Control structures
 
 Most statements in SecreC are separated by a semicolon, and after normal execution of the statement, control is given to the next statement in the statement list. Statements can be grouped between curly braces to form a compound statement. An empty statement is considered a statement. Expressions ending with a semicolon are also statements and if the expression evaluates to non-void, the resulting value is discarded. 
  If the semicolon is not a part of a syntactic construct, such as a variable declaration or expression statement, it is considered a statement and has no effect. For example, **int** i;; is a composition of a declaration statement and a skip statement.

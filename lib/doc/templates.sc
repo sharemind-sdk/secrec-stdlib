@@ -21,7 +21,7 @@
 @page templates Templates
 @brief Templates in SecreC
 
-@section templates Templates
+@section templates_section Templates
 
 In order to support domain type polymorphic procedures the language has support for C++’like function templates. Function templates give the language static domain, type and dimension polymorphism. Templates are declared using the **template** keyword, and the template domain, type and dimension parameters are listed between < and > parenthesis.
 

@@ -21,7 +21,7 @@
 @page structs Data structures
 @brief Data structures in SecreC
 
-@section structs Data structures
+@section structs_section Data structures
 
 SecreC supports basic data structures currently intended to be used for returning multiple values from functions and for simple aggregation of data. The types of structure fields is not restricted in any way: it's possible to store other structures, arrays and private data within a structure. Structures themselves, however, are limited in multiple ways. Namely, they are restricted to be public data and may not not be stored as elements of arrays.
 
