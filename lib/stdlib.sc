@@ -1284,6 +1284,7 @@ D T[[1]] min (D T[[1]] vec, uint k) {
 
 /**
 * @note **D** - all protection domains
+* @note **T** - any \ref data_types "data type"
 * @param scalar - a scalar value
 * @return returns the scalar value
 */
@@ -1293,8 +1294,8 @@ D T max (D T scalar) {
 }
 
 /**
-* @note **D** - all protection domains
 * @param vec - a 1-dimensional vector
+* @note **T** - any \ref data_types "data type"
 * @return returns the largest value in the vector
 */
 template <type T>
@@ -1315,6 +1316,7 @@ T max (T[[1]] vec) {
 //does not work for floats, xor_uints
 /**
 * @note **D** - all protection domains
+* @note **T** - any \ref data_types "data type"
 * @param vec - a 1-dimensional vector
 * @return returns the largest value in the vector
 */
@@ -1334,6 +1336,7 @@ D T max (D T[[1]] vec) {
 }
 
 /**
+* @note **T** - any \ref data_types "data type"
 * @param arr - an array of any dimension
 * @return returns the largest value in the array
 */
