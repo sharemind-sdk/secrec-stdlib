@@ -705,23 +705,24 @@ D bool[[1]] all (D bool[[1]] vec, uint k) {
  *  @brief Function for finding the sum of all elements in the input vector
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Uses accumulator to calculate sum. May be very inefficient for private domains.
+ *  @param x - input
  *  @return returns the sum of all elements in input vector
- *  @note uses accumulator to calculate sum. May be very inefficient for private domains.
  *  @leakage{None}
  */
 
 template <domain D, type T>
-D T sum (D T scalar) {
-    return scalar;
+D T sum (D T x) {
+    return x;
 }
 
 /** \cond */
 template <domain D, type T>
-D T _sum (D T[[1]] vec) {
-    uint n = size(vec);
+D T _sum (D T[[1]] x) {
+    uint n = size(x);
     D T sumOfArr = 0;
     for (uint i = 0; i < n; ++i) {
-        sumOfArr += vec[i];
+        sumOfArr += x[i];
     }
 
     return sumOfArr;
@@ -729,58 +730,58 @@ D T _sum (D T[[1]] vec) {
 /** \endcond */
 
 template <domain D>
-D uint sum (D bool[[1]] vec) {
-    return _sum ((uint) vec);
+D uint sum (D bool[[1]] x) {
+    return _sum ((uint) x);
 }
 
 template <domain D>
-D uint8 sum (D uint8[[1]] vec) {
-    return _sum (vec);
+D uint8 sum (D uint8[[1]] x) {
+    return _sum (x);
 }
 
 template <domain D>
-D uint16 sum (D uint16[[1]] vec) {
-    return _sum (vec);
+D uint16 sum (D uint16[[1]] x) {
+    return _sum (x);
 }
 
 template <domain D>
-D uint32 sum (D uint32[[1]] vec) {
-    return _sum (vec);
+D uint32 sum (D uint32[[1]] x) {
+    return _sum (x);
 }
 
 template <domain D>
-D uint sum (D uint[[1]] vec) {
-    return _sum (vec);
+D uint sum (D uint[[1]] x) {
+    return _sum (x);
 }
 
 template <domain D>
-D int8 sum (D int8[[1]] vec) {
-    return _sum (vec);
+D int8 sum (D int8[[1]] x) {
+    return _sum (x);
 }
 
 template <domain D>
-D int16 sum (D int16[[1]] vec) {
-    return _sum (vec);
+D int16 sum (D int16[[1]] x) {
+    return _sum (x);
 }
 
 template <domain D>
-D int32 sum (D int32[[1]] vec) {
-    return _sum (vec);
+D int32 sum (D int32[[1]] x) {
+    return _sum (x);
 }
 
 template <domain D>
-D int sum (D int[[1]] vec) {
-    return _sum (vec);
+D int sum (D int[[1]] x) {
+    return _sum (x);
 }
 
 template <domain D>
-D float32 sum (D float32[[1]] vec) {
-    return _sum (vec);
+D float32 sum (D float32[[1]] x) {
+    return _sum (x);
 }
 
 template <domain D>
-D float64 sum (D float64[[1]] vec) {
-    return _sum (vec);
+D float64 sum (D float64[[1]] x) {
+    return _sum (x);
 }
 
 /** @}*/
@@ -789,10 +790,11 @@ D float64 sum (D float64[[1]] vec) {
  *  @brief Function for finding the sum of all elements in the input vector in specified parts
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Uses accumulator to calculate sum. May be very inefficient for private domains.
+ *  @param vec - input
  *  @param k - an \ref uint64 "uint" type scalar which specifies in how many parts the sum is found. \n
      For example if k = 2 then the input vector is split into two parts and the sums of those parts are found seperately.
  *  @return returns a vector with the sum of the specified number of parts in the input vector
- *  @note uses accumulator to calculate sum. May be very inefficient for private domains.
  *  @leakage{None}
  */
 
