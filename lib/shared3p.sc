@@ -223,7 +223,7 @@ D float64[[N]] abs (D float64[[N]] value) {
  *  @note We are using a system call for summing vectors as it's very common
  *  operation, and the performance overhead of manually summing is in the
  *  range of 100 to 200 times slower.
- *  @param x - a 1-dimensional array
+ *  @param vec - a 1-dimensional array
  *  @returns the sum of all input vector elements
  *  @leakage{None}
  */
