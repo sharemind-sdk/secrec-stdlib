@@ -28,7 +28,7 @@ import stdlib;
  *  \defgroup keydb_connect keydb_connect(string)
  *  \defgroup keydb_disconnect keydb_disconnect(void)
  *  \defgroup keydb_del keydb_del(string)
- *  \defgroup keydb_get keydb_get(string, proxy)
+ *  \defgroup keydb_get keydb_get(string)
  *  \defgroup keydb_set keydb_set(string, value)
  *  \defgroup keydb_scan keydb_scan(string)
  *  \defgroup keydb_scan_next keydb_scan_next(cursor)
