@@ -891,13 +891,14 @@ D float64[[1]] sum (D float64[[1]] vec, uint k) {
  *  @brief Function for finding the product of the input vector
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
- *  @return returns the product of the input vector
+ *  @param x - input
+ *  @return the product of the input vector
  *  @leakage{None}
  */
 
 template <domain D, type T>
-D T product (D T scalar) {
-    return scalar;
+D T product (D T x) {
+    return x;
 }
 
 /** \cond */
@@ -916,53 +917,53 @@ D T _product (D T[[1]] vec) {
 /** \endcond */
 
 template <domain D>
-D uint8 product (D uint8[[1]] vec) {
-    return _product (vec);
+D uint8 product (D uint8[[1]] x) {
+    return _product (x);
 }
 
 template <domain D>
-D uint16 product (D uint16[[1]] vec) {
-    return _product (vec);
+D uint16 product (D uint16[[1]] x) {
+    return _product (x);
 }
 
 template <domain D>
-D uint32 product (D uint32[[1]] vec) {
-    return _product (vec);
+D uint32 product (D uint32[[1]] x) {
+    return _product (x);
 }
 
 template <domain D>
-D uint product (D uint[[1]] vec) {
-    return _product (vec);
+D uint product (D uint[[1]] x) {
+    return _product (x);
 }
 
 template <domain D>
-D int8 product (D int8[[1]] vec) {
-    return _product (vec);
+D int8 product (D int8[[1]] x) {
+    return _product (x);
 }
 
 template <domain D>
-D int16 product (D int16[[1]] vec) {
-    return _product (vec);
+D int16 product (D int16[[1]] x) {
+    return _product (x);
 }
 
 template <domain D>
-D int32 product (D int32[[1]] vec) {
-    return _product (vec);
+D int32 product (D int32[[1]] x) {
+    return _product (x);
 }
 
 template <domain D>
-D int product (D int[[1]] vec) {
-    return _product (vec);
+D int product (D int[[1]] x) {
+    return _product (x);
 }
 
 template <domain D>
-D float32 product (D float32[[1]] vec) {
-    return _product (vec);
+D float32 product (D float32[[1]] x) {
+    return _product (x);
 }
 
 template <domain D>
-D float64 product (D float64[[1]] vec) {
-    return _product (vec);
+D float64 product (D float64[[1]] x) {
+    return _product (x);
 }
 
 /** @}*/
@@ -971,9 +972,10 @@ D float64 product (D float64[[1]] vec) {
  *  @brief Function for finding the product of the input vector in parts
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
- * @param k - an \ref uint64 "uint" type scalar which specifies in how many parts the product is found. \n
+ *  @param vec - input vector
+ *  @param k - an \ref uint64 "uint" type scalar which specifies in how many parts the product is found. \n
      For example if k = 2 then the input vector is split into two parts and the products of those parts are found seperately.
- * @return returns a vector with the product of the specified number of parts in the input vector
+ * @return a vector with the product of the specified number of parts in the input vector
  *  @leakage{None}
  */
 

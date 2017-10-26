@@ -373,68 +373,68 @@ D int[[1]] sum (D int[[1]] vec, uint k) {
  *  @brief Function for finding the product of the input vector
  *  @note **D** - shared2p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
- *  @param vec - a vector of supported type
+ *  @param x - input of supported type
  *  @return The product of the input vector
  */
 
 template <domain D : shared2p, type T>
-D T product (D T scalar) {
-    return scalar;
+D T product (D T x) {
+    return x;
 }
 
 template <domain D : shared2p>
-D uint8 product (D uint8[[1]] vec) {
+D uint8 product (D uint8[[1]] x) {
     D uint8 out;
-    __syscall ("shared2p::product_uint8_vec", __domainid (D), vec, out);
+    __syscall ("shared2p::product_uint8_vec", __domainid (D), x, out);
     return out;
 }
 
 template <domain D : shared2p>
-D uint16 product (D uint16[[1]] vec) {
+D uint16 product (D uint16[[1]] x) {
     D uint16 out;
-    __syscall ("shared2p::product_uint16_vec", __domainid (D), vec, out);
+    __syscall ("shared2p::product_uint16_vec", __domainid (D), x, out);
     return out;
 }
 
 template <domain D : shared2p>
-D uint32 product (D uint32[[1]] vec) {
+D uint32 product (D uint32[[1]] x) {
     D uint32 out;
-    __syscall ("shared2p::product_uint32_vec", __domainid (D), vec, out);
+    __syscall ("shared2p::product_uint32_vec", __domainid (D), x, out);
     return out;
 }
 
 template <domain D : shared2p>
-D uint product (D uint[[1]] vec) {
+D uint product (D uint[[1]] x) {
     D uint out;
-    __syscall ("shared2p::product_uint64_vec", __domainid (D), vec, out);
+    __syscall ("shared2p::product_uint64_vec", __domainid (D), x, out);
     return out;
 }
 
 template <domain D : shared2p>
-D int8 product (D int8[[1]] vec) {
+D int8 product (D int8[[1]] x) {
     D int8 out;
-    __syscall ("shared2p::product_int8_vec", __domainid (D), vec, out);
+    __syscall ("shared2p::product_int8_vec", __domainid (D), x, out);
     return out;
 }
 
 template <domain D : shared2p>
-D int16 product (D int16[[1]] vec) {
+D int16 product (D int16[[1]] x) {
     D int16 out;
-    __syscall ("shared2p::product_int16_vec", __domainid (D), vec, out);
+    __syscall ("shared2p::product_int16_vec", __domainid (D), x, out);
     return out;
 }
 
 template <domain D : shared2p>
-D int32 product (D int32[[1]] vec) {
+D int32 product (D int32[[1]] x) {
     D int32 out;
-    __syscall ("shared2p::product_int32_vec", __domainid (D), vec, out);
+    __syscall ("shared2p::product_int32_vec", __domainid (D), x, out);
     return out;
 }
 
 template <domain D : shared2p>
-D int product (D int[[1]] vec) {
+D int product (D int[[1]] x) {
     D int out;
-    __syscall ("shared2p::product_int64_vec", __domainid (D), vec, out);
+    __syscall ("shared2p::product_int64_vec", __domainid (D), x, out);
     return out;
 }
 
