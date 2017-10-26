@@ -27,16 +27,16 @@ import shared3p;
 /**
 * @file
 * \defgroup shared3p_keydb shared3p_keydb.sc
-* \defgroup keydb_get keydb_get
-* \defgroup keydb_set keydb_set
+* \defgroup shared3p_keydb_get keydb_get
+* \defgroup shared3p_keydb_set keydb_set
 */
 
 /** \addtogroup shared3p_keydb
 *@{
-* @brief Module with functions for randomizing values
+* @brief Module for working with key-value databases that contain shared3p shares.
 */
 
-/** \addtogroup keydb_get
+/** \addtogroup shared3p_keydb_get
  *  @{
  *  @brief Get value stored in database.
  *  @note **D** - shared3p protection domain
@@ -74,7 +74,7 @@ D T[[1]] keydb_get(string key) {
 }
 /** @} */
 
-/** \addtogroup keydb_set
+/** \addtogroup shared3p_keydb_set
  *  @{
  *  @brief Store a new value in the database.
  *  @note **D** - shared3p protection domain
