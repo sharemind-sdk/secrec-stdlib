@@ -2652,7 +2652,7 @@ D int64[[2]] quicksort(D int64[[2]] matrix, uint column, bool ascending) {
  *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
- *  @param vector - a vector of supported type
+ *  @param vec - a vector of supported type
  *  @return returns the input vector sorted in ascending order
  *  @leakage{None}
  */
@@ -2723,7 +2723,8 @@ D int64[[1]] quicksort(D int64[[1]] vec) {
  *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
- *  @param vector - a vector of supported type
+ *  @param vec - a vector of supported type
+ *  @param ascending - whether to sort in ascending (**true**) or descending (**false**) order
  *  @return returns the sorted input vector
  *  @leakage{None}
  */
