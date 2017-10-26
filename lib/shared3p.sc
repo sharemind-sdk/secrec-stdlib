@@ -1028,22 +1028,23 @@ D bool[[1]] isNegligible (D float64[[1]] a) {
  *  @{
  *  @brief Functions for finding the minimum value
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  */
 
 /** \addtogroup shared3p_min_vec
  *  @{
  *  @brief Function for finding the minimum element of the input vector.
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param x - input
  *  @returns minimum element of the input vector.
  *  @pre input vector is not empty
  *  @leakage{None}
  */
 
 template <domain D : shared3p, type T>
-D T min (D T scalar) {
-    return scalar;
+D T min (D T x) {
+    return x;
 }
 
 template <domain D : shared3p>
@@ -1125,12 +1126,42 @@ D float64 min (D float64[[1]] x) {
     return out;
 }
 
+template <domain D : shared3p>
+D xor_uint8 min (D xor_uint8[[1]] x) {
+    assert (size(x) > 0);
+    D xor_uint8 out;
+    __syscall ("shared3p::vecmin_xor_uint8_vec", __domainid (D), x, out);
+    return out;
+}
+template <domain D : shared3p>
+D xor_uint16 min (D xor_uint16[[1]] x) {
+    assert (size(x) > 0);
+    D xor_uint16 out;
+    __syscall ("shared3p::vecmin_xor_uint16_vec", __domainid (D), x, out);
+    return out;
+}
+template <domain D : shared3p>
+D xor_uint32 min (D xor_uint32[[1]] x) {
+    assert (size(x) > 0);
+    D xor_uint32 out;
+    __syscall ("shared3p::vecmin_xor_uint32_vec", __domainid (D), x, out);
+    return out;
+}
+template <domain D : shared3p>
+D xor_uint64 min (D xor_uint64[[1]] x) {
+    assert (size(x) > 0);
+    D xor_uint64 out;
+    __syscall ("shared3p::vecmin_xor_uint64_vec", __domainid (D), x, out);
+    return out;
+}
+
 /** @}*/
 /** \addtogroup shared3p_min_k
  *  @{
  *  @brief Function for finding the minimum element in the specified parts of the vector.
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
+ *  @param x - input vector
  *  @param k - an \ref uint64 "uint" type value, which specifies into how many subarrays must the input array be divided
  *  @returns a vector with all the minimum elements of all the subarrays specified by k
  *  @pre input vector is not empty
@@ -1228,7 +1259,9 @@ D int[[1]] min (D int[[1]] x, uint k) {
  *  @{
  *  @brief Function for finding the pointwise minimum of 2 arrays
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param x - first argument
+ *  @param y - second argument
  *  @returns an array with the pointwise minimum of each element in the two input vectors
  *  @pre both input vectors are of equal length
  *  @leakage{None}
@@ -1443,7 +1476,76 @@ D float64[[N]] min(D float64[[N]] x, D float64[[N]] y) {
     __syscall ("shared3p::min_float64_vec", __domainid (D), x, y, x);
     return x;
 }
+template <domain D : shared3p>
+D xor_uint8 min (D xor_uint8 x, D xor_uint8 y) {
+    __syscall ("shared3p::min_xor_uint8_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint16 min (D xor_uint16 x, D xor_uint16 y) {
+    __syscall ("shared3p::min_xor_uint16_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint32 min (D xor_uint32 x, D xor_uint32 y) {
+    __syscall ("shared3p::min_xor_uint32_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint64 min (D xor_uint64 x, D xor_uint64 y) {
+    __syscall ("shared3p::min_xor_uint64_vec", __domainid (D), x, y, x);
+    return x;
+}
 
+template <domain D : shared3p>
+D xor_uint8[[1]] min (D xor_uint8[[1]] x, D xor_uint8[[1]] y) {
+    assert (size(x) == size(y));
+    __syscall ("shared3p::min_xor_uint8_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint16[[1]] min (D xor_uint16[[1]] x, D xor_uint16[[1]] y) {
+    assert (size (x) == size (y));
+    __syscall ("shared3p::min_xor_uint16_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint32[[1]] min (D xor_uint32[[1]] x, D xor_uint32[[1]] y) {
+    assert (size (x) == size (y));
+    __syscall ("shared3p::min_xor_uint32_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint64[[1]] min (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
+    assert (size (x) == size (y));
+    __syscall ("shared3p::min_xor_uint64_vec", __domainid (D), x, y, x);
+    return x;
+}
+
+template <domain D : shared3p, dim N>
+D xor_uint8[[N]] min (D xor_uint8[[N]] x, D xor_uint8[[N]] y) {
+    assert(shapesAreEqual(x,y));
+    __syscall ("shared3p::min_xor_uint8_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p, dim N>
+D xor_uint16[[N]] min (D xor_uint16[[N]] x, D xor_uint16[[N]] y) {
+    assert(shapesAreEqual(x,y));
+    __syscall ("shared3p::min_xor_uint16_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p, dim N>
+D xor_uint32[[N]] min (D xor_uint32[[N]] x, D xor_uint32[[N]] y) {
+    assert(shapesAreEqual(x,y));
+    __syscall ("shared3p::min_xor_uint32_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p, dim N>
+D xor_uint64[[N]] min (D xor_uint64[[N]] x, D xor_uint64[[N]] y) {
+    assert(shapesAreEqual(x,y));
+    __syscall ("shared3p::min_xor_uint64_vec", __domainid (D), x, y, x);
+    return x;
+}
 /** @}*/
 /** @}*/
 
@@ -1452,22 +1554,23 @@ D float64[[N]] min(D float64[[N]] x, D float64[[N]] y) {
  *  @{
  *  @brief Functions for finding the maximum value
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  */
 
 /** \addtogroup shared3p_max_vec
  *  @{
  *  @brief Function for finding the maximum element of the input vector.
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
- *  @returns maximum element of the input vector.
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param x - input
+ *  @returns maximum element of the input vector
  *  @pre input vector is not empty
  *  @leakage{None}
  */
 
 template <domain D : shared3p, type T>
-D T max (D T scalar) {
-    return scalar;
+D T max (D T x) {
+    return x;
 }
 template <domain D : shared3p>
 D uint8 max (D uint8[[1]] x) {
@@ -1548,6 +1651,34 @@ D float64 max(D float64[[1]] x) {
     __syscall ("shared3p::vecmax_float64_vec", __domainid (D), x, out);
     return out;
 }
+template <domain D : shared3p>
+D xor_uint8 max (D xor_uint8[[1]] x) {
+    assert (size(x) > 0);
+    D xor_uint8 out;
+    __syscall ("shared3p::vecmax_xor_uint8_vec", __domainid (D), x, out);
+    return out;
+}
+template <domain D : shared3p>
+D xor_uint16 max (D xor_uint16[[1]] x) {
+    assert (size(x) > 0);
+    D xor_uint16 out;
+    __syscall ("shared3p::vecmax_xor_uint16_vec", __domainid (D), x, out);
+    return out;
+}
+template <domain D : shared3p>
+D xor_uint32 max (D xor_uint32[[1]] x) {
+    assert (size(x) > 0);
+    D xor_uint32 out;
+    __syscall ("shared3p::vecmax_xor_uint32_vec", __domainid (D), x, out);
+    return out;
+}
+template <domain D : shared3p>
+D xor_uint64 max (D xor_uint64[[1]] x) {
+    assert (size(x) > 0);
+    D xor_uint64 out;
+    __syscall ("shared3p::vecmax_xor_uint64_vec", __domainid (D), x, out);
+    return out;
+}
 
 /** @}*/
 /** \addtogroup shared3p_max_k
@@ -1555,15 +1686,13 @@ D float64 max(D float64[[1]] x) {
  *  @brief Function for finding the maximum element in the specified parts of the vector.
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
+ *  @param x - input vector
  *  @param k - an \ref uint64 "uint" type value, which specifies into how many subarrays must the input array be divided
  *  @returns a vector with all the maximum elements of all the subarrays specified by k
  *  @pre input vector is not empty
  *  @pre the size of the input array is dividable by **k**
  *  @leakage{None}
  */
-
-
-
 template <domain D : shared3p>
 D uint8[[1]] max (D uint8[[1]] x, uint k) {
     uint n = size(x);
@@ -1572,8 +1701,6 @@ D uint8[[1]] max (D uint8[[1]] x, uint k) {
     __syscall ("shared3p::vecmax_uint8_vec", __domainid (D), x, out);
     return out;
 }
-
-
 
 template <domain D : shared3p>
 D uint16[[1]] max (D uint16[[1]] x, uint k) {
@@ -1584,8 +1711,6 @@ D uint16[[1]] max (D uint16[[1]] x, uint k) {
     return out;
 }
 
-
-
 template <domain D : shared3p>
 D uint32[[1]] max (D uint32[[1]] x, uint k) {
     uint n = size(x);
@@ -1595,8 +1720,6 @@ D uint32[[1]] max (D uint32[[1]] x, uint k) {
     return out;
 }
 
-
-
 template <domain D : shared3p>
 D uint[[1]] max (D uint[[1]] x, uint k) {
     uint n = size(x);
@@ -1605,7 +1728,6 @@ D uint[[1]] max (D uint[[1]] x, uint k) {
     __syscall ("shared3p::vecmax_uint64_vec", __domainid (D), x, out);
     return out;
 }
-
 
 template <domain D : shared3p>
 D int8[[1]] max (D int8[[1]] x, uint k) {
@@ -1653,7 +1775,7 @@ D int[[1]] max (D int[[1]] x, uint k) {
  *  @{
  *  @brief Function for finding the pointwise maximum of 2 arrays
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @returns an array with the pointwise maximum of each element in the two input vectors
  *  @pre both input vectors are of equal length
  *  @leakage{None}
@@ -1865,6 +1987,75 @@ template <domain D : shared3p, dim N>
 D float64[[N]] max (D float64[[N]] x, D float64[[N]] y) {
     assert (size (x) == size (y));
     __syscall ("shared3p::max_float64_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint8 max (D xor_uint8 x, D xor_uint8 y) {
+    __syscall ("shared3p::max_xor_uint8_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint16 max (D xor_uint16 x, D xor_uint16 y) {
+    __syscall ("shared3p::max_xor_uint16_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint32 max (D xor_uint32 x, D xor_uint32 y) {
+    __syscall ("shared3p::max_xor_uint32_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint64 max (D xor_uint64 x, D xor_uint64 y) {
+    __syscall ("shared3p::max_xor_uint64_vec", __domainid (D), x, y, x);
+    return x;
+}
+
+template <domain D : shared3p>
+D xor_uint8[[1]] max (D xor_uint8[[1]] x, D xor_uint8[[1]] y) {
+    assert (size (x) == size (y));
+    __syscall ("shared3p::max_xor_uint8_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint16[[1]] max (D xor_uint16[[1]] x, D xor_uint16[[1]] y) {
+    assert (size (x) == size (y));
+    __syscall ("shared3p::max_xor_uint16_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint32[[1]] max (D xor_uint32[[1]] x, D xor_uint32[[1]] y) {
+    assert (size (x) == size (y));
+    __syscall ("shared3p::max_xor_uint32_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p>
+D xor_uint64[[1]] max (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
+    assert (size (x) == size (y));
+    __syscall ("shared3p::max_xor_uint64_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p, dim N>
+D xor_uint8[[N]] max (D xor_uint8[[N]] x, D xor_uint8[[N]] y) {
+    assert(shapesAreEqual(x,y));
+    __syscall ("shared3p::max_xor_uint8_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p, dim N>
+D xor_uint16[[N]] max (D xor_uint16[[N]] x, D xor_uint16[[N]] y) {
+    assert(shapesAreEqual(x,y));
+    __syscall ("shared3p::max_xor_uint16_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p, dim N>
+D xor_uint32[[N]] max (D xor_uint32[[N]] x, D xor_uint32[[N]] y) {
+    assert(shapesAreEqual(x,y));
+    __syscall ("shared3p::max_xor_uint32_vec", __domainid (D), x, y, x);
+    return x;
+}
+template <domain D : shared3p, dim N>
+D xor_uint64[[N]] max (D xor_uint64[[N]] x, D xor_uint64[[N]] y) {
+    assert(shapesAreEqual(x,y));
+    __syscall ("shared3p::max_xor_uint64_vec", __domainid (D), x, y, x);
     return x;
 }
 
@@ -2413,269 +2604,6 @@ D xor_uint64[[N]] choose(D bool[[N]] cond, D xor_uint64[[N]] first, D xor_uint64
     return out;
 }
 
-/** @}*/
-/*******************************
-    Min, max
-********************************/
-
-/** \addtogroup shared3p_min
- *  @{
- *  @brief Functions for finding the minimum value
- *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
- */
-
-/** \addtogroup shared3p_min_vec
- *  @{
- *  @brief Function for finding the minimum element of the input vector.
- *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
- *  @returns minimum element of the input vector.
- *  @pre input vector is not empty
- *  @leakage{None}
- */
-
-template <domain D : shared3p>
-D xor_uint8 min (D xor_uint8[[1]] x) {
-    assert (size(x) > 0);
-    D xor_uint8 out;
-    __syscall ("shared3p::vecmin_xor_uint8_vec", __domainid (D), x, out);
-    return out;
-}
-template <domain D : shared3p>
-D xor_uint16 min (D xor_uint16[[1]] x) {
-    assert (size(x) > 0);
-    D xor_uint16 out;
-    __syscall ("shared3p::vecmin_xor_uint16_vec", __domainid (D), x, out);
-    return out;
-}
-template <domain D : shared3p>
-D xor_uint32 min (D xor_uint32[[1]] x) {
-    assert (size(x) > 0);
-    D xor_uint32 out;
-    __syscall ("shared3p::vecmin_xor_uint32_vec", __domainid (D), x, out);
-    return out;
-}
-template <domain D : shared3p>
-D xor_uint64 min (D xor_uint64[[1]] x) {
-    assert (size(x) > 0);
-    D xor_uint64 out;
-    __syscall ("shared3p::vecmin_xor_uint64_vec", __domainid (D), x, out);
-    return out;
-}
-
-/** @}*/
-/** \addtogroup shared3p_min_2
- *  @{
- *  @brief Function for finding the pointwise minimum of 2 arrays
- *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
- *  @returns an array with the pointwise minimum of each element in the two input vectors
- *  @pre both input vectors are of equal length
- *  @leakage{None}
- */
-
-template <domain D : shared3p>
-D xor_uint8 min (D xor_uint8 x, D xor_uint8 y) {
-    __syscall ("shared3p::min_xor_uint8_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p>
-D xor_uint16 min (D xor_uint16 x, D xor_uint16 y) {
-    __syscall ("shared3p::min_xor_uint16_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p>
-D xor_uint32 min (D xor_uint32 x, D xor_uint32 y) {
-    __syscall ("shared3p::min_xor_uint32_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p>
-D xor_uint64 min (D xor_uint64 x, D xor_uint64 y) {
-    __syscall ("shared3p::min_xor_uint64_vec", __domainid (D), x, y, x);
-    return x;
-}
-
-template <domain D : shared3p>
-D xor_uint8[[1]] min (D xor_uint8[[1]] x, D xor_uint8[[1]] y) {
-    assert (size(x) == size(y));
-    __syscall ("shared3p::min_xor_uint8_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p>
-D xor_uint16[[1]] min (D xor_uint16[[1]] x, D xor_uint16[[1]] y) {
-    assert (size (x) == size (y));
-    __syscall ("shared3p::min_xor_uint16_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p>
-D xor_uint32[[1]] min (D xor_uint32[[1]] x, D xor_uint32[[1]] y) {
-    assert (size (x) == size (y));
-    __syscall ("shared3p::min_xor_uint32_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p>
-D xor_uint64[[1]] min (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
-    assert (size (x) == size (y));
-    __syscall ("shared3p::min_xor_uint64_vec", __domainid (D), x, y, x);
-    return x;
-}
-
-template <domain D : shared3p, dim N>
-D xor_uint8[[N]] min (D xor_uint8[[N]] x, D xor_uint8[[N]] y) {
-    assert(shapesAreEqual(x,y));
-    __syscall ("shared3p::min_xor_uint8_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p, dim N>
-D xor_uint16[[N]] min (D xor_uint16[[N]] x, D xor_uint16[[N]] y) {
-    assert(shapesAreEqual(x,y));
-    __syscall ("shared3p::min_xor_uint16_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p, dim N>
-D xor_uint32[[N]] min (D xor_uint32[[N]] x, D xor_uint32[[N]] y) {
-    assert(shapesAreEqual(x,y));
-    __syscall ("shared3p::min_xor_uint32_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p, dim N>
-D xor_uint64[[N]] min (D xor_uint64[[N]] x, D xor_uint64[[N]] y) {
-    assert(shapesAreEqual(x,y));
-    __syscall ("shared3p::min_xor_uint64_vec", __domainid (D), x, y, x);
-    return x;
-}
-
-/** @}*/
-/** @}*/
-
-
-/** \addtogroup shared3p_max
- *  @{
- *  @brief Functions for finding the maximum value
- *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
- */
-
-/** \addtogroup shared3p_max_vec
- *  @{
- *  @brief Function for finding the maximum element of the input vector.
- *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
- *  @returns maximum element of the input vector.
- *  @pre input vector is not empty
- *  @leakage{None}
- */
-
-template <domain D : shared3p>
-D xor_uint8 max (D xor_uint8[[1]] x) {
-    assert (size(x) > 0);
-    D xor_uint8 out;
-    __syscall ("shared3p::vecmax_xor_uint8_vec", __domainid (D), x, out);
-    return out;
-}
-template <domain D : shared3p>
-D xor_uint16 max (D xor_uint16[[1]] x) {
-    assert (size(x) > 0);
-    D xor_uint16 out;
-    __syscall ("shared3p::vecmax_xor_uint16_vec", __domainid (D), x, out);
-    return out;
-}
-template <domain D : shared3p>
-D xor_uint32 max (D xor_uint32[[1]] x) {
-    assert (size(x) > 0);
-    D xor_uint32 out;
-    __syscall ("shared3p::vecmax_xor_uint32_vec", __domainid (D), x, out);
-    return out;
-}
-template <domain D : shared3p>
-D xor_uint64 max (D xor_uint64[[1]] x) {
-    assert (size(x) > 0);
-    D xor_uint64 out;
-    __syscall ("shared3p::vecmax_xor_uint64_vec", __domainid (D), x, out);
-    return out;
-}
-
-/** @}*/
-/** \addtogroup shared3p_max_2
- *  @{
- *  @brief Function for finding the pointwise maximum of 2 arrays
- *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
- *  @returns an array with the pointwise maximum of each element in the two input vectors
- *  @pre both input vectors are of equal length
- *  @leakage{None}
- */
-
-template <domain D : shared3p>
-D xor_uint8 max (D xor_uint8 x, D xor_uint8 y) {
-    __syscall ("shared3p::max_xor_uint8_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p>
-D xor_uint16 max (D xor_uint16 x, D xor_uint16 y) {
-    __syscall ("shared3p::max_xor_uint16_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p>
-D xor_uint32 max (D xor_uint32 x, D xor_uint32 y) {
-    __syscall ("shared3p::max_xor_uint32_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p>
-D xor_uint64 max (D xor_uint64 x, D xor_uint64 y) {
-    __syscall ("shared3p::max_xor_uint64_vec", __domainid (D), x, y, x);
-    return x;
-}
-
-template <domain D : shared3p>
-D xor_uint8[[1]] max (D xor_uint8[[1]] x, D xor_uint8[[1]] y) {
-    assert (size (x) == size (y));
-    __syscall ("shared3p::max_xor_uint8_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p>
-D xor_uint16[[1]] max (D xor_uint16[[1]] x, D xor_uint16[[1]] y) {
-    assert (size (x) == size (y));
-    __syscall ("shared3p::max_xor_uint16_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p>
-D xor_uint32[[1]] max (D xor_uint32[[1]] x, D xor_uint32[[1]] y) {
-    assert (size (x) == size (y));
-    __syscall ("shared3p::max_xor_uint32_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p>
-D xor_uint64[[1]] max (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
-    assert (size (x) == size (y));
-    __syscall ("shared3p::max_xor_uint64_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p, dim N>
-D xor_uint8[[N]] max (D xor_uint8[[N]] x, D xor_uint8[[N]] y) {
-    assert(shapesAreEqual(x,y));
-    __syscall ("shared3p::max_xor_uint8_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p, dim N>
-D xor_uint16[[N]] max (D xor_uint16[[N]] x, D xor_uint16[[N]] y) {
-    assert(shapesAreEqual(x,y));
-    __syscall ("shared3p::max_xor_uint16_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p, dim N>
-D xor_uint32[[N]] max (D xor_uint32[[N]] x, D xor_uint32[[N]] y) {
-    assert(shapesAreEqual(x,y));
-    __syscall ("shared3p::max_xor_uint32_vec", __domainid (D), x, y, x);
-    return x;
-}
-template <domain D : shared3p, dim N>
-D xor_uint64[[N]] max (D xor_uint64[[N]] x, D xor_uint64[[N]] y) {
-    assert(shapesAreEqual(x,y));
-    __syscall ("shared3p::max_xor_uint64_vec", __domainid (D), x, y, x);
-    return x;
-}
 /** @}*/
 
 /** \cond */
@@ -4805,3 +4733,4 @@ D xor_uint32[[1]] cast (D xor_uint64[[1]] x) {
 
 /** @}*/
 /** @}*/
+
