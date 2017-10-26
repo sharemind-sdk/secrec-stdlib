@@ -1597,6 +1597,8 @@ float64[[N]] sin(float64[[N]] x) {
  *  @{
  *  @brief Error function.
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @param x - input array
+ *  @return error function applied to elements of the input array
  */
 template<dim N>
 float32[[N]] erf(float32[[N]] x) {

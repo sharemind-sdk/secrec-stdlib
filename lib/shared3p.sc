@@ -923,7 +923,8 @@ D float64[[N]] exp (D float64[[N]] x) {
  *  @brief Function for finding the value of error function
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns the error functions of the input array
+ *  @param x - input array
+ *  @return error function applied to elements of the input array
  *  @leakage{None}
  */
 
