@@ -249,8 +249,9 @@ D T[[1]] flatten (D T[[N]] arr) {
  *  @note **T1** - any \ref data_types "data" type
  *  @note **T2** - any \ref data_types "data" type
  *  @note **T3** - any \ref data_types "data" type
+ *  @param first - first input
+ *  @param second - second input
  *  @return returns a \ref bool "bool" type value, whether the input arrays are of equal shape (**true**) or are not of equal shape (**false**)
- *  @leakage{Leaks the shapes of the inputs}
 */
 
 template <domain D1, domain D2, type T1, type T2, dim N>
