@@ -1636,7 +1636,10 @@ float64[[N]] exp(float64[[N]] x) {
 /** \addtogroup ln
  *  @{
  *  @brief Natural logarthim
+ *  @note **N** - any dimensionality
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @param x - input array
+ *  @return the natural logarithms of the input array
  */
 template<dim N>
 float32[[N]] ln(float32[[N]] x) {
