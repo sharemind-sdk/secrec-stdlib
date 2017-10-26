@@ -121,6 +121,7 @@ D float64[[1]] simpleLinearRegression(D int64[[1]] x, D int64[[1]] y, D bool[[1]
 }
 /** @} */
 
+/** \cond */
 template<domain D : shared3p, type T>
 uint _maxFirstLoc(D T[[1]] vec) {
     D T best = vec[0];
