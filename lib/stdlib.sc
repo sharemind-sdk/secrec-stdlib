@@ -1571,6 +1571,8 @@ float64[[N]] sqrt(float64[[N]] x) {
  *  @{
  *  @brief Function for finding sine.
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @param x - input
+ *  @return the sines of the input array
  */
 template<dim N>
 float32[[N]] sin(float32[[N]] x) {

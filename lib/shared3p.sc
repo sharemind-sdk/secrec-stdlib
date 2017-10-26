@@ -815,7 +815,8 @@ D float64[[N]] sqrt (D float64[[N]] x) {
  *  @brief Function for finding the sine of a value
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns the sines of the input array
+ *  @param x - input
+ *  @return the sines of the input array
  *  @leakage{None}
  */
 
