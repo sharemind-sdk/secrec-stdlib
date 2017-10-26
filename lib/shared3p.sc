@@ -792,7 +792,8 @@ D float64[[N]] inv (D float64[[N]] x) {
  *  @brief Function for finding the square root of a value
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @return returns the square roots of the input array
+ *  @param x - input
+ *  @return the square roots of the input array
  *  @leakage{None}
  */
 

@@ -1549,6 +1549,8 @@ int round (float64 x) {
  *  @{
  *  @brief Function for finding square roots
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @param x - input
+ *  @return the square roots of the input array
  */
 template<dim N>
 float32[[N]] sqrt(float32[[N]] x) {
