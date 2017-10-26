@@ -46,7 +46,6 @@ import stdlib;
  * @brief Structure containing the results of the analysis. Note that
  * each field only has a reasonable value if it was requested when
  * calling gspca. See also \ref shared3p_pca_return_values "return value constants".
- * \cond Doxygen_Suppress
  */
 template<domain D : shared3p, type T>
 struct PCAResult {
@@ -56,10 +55,7 @@ struct PCAResult {
     D T[[1]] variances;
     D T[[1]] proportions;
 }
-/**
- * \endcond
- * @}
- */
+/** @} */
 
 /**
  * \addtogroup shared3p_pca_return_values
@@ -395,6 +391,7 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
  * @param iterations - how many iterations to run the algorithm
  * @param returnValues - indicates which results to return. Use
  * bitwise or if you want multiple results.
+ * @return \ref PCAResult structure
  * @leakage{None}
  */
 template<domain D : shared3p>
