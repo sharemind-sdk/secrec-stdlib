@@ -49,8 +49,10 @@ import stdlib;
  *  @brief Function for obliviously choosing one of the inputs
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
- *  @param cond - a boolean array.
- *  @return returns one of the input arrays that was obliviously chosen with the condition. if **true**, array **first** is returned else **second** is returned
+ *  @param cond - a boolean array
+ *  @param first - values for **true** case
+ *  @param second - values for **false** case
+ *  @return one of the input arrays that was obliviously chosen with the condition. if **true**, array **first** is returned else **second** is returned
  */
 
 template <domain D : shared3p, dim N>

@@ -79,8 +79,10 @@ import matrix;
  *  @brief Function for obliviously choosing one of the inputs
  *  @note **D** - all protection domains
  *  @note **T** - any \ref data_types "data" type
- *  @param cond - a boolean scalar.
- *  @return returns one of the input arrays that was obliviously chosen with the condition. if **true**, array **first** is returned else **second** is returned
+ *  @param cond - a boolean scalar
+ *  @param first - values for **true** case
+ *  @param second - values for **false** case
+ *  @return one of the input arrays that was obliviously chosen with the condition. if **true**, array **first** is returned else **second** is returned
  */
 
 template <domain D, type T, dim N>
@@ -164,6 +166,8 @@ D float64[[N]] choose(D bool cond, D float64[[N]] first, D float64[[N]] second) 
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param cond - a boolean array
+ *  @param first - values for **true** case
+ *  @param second - values for **false** case
  *  @return pointwise check if **cond** at a certain position is **true** or **false**. if **true** the element of **first** at that position is returned else the element of **second** at that position is returned
  */
 

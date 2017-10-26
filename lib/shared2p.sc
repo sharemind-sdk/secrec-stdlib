@@ -1891,6 +1891,8 @@ D uint64 [[2]] reshare (D xor_uint64[[2]] input) {
  *  @note **D** - shared2p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param cond - a boolean vector
+ *  @param first - values for **true** case
+ *  @param second - values for **false** case
  *  @return pointwise check if **cond** at a certain position is **true** or **false**. if **true** the element of **first** at that position is returned else the element of **second** at that position is returned
  */
 
