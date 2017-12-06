@@ -65,6 +65,7 @@ import stdlib;
  * \defgroup tdb_vmap_get_value tdbVmapGetValue
  * \defgroup tdb_vmap_add_index tdbVmapAddIndex
  * \defgroup tdb_vmap_get_index tdbVmapGetIndex
+ * \defgroup tdb_vmap_set_value_as_column tdbVmapSetValueAsColumn
  */
 
 /** \addtogroup table_database
@@ -661,7 +662,7 @@ T[[1]] tdbVmapGetValue (uint id, string paramname, uint index) {
 
 /** \addtogroup tdb_vmap_add_index
  *  @{
- *  @brief Add a unsigned integer value to a vector in a vector map
+ *  @brief Add an unsigned integer value to a vector in a vector map
  *  @param id - vector map id
  *  @param paramname - name of the vector to which the string is added
  *  @param value - value to be added
@@ -673,7 +674,7 @@ void tdbVmapAddIndex(uint64 id, string paramname, uint64 value) {
 
 /** \addtogroup tdb_vmap_get_index
  *  @{
- *  @brief Get a string from a string vector in a vector map
+ *  @brief Get an unsigned integer from a string vector in a vector map
  *  @param id - vector map id
  *  @param paramname - string vector name
  *  @param index - index of the value in the vector
@@ -683,6 +684,18 @@ uint64 tdbVmapGetIndex(uint64 id, string paramname, uint index) {
     uint64 ret;
     __syscall("tdb_vmap_at_index", id, __cref paramname, index, __return ret);
     return ret;
+}
+/** @} */
+
+/** \addtogroup tdb_vmap_set_value_as_column
+ *  @{
+ *  @brief Configure the vector map to accept values as column
+ *  vectors. This can be used to insert multiple rows at a time by
+ *  providing a vector for each column in the table.
+ *  @param id - vector map id
+ */
+void tdbVmapSetValueAsColumn(uint64 id) {
+    tdbVmapAddIndex(id, "valueAsColumn", 1 :: uint64);
 }
 /** @} */
 
