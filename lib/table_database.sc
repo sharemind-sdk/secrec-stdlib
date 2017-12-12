@@ -283,7 +283,7 @@ uint64 tdbGetTableNames(string datasource) {
  *  the types and names of the columns.
  */
 void tdbTableCreate (string datasource, string table, uint64 parameters) {
-    __syscall ("tdb_stmt_exec", __cref datasource, __cref table, __cref "tbl_create", parameters);
+    __syscall ("tdb_tbl_create2", __cref datasource, __cref table, parameters);
 }
 /** @} */
 
@@ -322,7 +322,7 @@ bool tdbTableExists (string datasource, string table) {
  *  column.
  */
 void tdbInsertRow (string datasource, string table, uint64 parameters) {
-    __syscall ("tdb_stmt_exec", __cref datasource, __cref table, __cref "insert_row", parameters);
+    __syscall ("tdb_insert_row2", __cref datasource, __cref table, parameters);
 }
 /** @} */
 
