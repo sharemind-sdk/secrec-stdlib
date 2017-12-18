@@ -39,6 +39,13 @@ FILE(GLOB_RECURSE SharemindStdlib_ALLFILES
 ADD_CUSTOM_TARGET("include_SharemindStdlib_ALLFILES_in_IDE" SOURCES
                   ${SharemindStdlib_ALLFILES})
 
+EXECUTE_PROCESS(
+  COMMAND git rev-parse --abbrev-ref HEAD
+  WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
+  OUTPUT_VARIABLE GIT_BRANCH
+  OUTPUT_STRIP_TRAILING_WHITESPACE
+)
+
 # Stdlib:
 
 # Note that this globbing is done by cmake, not by make, hence sometimes clean might be required.
