@@ -107,7 +107,7 @@ run() {
     local TEST_NAME="$2"
     (cd "`dirname ${EMULATOR}`" &&
         ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
-                "./`basename ${EMULATOR}`" --conf=emulator.cfg \
+                "./`basename ${EMULATOR}`" --conf=emulator.conf \
                 --outFile=emulator.out --force "${SB}" \
                     | sed "s#^#${TEST_NAME}#g") \
             3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
