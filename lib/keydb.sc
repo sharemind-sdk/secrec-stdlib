@@ -32,6 +32,7 @@ import stdlib;
  *  \defgroup keydb_set keydb_set(string, value)
  *  \defgroup keydb_scan keydb_scan(string)
  *  \defgroup keydb_scan_next keydb_scan_next(cursor)
+ *  \defgroup keydb_scan_cursor_free keydb_scan_cursor_free(cursor)
  */
 
 /** \addtogroup keydb
@@ -44,8 +45,9 @@ import stdlib;
  *  @brief Structure for keydb_scan.
  */
 struct ScanCursor {
-    uint cursor; /** @brief When non-zero, keydb_scan_next should be called. */
-    string key; /** @brief Holds the returned key, when cursor is non-zero. */
+    uint64 cursor;
+    uint64 nextKeySize; /** @brief When non-zero, keydb_scan_next can be called. */
+    string key; /** @brief Holds the returned key. */
 }
 
 /** @} */
@@ -145,33 +147,69 @@ void keydb_set(string key, T[[1]] value) {
  *  existing keys are returned from the scan.
  */
 ScanCursor keydb_scan(string pattern) {
-    string key;
-    uint cursor = 0;
-    __syscall("keydb_scan", __ref cursor, __cref pattern, __return key);
-    ScanCursor sc;
-    sc.cursor = cursor;
-    sc.key = key;
-    return sc;
+    uint64 cursor;
+    uint64 nextKeySize;
+    __syscall("keydb_scan",
+              __cref pattern,
+              __ref nextKeySize,
+              __return cursor);
+    if (cursor != 0) {
+        // assert(nextKeySize > 0);
+        uint8[[1]] firstKey(nextKeySize);
+        __syscall("keydb_scan_cursor_pop",
+                  cursor,
+                  __ref firstKey,
+                  __return nextKeySize);
+        ScanCursor sc;
+        sc.cursor = cursor;
+        sc.nextKeySize = nextKeySize;
+        sc.key = __string_from_bytes(firstKey);
+        return sc;
+    } else {
+        ScanCursor sc;
+        return sc;
+    }
 }
 /** @} */
 
 /** \addtogroup keydb_scan_next
  *  @{
  *  @brief Scan the next key from a database.
- *  @param cursor - the cursor returned by previous call to \ref keydb_scan "keydb_scan"
+ *  @param sc the cursor returned by previous call to \ref keydb_scan "keydb_scan"
  *   or \ref keydb_scan_next "keydb_scan_next".
  *  @return a \ref ScanCursor "ScanCursor" which holds the key and a cursor.
  */
-ScanCursor keydb_scan_next(uint cursor) {
-    ScanCursor sc;
-    string fake;
-    string key;
-    __syscall("keydb_scan", __ref cursor, __cref fake, __return key);
-    sc.cursor = cursor;
-    sc.key = key;
+ScanCursor keydb_scan_next(ScanCursor sc) {
+    if (sc.nextKeySize > 0) {
+        uint64 newNextKeySize;
+        uint8[[1]] newKey(sc.nextKeySize);
+        __syscall("keydb_scan_cursor_pop",
+                  sc.cursor,
+                  __ref newKey,
+                  __return newNextKeySize);
+        sc.key = __string_from_bytes(newKey);
+        sc.nextKeySize = newNextKeySize;
+    } else {
+        sc.cursor = 0;
+        sc.key = "";
+    }
     return sc;
 }
 /** @} */
+
+/** \addtogroup keydb_scan_cursor_free
+ *  @{
+ *  @brief Deallocates the given cursor without popping all the elements.
+ *  @param sc - the cursor returned by previous call to \ref keydb_scan "keydb_scan"
+ *   or \ref keydb_scan_next "keydb_scan_next".
+ */
+void keydb_scan_cursor_free(ScanCursor sc) {
+    if (sc.cursor != 0)
+        __syscall("keydb_scan_cursor_free", sc.cursor);
+}
+/** @} */
+
+
 
 /** \addtogroup keydb_clean
  *  @{
