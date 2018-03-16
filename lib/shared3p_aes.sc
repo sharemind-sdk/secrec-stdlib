@@ -93,6 +93,7 @@ D xor_uint32[[1]] aes128Genkey(uint blocks) {
  *  @brief Function for expanding a randomly generated AES key
  *  @param aeskey - a 1-dimensional array of type \ref xor_uint32 "xor_uint32". See also \ref aes_genkey "aesGenkey"
  *  @return returns a vector of type \ref xor_uint32 "xor_uint32" with an expanded key
+ *  @leakage{None}
  */
 
 /**
@@ -120,6 +121,7 @@ D xor_uint32[[1]] aes128ExpandKey(D xor_uint32[[1]] aeskey) {
 * @pre the size of **expandedKey** has to be dividable by (AES128_Nb * (AES128_Nr + 1))
 * @pre the size of **plainText** has to be dividable by AES128_Nb
 * @pre ( **plainText** / AES128_Nb ) == ( size of **expandedKey** ) / (AES128_Nb * (AES128_Nr + 1))
+* @leakage{None}
 */
 template <domain D : shared3p>
 D xor_uint32[[1]] aes128EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {
@@ -137,6 +139,7 @@ D xor_uint32[[1]] aes128EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
 * @param plainText - a \ref string "string" converted to a \ref xor_uint32 "xor_uint32" vector
 * @pre the size of **plainText** has to be dividable by AES128_Nb
 * @pre the size of **expandedKey** has to be (AES128_Nb * (AES128_Nr + 1))
+* @leakage{None}
 */
 template <domain D : shared3p>
 D xor_uint32[[1]] aes128SingleKeyEncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {
@@ -204,6 +207,7 @@ D xor_uint32[[1]] aes192ExpandKey(D xor_uint32[[1]] aeskey) {
 * @pre the size of **expandedKey** has to be dividable by (AES192_Nb * (AES192_Nr + 1))
 * @pre the size of **plainText** has to be dividable by AES192_Nb
 * @pre ( **plainText** / AES192_Nb ) == ( size of **expandedKey** ) / (AES192_Nb * (AES192_Nr + 1))
+* @leakage{None}
 */
 
 template <domain D : shared3p>
@@ -222,6 +226,7 @@ D xor_uint32[[1]] aes192EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
 * @param plainText - a \ref string "string" converted to a \ref xor_uint32 "xor_uint32" vector
 * @pre the size of **plainText** has to be dividable by AES192_Nb
 * @pre the size of **expandedKey** has to be (AES192_Nb * (AES192_Nr + 1))
+* @leakage{None}
 */
 template <domain D : shared3p>
 D xor_uint32[[1]] aes192SingleKeyEncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {
@@ -288,6 +293,7 @@ D xor_uint32[[1]] aes256ExpandKey(D xor_uint32[[1]] aeskey) {
 * @pre the size of **expandedKey** has to be dividable by (AES256_Nb * (AES256_Nr + 1))
 * @pre the size of **plainText** has to be dividable by AES256_Nb
 * @pre ( **plainText** / AES256_Nb ) == ( size of **expandedKey** ) / (AES256_Nb * (AES256_Nr + 1))
+* @leakage{None}
 */
 
 template <domain D : shared3p>
@@ -306,6 +312,7 @@ D xor_uint32[[1]] aes256EncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[
 * @param plainText - a \ref string "string" converted to a \ref xor_uint32 "xor_uint32" vector
 * @pre the size of **plainText** has to be dividable by AES256_Nb
 * @pre the size of **expandedKey** has to be (AES256_Nb * (AES256_Nr + 1))
+* @leakage{None}
 */
 template <domain D : shared3p>
 D xor_uint32[[1]] aes256SingleKeyEncryptEcb(D xor_uint32[[1]] expandedKey, D xor_uint32[[1]] plainText) {

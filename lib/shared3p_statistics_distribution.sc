@@ -398,7 +398,8 @@ D T[[2]] _heatmap (D T[[1]] x,
  *  (note that the last element of the second row is always 0 because
  *  for n bins we have n+1 boundaries). An element x belongs to a bin
  *  with boundaries (a, b) if a < x <= b.
- *  @leakage{Leaks the minimum and maximum values in the input}
+ *  @leakage{Leaks the minimum and maximum values in the input\n
+ *           Leaks the number of missing values in the input}
  */
 template<domain D>
 D int32[[2]] histogram (D int32[[1]] data, D bool[[1]] isAvailable) {
@@ -424,7 +425,7 @@ D int64[[2]] histogram (D int64[[1]] data, D bool[[1]] isAvailable) {
  *  @param K - minimum input size
  *  @return returns a matrix where the first row contains discrete distribution values
  *  and the second row contains counts for each value
- *  @leakage{Leaks the amount of discrete distribution values}
+ *  @leakage{Leaks max - min}
  */
 /*
  * In most of the use cases stepsize is 1, so can omit that from parameters for ease of use.
@@ -457,7 +458,7 @@ D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailab
  *  @param K - minimum input size
  *  @return returns a matrix where the first row contains discrete distribution values
  *  and the second row contains counts for each value
- *  @leakage{Leaks the amount of discrete distribution values}
+ *  @leakage{Leaks (max - min) / stepSize}
  */
 /*
  * More possible versions of discreteDistributionCount():
@@ -515,7 +516,7 @@ D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailab
  *  matrix</td></tr><tr><td>columns</td><td>number of columns in the
  *  matrix</td></tr></table>
  *
- *  @leakage{Leaks the minimum and maximum values in the input}
+ *  @leakage{Leaks the minimum and maximum values in both inputs}
  */
 template <domain D : shared3p>
 D int32[[2]] heatmap (D int32[[1]] x,

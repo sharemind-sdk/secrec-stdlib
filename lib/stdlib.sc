@@ -461,7 +461,6 @@ void printArray (T[[N]] arr) {
  *  @{
  *  @brief Function for checking if any element in a boolean vector is true
  *  @note **D** - all protection domains
- *  @leakage{None}
  */
 
 /** \addtogroup any1
@@ -1066,13 +1065,13 @@ D float64[[1]] product (D float64[[1]] vec, uint k) {
  *  @brief Function for finding the minimum value of the input
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @return returns the minimum value of the input
- *  @leakage{None}
  */
 
 /**
 * @note **D** - all protection domains
 * @param scalar - a scalar value
 * @return returns the scalar value
+* @leakage{None}
 */
 template <domain D, type T>
 D T min (D T scalar) {
@@ -1122,7 +1121,7 @@ T min (T[[1]] vec) {
 * @note **D** - all protection domains
 * @param vec - a 1-dimensional vector
 * @return returns the smallest value in the vector
-*  @leakage{None}
+* @leakage{None}
 */
 template <domain D, type T>
 D T min (D T[[1]] vec) {
@@ -1283,7 +1282,6 @@ D T[[1]] min (D T[[1]] vec, uint k) {
  *  @brief Function for finding the maximum value of the input
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @return return the maximum value of the input
- *  @leakage{None}
  */
 
 /**
@@ -1291,6 +1289,7 @@ D T[[1]] min (D T[[1]] vec, uint k) {
 * @note **T** - any \ref data_types "data type"
 * @param scalar - a scalar value
 * @return returns the scalar value
+* @leakage{None}
 */
 template <domain D, type T>
 D T max (D T scalar) {
@@ -1323,6 +1322,7 @@ T max (T[[1]] vec) {
 * @note **T** - any \ref data_types "data type"
 * @param vec - a 1-dimensional vector
 * @return returns the largest value in the vector
+* @leakage{None}
 */
 template <domain D, type T>
 D T max (D T[[1]] vec) {

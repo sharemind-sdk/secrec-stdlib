@@ -380,7 +380,7 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
 /**
  * \addtogroup shared3p_gspca
  * @{
- * @brief Principle component analysis. Note that this method is
+ * @brief Principal component analysis. Note that this method is
  * relatively efficient and precise when a low number of components is
  * required. It uses fixed point numbers internally so it may fail on
  * large inputs due to overflow.

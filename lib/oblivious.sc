@@ -72,6 +72,7 @@ import matrix;
  *  @brief Function for obliviously choosing one of the inputs
  *  @note **D** - all protection domains
  *  @return returns one of the input arrays that was obliviously chosen with the condition
+ *  @leakage{None}
  */
 
 /** \addtogroup choose1
@@ -83,6 +84,7 @@ import matrix;
  *  @param first - values for **true** case
  *  @param second - values for **false** case
  *  @return one of the input arrays that was obliviously chosen with the condition. if **true**, array **first** is returned else **second** is returned
+ *  @leakage{None}
  */
 
 template <domain D, type T, dim N>
@@ -169,6 +171,7 @@ D float64[[N]] choose(D bool cond, D float64[[N]] first, D float64[[N]] second) 
  *  @param first - values for **true** case
  *  @param second - values for **false** case
  *  @return pointwise check if **cond** at a certain position is **true** or **false**. if **true** the element of **first** at that position is returned else the element of **second** at that position is returned
+ *  @leakage{None}
  */
 
 template <domain D, dim N>
@@ -264,6 +267,7 @@ D bool[[1]] vectorLookupBitmask(uint elems, D uint index) {
  *  @param vec - a 1-dimensional vector of supported type
  *  @param index - an \ref uint64 "uint" type scalar for specifying the position in the vector to look up
  *  @return returns the element in the vector specified by **index**
+ *  @leakage{None}
  */
 
 template <domain D>
@@ -383,6 +387,7 @@ D bool[[2]] matrixLookupRowBitmask(uint rows, uint cols, D uint rowIndex) {
  *  @param mat - a 2-dimensional matrix of supported type
  *  @param rowIndex - an \ref uint64 "uint" type scalar for specifying the row of the input matrix to look up
  *  @return returns the row from the input matrix specified by **rowIndex**
+ *  @leakage{None}
  */
 
 
@@ -510,6 +515,7 @@ D bool[[2]] matrixLookupColumnBitmask(uint rows, uint cols, D uint colIndex) {
  *  @param mat - a 2-dimensional matrix of supported type
  *  @param colIndex - an \ref uint64 "uint" type scalar for specifying the column of the input matrix to look up
  *  @return returns the column from the input matrix specified by **colIndex**
+ *  @leakage{None}
  */
 
 template <domain D>
@@ -630,6 +636,7 @@ D bool[[2]] matrixLookupBitmask(uint rows, uint cols, D uint rowIndex, D uint co
  *  @param rowIndex - an \ref uint64 "uint" type scalar for specifying the row in the input matrix
  *  @param colIndex - an \ref uint64 "uint" type scalar for specifying the column in the input matrix
  *  @return returns the element from the input matrix specified by **rowIndex** and **colIndex**
+ *  @leakage{None}
  */
 
 template <domain D>
@@ -734,6 +741,7 @@ D float64 matrixLookup(D float64[[2]] mat, D uint rowIndex, D uint columnIndex) 
  *  @param index - an \ref uint64 "uint" type scalar for specifying the element to replace
  *  @param newValue - a scalar value of the same type as the input vector
  *  @return returns a vector with the value at position **index** replaced by **newValue**
+ *  @leakage{None}
  */
 
 template <domain D>
@@ -810,6 +818,7 @@ D uint[[1]] vectorUpdate(D uint64[[1]] vec, D uint index, D uint64 newValue) {
  *  @param rowIndex - an \ref uint64 "uint" type scalar for specifying the row to replace
  *  @param newRow - a vector with new values
  *  @return returns a matrix where the row at **rowIndex** has been replaced with **newRow**
+ *  @leakage{None}
  */
 
 /** \cond */
@@ -899,6 +908,7 @@ D int[[2]] matrixUpdateRow(D int[[2]] mat, D uint rowIndex, D int[[1]] newRow) {
  *  @param colIndex - an \ref uint64 "uint" type scalar for specifying the column to replace
  *  @param newCol - a vector with new values
  *  @return returns a matrix where the column at **colIndex** has been replaced with **newCol**
+ *  @leakage{None}
  */
 
 /** \cond */
@@ -987,6 +997,7 @@ D int[[2]] matrixUpdateColumn(D int[[2]] mat, D uint colIndex, D int[[1]] newCol
  *  @param colIndex - an \ref uint64 "uint" type scalar for specifying the column in the input matrix
  *  @param newValue - a new scalar value
  *  @return returns a matrix where the element at row **rowIndex** and column **colIndex** has been replaced with **newValue**
+ *  @leakage{None}
  */
 
 /** \cond */

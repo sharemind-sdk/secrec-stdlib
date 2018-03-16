@@ -77,6 +77,7 @@ D T[[1]] _rowSums (D T[[2]] mat) {
  *  @note When adding boolean values, the numerical value of boolean is used
  *  @param mat - a matrix of supported type
  *  @return returns a vector with the sums of each row in the input matrix
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -143,6 +144,7 @@ D float64[[1]] rowSums (D float64[[2]] mat) {
  *  @note When adding boolean values, the numerical value of boolean is used
  *  @param mat - a matrix of supported type
  *  @return returns a vector with the sums of each column in the input matrix
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -236,6 +238,7 @@ D T[[1]] _dotProduct (D T[[2]] x, D T[[2]] y) {
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x, y - input vectors
  *  @return returns a scalar with the dot product of the two input vectors
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -296,6 +299,7 @@ D float64 dotProduct (D float64[[1]] x, D float64[[1]] y) {
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x,y - matrices of supported type
  *  @return returns a vector with the dot product of each row of the two input matrices
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -359,6 +363,7 @@ D float64[[1]] dotProduct (D float64[[2]] x, D float64[[2]] y) {
  *  @brief Function for finding the length of a vector
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @leakage{None}
  */
 
 /**
@@ -530,6 +535,7 @@ D T[[2]] _crossProduct (D T[[2]] x, D T[[2]] y) {
  *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x,y - vectors of supported type
  *  @return returns a vector with the cross product of the two input vectors
+ *  @leakage{None}
  */
 
 
@@ -571,6 +577,7 @@ D float64[[1]] crossProduct (D float64[[1]] x, D float64[[1]] y) {
  *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x,y - matrices of supported type
  *  @return returns a matrix with the cross product of each row of the two input matrices
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -735,6 +742,7 @@ D T[[2]] _intMatrixMultiplication(D T[[2]] x, D T[[2]] y) {
  *  @warning no. of columns of x must equal no. of rows of y
  *  @param x,y - 2-dimensional matrices of supported type and shape
  *  @return returns the matrix of x*y
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -796,6 +804,7 @@ D float64[[2]] matrixMultiplication (D float64[[2]] x, D float64[[2]] y) {
  *  @warning no. of columns of x must equal no. of rows of y. Also, there should be an equal no. of matrices in both structures
  *  @param x,y - 3-dimensional matrices of supported type and shape
  *  @return We multiply across the last two dimensions and return a vector of product matrices
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -860,6 +869,7 @@ D float64[[3]] matrixMultiplication (D float64[[3]] x, D float64[[3]] y) {
  *  positive-definite Hermitian matrices.
  *  @param x - matrix
  *  @return returns matrix L such that x = L L^T
+ *  @leakage{None}
  */
 /** \cond */
 // Only works with positive definite Hermitian matrices.
@@ -906,6 +916,7 @@ D float64[[2]] cholesky(D float64[[2]] x) {
  *  Hermitian matrices.
  *  @param x - matrix
  *  @return returns the inverse of x
+ *  @leakage{None}
  */
 /** \cond */
 // Only works with positive definite Hermitian matrices.
@@ -954,6 +965,7 @@ D float64[[2]] choleskyInverse(D float64[[2]] x) {
  *  Hermitian matrices.
  *  @param x - matrix
  *  @return returns the inverse of x
+ *  @leakage{None}
  */
 /** \cond */
 

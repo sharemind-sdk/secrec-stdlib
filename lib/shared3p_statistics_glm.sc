@@ -524,6 +524,8 @@ D T _glmaic(D T[[1]] y, D T[[2]] X, D T[[1]] coefficients, int64 family) {
  *  \ref float32 "float32" / \ref float64 "float64"
  *  @param dependent - dependent variable
  *  @param glm - structure returned by the model fitting function
+ *  @return Akaike information criterion
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D float32 GLMAIC(D int32[[1]] dependent, GLMResult<D, float32> glm) {
@@ -558,6 +560,8 @@ D float64 GLMAIC(D float64[[1]] dependent, GLMResult<D, float64> glm) {
  *  @param coefficients - model coefficients
  *  @param family - indicates the distribution of the dependent
  *  variable
+ *  @return Akaike information criterion
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D float32 GLMAIC(D int32[[1]] dependent, D int32[[2]] vars, D float32[[1]] coefficients, int64 family) {

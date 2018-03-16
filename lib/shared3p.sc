@@ -949,6 +949,7 @@ D float64[[N]] erf (D float64[[N]] x) {
  *  @param a base
  *  @param b exponent
  *  @return returns the b-th powers of vector a
+ *  @leakage{None}
  */
 template <domain D : shared3p, dim N>
 D float32[[N]] pow (D float32[[N]] a, D float32[[N]] b) {
@@ -2215,6 +2216,7 @@ void publish (string name, D T[[N]] val) {
  *  @note The input is arbitrary dimensional array, output is flattened to one boolean vector. Reshape the result to get appropriate dimensionality.
  *  @param input - the input value to convert
  *  @return returns filattened vector of extracted bits
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -2254,6 +2256,7 @@ D bool[[1]] bit_extract (D xor_uint64[[N]] input) {
  *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param input - the input value to convert
  *  @return returns a converted value from uint(X) -> xor_uint(X) or xor_uint(X) -> uint(X)
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -2527,6 +2530,7 @@ D uint64 [[2]] reshare (D xor_uint64[[2]] input) {
  *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param cond - a boolean scalar
  *  @return returns one of the input arrays that was obliviously chosen with the condition. if **true**, array **first** is returned else **second** is returned
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -2574,6 +2578,7 @@ D xor_uint64[[N]] choose(D bool cond, D xor_uint64[[N]] first, D xor_uint64[[N]]
  *  @note Supported types - \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param cond - a boolean vector
  *  @return pointwise check if **cond** at a certain position is **true** or **false**. if **true** the element of **first** at that position is returned else the element of **second** at that position is returned
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>

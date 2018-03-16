@@ -269,15 +269,14 @@ D FT _combinedDegreesOfFreedom (D IT[[1]] data1,
 
     D FT[[1]] meanVar = _parallelMeanVar (data1, ia1, data2, ia2, proxy);
 
-    // These are already declassified in _parallelMeanVar
-    UT n1 = declassify (sum ((UT) ia1));
-    UT n2 = declassify (sum ((UT) ia2));
+    D UT n1 = sum ((UT) ia1);
+    D UT n2 = sum ((UT) ia2);
 
     D FT var1 = meanVar[2];
     D FT var2 = meanVar[3];
 
-    UT df1 = n1 - 1;
-    UT df2 = n2 - 1;
+    D UT df1 = n1 - 1;
+    D UT df2 = n2 - 1;
     D FT[[1]] sqr = {var1, var2};
     sqr = sqr * sqr;
 
@@ -331,6 +330,7 @@ int64 ALTERNATIVE_TWO_SIDED = 2;
  *  @param variancesEqual - indicates if the variances of the two
  *  samples should be treated as equal
  *  @return returns the test statistic
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D float32 tTest (D int32[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool variancesEqual) {
@@ -355,6 +355,7 @@ D float64 tTest (D int64[[1]] data, D bool[[1]] cases, D bool[[1]] controls, boo
  *  @param variancesEqual - indicates if the variances of the two
  *  samples should be treated as equal
  *  @return returns the test statistic
+ *  @leakage{Leaks the number of true values in ia1 and ia2}
  */
 template<domain D : shared3p>
 D float32 tTest (D int32[[1]] data1,
@@ -395,6 +396,7 @@ D float64 tTest (D int64[[1]] data1,
  *  @param ia2 - vector indicating which elements of the second sample
  *  are available
  *  @return returns the approximated number of degrees of freedom
+ *  @leakage{Leaks the number of true values in ia1 and ia2}
  */
 template<domain D>
 D float32 combinedDegreesOfFreedom (D int32[[1]] data1,
@@ -459,6 +461,7 @@ D FT _pairedTTest (D T[[1]] sample1, D T[[1]] sample2, D bool[[1]] filter, FT co
  *  @param constant - hypothesized difference of means (set to 0 if
  *  testing for equal means)
  *  @return returns the t-value
+ *  @leakage{None}
  */
 template <domain D : shared3p>
 D float32 pairedTTest (D int32[[1]] sample1, D int32[[1]] sample2, D bool[[1]] filter, float32 constant) {
@@ -506,9 +509,9 @@ D FT _chiSquaredXClasses (D UT[[2]] contTable, T dummy) {
     uint k = shapeContingency[0];
 
     D UT[[1]] colSums (k), rowSums (2);
-    colSums = contTable[: , 0] + contTable[: , 1];
-    rowSums[0] = sum (contTable [: , 0]);
-    rowSums[1] = sum (contTable [: , 1]);
+    colSums = contTable[:, 0] + contTable[:, 1];
+    rowSums[0] = sum (contTable [:, 0]);
+    rowSums[1] = sum (contTable [:, 1]);
     D UT total = rowSums[0] + rowSums[1];
     D FT[[1]] mulParA (2 * k), mulParB (2 * k), mulParRes (2 * k);
 
@@ -523,8 +526,8 @@ D FT _chiSquaredXClasses (D UT[[2]] contTable, T dummy) {
 
     D FT[[1]] flatFreq (k * 2);
 
-    flatFreq[0:k] = (FT)contTable [:, 0];
-    flatFreq[k:k * 2] = (FT)contTable [:, 1];
+    flatFreq[0 : k] = (FT)contTable [:, 0];
+    flatFreq[k : k * 2] = (FT)contTable [:, 1];
 
     // Calculate sum ((realFreq - expectedFreq)**2 / expectedFreq) in parallel as much as possible
     D FT[[1]] diffs (k * 2), squares (k * 2), quotients (k * 2);
@@ -553,6 +556,7 @@ D FT _chiSquaredXClasses (D UT[[2]] contTable, T dummy) {
  *  <tr><td>…</td><td>…</td><td>…</td></tr>
  *  </table>
  *  @return returns the test statistic
+ *  @leakage{None}
  */
 template <domain D>
 D float32 chiSquared (D uint32[[2]] contTable) {
@@ -561,7 +565,7 @@ D float32 chiSquared (D uint32[[2]] contTable) {
 
     int32 i;
 
-    if (shape(contTable)[0] == 2)
+    if (shape (contTable)[0] == 2)
         return _chiSquared2Classes (contTable, i);
     else
         return _chiSquaredXClasses (contTable, i);
@@ -575,7 +579,7 @@ D float64 chiSquared (D uint64[[2]] contTable) {
 
     int64 i;
 
-    if (shape(contTable)[0] == 2)
+    if (shape (contTable)[0] == 2)
         return _chiSquared2Classes (contTable, i);
     else
         return _chiSquaredXClasses (contTable, i);
@@ -600,6 +604,7 @@ D float64 chiSquared (D uint64[[2]] contTable) {
  *  and the second row contains the classes that these values will be
  *  put into. The classes should begin with 1.
  *  @return returns the test statistic
+ *  @leakage{None}
  */
 template <domain D>
 D float32 chiSquared (D uint32[[1]] data,
@@ -714,7 +719,7 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
     if (correctRanks) {
         public _RankResult<D, T, FT> res = _rank (mat[:, 0], mat[:, 1]);
         w = res.rankSum;
-        sigmaSqr =sigmaSqr - n1 * n2 / (12 * (FT) (N * (N - 1))) * (FT) res.tieCorrection;
+        sigmaSqr = sigmaSqr - n1 * n2 / (12 * (FT) (N * (N - 1))) * (FT) res.tieCorrection;
     } else {
         T[[1]] ranks (N);
         for (uint i = 0; i < N; i++) {
@@ -772,6 +777,7 @@ D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
  *  continuity corrected. The z-score is an approximation and its
  *  values are only correct when both samples have at least 5
  *  elements.
+ *  @leakage{Leaks the sum of the number of true values in ia1 and ia2}
  */
 template <domain D : shared3p>
 D float32[[1]] wilcoxonRankSum (D int32[[1]] sample1,
@@ -901,6 +907,7 @@ D FT[[1]] _mannWhitneyU (D T[[1]] sample1,
  * continuity corrected. The z-score is an approximation and is only
  * correct when the samples are large and the significance level is
  * not very low.
+ * @leakage{Leaks the sum of the number of true values in ia1 and ia2}
  */
 template <domain D : shared3p>
 D float32[[1]] mannWhitneyU (D int32[[1]] sample1,
@@ -1028,6 +1035,7 @@ D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
  *  continuity corrected. The z-score is an approximation and when
  *  there's less than 10 pairs with non-zero difference, it's
  *  incorrect.
+ *  @leakage{Leaks the number of true values in filter minus the number of pairs where the difference is zero}
  */
 template <domain D : shared3p>
 D float32[[1]] wilcoxonSignedRank (D int32[[1]] sample1, D int32[[1]] sample2, D bool[[1]] filter, bool correctRanks, int64 alternative) {
@@ -1103,6 +1111,7 @@ D uint[[1]] _benjaminiHochberg (D FT[[1]] statistics,
  *  should be calculated as 1 - Q(p), not Q(p).
  *  @return returns the indices of the tests for which the null
  *  hypothesis is rejected
+ *  @leakage{Leaks the ordering of significant test statistics (but not the statistics)}
  */
 template <domain D : shared3p>
 D uint[[1]] multipleTesting (D float32[[1]] statistics, float32[[1]] quantiles) {

@@ -108,7 +108,7 @@ D FT[[1]] _simpleLinear(D T[[1]] x, D T[[1]] y, D bool[[1]] filter) {
  * @param filter - filter indicating which elements of the samples are
  * available
  * @return returns vector {α, β} where α, β are such that y ≈ α + β · x
- * @leakage{None}
+ * @leakage{Leaks the number of missing values}
  */
 template<domain D : shared3p>
 D float32[[1]] simpleLinearRegression(D int32[[1]] x, D int32[[1]] y, D bool[[1]] filter) {
@@ -186,8 +186,7 @@ D T[[1]] _gaussianElimination(D T[[2]] a, D T[[1]] b) {
             b[icol] = tmp;
         }
 
-        // Divide the pivot row by the pivot element, located at
-        // (irow, icol).
+        // Divide the pivot row by the pivot element
         D T pivinv = inv(a[icol, icol]);
         a[icol, icol] = 1;
         D T[[1]] mult(n) = pivinv;
@@ -398,7 +397,6 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method
  * @return returns vector {β_1, β_1, …, β_n} such that y ≈ β_1 * x_1 +
  * β_2 * x_2 + … + β_(n-1) * x_(n-1) + β_n where y is the dependent
  * variable and x_i are the explanatory variables.
- * 
  * @leakage{None}
  */
 template<domain D : shared3p>

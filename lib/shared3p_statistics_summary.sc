@@ -67,7 +67,7 @@ import stdlib;
  *  @param data - input vector
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns the smallest element of the input vector
- *  @leakage{Leaks the amount of values in isAvailable}
+ *  @leakage{Leaks the number of true values in isAvailable}
  */
 template <domain D : shared3p>
 D int32 minimum (D int32[[1]] data, D bool[[1]] isAvailable) {
@@ -91,7 +91,7 @@ D int64 minimum (D int64[[1]] data, D bool[[1]] isAvailable) {
  *  @param data - input vector
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns the largest element of the input vector
- *  @leakage{Leaks the amount of values in isAvailable}
+ *  @leakage{Leaks the number of true values in isAvailable}
  */
 template <domain D : shared3p>
 D int32 maximum (D int32[[1]] data, D bool[[1]] isAvailable) {
@@ -140,14 +140,14 @@ D float64 mean (D int64[[1]] data) {
  */
 template <domain D>
 D float32 mean (D int32[[1]] data, D bool[[1]] mask) {
-    assert(shapesAreEqual(data, mask));
-    data = data * (int32)mask;
-    return _mean (data, (uint32)sum (mask));
+    assert (shapesAreEqual (data, mask));
+    data = data * (int32) mask;
+    return _mean (data, (uint32) sum (mask));
 }
 template <domain D>
 D float64 mean (D int64[[1]] data, D bool[[1]] mask) {
-    assert(shapesAreEqual(data, mask));
-    data = data * (int64)mask;
+    assert (shapesAreEqual (data, mask));
+    data = data * (int64) mask;
     return _mean (data, sum (mask));
 }
 /** @} */
@@ -228,6 +228,7 @@ D float64 variance (D int64[[1]] data, D bool[[1]] mask) {
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
  *  @param data - input sample (the function may overflow if the input is too big)
  *  @return returns the standard deviation of the input sample
+ *  @leakage{None}
  */
 template <domain D>
 D float32 standardDev (D int32[[1]] data) {
@@ -252,17 +253,18 @@ D float64 standardDev (D int64[[1]] data) {
  *  @param mask - mask vector indicating which elements of the input
  *  sample to include when computing the standard deviation
  *  @return returns the standard deviation of the filtered input vector
+ *  @leakage{None}
  */
 template <domain D>
 D float32 standardDev (D int32[[1]] data, D bool[[1]] mask){
-    assert(shapesAreEqual(data, mask));
+    assert (shapesAreEqual (data, mask));
 	D float32 var = variance (data, mask);
 	return sqrt (var);
 }
 
 template <domain D>
 D float64 standardDev (D int64[[1]] data, D bool[[1]] mask){
-    assert(shapesAreEqual(data, mask));
+    assert (shapesAreEqual (data, mask));
 	D float64 var = variance (data, mask);
 	return sqrt (var);
 }
@@ -321,7 +323,7 @@ D float64 MAD (D int64[[1]] data, float64 constant) {
  *  sample to include when computing MAD
  *  @return returns the median absolute deviation of the filtered
  *  input multiplied by 1.4826
- *  @leakage{Leaks the number of values in the mask}
+ *  @leakage{Leaks the number of true values in the mask}
  */
 template<domain D : shared3p>
 D float32 MAD (D int32[[1]] data, D bool[[1]] mask) {
@@ -345,7 +347,7 @@ D float64 MAD (D int64[[1]] data, D bool[[1]] mask) {
  *  @param constant - scale factor
  *  @return returns the median absolute deviation of the filtered
  *  input multiplied by the scale factor
- *  @leakage{Leaks the number of values in the mask}
+ *  @leakage{Leaks the number of true values in the mask}
  */
 template<domain D : shared3p>
 D float32 MAD (D int32[[1]] data, D bool[[1]] mask, float32 constant) {
@@ -435,7 +437,7 @@ D FT[[1]] _fiveNumberSummary (D T[[1]] data, D bool[[1]] isAvailable) {
  *  median, upper quartile and maximum of the input sample (in that
  *  order). If the input size is less than five, a vector of zeroes is
  *  returned.
- *  @leakage{Leaks the amount of values in isAvailable}
+ *  @leakage{Leaks the number of true values in isAvailable}
  */
 template<domain D>
 D float32[[1]] fiveNumberSummary (D int32[[1]] data, D bool[[1]] isAvailable) {
@@ -456,6 +458,7 @@ D float64[[1]] fiveNumberSummary (D int64[[1]] data, D bool[[1]] isAvailable) {
  *  @param sample2 - second sample
  *  are available
  *  @return returns the covariance
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D float32 covariance (D int32[[1]] sample1, D int32[[1]] sample2) {
@@ -478,6 +481,7 @@ D float64 covariance (D int64[[1]] sample1, D int64[[1]] sample2) {
  *  @param filter - filter indicating which elements of the samples
  *  are available
  *  @return returns the covariance
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D float32 covariance (D int32[[1]] sample1, D int32[[1]] sample2, D bool[[1]] filter) {
@@ -500,7 +504,7 @@ D float64 covariance (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] fi
 
 // This INTERNAL version of mean assumes that the data is already filtered
 template <domain D, type T, type FT, type UT>
-D FT _mean (D T[[1]] data, D UT count){
+D FT _mean (D T[[1]] data, D UT count) {
 
 	D T dataSum = sum (data);
 
@@ -536,17 +540,17 @@ D FT _variance (D T[[1]] data, D bool[[1]] mask, D FT meanValue) {
     // Apply filter to means
 	D FT[[1]] means (size(data));
 	means = (FT) meanValue;
-    means = means * (FT)mask;
+    means = means * (FT) mask;
 
     // Compute differences
-	D FT[[1]] differences (size(data));
+	D FT[[1]] differences (size (data));
 	differences = ((FT) data) - means;
 	differences = differences * differences;
 
 	D FT diffSum = sum (differences);
 
 	// Private division
-	D FT result = diffSum / (FT) (sum((uint32)mask) - 1);
+	D FT result = diffSum / (FT) (sum ((uint32) mask) - 1);
 
 	return result;
 }

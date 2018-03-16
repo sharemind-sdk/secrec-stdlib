@@ -163,6 +163,7 @@ D xor_uint32 [[2]] dupCols (D xor_uint32[[1]] col, uint n) {
 * @param filter - filter data structure
 * @param seed - seed
 * @return returns the filter data structure
+* @leakage{None}
 */
 template <domain D : shared3p>
 D bool[[1]] bloomInsertMany (D xor_uint32[[1]] elem, D bool[[1]] filter, uint32[[1]] seed) {
@@ -187,6 +188,7 @@ D bool[[1]] bloomInsertMany (D xor_uint32[[1]] elem, D bool[[1]] filter, uint32[
 * @param filter - filter data structure
 * @param seed - seed
 * @return returns a pointwise boolean vector whether the element is in the filter (may give false positive) or not (never gives false negative)
+* @leakage{None}
 */
 template <domain D : shared3p>
 D bool[[1]] bloomQueryMany (D  xor_uint32[[1]] elem,  D bool[[1]] filter, uint32[[1]] seed){

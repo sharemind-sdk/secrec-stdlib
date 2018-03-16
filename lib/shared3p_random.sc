@@ -61,6 +61,7 @@ import matrix;
  *  @brief Function for shuffling values
  *  @note **D** - shared3p protection domain
  *  @return returns a shuffled vector
+ *  @leakage{None}
  */
 
 /**
@@ -84,6 +85,7 @@ D T[[1]] shuffle (D T[[1]] vec) {
  *  @note the declassified value of the key does not matter, internally only the shares are used.
  *   If two vectors are shuffled using the same key the permutation applied is the same as long
  *   as the vectors are of the same length, and the key does not get reshared.
+ *  @leakage{None}
  */
 
 /**
@@ -109,6 +111,7 @@ D T[[1]] shuffle (D T[[1]] vec, D uint8[[1]] key) {
  *  @note the declassified value of the key does not matter, internally only the shares are used.
  *   If two vectors are shuffled using the same key the permutation applied is the same as long
  *   as the vectors are of the same length, and the key does not get reshared.
+ *  @leakage{None}
  */
 
 /**
@@ -129,6 +132,7 @@ D T[[1]] inverseShuffle (D T[[1]] vec, D uint8[[1]] key) {
 *  @brief Function for shuffling rows in a matrix
 *  @note **D** - shared3p protection domain
 *  @return returns a matrix with shuffled rows
+ *  @leakage{None}
 */
 
 /**
@@ -152,6 +156,7 @@ D T[[2]] shuffleRows (D T[[2]] mat) {
  *  @note the declassified value of the key does not matter, internally only the shares are used.
  *   If two vectors are shuffled using the same key the permutation applied is the same as long
  *   as the vectors are of the same length, and the key does not get reshared.
+ *  @leakage{None}
  */
 
 /**
@@ -177,6 +182,7 @@ D T[[2]] shuffleRows (D T[[2]] mat, D uint8[[1]] key) {
  *  @note the declassified value of the key does not matter, internally only the shares are used.
  *   If two vectors are shuffled using the same key the permutation applied is the same as long
  *   as the vectors are of the same length, and the key does not get reshared.
+ *  @leakage{None}
  */
 
 /**
@@ -197,6 +203,7 @@ D T[[2]] inverseShuffleRows (D T[[2]] mat, D uint8[[1]] key) {
 *  @brief Function for shuffling columns in a matrix
 *  @note **D** - shared3p protection domain
 *  @return returns a matrix with shuffled columns
+*  @leakage{None}
 */
 
 /**
@@ -220,6 +227,7 @@ D T[[2]] shuffleColumns (D T[[2]] mat) {
  *  @note the declassified value of the key does not matter, internally only the shares are used.
  *   If two vectors are shuffled using the same key the permutation applied is the same as long
  *   as the vectors are of the same length, and the key does not get reshared.
+ *  @leakage{None}
  */
 
 /**
@@ -244,6 +252,7 @@ D T[[2]] shuffleColumns (D T[[2]] mat, D uint8[[1]] key) {
  *  @note the declassified value of the key does not matter, internally only the shares are used.
  *   If two vectors are shuffled using the same key the permutation applied is the same as long
  *   as the vectors are of the same length, and the key does not get reshared.
+ *  @leakage{None}
  */
 
 /**

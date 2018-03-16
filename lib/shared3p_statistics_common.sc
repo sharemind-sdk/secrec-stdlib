@@ -120,7 +120,7 @@ D T[[1]] _cut (D T[[1]] data, D bool[[1]] isAvailable){
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns a vector where elements of the input vector have
  *   been removed if the corresponding element in isAvailable is zero.
- *  @leakage{Leaks the amount of values in isAvailable}
+ *  @leakage{Leaks the number of true values in isAvailable}
  */
 template <domain D : shared3p>
 D bool[[1]] cut (D bool[[1]] data, D bool[[1]] isAvailable) {
@@ -251,7 +251,7 @@ D T[[2]] _cut (D T[[2]] data, D bool[[1]] isAvailable) {
  *  @param isAvailable - vector indicating which elements of the input
  *  samples are available. Has to have as many elements as there are
  *  rows in the data matrix.
- *  @leakage{Leaks the amount of values in isAvailable}
+ *  @leakage{Leaks the number of true values in isAvailable}
  */
 template <domain D : shared3p>
 D int32[[2]] cut (D int32[[2]] data, D bool[[1]] isAvailable) {
@@ -356,7 +356,8 @@ D T _nthElement (D T[[1]] data, uint64 left, uint64 right, uint64 k, bool shuffl
  *  execution flow but if the input vector has already been shuffled
  *  it's unnecessary.
  *  @return returns the nth element in size of the input vector.
- *  @leakage{None}
+ *  @leakage{Does not leak anything if the input is shuffled\n
+ *           Leaks the results of comparisons if the input is not shuffled}
  */
 template<domain D : shared3p>
 D int32 nthElement (D int32[[1]] data, uint64 k, bool shuffle) {
@@ -420,7 +421,7 @@ D T[[2]] _contingencyTable (D T[[1]] data, D bool[[1]] cases, D bool[[1]] contro
     for (uint i = 0; i < codeCount; i = i + 1) {
 		parEqA[i * 2 * dataSize : (i * 2 + 1) * dataSize] = dataCases;
 		parEqA[(i * 2 + 1) * dataSize : (i + 1) * 2 * dataSize] = dataControls;
-		parEqB[i * 2 * dataSize : (i + 1) * 2 * dataSize] = (T)codeBook[0, i];
+		parEqB[i * 2 * dataSize : (i + 1) * 2 * dataSize] = (T) codeBook[0, i];
 	}
 
 	parEqRes = (T) (parEqA == parEqB);
@@ -430,8 +431,8 @@ D T[[2]] _contingencyTable (D T[[1]] data, D bool[[1]] cases, D bool[[1]] contro
 	D T[[2]] contTable ((uint) classCount, 2) = 0;
     for (uint i = 0; i < codeCount; i = i + 1) {
        	uint64 class = (uint) codeBook[1, i] - 1;
-		contTable[class, 0] = contTable[class, 0] + (T)parEqSums[i * 2];
-		contTable[class, 1] = contTable[class, 1] + (T)parEqSums[i * 2 + 1];
+		contTable[class, 0] = contTable[class, 0] + (T) parEqSums[i * 2];
+		contTable[class, 1] = contTable[class, 1] + (T) parEqSums[i * 2 + 1];
 	}
 
 	return contTable;

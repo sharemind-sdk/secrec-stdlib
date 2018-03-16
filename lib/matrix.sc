@@ -75,9 +75,10 @@ import stdlib;
  */
 
 /**
-* @param mat - a 2-dimensional matrix
-* @return returns the transposed version of the input matrix
-*/
+ * @param mat - a 2-dimensional matrix
+ * @return returns the transposed version of the input matrix
+ * @leakage{None}
+ */
 template <domain D, type T>
 D T[[2]] transpose (D T[[2]] mat) {
     uint[[1]] matShape = shape (mat);
@@ -90,10 +91,11 @@ D T[[2]] transpose (D T[[2]] mat) {
 }
 
 /**
-* @param arr - a 3-dimensional array
-* @note Transposes across the last two dimensions
-* @return returns a 2-dimensional array transposed across the last two dimension
-*/
+ * @param arr - a 3-dimensional array
+ * @note Transposes across the last two dimensions
+ * @return returns a 2-dimensional array transposed across the last two dimension
+ * @leakage{None}
+ */
 template <domain D, type T>
 D T[[3]] transpose (D T[[3]] arr) {
     uint[[1]] matShape = shape (arr);
@@ -211,12 +213,13 @@ D T[[1]] _rowSums (D T[[2]] mat) {
 
 /** \addtogroup rowsums
  *  @{
- *  @brief Function for summarizing the rows of a matrix
+ *  @brief Function for summing the rows of a matrix
  *  @note **D** - all protection domains
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param mat - a matrix of supported type
  *  @return returns a vector with the sums of each row in the input matrix
-*/
+ *  @leakage{None}
+ */
 
 template <domain D>
 D uint[[1]] rowSums (D bool[[2]] mat) {
@@ -282,6 +285,7 @@ D float64[[1]] rowSums (D float64[[2]] mat) {
  *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param mat - a matrix of supported type
  *  @return returns a vector with the sums of each column in the input matrix
+ *  @leakage{None}
  */
 
 template <domain D>
@@ -375,6 +379,7 @@ D T[[1]] _dotProduct (D T[[2]] x, D T[[2]] y) {
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x, y - input vectors
  *  @return returns a scalar with the dot product of the two input vectors
+ *  @leakage{None}
  */
 
 template <domain D>
@@ -435,6 +440,7 @@ D float64 dotProduct (D float64[[1]] x, D float64[[1]] y) {
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x,y - matrices of supported type
  *  @return returns a vector with the dot product of each row of the two input matrices
+ *  @leakage{None}
  */
 
 template <domain D>
@@ -665,6 +671,7 @@ D T[[2]] _crossProduct (D T[[2]] x, D T[[2]] y) {
  *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x,y - vectors of supported type
  *  @return returns a vector with the cross product of the two input vectors
+ *  @leakage{None}
  */
 
 template <domain D>
@@ -705,6 +712,7 @@ D float64[[1]] crossProduct (D float64[[1]] x, D float64[[1]] y) {
  *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x,y - matrices of supported type
  *  @return returns a matrix with the cross product of each row of the two input matrices
+ *  @leakage{None}
  */
 
 
@@ -859,6 +867,7 @@ D T[[3]] _matrixMultiplication (D T[[3]] x, D T[[3]] y) {
  *  @warning no. of columns of x must equal no. of rows of y
  *  @param x,y - matrices of supported type and shape
  *  @return returns the matrix of x*y
+ *  @leakage{None}
  */
 template <domain D>
 D uint8[[2]] matrixMultiplication (D uint8[[2]] x, D uint8[[2]] y) {
@@ -920,6 +929,7 @@ D float64[[2]] matrixMultiplication (D float64[[2]] x, D float64[[2]] y) {
  *  @warning no. of columns of x must equal no. of rows of y. Also, there should be an equal no. of matrices in both structures
  *  @param x,y - 3-dimensional matrices of supported type and shape
  *  @return We multiply across the last two dimensions and return a vector of product matrices
+ *  @leakage{None}
  */
 
 template <domain D>
@@ -1075,6 +1085,7 @@ D T[[3]] _diagMatrixMultiplication (D T[[3]] x, D T[[3]] y) {
  *  @warning NB! This matrix multiplication is very conditional. Before using, make sure that your matrices are in the right format. **y** must be diagonal
  *  @param x,y - 2-dimensional matrices of supported type and shape
  *  @return returns the matrix of x*y
+ *  @leakage{None}
  */
 
 template <domain D>
@@ -1137,6 +1148,7 @@ D float64[[2]] diagMatrixMultiplication (D float64[[2]] x, D float64[[2]] y) {
  *  @warning NB! This matrix multiplication is very conditional. Before using, make sure that your matrices are in the right format. **y** must be diagonal
  *  @param x,y - 3-dimensional matrices of supported type and shape
  *  @return We multiply across the last two dimensions and return a vector of product matrices
+ *  @leakage{None}
  */
 
 
@@ -1200,6 +1212,7 @@ D float64[[3]] diagMatrixMultiplication (D float64[[3]] x, D float64[[3]] y) {
  *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
  *  @param mat - a matrix of supported type
  *  @return returns the determinant of the input matrix
+ *  @leakage{None}
  */
 
 /* Determinant using LUP-decomposition method. */
@@ -1444,6 +1457,7 @@ float64[[2]] LupDecomposition (float64[[2]] mat) {
  *  @note Supported types \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x - matrix
  *  @return returns transposed x multiplied by x
+ *  @leakage{None}
  */
 /** \cond */
 // Multiples X^T * X
@@ -1528,6 +1542,7 @@ D float64[[2]] leftTransposedMultiplication(D float64[[2]] x) {
  *  @note Supported types \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x - matrix
  *  @return returns x multiplied by transposed x
+ *  @leakage{None}
  */
 /** \cond */
 // Multiples X * X^T

@@ -55,10 +55,11 @@ import shared3p_aes;
  *  @param rightKeyCol - the key column to be joined after in the matrix **right**
  *  @pre the pointwise values of the columns specified by **leftKeyCol** and **rightKeyCol** are the same
  *  @return returns a joined matrix joined at **leftKeyCol** and **rightKeyCol**
+ *  @leakage{Leaks the number of rows with the same key value and size of the result table.}
  */
 template <domain D : shared3p>
 D xor_uint32[[2]] tableJoinAes128(D xor_uint32[[2]] left, uint leftKeyCol,
-                                      D xor_uint32[[2]] right, uint rightKeyCol)
+                                  D xor_uint32[[2]] right, uint rightKeyCol)
 {
     uint[[1]] lShape = shape(left);
     uint[[1]] rShape = shape(right);
@@ -67,8 +68,6 @@ D xor_uint32[[2]] tableJoinAes128(D xor_uint32[[2]] left, uint leftKeyCol,
 
     left = shuffleRows(left);
     right = shuffleRows(right);
-    //__syscall("shared3p::matshuf_xor_uint32_vec", __domainid(D), left, leftCols);
-    //__syscall("shared3p::matshuf_xor_uint32_vec", __domainid(D), right, rightCols);
     uint leftRows = lShape[0];
     uint rightRows = rShape[0];
 
@@ -92,9 +91,7 @@ D xor_uint32[[2]] tableJoinAes128(D xor_uint32[[2]] left, uint leftKeyCol,
     D xor_uint32[[1]] realKey (44 * blocks);
     {
         D xor_uint32[[1]] aesKey = aes128Genkey(1::uint);
-        //__syscall("shared3p::randomize_xor_uint32_vec", __domainid(D), aesKey); // Generate random AES key
         D xor_uint32[[1]] expandedKey = aes128ExpandKey(aesKey);
-        //__syscall("shared3p::aes128_xor_uint32_vec_expand_key", __domainid(D), aesKey, expandedKey); // expand key
         for (uint round = 0; round < 11; round++) {
             D xor_uint32[[1]] temp = expandedKey[round*4:round*4 + 4];
             for (uint j = 0; j < blocks; ++j) {
@@ -104,7 +101,6 @@ D xor_uint32[[2]] tableJoinAes128(D xor_uint32[[2]] left, uint leftKeyCol,
     }
 
     keyColumnData = aes128EncryptEcb(realKey, keyColumnData);
-    //__syscall("shared3p::aes128_xor_uint32_vec", __domainid(D), keyColumnData, realKey, keyColumnData);
     uint32[[1]] publicKeyColumns = declassify(keyColumnData);
 
     uint allCols = leftCols + rightCols;
@@ -129,7 +125,6 @@ D xor_uint32[[2]] tableJoinAes128(D xor_uint32[[2]] left, uint leftKeyCol,
     }
     joinedTable = joinedTable[:resultRows, :];
     joinedTable = shuffleRows(joinedTable);
-    //__syscall("shared3p::matshuf_xor_uint32_vec", __domainid(D), joinedTable, allCols);
     return joinedTable;
 }
 

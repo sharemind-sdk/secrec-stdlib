@@ -53,6 +53,7 @@ import stdlib;
  *  @param first - values for **true** case
  *  @param second - values for **false** case
  *  @return one of the input arrays that was obliviously chosen with the condition. if **true**, array **first** is returned else **second** is returned
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -81,6 +82,7 @@ D float64[[N]] choose(D bool[[N]] cond, D float64[[N]] first, D float64[[N]] sec
  *  @param index - an \ref uint64 "uint" type scalar for specifying the element to replace
  *  @param newValue - a scalar value of the same type as the input vector
  *  @return returns a vector with the value at position **index** replaced by **newValue**
+ *  @leakage{None}
  */
 
 /** \cond */
@@ -114,6 +116,7 @@ D float64[[1]] vectorUpdate(D float64[[1]] vec, D uint index, D float64 newValue
  *  @param rowIndex - an \ref uint64 "uint" type scalar for specifying the row to replace
  *  @param newRow - a vector with new values
  *  @return returns a matrix where the row at **rowIndex** has been replaced with **newRow**
+ *  @leakage{None}
  */
 
 /** \cond */
@@ -124,7 +127,6 @@ D T[[2]] _matrixUpdateRow(D T[[2]] mat, D uint rowIndex, D T[[1]] newRow) {
     uint rows = s[0];
     uint cols = s[1];
     assert(cols == size(newRow));
-    // assert(declassify(rows > rowIndex));
 
     D bool[[2]] mask = matrixLookupRowBitmask(rows, cols, rowIndex);
 
@@ -158,6 +160,7 @@ D float64[[2]] matrixUpdateRow(D float64[[2]] mat, D uint rowIndex, D float64[[1
  *  @param colIndex - an \ref uint64 "uint" type scalar for specifying the column to replace
  *  @param newCol - a vector with new values
  *  @return returns a matrix where the column at **colIndex** has been replaced with **newCol**
+ *  @leakage{None}
  */
 
 /** \cond */
@@ -168,7 +171,6 @@ D T[[2]] _matrixUpdateColumn(D T[[2]] mat, D uint colIndex, D T[[1]] newCol) {
     uint rows = s[0];
     uint cols = s[1];
     assert(rows == size(newCol));
-    // assert(declassify(cols > colIndex));
 
     D bool[[2]] mask = matrixLookupColumnBitmask(rows, cols, colIndex);
 
@@ -203,6 +205,7 @@ D float64[[2]] matrixUpdateColumn(D float64[[2]] mat, D uint colIndex, D float64
  *  @param colIndex - an \ref uint64 "uint" type scalar for specifying the column in the input matrix
  *  @param newValue - a new scalar value
  *  @return returns a matrix where the element at row **rowIndex** and column **colIndex** has been replaced with **newValue**
+ *  @leakage{None}
  */
 
 /** \cond */
@@ -212,8 +215,6 @@ D T[[2]] _matrixUpdate(D T[[2]] mat, D uint rowIndex, D uint columnIndex, D T ne
     uint[[1]] s = shape(mat);
     uint rows = s[0];
     uint cols = s[1];
-    // assert(declassify(rows > rowIndex));
-    // assert(declassify(cols > columnIndex));
 
     D T[[2]] n(rows, cols) = newValue;
     return choose(matrixLookupBitmask(rows, cols, rowIndex, columnIndex), n, mat);

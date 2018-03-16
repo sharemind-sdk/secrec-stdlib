@@ -87,6 +87,7 @@ import shared3p;
  *  @brief Compute CRC hash of the input byte array with given initial hash.
  *  @param input - the input byte vector
  *  @param hash - the initial hash of type \ref xor_uint16 "xor_uint16" or \ref xor_uint32 "xor_uint32"
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -109,6 +110,7 @@ D xor_uint32 CRC32 (D xor_uint8 [[N]] input, D xor_uint32 hash) {
     @note Supported types - \ref xor_uint8 "xor_uint8"
  *  @brief Compute CRC hash of the input byte array with 0 initial hash.
  *  @param input - the input byte vector
+ *  @leakage{None}
  */
 
 template <domain D : shared3p, dim N>
@@ -246,7 +248,7 @@ D xor_uint32[[1]] murmurHasherVec (D xor_uint32[[1]] hashee,  public uint32[[1]]
  *  @brief Count zeroes in the input vector
  *  @param s - a vector of supported type
  *  @return returns the number of 0 bytes in the input vector
- *  @leakage{If the zeros are only at the end of the array, leaks the real length of the string}
+ *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -260,7 +262,6 @@ D uint countZeroes (D xor_uint8[[1]] s) {
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
  *  @brief Convert a string to a vector of type xor_uint8
- *  @leakage{None}
  */
 
 /**
@@ -315,7 +316,7 @@ D bool bl_strIsEmpty (D xor_uint8[[1]] s) {
  *  @param ps - a vector of supported type
  *  @brief Function for converting an array of type xor_uint8 to a string
  *  @return returns a declassified bounded length \ref string "string", extra bytes are removed
- *  @leakage{None}
+ *  @leakage{Leaks the input}
  */
 
 template <domain D : shared3p>
@@ -350,11 +351,10 @@ D uint bl_strLength (D xor_uint8[[1]] s) {
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
- *  @note this operation leaks the real length of the string, use with care!
  *  @param s - a vector of supported type
  *  @brief Function for trimming a string
  *  @return returns a \ref string "string" with excess bytes removed
- *  @leakage{Leaks the amount of zeros at the end of the string}
+ *  @leakage{Leaks the length of the string}
  */
 template <domain D : shared3p>
 D xor_uint8[[1]] bl_strTrim (D xor_uint8[[1]] s) {
@@ -709,7 +709,6 @@ D uint bl_strHamming (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @brief Function for constructing a known length string from given public string
  *  @param s - a \ref string "string"
  *  @return XOR shared byte array of length equal to the input public string.
- *  @leakage{None}
  */
 
 template <domain D : shared3p>
@@ -725,7 +724,7 @@ D xor_uint8[[1]] kl_str (string s) {
  *  @param ps - a string vector of supported type
  *  @brief Function for declassifying a given XOR shared byte string.
  *  @return returns a public string
- *  @leakage{None}
+ *  @leakage{Leaks the input string}
  */
 
 template <domain D : shared3p>

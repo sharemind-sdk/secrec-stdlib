@@ -109,7 +109,7 @@ D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvail
  *  the corresponding mask element is true if the corresponding
  *  isAvailable element is true and Q<sub>p</sub> < x <
  *  Q<sub>1-p</sub>
- *  @leakage{None}
+ *  @leakage{Leaks the number of missing values in the input}
  */
 template<domain D : shared3p>
 D bool[[1]] outlierDetectionQuantiles (float64 p, D int64[[1]] data, D bool[[1]] isAvailable) {
@@ -160,7 +160,7 @@ D bool[[1]] _outlierDetectionMAD (D T[[1]] data,
  *  isAvailable element is true and its absolute deviation from the
  *  median of the sample does not exceed lambda · MAD where MAD is the
  *  median absolute deviation of the sample.
- *  @leakage{None}
+ *  @leakage{Leaks the number of missing values in the input}
  */
 template<domain D : shared3p>
 D bool[[1]] outlierDetectionMAD (D int32[[1]] data,
