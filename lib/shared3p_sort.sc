@@ -2374,9 +2374,10 @@ uint[[1]] _unsafeSort(D T[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
  *  @return returns the sort permutation. The ith value of the
  *  permutation is the index of the input value that is in the ith
  *  position after sorting.
- *  @leakage{Nothing is leaked if the input has been shuffled \n If
- *           the input is not shuffled, leaks the number of equal
- *           elements}
+ *  @leakage{Nothing is leaked if the input has been shuffled and the
+ *  indices are unique \n If the input is not shuffled or the indices
+ *  are not unique, leaks the relative ordering of elements possibly
+ *  including whether elements are equal}
  */
 template<domain D : shared3p>
 uint[[1]] unsafeSort(D xor_uint8[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
