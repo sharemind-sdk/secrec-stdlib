@@ -357,7 +357,7 @@ D T _nthElement (D T[[1]] data, uint64 left, uint64 right, uint64 k, bool shuffl
  *  it's unnecessary.
  *  @return returns the nth element in size of the input vector.
  *  @leakage{Does not leak anything if the input is shuffled\n
- *           Leaks the results of comparisons if the input is not shuffled}
+ *           Leaks the number of equal elements if the input is not shuffled}
  */
 template<domain D : shared3p>
 D int32 nthElement (D int32[[1]] data, uint64 k, bool shuffle) {
