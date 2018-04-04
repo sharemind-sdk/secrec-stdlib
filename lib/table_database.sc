@@ -41,6 +41,7 @@ import stdlib;
  * \defgroup tdb_close_connection tdbCloseConnection
  * \defgroup tdb_get_table_names tdbGetTableNames
  * \defgroup tdb_table_create tdbTableCreate
+ * \defgroup tdb_table_create2 tdbTableCreate2
  * \defgroup tdb_table_delete tdbTableDelete
  * \defgroup tdb_table_exists tdbTableExists
  * \defgroup tdb_insert_row tdbInsertRow
@@ -284,6 +285,23 @@ uint64 tdbGetTableNames(string datasource) {
  */
 void tdbTableCreate (string datasource, string table, uint64 parameters) {
     __syscall ("tdb_tbl_create2", __cref datasource, __cref table, parameters);
+}
+/** @} */
+
+/** \addtogroup tdb_table_create2
+ *  @{
+ *  @brief Create a table
+ *  @param datasource - name of the data source that will contain the table
+ *  @param table - table name
+ *  @param parameters - id of the vector map containing parameters for
+ *  creating the table. The vectors "types" and "names" should contain
+ *  the types and names of the columns.
+ *  @return \ref SharemindTdbError "error code"
+ */
+int tdbTableCreate2 (string datasource, string table, uint parameters) {
+    int ret;
+    __syscall ("tdb_tbl_create2", __cref datasource, __cref table, __ref ret, parameters);
+    return ret;
 }
 /** @} */
 
