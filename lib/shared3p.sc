@@ -3442,29 +3442,29 @@ D uint64[[1]] operator << (D uint64[[1]] x, D uint64[[1]] y) {
 }
 
 template <domain D : shared3p>
-D xor_uint8[[1]] operator << (D xor_uint8[[1]] x, uint8 k) {
-    int[[1]] shifts(size(x)) = (int) k;
+D xor_uint8[[1]] operator << (D xor_uint8[[1]] x, uint8[[1]] k) {
+    int[[1]] shifts = (int) k;
     __syscall("shared3p::shift_left_xor_uint8_vec", __domainid(D), x, __cref shifts, x);
     return x;
 }
 
 template <domain D : shared3p>
-D xor_uint16[[1]] operator << (D xor_uint16[[1]] x, uint16 k) {
-    int[[1]] shifts(size(x)) = (int) k;
+D xor_uint16[[1]] operator << (D xor_uint16[[1]] x, uint16[[1]] k) {
+    int[[1]] shifts = (int) k;
     __syscall("shared3p::shift_left_xor_uint16_vec", __domainid(D), x, __cref shifts, x);
     return x;
 }
 
 template <domain D : shared3p>
-D xor_uint32[[1]] operator << (D xor_uint32[[1]] x, uint32 k) {
-    int[[1]] shifts(size(x)) = (int) k;
+D xor_uint32[[1]] operator << (D xor_uint32[[1]] x, uint32[[1]] k) {
+    int[[1]] shifts = (int) k;
     __syscall("shared3p::shift_left_xor_uint32_vec", __domainid(D), x, __cref shifts, x);
     return x;
 }
 
 template <domain D : shared3p>
-D xor_uint64[[1]] operator << (D xor_uint64[[1]] x, uint64 k) {
-    int[[1]] shifts(size(x)) = (int) k;
+D xor_uint64[[1]] operator << (D xor_uint64[[1]] x, uint64[[1]] k) {
+    int[[1]] shifts = (int) k;
     __syscall("shared3p::shift_left_xor_uint64_vec", __domainid(D), x, __cref shifts, x);
     return x;
 }
@@ -3522,29 +3522,29 @@ D uint64[[1]] operator * (D uint64[[1]] x, uint64[[1]] y) {
 }
 
 template <domain D : shared3p>
-D xor_uint8[[1]] operator >> (D xor_uint8[[1]] x, uint8 k) {
-    int[[1]] shifts(size(x)) = - (int) k;
+D xor_uint8[[1]] operator >> (D xor_uint8[[1]] x, uint8[[1]] k) {
+    int[[1]] shifts = - (int) k;
     __syscall("shared3p::shift_left_xor_uint8_vec", __domainid(D), x, __cref shifts, x);
     return x;
 }
 
 template <domain D : shared3p>
-D xor_uint16[[1]] operator >> (D xor_uint16[[1]] x, uint16 k) {
-    int[[1]] shifts(size(x)) = - (int) k;
+D xor_uint16[[1]] operator >> (D xor_uint16[[1]] x, uint16[[1]] k) {
+    int[[1]] shifts = - (int) k;
     __syscall("shared3p::shift_left_xor_uint16_vec", __domainid(D), x, __cref shifts, x);
     return x;
 }
 
 template <domain D : shared3p>
-D xor_uint32[[1]] operator >> (D xor_uint32[[1]] x, uint32 k) {
-    int[[1]] shifts(size(x)) = - (int) k;
+D xor_uint32[[1]] operator >> (D xor_uint32[[1]] x, uint32[[1]] k) {
+    int[[1]] shifts = - (int) k;
     __syscall("shared3p::shift_left_xor_uint32_vec", __domainid(D), x, __cref shifts, x);
     return x;
 }
 
 template <domain D : shared3p>
-D xor_uint64[[1]] operator >> (D xor_uint64[[1]] x, uint64 k) {
-    int[[1]] shifts(size(x)) = - (int) k;
+D xor_uint64[[1]] operator >> (D xor_uint64[[1]] x, uint64[[1]] k) {
+    int[[1]] shifts = - (int) k;
     __syscall("shared3p::shift_left_xor_uint64_vec", __domainid(D), x, __cref shifts, x);
     return x;
 }
