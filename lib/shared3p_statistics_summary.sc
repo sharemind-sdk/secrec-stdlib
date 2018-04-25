@@ -111,50 +111,50 @@ D int64 maximum (D int64[[1]] data, D bool[[1]] isAvailable) {
  *  @{
  *  @brief Find the mean of a vector
  *  @note **D** - any protection domain
- *  @note Supported types - \ref int8 "int8" \ref int16 "int16" \ref int32 "int32" / \ref int64 "int64" \ref uint8 "uint8" \ref uint16 "uint16" \ref uint32 "uint32" / \ref uint64 "uint64"
+ *  @note Supported types - \ref int8 "int8" \ref int16 "int16" \ref int32 "int32" \ref int64 "int64" \ref uint8 "uint8" \ref uint16 "uint16" \ref uint32 "uint32" \ref uint64 "uint64" \ref float32 "float32" \ref float64 "float64"
  *  @param data - input vector (the function may overflow if the input is too big)
  *  @return returns the mean of the input vector
  *  @leakage{None}
  */
 template <domain D>
 D float32 mean (D int8[[1]] data) {
-	D uint64 data_size = size (data);
-    return _mean (data, data_size);
+    return _mean (data);
 }
 template <domain D>
 D float32 mean (D int16[[1]] data) {
-	D uint64 data_size = size (data);
-    return _mean (data, data_size);
+    return _mean (data);
 }
 template <domain D>
 D float32 mean (D int32[[1]] data) {
-	D uint64 data_size = size (data);
-    return _mean (data, data_size);
+    return _mean (data);
 }
 template <domain D>
 D float64 mean (D int64[[1]] data) {
-	D uint64 data_size = size (data);
-    return _mean (data, data_size);
+    return _mean (data);
 }
 template <domain D>
 D float32 mean (D uint8[[1]] data) {
-	D uint64 data_size = size (data);
-    return _mean (data, data_size);
+    return _mean (data);
 }
 template <domain D>
 D float32 mean (D uint16[[1]] data) {
-	D uint64 data_size = size (data);
-    return _mean (data, data_size);
+    return _mean (data);
 }
 template <domain D>
 D float32 mean (D uint32[[1]] data) {
-	D uint64 data_size = size (data);
-    return _mean (data, data_size);
+    return _mean (data);
 }
 template <domain D>
 D float64 mean (D uint64[[1]] data) {
-	D uint64 data_size = size (data);
-    return _mean (data, data_size);
+    return _mean (data);
+}
+template <domain D>
+D float32 mean (D float32[[1]] data) {
+    return _mean (data);
+}
+template <domain D>
+D float64 mean (D float64[[1]] data) {
+    return _mean (data);
 }
 /** @} */
 
@@ -162,7 +162,7 @@ D float64 mean (D uint64[[1]] data) {
  *  @{
  *  @brief Find the mean of a filtered vector
  *  @note **D** - any protection domain
- *  @note Supported types - \ref int8 "int8" \ref int16 "int16" \ref int32 "int32" / \ref int64 "int64" \ref uint8 "uint8" \ref uint16 "uint16" \ref uint32 "uint32" / \ref uint64 "uint64"
+ *  @note Supported types - \ref int8 "int8" \ref int16 "int16" \ref int32 "int32" \ref int64 "int64" \ref uint8 "uint8" \ref uint16 "uint16" \ref uint32 "uint32" \ref uint64 "uint64" \ref float32 "float32" \ref float64 "float64"
  *  @param data - input vector (the function may overflow if the input is too big)
  *  @param mask - mask indicating which elements of the input vector to include when computing the mean
  *  @return returns the mean of the filtered input vector
@@ -200,6 +200,14 @@ template <domain D>
 D float64 mean (D uint64[[1]] data, D bool[[1]] mask) {
     return _mean (data, mask);
 }
+template <domain D>
+D float32 mean (D float32[[1]] data, D bool[[1]] mask) {
+    return _meanF (data, mask);
+}
+template <domain D>
+D float64 mean (D float64[[1]] data, D bool[[1]] mask) {
+    return _meanF (data, mask);
+}
 /** @} */
 
 /** \addtogroup variance
@@ -213,20 +221,12 @@ D float64 mean (D uint64[[1]] data, D bool[[1]] mask) {
  */
 template <domain D>
 D float32 variance (D int32[[1]] data) {
-	// Use the internal version of mean, because we have already filtered the data
-	D uint32 data_size = (uint32) size(data);
-	D float32 meanValue = _mean (data, data_size);
-
-    // Use the internal version of variance to complete the calculation
+	D float32 meanValue = _mean (data);
     return _variance (data, meanValue);
 }
 template <domain D>
 D float64 variance (D int64[[1]] data) {
-	// Use the internal version of mean, because we have already filtered the data
-	D uint data_size = size(data);
-	D float64 meanValue = _mean (data, data_size);
-
-    // Use the internal version of variance to complete the calculation
+	D float64 meanValue = _mean (data);
     return _variance (data, meanValue);
 }
 /** @} */
@@ -243,10 +243,10 @@ D float64 variance (D int64[[1]] data) {
  */
 template <domain D>
 D float32 variance (D int32[[1]] data, D bool[[1]] mask) {
-    assert(shapesAreEqual(data, mask));
+    assert (shapesAreEqual (data, mask));
 
     // First, filter data
-    data = data * (int32)mask;
+    data = data * (int32) mask;
 
 	// Use the internal version of mean, because we have already filtered the data
 	D float32 meanValue = _mean (data, (uint32) sum (mask));
@@ -257,10 +257,10 @@ D float32 variance (D int32[[1]] data, D bool[[1]] mask) {
 
 template <domain D>
 D float64 variance (D int64[[1]] data, D bool[[1]] mask) {
-    assert(shapesAreEqual(data, mask));
+    assert (shapesAreEqual (data, mask));
 
     // First, filter data
-    data = data * (int64)mask;
+    data = data * (int64) mask;
 
 	// Use the internal version of mean, because we have already filtered the data
 	D float64 meanValue = _mean (data, sum (mask));
@@ -552,11 +552,28 @@ D float64 covariance (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] fi
  * \cond
  */
 
+template <domain D, type FT>
+D FT _meanF (D FT[[1]] data, D bool[[1]] mask) {
+    assert (shapesAreEqual (data, mask));
+    data = data * (FT) mask;
+    return sum (data) / (FT) sum((uint64) mask);
+}
+
 template <domain D, type T, type FT>
 D FT _mean (D T[[1]] data, D bool[[1]] mask) {
     assert (shapesAreEqual (data, mask));
     data = data * (T) mask;
     return (FT) sum (data) / (FT) sum ((uint64) mask);
+}
+
+template <domain D, type T, type FT>
+D FT _mean (D T[[1]] data) {
+	return (FT) sum (data) / (FT) size (data);
+}
+
+template <domain D, type FT>
+D FT _meanF (D FT[[1]] data) {
+	return sum (data) / (FT) size (data);
 }
 
 // This INTERNAL version of mean assumes that the data is already filtered
