@@ -41,7 +41,7 @@ import stdlib;
  * \defgroup tdb_close_connection tdbCloseConnection
  * \defgroup tdb_get_table_names tdbGetTableNames
  * \defgroup tdb_table_create tdbTableCreate
- * \defgroup tdb_table_create2 tdbTableCreate2
+ * \defgroup tdb_table_create2 tdbTableCreateWithErrorCode
  * \defgroup tdb_table_delete tdbTableDelete
  * \defgroup tdb_table_exists tdbTableExists
  * \defgroup tdb_insert_row tdbInsertRow
@@ -298,7 +298,7 @@ void tdbTableCreate (string datasource, string table, uint64 parameters) {
  *  the types and names of the columns.
  *  @return \ref SharemindTdbError "error code"
  */
-int tdbTableCreate2 (string datasource, string table, uint parameters) {
+int tdbTableCreateWithErrorCode (string datasource, string table, uint parameters) {
     int ret;
     __syscall ("tdb_tbl_create2", __cref datasource, __cref table, __ref ret, parameters);
     return ret;
