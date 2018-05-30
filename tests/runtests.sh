@@ -109,9 +109,7 @@ install() {
         local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
         mkdir -p "${SCRIPTS_PATH}"
         local TARGET="${SCRIPTS_PATH}/${TARGET_FN}"
-        if [ "$SOURCE" -nt "$TARGET" ]; then
-            cp -f "$SOURCE" "$TARGET"
-        fi
+        cp -f "$SOURCE" "$TARGET"
     done
 }
 
