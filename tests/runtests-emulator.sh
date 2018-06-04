@@ -87,6 +87,10 @@ if [ -d "${SHAREMIND_PATH}" ]; then
   unset -v L
 fi
 
+if [ -z "${EMULATOR_CONF}" ]; then
+    EMULATOR_CONF="emulator.conf"
+fi
+
 TEST_PATH="${SHAREMIND_PATH}/lib/sharemind/test"
 SCC="${SHAREMIND_PATH}/bin/scc"
 STDLIB="${SHAREMIND_PATH}/lib/sharemind/stdlib"
@@ -107,7 +111,7 @@ run() {
     local TEST_NAME="$2"
     (cd "`dirname ${EMULATOR}`" &&
         ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
-                "./`basename ${EMULATOR}`" --conf=emulator.conf \
+                "./`basename ${EMULATOR}`" --conf="${EMULATOR_CONF}" \
                 --outFile=emulator.out --force "${SB}" \
                     | sed "s#^#${TEST_NAME}#g") \
             3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
