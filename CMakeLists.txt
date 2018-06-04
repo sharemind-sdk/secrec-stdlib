@@ -80,6 +80,13 @@ INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests/"
         COMPONENT "tests"
         FILES_MATCHING PATTERN "*.sc")
 
+# Install CMake find files:
+SharemindCreateCMakeFindFiles(
+    DEFINITIONS
+        "${CMAKE_INSTALL_PREFIX}/bin/runtests.sh"
+    INCLUDE_DIRS
+        "${CMAKE_INSTALL_PREFIX}/lib/sharemind/test"
+)
 
 # Packaging:
 SharemindSetupPackaging()
