@@ -1,0 +1,2 @@
+SET(SharemindStdlib_TESTS_RUNNER @CMAKE_INSTALL_PREFIX@/bin/runtests.sh)
+SET(SharemindStdlib_TESTS_PATH @CMAKE_INSTALL_PREFIX@/lib/sharemind/test)
