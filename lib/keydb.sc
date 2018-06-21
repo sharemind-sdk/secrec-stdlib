@@ -40,18 +40,6 @@ import stdlib;
  *  @brief Module for working with key-value database.
  */
 
-/** \addtogroup ScanCursor
- *  @{
- *  @brief Structure for keydb_scan.
- */
-struct ScanCursor {
-    uint64 cursor;
-    uint64 nextKeySize; /** @brief When non-zero, keydb_scan_next can be called. */
-    string key; /** @brief Holds the returned key. */
-}
-
-/** @} */
-
 /** \addtogroup keydb_connect
  *  @{
  *  @brief Connect to a Redis host.
@@ -223,6 +211,17 @@ bool keydb_clean(string pattern) {
     bool ok;
     __syscall("keydb_clean", __cref pattern, __return ok);
     return ok;
+}
+/** @} */
+
+/** \addtogroup ScanCursor
+ *  @{
+ *  @brief Structure for keydb_scan.
+ */
+struct ScanCursor {
+    uint64 cursor;
+    uint64 nextKeySize; /** @brief When non-zero, keydb_scan_next can be called. */
+    string key; /** @brief Holds the returned key. */
 }
 /** @} */
 
