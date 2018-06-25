@@ -464,6 +464,53 @@ string tdbVmapGetValue(uint64 id, string paramname, uint64 index) {
 }
 /** @} */
 
+/** \addtogroup tdb_vmap_get_vlen_value
+ *  @{
+ *  @brief Get a variable length value from a vector in a vector map
+ *  @note This function is used when the table column contains variable length vectors
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param id - vector map id
+ *  @param paramname - name of the vector from which to retrieve the value
+ *  @param index - index of the value in the vector
+ */
+template <type T>
+T[[1]] tdbVmapGetVlenValue (uint64 id, string paramname, uint64 index) {
+    T proxy;
+    uint t_size = sizeof(proxy);
+
+    // Check if the given vector map is valid
+    uint64 isvalue = 0;
+    __syscall ("tdb_vmap_is_value_vector", id, __cref paramname, __return isvalue);
+    assert (isvalue != 0);
+
+    // Get the number of values in 'values'
+    uint64 pvsize = 0;
+    __syscall ("tdb_vmap_size_value", id, __cref paramname, __return pvsize);
+    assert (index < pvsize);
+
+    // Check if the returned value type matches
+    string rt_dom;
+    __syscall ("tdb_vmap_at_value_type_domain", id, __cref paramname, index, __return rt_dom);
+    assert (rt_dom == "public");
+
+    string rt_name;
+    __syscall ("tdb_vmap_at_value_type_name", id, __cref paramname, index, __return rt_name);
+    assert (rt_name == "$T");
+
+    uint64 rt_size = 0;
+    __syscall ("tdb_vmap_at_value_type_size", id, __cref paramname, index, __return rt_size);
+    assert (rt_size == 0);
+
+    // Read the value bytes
+    uint64 num_bytes = 0;
+    __syscall ("tdb_vmap_at_value", id, __cref paramname, index, __return num_bytes);
+    T[[1]] out(num_bytes / t_size);
+    __syscall ("tdb_vmap_at_value", id, __cref paramname, index, __ref out);
+
+    return out;
+}
+/** @} */
+
 /** \addtogroup tdb_get_column_count
  *  @{
  *  @brief Get the number of columns in a table
@@ -607,8 +654,8 @@ void tdbVmapAddValue(uint64 id, string paramname, T value) {
 
 /** \addtogroup tdb_vmap_add_vlen_value
  *  @{
- *  @brief Add a string to a vector in a vector map
- *  @note Supported types - \ref string "string"
+ *  @brief Add a variable length vector to a vector in a vector map
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param id - vector map id
  *  @param paramname - name of the vector to which the value is added
  *  @param values - vector to be added
