@@ -96,7 +96,8 @@ void tdbVmapAddValue (uint64 id, string paramname, D T value) {
     __syscall("shared3p::get_shares_$T\_vec", __domainid(D), value, __return num_bytes);
     uint8 [[1]] bytes(num_bytes);
     __syscall("shared3p::get_shares_$T\_vec", __domainid(D), value, __ref bytes);
-    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref "$D", __cref "$T", t_size, __cref bytes);
+    bool isScalar = true;
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref "$D", __cref "$T", t_size, __cref bytes, isScalar);
 }
 /** @} */
 
@@ -117,7 +118,8 @@ void tdbVmapAddValue (uint64 id, string paramname, D T [[1]] values) {
     __syscall("shared3p::get_shares_$T\_vec", __domainid(D), values, __return num_bytes);
     uint8 [[1]] bytes(num_bytes);
     __syscall("shared3p::get_shares_$T\_vec", __domainid(D), values, __ref bytes);
-    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref "$D", __cref "$T", t_size, __cref bytes);
+    bool isScalar = false;
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref "$D", __cref "$T", t_size, __cref bytes, isScalar);
 }
 /** @} */
 
@@ -136,7 +138,8 @@ void tdbVmapAddVlenValue (uint64 id, string paramname, D T [[1]] values) {
     __syscall("shared3p::get_shares_$T\_vec", __domainid(D), values, __return num_bytes);
     uint8 [[1]] bytes(num_bytes);
     __syscall("shared3p::get_shares_$T\_vec", __domainid(D), values, __ref bytes);
-    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref "$D", __cref "$T", 0::uint64, __cref bytes);
+    bool isScalar = false;
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref "$D", __cref "$T", 0::uint64, __cref bytes, isScalar);
 }
 /** @} */
 

@@ -64,6 +64,7 @@ import stdlib;
  * \defgroup tdb_vmap_add_value_vector tdbVmapAddValue(vector)
  * \defgroup tdb_vmap_add_vlen_value tdbVmapAddVlenValue
  * \defgroup tdb_vmap_get_value tdbVmapGetValue
+ * \defgroup tdb_vmap_get_vlen_value tdbVmapGetVlenValue
  * \defgroup tdb_vmap_add_index tdbVmapAddIndex
  * \defgroup tdb_vmap_get_index tdbVmapGetIndex
  * \defgroup tdb_vmap_set_value_as_column tdbVmapSetValueAsColumn
@@ -599,7 +600,8 @@ template<type T>
 void tdbVmapAddValue(uint64 id, string paramname, T value) {
     string t_dom = "public";
     uint64 t_size = sizeof(value);
-    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", t_size, __cref value);
+    bool isScalar = true;
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", t_size, __cref value, isScalar);
 }
 /** @} */
 
@@ -611,10 +613,10 @@ void tdbVmapAddValue(uint64 id, string paramname, T value) {
  *  @param paramname - name of the vector to which the value is added
  *  @param values - vector to be added
  */
-void tdbVmapAddVlenValue (uint64 id, string paramname, string value) {
-    string t_dom = "public";
-    uint8 [[1]] bytes = __bytes_from_string (value);
-    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "string", 0::uint64, __cref bytes);
+template<type T>
+void tdbVmapAddVlenValue (uint64 id, string paramname, T [[1]] values) {
+    bool isScalar = false;
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref "public", __cref "$T", 0 :: uint64, __cref values, isScalar);
 }
 /** @} */
 
@@ -631,7 +633,8 @@ void tdbVmapAddValue (uint64 id, string paramname, T[[1]] values) {
     T dummy;
     string t_dom = "public";
     uint64 t_size = sizeof(dummy);
-    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", t_size, __cref values);
+    bool isScalar = false;
+    __syscall("tdb_vmap_push_back_value", id, __cref paramname, __cref t_dom, __cref "$T", t_size, __cref values, isScalar);
 }
 /** @} */
 
