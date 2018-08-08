@@ -246,7 +246,8 @@ D T[[2]] _cut (D T[[2]] data, D bool[[1]] isAvailable) {
  *  @brief Remove unavailable elements from N samples using the same
  *  shuffling key
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" /
+ *  \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input matrix. Each column is a sample.
  *  @param isAvailable - vector indicating which elements of the input
  *  samples are available. Has to have as many elements as there are
@@ -260,6 +261,16 @@ D int32[[2]] cut (D int32[[2]] data, D bool[[1]] isAvailable) {
 
 template <domain D : shared3p>
 D int64[[2]] cut (D int64[[2]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : shared3p>
+D float32[[2]] cut (D float32[[2]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : shared3p>
+D float64[[2]] cut (D float64[[2]] data, D bool[[1]] isAvailable) {
     return _cut (data, isAvailable);
 }
 /** @} */
