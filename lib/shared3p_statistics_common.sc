@@ -265,6 +265,16 @@ D int64[[2]] cut (D int64[[2]] data, D bool[[1]] isAvailable) {
 }
 
 template <domain D : shared3p>
+D uint32[[2]] cut (D uint32[[2]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : shared3p>
+D uint64[[2]] cut (D uint64[[2]] data, D bool[[1]] isAvailable) {
+    return _cut (data, isAvailable);
+}
+
+template <domain D : shared3p>
 D float32[[2]] cut (D float32[[2]] data, D bool[[1]] isAvailable) {
     return _cut (data, isAvailable);
 }
