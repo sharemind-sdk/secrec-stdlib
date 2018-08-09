@@ -63,7 +63,7 @@ import stdlib;
  *  @{
  *  @brief Find the smallest element of a vector
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input vector
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns the smallest element of the input vector
@@ -80,6 +80,18 @@ D int64 minimum (D int64[[1]] data, D bool[[1]] isAvailable) {
     data = cut (data, isAvailable);
     return min (data);
 }
+
+template <domain D : shared3p>
+D float32 minimum (D float32[[1]] data, D bool[[1]] isAvailable) {
+    data = cut (data, isAvailable);
+    return min (data);
+}
+
+template <domain D : shared3p>
+D float64 minimum (D float64[[1]] data, D bool[[1]] isAvailable) {
+    data = cut (data, isAvailable);
+    return min (data);
+}
 /** @} */
 
 
@@ -87,7 +99,7 @@ D int64 minimum (D int64[[1]] data, D bool[[1]] isAvailable) {
  *  @{
  *  @brief Find the largest element of a vector
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input vector
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns the largest element of the input vector
@@ -101,6 +113,18 @@ D int32 maximum (D int32[[1]] data, D bool[[1]] isAvailable) {
 
 template <domain D : shared3p>
 D int64 maximum (D int64[[1]] data, D bool[[1]] isAvailable) {
+    data = cut (data, isAvailable);
+    return max (data);
+}
+
+template <domain D : shared3p>
+D float32 maximum (D float32[[1]] data, D bool[[1]] isAvailable) {
+    data = cut (data, isAvailable);
+    return max (data);
+}
+
+template <domain D : shared3p>
+D float64 maximum (D float64[[1]] data, D bool[[1]] isAvailable) {
     data = cut (data, isAvailable);
     return max (data);
 }
