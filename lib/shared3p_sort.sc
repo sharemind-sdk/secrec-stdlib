@@ -2917,7 +2917,7 @@ D T[[1]] _quickquicksort(D T[[1]] array) {
  *  @brief Functions for sorting values in a matrix using the quicksort algorithm
  *  @deprecated Use quicksort
  *  @note **D** - all protection domains
- *  @note Supported types -  \ref uint64 "uint64" / \ref xor_uint64 "xor_uint64"
+ *  @note Supported types -  \ref uint64 "uint64" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param array - a vector of supported type
  *  @return returns a vector where the values are sorted from smallest to greatest 
  *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
@@ -2935,11 +2935,7 @@ D xor_uint64[[1]] quickquicksort(D xor_uint64[[1]] array) {
 
     return sorted;
 }
-/** @}*/
 
-/**
-* \cond
-*/
 template <domain D>
 D uint64[[1]] quickquicksort(D uint64[[1]] array) {
 
@@ -2963,6 +2959,20 @@ D uint64[[1]] quickquicksort(D uint64[[1]] array) {
     return result;
 }
 
+template <domain D>
+D float32[[1]] quickquicksort(D float32[[1]] x) {
+    return _quickquicksort(x);
+}
+
+template <domain D>
+D float64[[1]] quickquicksort(D float64[[1]] x) {
+    return _quickquicksort(x);
+}
+/** @}*/
+
+/**
+* \cond
+*/
 template <domain D, type T>
 D T[[2]] _quickquicksort(D T[[2]] matrix, uint column1) {
     uint[[1]] matShape = shape(matrix);
@@ -3098,10 +3108,10 @@ D T[[2]] _quickquicksort(D T[[2]] matrix, uint column1) {
  *  @brief Functions for sorting rows in a matrix using the qucikquicksort algorithm
  *  @deprecated Use quicksort
  *  @note **D** - all protection domains
- *  @note Supported types -  \ref uint64 "uint64" / \ref xor_uint64 "xor_uint64"
+ *  @note Supported types - \ref uint64 "uint64" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param array - a vector of supported type
  *  @param column - the index of the sorting column
- *  @return returns a matrix where the input matrix rows are sorted based on values of the specified column 
+ *  @return returns a matrix where the input matrix rows are sorted based on values of the specified column
  *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
  */
 
@@ -3118,10 +3128,6 @@ D xor_uint64[[2]] quickquicksort(D xor_uint64[[2]] array, uint column1) {
     return sorted;
 }
 
-
-/**
-* \cond
-*/
 template <domain D>
 D uint64[[2]] quickquicksort(D uint64[[2]] array, uint column1) {
 
@@ -3144,18 +3150,19 @@ D uint64[[2]] quickquicksort(D uint64[[2]] array, uint column1) {
 
     return result;
 }
-/**
-* \endcond
-*/
 
+template <domain D>
+D float32[[2]] quickquicksort(D float32[[2]] array, uint col) {
+    return _quickquicksort(array, col);
+}
 
-
+template <domain D>
+D float64[[2]] quickquicksort(D float64[[2]] array, uint col) {
+    return _quickquicksort(array, col);
+}
 /** @}*/
 /** @}*/
-
-
 
 /** @} */
 /** @} */
 /** @}*/
-
