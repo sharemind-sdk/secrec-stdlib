@@ -238,7 +238,7 @@ D float64 mean (D float64[[1]] data, D bool[[1]] mask) {
  *  @{
  *  @brief Find the variance of a vector
  *  @note **D** - any protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input vector (the function may overflow if the input is too big)
  *  @return returns the variance of the input vector
  *  @leakage{None}
@@ -253,13 +253,23 @@ D float64 variance (D int64[[1]] data) {
 	D float64 meanValue = _mean (data);
     return _variance (data, meanValue);
 }
+template <domain D>
+D float32 variance (D float32[[1]] data) {
+	D float32 meanValue = _mean (data);
+    return _variance (data, meanValue);
+}
+template <domain D>
+D float64 variance (D float64[[1]] data) {
+	D float64 meanValue = _mean (data);
+    return _variance (data, meanValue);
+}
 /** @} */
 
 /** \addtogroup variance_filter
  *  @{
  *  @brief Find the variance of a filtered vector
  *  @note **D** - any protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input vector (the function may overflow if the input is too big)
  *  @param mask - mask indicating which elements of the input vector to include when computing the variance
  *  @return returns the variance of the input vector
@@ -268,28 +278,32 @@ D float64 variance (D int64[[1]] data) {
 template <domain D>
 D float32 variance (D int32[[1]] data, D bool[[1]] mask) {
     assert (shapesAreEqual (data, mask));
-
-    // First, filter data
     data = data * (int32) mask;
-
-	// Use the internal version of mean, because we have already filtered the data
 	D float32 meanValue = _mean (data, (uint32) sum (mask));
-
-    // Use the internal version of variance to complete the calculation
     return _variance (data, mask, meanValue);
 }
 
 template <domain D>
 D float64 variance (D int64[[1]] data, D bool[[1]] mask) {
     assert (shapesAreEqual (data, mask));
-
-    // First, filter data
     data = data * (int64) mask;
-
-	// Use the internal version of mean, because we have already filtered the data
 	D float64 meanValue = _mean (data, sum (mask));
+    return _variance (data, mask, meanValue);
+}
 
-    // Use the internal version of variance to complete the calculation
+template <domain D>
+D float32 variance (D float32[[1]] data, D bool[[1]] mask) {
+    assert (shapesAreEqual (data, mask));
+    data = data * (float32) mask;
+	D float32 meanValue = _mean (data, (float32) sum (mask));
+    return _variance (data, mask, meanValue);
+}
+
+template <domain D>
+D float64 variance (D float64[[1]] data, D bool[[1]] mask) {
+    assert (shapesAreEqual (data, mask));
+    data = data * (float64) mask;
+	D float64 meanValue = _mean (data, (float64) sum (mask));
     return _variance (data, mask, meanValue);
 }
 /** @} */
