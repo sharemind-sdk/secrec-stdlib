@@ -313,7 +313,7 @@ D float64 variance (D float64[[1]] data, D bool[[1]] mask) {
  *  @{
  *  @brief Find the standard deviation of a sample
  *  @note **D** - any protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input sample (the function may overflow if the input is too big)
  *  @return returns the standard deviation of the input sample
  *  @leakage{None}
@@ -329,6 +329,18 @@ D float64 standardDev (D int64[[1]] data) {
 	D float64 var = variance (data);
 	return sqrt (var);
 }
+
+template <domain D>
+D float32 standardDev (D float32[[1]] data) {
+	D float32 var = variance (data);
+	return sqrt (var);
+}
+
+template <domain D>
+D float64 standardDev (D float64[[1]] data) {
+	D float64 var = variance (data);
+	return sqrt (var);
+}
 /** @} */
 
 
@@ -336,7 +348,7 @@ D float64 standardDev (D int64[[1]] data) {
  *  @{
  *  @brief Find the standard deviation of a filtered sample
  *  @note **D** - any protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input sample (the function may overflow if the input is too big)
  *  @param mask - mask vector indicating which elements of the input
  *  sample to include when computing the standard deviation
@@ -352,6 +364,20 @@ D float32 standardDev (D int32[[1]] data, D bool[[1]] mask){
 
 template <domain D>
 D float64 standardDev (D int64[[1]] data, D bool[[1]] mask){
+    assert (shapesAreEqual (data, mask));
+	D float64 var = variance (data, mask);
+	return sqrt (var);
+}
+
+template <domain D>
+D float32 standardDev (D float32[[1]] data, D bool[[1]] mask){
+    assert (shapesAreEqual (data, mask));
+	D float32 var = variance (data, mask);
+	return sqrt (var);
+}
+
+template <domain D>
+D float64 standardDev (D float64[[1]] data, D bool[[1]] mask){
     assert (shapesAreEqual (data, mask));
 	D float64 var = variance (data, mask);
 	return sqrt (var);
