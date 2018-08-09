@@ -389,7 +389,7 @@ D float64 standardDev (D float64[[1]] data, D bool[[1]] mask){
  *  @{
  *  @brief Find the median absolute deviation of a sample
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input sample
  *  @return returns the median absolute deviation of the input multiplied by 1.4826
  *  @leakage{None}
@@ -403,13 +403,23 @@ template<domain D : shared3p>
 D float64 MAD (D int64[[1]] data) {
     return _MAD (data);
 }
+
+template<domain D : shared3p>
+D float32 MAD (D float32[[1]] data) {
+    return _MAD (data);
+}
+
+template<domain D : shared3p>
+D float64 MAD (D float64[[1]] data) {
+    return _MAD (data);
+}
 /** @} */
 
 /** \addtogroup mad_constant
  *  @{
  *  @brief Find the median absolute deviation of a sample
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input sample
  *  @param constant - scale factor
  *  @return returns the median absolute deviation of the input
@@ -425,13 +435,23 @@ template<domain D : shared3p>
 D float64 MAD (D int64[[1]] data, float64 constant) {
     return _MAD (data, constant);
 }
+
+template<domain D : shared3p>
+D float32 MAD (D float32[[1]] data, float32 constant) {
+    return _MAD (data, constant);
+}
+
+template<domain D : shared3p>
+D float64 MAD (D float64[[1]] data, float64 constant) {
+    return _MAD (data, constant);
+}
 /** @} */
 
 /** \addtogroup mad_filter
  *  @{
  *  @brief Find the median absolute deviation of a filtered sample
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref int32 "int32" / \ref int64 "int64"
  *  @param data - input sample
  *  @param mask - mask vector indicating which elements of the input
  *  sample to include when computing MAD
@@ -448,13 +468,23 @@ template<domain D : shared3p>
 D float64 MAD (D int64[[1]] data, D bool[[1]] mask) {
     return _MAD (data, mask);
 }
+
+template<domain D : shared3p>
+D float32 MAD (D float32[[1]] data, D bool[[1]] mask) {
+    return _MAD (data, mask);
+}
+
+template<domain D : shared3p>
+D float64 MAD (D float64[[1]] data, D bool[[1]] mask) {
+    return _MAD (data, mask);
+}
 /** @} */
 
 /** \addtogroup mad_filter_constant
  *  @{
  *  @brief Find the median absolute deviation of a filtered sample
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input sample
  *  @param mask - mask vector indicating which elements of the input
  *  sample to include when computing MAD
@@ -470,6 +500,16 @@ D float32 MAD (D int32[[1]] data, D bool[[1]] mask, float32 constant) {
 
 template<domain D : shared3p>
 D float64 MAD (D int64[[1]] data, D bool[[1]] mask, float64 constant) {
+    return _MAD (data, mask, constant);
+}
+
+template<domain D : shared3p>
+D float32 MAD (D float32[[1]] data, D bool[[1]] mask, float32 constant) {
+    return _MAD (data, mask, constant);
+}
+
+template<domain D : shared3p>
+D float64 MAD (D float64[[1]] data, D bool[[1]] mask, float64 constant) {
     return _MAD (data, mask, constant);
 }
 /** @} */
