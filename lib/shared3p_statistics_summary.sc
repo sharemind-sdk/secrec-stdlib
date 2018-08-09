@@ -630,7 +630,7 @@ D float64[[1]] fiveNumberSummary (D float64[[1]] data, D bool[[1]] isAvailable) 
  *  @{
  *  @brief Estimate the Pearson covariance of two samples.
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param sample1 - first sample
  *  @param sample2 - second sample
  *  are available
@@ -644,6 +644,16 @@ D float32 covariance (D int32[[1]] sample1, D int32[[1]] sample2) {
 
 template<domain D : shared3p>
 D float64 covariance (D int64[[1]] sample1, D int64[[1]] sample2) {
+    return _covariance (sample1, sample2);
+}
+
+template<domain D : shared3p>
+D float32 covariance (D float32[[1]] sample1, D float32[[1]] sample2) {
+    return _covariance (sample1, sample2);
+}
+
+template<domain D : shared3p>
+D float64 covariance (D float64[[1]] sample1, D float64[[1]] sample2) {
     return _covariance (sample1, sample2);
 }
 /** @} */
