@@ -515,12 +515,27 @@ D float64 MAD (D float64[[1]] data, D bool[[1]] mask, float64 constant) {
 /** @} */
 
 /** \cond */
+template <domain D>
+D float32[[1]] _sortHelper (D float32[[1]] x) {
+    return quickquicksort (x);
+}
+
+template <domain D>
+D float64[[1]] _sortHelper (D float64[[1]] x) {
+    return quickquicksort (x);
+}
+
+template <domain D, type T>
+D T[[1]] _sortHelper (D T[[1]] x) {
+    return quicksort (x);
+}
+
 // This algorithm is Q7 from the article Sample Quantiles in Statistical Packages
 template <domain D, type T, type FT>
 D FT[[1]] _fiveNumberSummary (D T[[1]] data, D bool[[1]] isAvailable) {
 	D FT [[1]] result (5);
 	D T[[1]] cutDatabase = cut (data, isAvailable);
-	D T[[1]] sortedDatabase = quicksort (cutDatabase);
+	D T[[1]] sortedDatabase = _sortHelper (cutDatabase);
 
  	uint sortedSize = size (sortedDatabase);
 
@@ -580,7 +595,7 @@ D FT[[1]] _fiveNumberSummary (D T[[1]] data, D bool[[1]] isAvailable) {
  *  @{
  *  @brief Find the minimum, lower quartile, median, upper quartile and maximum of a sample
  *  @note **D** - any protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @note A version of this function which hides the sample size was
  *  implemented for the paper "Going Beyond Millionaires:
  *  Privacy-Preserving Statistical Analysis" but is not included due
@@ -599,6 +614,14 @@ D float32[[1]] fiveNumberSummary (D int32[[1]] data, D bool[[1]] isAvailable) {
 }
 template<domain D>
 D float64[[1]] fiveNumberSummary (D int64[[1]] data, D bool[[1]] isAvailable) {
+    return _fiveNumberSummary (data, isAvailable);
+}
+template<domain D>
+D float32[[1]] fiveNumberSummary (D float32[[1]] data, D bool[[1]] isAvailable) {
+    return _fiveNumberSummary (data, isAvailable);
+}
+template<domain D>
+D float64[[1]] fiveNumberSummary (D float64[[1]] data, D bool[[1]] isAvailable) {
     return _fiveNumberSummary (data, isAvailable);
 }
 /** @} */
