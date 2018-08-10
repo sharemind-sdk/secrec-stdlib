@@ -262,8 +262,8 @@ D FT _combinedDegreesOfFreedom (D IT[[1]] data1,
      * Welch's t-test uses the following formula for approximating
      * degrees of freedom:
      *
-     * df = (variance1^2 / size1 + variance2^2 / size)^2 /
-     *      (variance1^4 / (size1^2 * df1) + variance2^4 / (size2^2 * df2))
+     * df = (variance1 / size1 + variance2 / size2)^2 /
+     *      (variance1^2 / (size1^2 * df1) + variance2^2 / (size2^2 * df2))
      */
 
     D FT[[1]] meanVar = _parallelMeanVar (data1, ia1, data2, ia2, proxy);
@@ -284,16 +284,13 @@ D FT _combinedDegreesOfFreedom (D IT[[1]] data1,
 
     sqr = sqr * sqr;
 
-    D FT var1Quad = sqr[0];
-    D FT var2Quad = sqr[1];
-
     D UT[[1]] nSqr = {n1, n2};
     nSqr = nSqr * nSqr;
 
     D UT[[1]] nSqrMulDf = {df1, df2};
     nSqrMulDf = nSqr * nSqrMulDf;
 
-    D FT[[1]] divA = {var1Sqr, var2Sqr, var1Quad, var2Quad};
+    D FT[[1]] divA = {var1, var2, var1Sqr, var2Sqr};
     D FT[[1]] divB = {(FT) n1, (FT) n2,
                       (FT) nSqrMulDf[0], (FT) nSqrMulDf[1]};
     D FT[[1]] divRes = divA / divB;
