@@ -111,7 +111,6 @@ D FT _tTest (D T[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool varian
         resSqrtPar = sqrt (sqrtPar);
 
         result = subMean / (resSqrtPar[0] * resSqrtPar[1]);
-
     } else {
         D FT[[1]] divAPar (2), divBPar (2), resDivPar (2);
         divAPar[0] = varCases;
@@ -311,8 +310,8 @@ D FT _combinedDegreesOfFreedom (D IT[[1]] data1,
  * @{
  * @brief Constants used for specifying the alternative hypothesis.
  */
-int64 ALTERNATIVE_LESS      = 0;
-int64 ALTERNATIVE_GREATER   = 1;
+int64 ALTERNATIVE_LESS = 0;
+int64 ALTERNATIVE_GREATER = 1;
 int64 ALTERNATIVE_TWO_SIDED = 2;
 /** @} */
 
@@ -321,7 +320,7 @@ int64 ALTERNATIVE_TWO_SIDED = 2;
  *  @{
  *  @brief Perform t-tests
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input vector
  *  @param cases - vector indicating which elements of the input
  *  vector belong to the first sample
@@ -341,13 +340,23 @@ template<domain D : shared3p>
 D float64 tTest (D int64[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool variancesEqual) {
     return _tTest (data, cases, controls, variancesEqual);
 }
+
+template<domain D : shared3p>
+D float32 tTest (D float32[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool variancesEqual) {
+    return _tTest (data, cases, controls, variancesEqual);
+}
+
+template<domain D : shared3p>
+D float64 tTest (D float64[[1]] data, D bool[[1]] cases, D bool[[1]] controls, bool variancesEqual) {
+    return _tTest (data, cases, controls, variancesEqual);
+}
 /** @} */
 
 /** \addtogroup t_test_samples
  *  @{
  *  @brief Perform t-tests
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data1 - first sample
  *  @param ia1 - vector indicating which elements of the first sample are available
  *  @param data2 - second sample
@@ -378,6 +387,28 @@ D float64 tTest (D int64[[1]] data1,
     uint64 proxy;
     return _tTest (data1, ia1, data2, ia2, variancesEqual, proxy);
 }
+
+template<domain D : shared3p>
+D float32 tTest (D float32[[1]] data1,
+                 D bool[[1]] ia1,
+                 D float32[[1]] data2,
+                 D bool[[1]] ia2,
+                 bool variancesEqual)
+{
+    uint32 proxy;
+    return _tTest (data1, ia1, data2, ia2, variancesEqual, proxy);
+}
+
+template<domain D : shared3p>
+D float64 tTest (D float64[[1]] data1,
+                 D bool[[1]] ia1,
+                 D float64[[1]] data2,
+                 D bool[[1]] ia2,
+                 bool variancesEqual)
+{
+    uint64 proxy;
+    return _tTest (data1, ia1, data2, ia2, variancesEqual, proxy);
+}
 /** @} */
 
 /** \addtogroup combined_df
@@ -388,7 +419,7 @@ D float64 tTest (D int64[[1]] data1,
  *  calculating the degrees of freedom when performing a t-test on
  *  samples with unequal variances (Welch's t-test).
  *  @note **D** - any protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data1 - first sample
  *  @param ia1 - vector indicating which elements of the first sample
  *  are available
@@ -412,6 +443,26 @@ template<domain D>
 D float64 combinedDegreesOfFreedom (D int64[[1]] data1,
                                     D bool[[1]] ia1,
                                     D int64[[1]] data2,
+                                    D bool[[1]] ia2)
+{
+    uint64 proxy;
+    return _combinedDegreesOfFreedom (data1, ia1, data2, ia2, proxy);
+}
+
+template<domain D>
+D float32 combinedDegreesOfFreedom (D float32[[1]] data1,
+                                    D bool[[1]] ia1,
+                                    D float32[[1]] data2,
+                                    D bool[[1]] ia2)
+{
+    uint32 proxy;
+    return _combinedDegreesOfFreedom (data1, ia1, data2, ia2, proxy);
+}
+
+template<domain D>
+D float64 combinedDegreesOfFreedom (D float64[[1]] data1,
+                                    D bool[[1]] ia1,
+                                    D float64[[1]] data2,
                                     D bool[[1]] ia2)
 {
     uint64 proxy;
@@ -453,7 +504,7 @@ D FT _pairedTTest (D T[[1]] sample1, D T[[1]] sample2, D bool[[1]] filter, FT co
  *  @{
  *  @brief Perform paired t-tests
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param sample1 - first sample
  *  @param sample2 - second sample
  *  @param filter - vector indicating which elements of the sample to
@@ -470,6 +521,16 @@ D float32 pairedTTest (D int32[[1]] sample1, D int32[[1]] sample2, D bool[[1]] f
 
 template <domain D : shared3p>
 D float64 pairedTTest (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] filter, float64 constant) {
+    return _pairedTTest (sample1, sample2, filter, constant);
+}
+
+template <domain D : shared3p>
+D float32 pairedTTest (D float32[[1]] sample1, D float32[[1]] sample2, D bool[[1]] filter, float32 constant) {
+    return _pairedTTest (sample1, sample2, filter, constant);
+}
+
+template <domain D : shared3p>
+D float64 pairedTTest (D float64[[1]] sample1, D float64[[1]] sample2, D bool[[1]] filter, float64 constant) {
     return _pairedTTest (sample1, sample2, filter, constant);
 }
 /** @} */
