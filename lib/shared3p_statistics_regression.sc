@@ -102,7 +102,7 @@ D FT[[1]] _simpleLinear(D T[[1]] x, D T[[1]] y, D bool[[1]] filter) {
  * @{
  * @brief Fitting of simple linear models
  * @note **D** - shared3p protection domain
- * @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ * @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  * @param x - explanatory variable sample
  * @param y - dependent variable sample
  * @param filter - filter indicating which elements of the samples are
@@ -117,6 +117,16 @@ D float32[[1]] simpleLinearRegression(D int32[[1]] x, D int32[[1]] y, D bool[[1]
 
 template<domain D : shared3p>
 D float64[[1]] simpleLinearRegression(D int64[[1]] x, D int64[[1]] y, D bool[[1]] filter) {
+    return _simpleLinear(x, y, filter);
+}
+
+template<domain D : shared3p>
+D float32[[1]] simpleLinearRegression(D float32[[1]] x, D float32[[1]] y, D bool[[1]] filter) {
+    return _simpleLinear(x, y, filter);
+}
+
+template<domain D : shared3p>
+D float64[[1]] simpleLinearRegression(D float64[[1]] x, D float64[[1]] y, D bool[[1]] filter) {
     return _simpleLinear(x, y, filter);
 }
 /** @} */
@@ -387,7 +397,7 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method
  * @{
  * @brief Fitting of linear models with multiple explanatory variables
  * @note **D** - shared3p protection domain
- * @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ * @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  * @param variables - a matrix where each column is a sample of an
  * explanatory variable
  * @param dependent - sample vector of dependent variable
@@ -410,6 +420,18 @@ D float64[[1]] linearRegression(D int64[[2]] variables, D int64[[1]] dependent, 
     assert(method == LINEAR_REGRESSION_GAUSS || method == LINEAR_REGRESSION_INVERT || method == LINEAR_REGRESSION_LU_DECOMPOSITION);
     return _linearRegression(variables, dependent, method, 0 :: uint);
 }
+
+template<domain D : shared3p>
+D float32[[1]] linearRegression(D float32[[2]] variables, D float32[[1]] dependent, int64 method) {
+    assert(method == LINEAR_REGRESSION_GAUSS || method == LINEAR_REGRESSION_INVERT || method == LINEAR_REGRESSION_LU_DECOMPOSITION);
+    return _linearRegression(variables, dependent, method, 0 :: uint);
+}
+
+template<domain D : shared3p>
+D float64[[1]] linearRegression(D float64[[2]] variables, D float64[[1]] dependent, int64 method) {
+    assert(method == LINEAR_REGRESSION_GAUSS || method == LINEAR_REGRESSION_INVERT || method == LINEAR_REGRESSION_LU_DECOMPOSITION);
+    return _linearRegression(variables, dependent, method, 0 :: uint);
+}
 /** @} */
 
 /**
@@ -418,7 +440,7 @@ D float64[[1]] linearRegression(D int64[[2]] variables, D int64[[1]] dependent, 
  * @brief Fitting of linear models with multiple explanatory variables
  * using the conjugate gradient method
  * @note **D** - shared3p protection domain
- * @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ * @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  * @param variables - a matrix where each column is a sample of an
  * explanatory variable
  * @param dependent - sample vector of dependent variable
@@ -439,6 +461,18 @@ D float32[[1]] linearRegressionCG(D int32[[2]] variables, D int32[[1]] dependent
 
 template<domain D : shared3p>
 D float64[[1]] linearRegressionCG(D int64[[2]] variables, D int64[[1]] dependent, uint iterations) {
+    assert(iterations > 0);
+    return _linearRegression(variables, dependent, LINEAR_REGRESSION_CONJUGATE_GRADIENT, iterations);
+}
+
+template<domain D : shared3p>
+D float32[[1]] linearRegressionCG(D float32[[2]] variables, D float32[[1]] dependent, uint iterations) {
+    assert(iterations > 0);
+    return _linearRegression(variables, dependent, LINEAR_REGRESSION_CONJUGATE_GRADIENT, iterations);
+}
+
+template<domain D : shared3p>
+D float64[[1]] linearRegressionCG(D float64[[2]] variables, D float64[[1]] dependent, uint iterations) {
     assert(iterations > 0);
     return _linearRegression(variables, dependent, LINEAR_REGRESSION_CONJUGATE_GRADIENT, iterations);
 }
