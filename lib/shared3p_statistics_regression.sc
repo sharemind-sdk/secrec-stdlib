@@ -338,30 +338,41 @@ D T[[1]] _conjugateGradient(D T[[2]] a, D T[[1]] b, uint iterations) {
 // variable samples as columns
 template<domain D : shared3p, type T, type FT>
 D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method, uint iterations) {
-    assert(shape(variables)[0] == size(dependent));
+    uint obs = size(dependent);
     uint vars = shape(variables)[1];
-
-    D T[[2]] xt = transpose(variables);
-    D T[[2]] a = leftTransposedMultiplication(variables);
-    D T[[2]] b = matrixMultiplication(xt, reshape(dependent, size(dependent), 1));
 
     // Modify a and b to account for the intercept. To get the
     // intercept, a column of ones should be added as the last column
     // of variables. Instead, we can do multiplications without it and
     // then extend a and b to account for the ones "variable".
+    D T[[2]] extendedA;
+    D T[[2]] extendedB;
+    D T[[2]] depSum(1, 1);
+    depSum[0, 0] = sum(dependent);
 
-    D T[[2]] extendedA(vars + 1, vars + 1);
-    extendedA[:vars, :vars] = a;
-    extendedA[vars, vars] = (T) size(dependent);
+    if (vars > 0) {
+        D T[[2]] xt = transpose(variables);
+        D T[[2]] a = leftTransposedMultiplication(variables);
+        D T[[2]] b = matrixMultiplication(xt, reshape(dependent, size(dependent), 1));
+
+        D T[[2]] extA(vars + 1, vars + 1);
+        extA[:vars, :vars] = a;
+        extA[vars, vars] = (T) obs;
+        extendedA = extA;
+
+        extendedB = cat(b, depSum, 0);
+    } else {
+        D T[[2]] extA(1, 1);
+        extA[0, 0] = (T) obs;
+        extendedA = extA;
+        extendedB = depSum;
+    }
 
     for (uint i = 0; i < vars; i++) {
         extendedA[vars, i] = sum(variables[:, i]);
         extendedA[i, vars] = sum(variables[:, i]);
     }
 
-    D T[[2]] depSum(1, 1);
-    depSum[0, 0] = sum(dependent);
-    D T[[2]] extendedB = cat(b, depSum, 0);
     D T[[1]] bvec = extendedB[:, 0];
 
     if (method == LINEAR_REGRESSION_INVERT) {
@@ -398,6 +409,8 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method
  * @brief Fitting of linear models with multiple explanatory variables
  * @note **D** - shared3p protection domain
  * @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
+ * @note You can pass an empty matrix as the variables argument to
+ * specify a null model with just intercept.
  * @param variables - a matrix where each column is a sample of an
  * explanatory variable
  * @param dependent - sample vector of dependent variable
@@ -441,6 +454,8 @@ D float64[[1]] linearRegression(D float64[[2]] variables, D float64[[1]] depende
  * using the conjugate gradient method
  * @note **D** - shared3p protection domain
  * @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
+ * @note You can pass an empty matrix as the variables argument to
+ * specify a null model with just intercept.
  * @param variables - a matrix where each column is a sample of an
  * explanatory variable
  * @param dependent - sample vector of dependent variable
