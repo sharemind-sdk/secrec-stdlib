@@ -107,14 +107,18 @@ _glm(D FT[[1]] dependent,
            SOLEmethod == GLM_SOLE_METHOD_GAUSS ||
            SOLEmethod == GLM_SOLE_METHOD_CONJUGATE_GRADIENT);
 
+    uint observationCount = size(dependent);
+
     // Add a variable with all observations set to one. The parameter
     // for this variable is the intercept.
-    D FT[[2]] ones(shape(vars)[0], 1) = 1;
-    vars = cat(vars, ones, 1);
+    D FT[[2]] ones(observationCount, 1) = 1;
+    if (shape(vars)[1] == 0)
+        vars = ones;
+    else
+        vars = cat(vars, ones, 1);
 
     D FT[[2]] z;
     uint varCount = shape(vars)[1];
-    uint observationCount = size(dependent);
     D FT[[2]] y = _toCol(dependent);
     D FT[[2]] p(varCount, 1);
     D FT[[2]] mu = _initialmu(y, family);
