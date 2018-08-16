@@ -378,7 +378,9 @@ D FT[[1]] _linearRegression(D T[[2]] variables, D T[[1]] dependent, int64 method
     if (method == LINEAR_REGRESSION_INVERT) {
         assert(vars <= 3);
 
-        if (vars == 1) {
+        if (vars == 0) {
+            return {1 / (FT) extendedA[0, 0] * (FT) extendedB[0, 0]};
+        } else if (vars == 1) {
             return matrixMultiplication(_invert2by2((FT) extendedA), (FT) extendedB)[:, 0];
         } else if (vars == 2) {
             return matrixMultiplication(_invert3by3((FT) extendedA), (FT) extendedB)[:, 0];
