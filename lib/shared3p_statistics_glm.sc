@@ -347,6 +347,8 @@ D T[[1]] _glmStandardErrors(D T[[1]] dependent,
  * @note **D** - shared3p protection domain
  * @note Supported types - \ref int32 "int32" / \ref int64 "int64" /
  * \ref float32 "float32" / \ref float64 "float64"
+ * @note You can pass an empty matrix as the variables argument to
+ * specify a null model with just intercept.
  * @param dependent - sample vector of the dependent variable
  * @param variables - a matrix where each column is a sample of an
  * explanatory variable
@@ -388,6 +390,8 @@ generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] variables, int64
  * @note **D** - shared3p protection domain
  * @note Supported types - \ref int32 "int32" / \ref int64 "int64" /
  * \ref float32 "float32" / \ref float64 "float64"
+ * @note You can pass an empty matrix as the variables argument to
+ * specify a null model with just intercept.
  * @param dependent - sample vector of the dependent variable
  * @param variables - a matrix where each column is a sample of an
  * explanatory variable
