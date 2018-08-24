@@ -2365,7 +2365,7 @@ uint[[1]] _unsafeSort(D T[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
  *  shuffled
  *  @note unsafeSort is stable
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param vec - input vector
  *  @param indices - an index vector indicating which indice an
  *  element of the shuffled vector originated from
@@ -2436,6 +2436,16 @@ uint[[1]] unsafeSort(D int32[[1]] vec, D xor_uint64[[1]] indices, bool ascending
 
 template<domain D : shared3p>
 uint[[1]] unsafeSort(D int64[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
+
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D float32[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort(vec, indices, ascending);
+}
+
+template<domain D : shared3p>
+uint[[1]] unsafeSort(D float64[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
     return _unsafeSort(vec, indices, ascending);
 }
 /** @} */
@@ -2509,7 +2519,7 @@ D T[[2]] _quicksort(D T[[2]] matrix, uint column, bool ascending) {
  *  algorithm
  *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param matrix - a matrix of supported type
  *  @param column - the index of the sorting column
  *  @return returns a matrix where the input matrix rows are sorted based on values of the specified column
@@ -2574,6 +2584,16 @@ template<domain D : shared3p>
 D int64[[2]] quicksort(D int64[[2]] matrix, uint column) {
     return _quicksort(matrix, column, true);
 }
+
+template<domain D : shared3p>
+D float32[[2]] quicksort(D float32[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+
+template<domain D : shared3p>
+D float64[[2]] quicksort(D float64[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
 /** @}*/
 
 /** \addtogroup quick_sort_matrix_direction
@@ -2581,7 +2601,7 @@ D int64[[2]] quicksort(D int64[[2]] matrix, uint column) {
  *  @brief Functions for sorting rows in a matrix using the quicksort algorithm
  *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param matrix - a matrix of supported type
  *  @param column - the index of the sorting column
  *  @param ascending - a boolean indicating if the input should be sorted in ascending order
@@ -2647,6 +2667,16 @@ template<domain D : shared3p>
 D int64[[2]] quicksort(D int64[[2]] matrix, uint column, bool ascending) {
     return _quicksort(matrix, column, ascending);
 }
+
+template<domain D : shared3p>
+D float32[[2]] quicksort(D float32[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
+template<domain D : shared3p>
+D float64[[2]] quicksort(D float64[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
 /** @}*/
 
 /** \addtogroup quick_sort_vector
@@ -2654,7 +2684,7 @@ D int64[[2]] quicksort(D int64[[2]] matrix, uint column, bool ascending) {
  *  @brief Functions for sorting values in a matrix using the quicksort algorithm
  *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param vec - a vector of supported type
  *  @return returns the input vector sorted in ascending order
  *  @leakage{None}
@@ -2718,6 +2748,16 @@ template<domain D : shared3p>
 D int64[[1]] quicksort(D int64[[1]] vec) {
     return _quicksort(vec, true);
 }
+
+template<domain D : shared3p>
+D float32[[1]] quicksort(D float32[[1]] vec) {
+    return _quicksort(vec, true);
+}
+
+template<domain D : shared3p>
+D float64[[1]] quicksort(D float64[[1]] vec) {
+    return _quicksort(vec, true);
+}
 /** @}*/
 
 /** \addtogroup quick_sort_vector_direction
@@ -2725,7 +2765,7 @@ D int64[[1]] quicksort(D int64[[1]] vec) {
  *  @brief Functions for sorting values in a matrix using the quicksort algorithm
  *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param vec - a vector of supported type
  *  @param ascending - whether to sort in ascending (**true**) or descending (**false**) order
  *  @return returns the sorted input vector
@@ -2788,6 +2828,16 @@ D int32[[1]] quicksort(D int32[[1]] vec, bool ascending) {
 
 template<domain D : shared3p>
 D int64[[1]] quicksort(D int64[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D float32[[1]] quicksort(D float32[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
+template<domain D : shared3p>
+D float64[[1]] quicksort(D float64[[1]] vec, bool ascending) {
     return _quicksort(vec, ascending);
 }
 /** @}*/
@@ -2869,7 +2919,7 @@ D T[[1]] _quickquicksort(D T[[1]] array) {
         uint[[1]] end_ (m);
 
         for (uint i = 0; i < jobs; i++) {
-            
+
             // Find partition point p:
             uint idx = begin[i] - 1; // It is OK even if idx < 0, as it is always increased before use
 
@@ -2919,7 +2969,7 @@ D T[[1]] _quickquicksort(D T[[1]] array) {
  *  @note **D** - all protection domains
  *  @note Supported types -  \ref uint64 "uint64" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param array - a vector of supported type
- *  @return returns a vector where the values are sorted from smallest to greatest 
+ *  @return returns a vector where the values are sorted from smallest to greatest
  *  @leakage{Shuffled reordering decisions are declassified \n Leaks the number of equal elements}
  */
 
@@ -3043,7 +3093,7 @@ D T[[2]] _quickquicksort(D T[[2]] matrix, uint column1) {
         uint[[1]] end_ (m);
 
         for (uint i = 0; i < jobs; i++) {
-            
+
             // Find partition point p:
             uint idx = begin[i] - 1; // It is OK even if idx < 0, as it is always increased before use
 
