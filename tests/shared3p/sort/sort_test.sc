@@ -181,6 +181,7 @@ void main () {
     {pd_shared3p xor_uint64 a;  test ("RadixSort(vector)", radix_test (a), a);}
 
     {pd_shared3p xor_uint64 a;  test ("Quicksort(vector)", quick_test (a), a);}
+    {pd_shared3p float32 a;  test ("Quicksort(vector)", quick_test (a), a);}
 
     {pd_shared3p xor_uint64 a;  test ("Quickquicksort(vector)", quickquick_test (a), a);}
 
@@ -201,6 +202,8 @@ void main () {
     {pd_shared3p int16 a; test ("UnsafeSort", unsafe_sort_test (a), a);}
     {pd_shared3p int32 a; test ("UnsafeSort", unsafe_sort_test (a), a);}
     {pd_shared3p int64 a; test ("UnsafeSort", unsafe_sort_test (a), a);}
+    {pd_shared3p float32 a; test ("UnsafeSort", unsafe_sort_test (a), a);}
+    {pd_shared3p float64 a; test ("UnsafeSort", unsafe_sort_test (a), a);}
 
     test_report();
 }
