@@ -515,27 +515,12 @@ D float64 MAD (D float64[[1]] data, D bool[[1]] mask, float64 constant) {
 /** @} */
 
 /** \cond */
-template <domain D>
-D float32[[1]] _sortHelper (D float32[[1]] x) {
-    return quickquicksort (x);
-}
-
-template <domain D>
-D float64[[1]] _sortHelper (D float64[[1]] x) {
-    return quickquicksort (x);
-}
-
-template <domain D, type T>
-D T[[1]] _sortHelper (D T[[1]] x) {
-    return quicksort (x);
-}
-
 // This algorithm is Q7 from the article Sample Quantiles in Statistical Packages
 template <domain D, type T, type FT>
 D FT[[1]] _fiveNumberSummary (D T[[1]] data, D bool[[1]] isAvailable) {
 	D FT [[1]] result (5);
 	D T[[1]] cutDatabase = cut (data, isAvailable);
-	D T[[1]] sortedDatabase = _sortHelper (cutDatabase);
+	D T[[1]] sortedDatabase = quicksort (cutDatabase);
 
  	uint sortedSize = size (sortedDatabase);
 
@@ -776,26 +761,11 @@ D FT _variance (D T[[1]] data, D bool[[1]] mask, D FT meanValue) {
 	return result;
 }
 
-template<domain D : shared3p, type T>
-D T[[1]] _summarySortHelper (D T[[1]] x) {
-    return quicksort (x);
-}
-
-template<domain D : shared3p>
-D float32[[1]] _summarySortHelper (D float32[[1]] x) {
-    return sortingNetworkSort (x);
-}
-
-template<domain D : shared3p>
-D float64[[1]] _summarySortHelper (D float64[[1]] x) {
-    return sortingNetworkSort (x);
-}
-
 /* Data must be shuffled! */
 template<domain D : shared3p, type T, type FT>
 D FT _median (D T[[1]] data) {
     uint dataSize = size (data);
-    D T[[1]] sortedData = _summarySortHelper (data);
+    D T[[1]] sortedData = quicksort (data);
 
     if (dataSize % 2 == 0) {
         uint j = dataSize / 2;
