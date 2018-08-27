@@ -43,28 +43,13 @@ import shared3p;
  */
 
 /** \cond */
-template<domain D : shared3p, type T>
-D T[[1]] _outliersSortHelper (D T[[1]] x) {
-    return quicksort (x);
-}
-
-template<domain D : shared3p>
-D float32[[1]] _outliersSortHelper (D float32[[1]] x) {
-    return sortingNetworkSort (x);
-}
-
-template<domain D : shared3p>
-D float64[[1]] _outliersSortHelper (D float64[[1]] x) {
-    return sortingNetworkSort (x);
-}
-
 template<domain D : shared3p, type T, type FT>
 D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvailable) {
     assert (0 < p);
     assert (p < 1);
 
     D T[[1]] cutData = cut (data, isAvailable);
-    D T[[1]] sortedData = _outliersSortHelper (cutData);
+    D T[[1]] sortedData = quicksort (cutData);
     uint cutSize = size (cutData);
     uint dataSize = size (data);
     D bool[[1]] result;
@@ -99,7 +84,7 @@ D bool[[1]] _outlierDetectionQuantiles (FT p, D T[[1]] data, D bool[[1]] isAvail
  *  @{
  *  @brief Outlier detection (using quantiles)
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param p - quantile probability (between 0 and 1). Quantile Q<sub>p</sub> is
  *  a value such that a random variable with the same distribution as
  *  the sample points will be less than Q<sub>p</sub> with probability p.
@@ -118,6 +103,16 @@ D bool[[1]] outlierDetectionQuantiles (float64 p, D int64[[1]] data, D bool[[1]]
 
 template<domain D : shared3p>
 D bool[[1]] outlierDetectionQuantiles (float32 p, D int32[[1]] data, D bool[[1]] isAvailable) {
+    return _outlierDetectionQuantiles (p, data, isAvailable);
+}
+
+template<domain D : shared3p>
+D bool[[1]] outlierDetectionQuantiles (float64 p, D float64[[1]] data, D bool[[1]] isAvailable) {
+    return _outlierDetectionQuantiles (p, data, isAvailable);
+}
+
+template<domain D : shared3p>
+D bool[[1]] outlierDetectionQuantiles (float32 p, D float32[[1]] data, D bool[[1]] isAvailable) {
     return _outlierDetectionQuantiles (p, data, isAvailable);
 }
 /** @} */
@@ -148,7 +143,7 @@ D bool[[1]] _outlierDetectionMAD (D T[[1]] data,
  *  @{
  *  @brief Outlier detection (using median absolute deviation)
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @note Constant 1.0 is used as the parameter for median absolute deviation.
  *  @param data - input vector
  *  @param isAvailable - vector indicating which elements of the input
@@ -172,6 +167,22 @@ D bool[[1]] outlierDetectionMAD (D int32[[1]] data,
 
 template<domain D : shared3p>
 D bool[[1]] outlierDetectionMAD (D int64[[1]] data,
+                                 D bool[[1]] isAvailable,
+                                 float64 lambda)
+{
+    return _outlierDetectionMAD (data, isAvailable, lambda);
+}
+
+template<domain D : shared3p>
+D bool[[1]] outlierDetectionMAD (D float32[[1]] data,
+                                 D bool[[1]] isAvailable,
+                                 float32 lambda)
+{
+    return _outlierDetectionMAD (data, isAvailable, lambda);
+}
+
+template<domain D : shared3p>
+D bool[[1]] outlierDetectionMAD (D float64[[1]] data,
                                  D bool[[1]] isAvailable,
                                  float64 lambda)
 {

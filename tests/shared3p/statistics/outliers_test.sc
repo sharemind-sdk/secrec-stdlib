@@ -63,10 +63,14 @@ void main () {
 	string test_prefix = "OutlierDetectionMAD";
 	test (test_prefix, outliersMAD_test (0::int32, 0::float32), 0::int32, 0::float32);
 	test (test_prefix, outliersMAD_test (0::int64, 0::float64), 0::int64, 0::float64);
+    test (test_prefix, outliersMAD_test (0::float32, 0::float32), 0::float32, 0::float32);
+	test (test_prefix, outliersMAD_test (0::float64, 0::float64), 0::float64, 0::float64);
 
 	test_prefix = "OutlierDetectionQuantiles";
 	test (test_prefix, outliersQuantiles_test (0::int32, 0::float32), 0::int32, 0::float32);
 	test (test_prefix, outliersQuantiles_test (0::int64, 0::float64), 0::int64, 0::float64);
+	test (test_prefix, outliersQuantiles_test (0::float32, 0::float32), 0::float32, 0::float32);
+	test (test_prefix, outliersQuantiles_test (0::float64, 0::float64), 0::float64, 0::float64);
 
 	test_report ();
 }
