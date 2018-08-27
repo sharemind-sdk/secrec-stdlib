@@ -390,7 +390,7 @@ D T[[2]] _heatmap (D T[[1]] x,
  *  @{
  *  @brief Create a histogram
  *  @note **D** - any protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param data - input vector
  *  @param isAvailable - vector indicating which elements of the input vector are available
  *  @return returns a matrix where the first row contains histogram
@@ -408,6 +408,16 @@ D int32[[2]] histogram (D int32[[1]] data, D bool[[1]] isAvailable) {
 
 template<domain D>
 D int64[[2]] histogram (D int64[[1]] data, D bool[[1]] isAvailable) {
+    return _histogram (data, isAvailable);
+}
+
+template<domain D>
+D float32[[2]] histogram (D float32[[1]] data, D bool[[1]] isAvailable) {
+    return _histogram (data, isAvailable);
+}
+
+template<domain D>
+D float64[[2]] histogram (D float64[[1]] data, D bool[[1]] isAvailable) {
     return _histogram (data, isAvailable);
 }
 /** @} */
