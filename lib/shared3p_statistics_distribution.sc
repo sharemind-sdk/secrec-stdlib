@@ -490,7 +490,7 @@ D int64[[2]] discreteDistributionCount (D int64[[1]] data, D bool[[1]] isAvailab
  *  @{
  *  @brief Create a heatmap
  *  @note **D** - shared3p
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param x - first sample
  *  @param y - second sample
  *  @param xIsAvailable - vector indicating which elements of x are available
@@ -545,6 +545,28 @@ D int64[[2]] heatmap (D int64[[1]] x,
                       D bool[[1]] xIsAvailable,
                       D bool[[1]] yIsAvailable,
                       uint K)
+{
+    uint64 buddy;
+    return _heatmap (x, y, xIsAvailable, yIsAvailable, K, buddy);
+}
+
+template <domain D : shared3p>
+D float32[[2]] heatmap (D float32[[1]] x,
+                        D float32[[1]] y,
+                        D bool[[1]] xIsAvailable,
+                        D bool[[1]] yIsAvailable,
+                        uint K)
+{
+    uint32 buddy;
+    return _heatmap (x, y, xIsAvailable, yIsAvailable, K, buddy);
+}
+
+template <domain D : shared3p>
+D float64[[2]] heatmap (D float64[[1]] x,
+                        D float64[[1]] y,
+                        D bool[[1]] xIsAvailable,
+                        D bool[[1]] yIsAvailable,
+                        uint K)
 {
     uint64 buddy;
     return _heatmap (x, y, xIsAvailable, yIsAvailable, K, buddy);
