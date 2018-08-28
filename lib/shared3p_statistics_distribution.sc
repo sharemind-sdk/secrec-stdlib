@@ -92,7 +92,9 @@ T[[1]] _getApproximateBreaksHist (T min, T max, uint64 noOfBreaks) {
 template<type T>
 uint _niceStep (T min, T max, uint idealIntervalCount) {
     assert (idealIntervalCount > 1);
-    assert (max > min);
+
+    if (max == min)
+        ++max;
 
     uint[[1]] niceSmall = {1, 2, 5};
     uint[[1]] niceBig = {10, 20, 25, 50};
@@ -158,9 +160,6 @@ template<type T>
 T[[1]] _niceTics (T min, T max, uint idealIntervalCount) {
     assert (idealIntervalCount > 1);
     assert (max >= min);
-
-    if (max == min)
-        max++;
 
     uint step = _niceStep (min, max, idealIntervalCount);
     min = _roundToMultiple (min, step);
