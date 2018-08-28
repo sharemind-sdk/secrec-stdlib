@@ -740,6 +740,9 @@ _RankResult<D, T, FT> _rank (D T[[1]] data, D T[[1]] multiplier) {
 
 /*
  * Reference: Nonparametric Statistical Methods
+ *
+ * Note: the statistic is the same as Mann-Whitney U + n1 * (n1 + 1) / 2
+ * but the z-score will be the same.
  */
 template <domain D : shared3p, type T, type FT>
 D FT[[1]] _wilcoxonRankSum (D T[[1]] sample1,
@@ -858,6 +861,28 @@ D float64[[1]] wilcoxonRankSum (D int64[[1]] sample1,
 {
     return _wilcoxonRankSum (sample1, ia1, sample2, ia2, correctRanks, alternative);
 }
+
+template <domain D : shared3p>
+D float32[[1]] wilcoxonRankSum (D float32[[1]] sample1,
+                                D bool[[1]] ia1,
+                                D float32[[1]] sample2,
+                                D bool[[1]] ia2,
+                                bool correctRanks,
+                                int64 alternative)
+{
+    return _wilcoxonRankSum (sample1, ia1, sample2, ia2, correctRanks, alternative);
+}
+
+template <domain D : shared3p>
+D float64[[1]] wilcoxonRankSum (D float64[[1]] sample1,
+                                D bool[[1]] ia1,
+                                D float64[[1]] sample2,
+                                D bool[[1]] ia2,
+                                bool correctRanks,
+                                int64 alternative)
+{
+    return _wilcoxonRankSum (sample1, ia1, sample2, ia2, correctRanks, alternative);
+}
 /** @} */
 
 /** \cond */
@@ -942,7 +967,8 @@ D FT[[1]] _mannWhitneyU (D T[[1]] sample1,
  * @{
  * @brief Perform Mann-Whitney U test
  * @note **D** - shared3p protection domain
- * @note Supported types - \ref int32 "int32" / \ref int64 "int64"
+ * @note Supported types - \ref int32 "int32" / \ref int64 "int64" /
+ \ref float32 "float32" / \ref float64 "float64"
  * @note The t-test requires the populations to be normally
  * distributed. If the populations cannot be assumed to be normally
  * distributed but are ordinal then the Mann-Whitney U or Wilcoxon
@@ -988,9 +1014,46 @@ D float64[[1]] mannWhitneyU (D int64[[1]] sample1,
 {
     return _mannWhitneyU (sample1, ia1, sample2, ia2, correctRanks, alternative);
 }
+
+template <domain D : shared3p>
+D float32[[1]] mannWhitneyU (D float32[[1]] sample1,
+                             D bool[[1]] ia1,
+                             D float32[[1]] sample2,
+                             D bool[[1]] ia2,
+                             bool correctRanks,
+                             int64 alternative)
+{
+    return _mannWhitneyU (sample1, ia1, sample2, ia2, correctRanks, alternative);
+}
+
+template <domain D : shared3p>
+D float64[[1]] mannWhitneyU (D float64[[1]] sample1,
+                             D bool[[1]] ia1,
+                             D float64[[1]] sample2,
+                             D bool[[1]] ia2,
+                             bool correctRanks,
+                             int64 alternative)
+{
+    return _mannWhitneyU (sample1, ia1, sample2, ia2, correctRanks, alternative);
+}
 /** @} */
 
 /** \cond */
+template <domain D : shared3p, type T>
+D bool[[1]] _notZero (D T[[1]] diffs) {
+    return diffs != 0;
+}
+
+template <domain D : shared3p>
+D bool[[1]] _notZero (D float32[[1]] diffs) {
+    return ! isNegligible (diffs);
+}
+
+template <domain D : shared3p>
+D bool[[1]] _notZero (D float64[[1]] diffs) {
+    return ! isNegligible (diffs);
+}
+
 template <domain D : shared3p, type T, type FT>
 D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
                                D T[[1]] sample2,
@@ -1006,7 +1069,7 @@ D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
 
     // Pairs whose difference is zero are dropped
     D T[[1]] differences = sample1 - sample2;
-    filter = filter & (differences != 0);
+    filter = filter & _notZero (differences);
 
     D T[[2]] bothSamples (size (sample1), 2);
     bothSamples[:, 0] = sample1;
@@ -1075,8 +1138,8 @@ D FT[[1]] _wilcoxonSignedRank (D T[[1]] sample1,
  *  distributed but are ordinal then the Wilcoxon signed rank test can
  *  be used instead.
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int32 "int32" / \ref int64 "int64"
- *  @note This function does not match the one in R.
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" /
+ *  \ref float32 "float32" / \ref float64 "float64"
  *  @param sample1 - first  sample
  *  @param sample2 - second sample
  *  @param filter - vector indicating which elements of the sample to
@@ -1102,6 +1165,16 @@ D float32[[1]] wilcoxonSignedRank (D int32[[1]] sample1, D int32[[1]] sample2, D
 
 template <domain D : shared3p>
 D float64[[1]] wilcoxonSignedRank (D int64[[1]] sample1, D int64[[1]] sample2, D bool[[1]] filter, bool correctRanks, int64 alternative) {
+    return _wilcoxonSignedRank (sample1, sample2, filter, correctRanks, alternative);
+}
+
+template <domain D : shared3p>
+D float32[[1]] wilcoxonSignedRank (D float32[[1]] sample1, D float32[[1]] sample2, D bool[[1]] filter, bool correctRanks, int64 alternative) {
+    return _wilcoxonSignedRank (sample1, sample2, filter, correctRanks, alternative);
+}
+
+template <domain D : shared3p>
+D float64[[1]] wilcoxonSignedRank (D float64[[1]] sample1, D float64[[1]] sample2, D bool[[1]] filter, bool correctRanks, int64 alternative) {
     return _wilcoxonSignedRank (sample1, sample2, filter, correctRanks, alternative);
 }
 /** @} */
