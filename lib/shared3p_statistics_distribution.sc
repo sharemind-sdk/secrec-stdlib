@@ -89,8 +89,7 @@ T[[1]] _getApproximateBreaksHist (T min, T max, uint64 noOfBreaks) {
     return breaks;
 }
 
-template<type T>
-uint _niceStep (T min, T max, uint idealIntervalCount) {
+uint _niceStep (int64 min, int64 max, uint idealIntervalCount) {
     assert (idealIntervalCount > 1);
 
     if (max == min)
@@ -145,31 +144,29 @@ uint _niceStep (T min, T max, uint idealIntervalCount) {
     return step;
 }
 
-template<type T>
-T _roundToMultiple (T x, uint to) {
+int64 _roundToMultiple (int64 x, uint to) {
     // Integer division is rounded towards zero so we need to handle
     // the case when 'min' is negative separately. If 'min' can be
     // represented as a multiple of 'step' then everything is fine.
-    if (x >= 0 || x % (T) to == 0)
-        return (x / (T) to) * (T) to;
+    if (x >= 0 || x % (int64) to == 0)
+        return (x / (int64) to) * (int64) to;
     else
-        return ((x / (T) to) - 1) * (T) to;
+        return ((x / (int64) to) - 1) * (int64) to;
 }
 
-template<type T>
-T[[1]] _niceTics (T min, T max, uint idealIntervalCount) {
+int64[[1]] _niceTics (int64 min, int64 max, uint idealIntervalCount) {
     assert (idealIntervalCount > 1);
     assert (max >= min);
 
     uint step = _niceStep (min, max, idealIntervalCount);
     min = _roundToMultiple (min, step);
 
-    T[[1]] tics;
-    T val = min;
+    int64[[1]] tics;
+    int64 val = min;
     while (true) {
-        T[[1]] singleton = {val};
+        int64[[1]] singleton = {val};
         tics = cat (tics, singleton);
-        val += (T) step;
+        val += (int64) step;
 
         if (singleton[0] >= max)
             break;
@@ -192,7 +189,7 @@ D T[[2]] _histogram (D T[[1]] data, D bool[[1]] isAvailable) {
     T max = declassify (max (data));
 
     uint noBreaks = _getNoOfBreaks (dataSize);
-    T[[1]] breaks = _niceTics (min, max, noBreaks);
+    T[[1]] breaks = (T) _niceTics ((int64) min, (int64) max, noBreaks);
 
     uint countsSize = size (breaks) - 1;
     D T[[1]] counts (countsSize);
@@ -303,10 +300,10 @@ D T[[2]] _heatmap (D T[[1]] x,
     T ymax = declassify (max (mat[:,1]));
 
     uint s = _getNoOfBreaks (dataSize);
-    uint xstep = max (K, _niceStep (xmin, xmax, s));
-    uint ystep = max (K, _niceStep (ymin, ymax, s));
-    xmin = _roundToMultiple (xmin, xstep);
-    ymin = _roundToMultiple (ymin, ystep);
+    uint xstep = max (K, _niceStep ((int64) xmin, (int64) xmax, s));
+    uint ystep = max (K, _niceStep ((int64) ymin, (int64) ymax, s));
+    xmin = (T) _roundToMultiple ((int64) xmin, xstep);
+    ymin = (T) _roundToMultiple ((int64) ymin, ystep);
 
     // z will be a matrix where each element counts the number of
     // points falling in a specific bin. The bins are sequential, ie
@@ -363,8 +360,8 @@ D T[[2]] _heatmap (D T[[1]] x,
     T zmin = declassify (min (zflat));
     T zmax = declassify (max (zflat));
     s = max (K, _getNoOfBreaks ((uint) (zmax - zmin)));
-    uint zstep = _niceStep (zmin, zmax, s);
-    zmin = _roundToMultiple (zmin, zstep);
+    uint zstep = _niceStep ((int64) zmin, (int64) zmax, s);
+    zmin = (T) _roundToMultiple ((int64) zmin, zstep);
     // TODO: remove casts when we can divide Ts.
     D T[[2]] gradient = (T) ((UT) (z - zmin) / (UT) zstep);
 
