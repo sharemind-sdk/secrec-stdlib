@@ -65,6 +65,9 @@ import shared3p;
 * \defgroup kl_strindexof kl_strIndexOf
 * \defgroup kl_strhamming kl_strHamming
 * \defgroup kl_strlevenshtein kl_strLevenshtein
+* \defgroup cw128genkey cw128GenKey
+* \defgroup cw128hash cw128Hash
+* \defgroup cw128hash_key cw128Hash(key)
 */
 
 /** \addtogroup shared3p_string
@@ -1018,4 +1021,61 @@ D uint kl_strLevenshtein (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
 }
 /** @}*/
 /** @}*/
+
+/** \addtogroup cw128genkey
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @param rowLen - length of hash function input in bytes
+ *  @brief Generates key for 128-bit Carter-Wegman hash
+ *  @leakage{None}
+ */
+template <domain D : shared3p>
+D xor_uint8[[1]] cw128GenKey(uint rowLen) {
+    uint keyLen = 128; // Must be in bits!
+    D xor_uint8[[1]] key (keyLen * rowLen);
+    key = randomize(key);
+    return key;
+}
+/** @} */
+
+/** \addtogroup cw128hash
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @param data - data vector
+ *  @param rowLen - length of one data element in bytes
+ *  @brief Hashes values in the input vector into 128-bit hashes using the Carter-Wegman algorithm
+ *  @leakage{None}
+ */
+template <domain D : shared3p>
+D xor_uint8[[1]] cw128Hash(D xor_uint8[[1]] data, uint rowLen) {
+    assert (rowLen > 0);
+    assert (size(data) % rowLen == 0);
+    D xor_uint8[[1]] key = cw128GenKey(rowLen);
+    return cw128Hash(data, key, rowLen);
+}
+/** @} */
+
+/** \addtogroup cw128hash_key
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @param data - data vector
+ *  @param key - key used for hashing. See \ref cw128genkey cw128GenKey.
+ *  @param rowLen - length of one data element in bytes
+ *  @brief Hashes values in the input vector into 128-bit hashes using the Carter-Wegman algorithm
+ *  @leakage{None}
+ */
+template <domain D : shared3p>
+D xor_uint8[[1]] cw128Hash(D xor_uint8[[1]] data, D xor_uint8[[1]] key, uint rowLen) {
+    assert (rowLen > 0);
+    assert (size(data) % rowLen == 0);
+    assert (size(key) == 128 * rowLen);
+    uint keyLenInBytes = 16;
+    uint rows = size(data) / rowLen;
+    D xor_uint8[[1]] results (keyLenInBytes * rows);
+    __syscall("shared3p::cw128_xor_uint8_vec",
+        __domainid (D), key, data, results);
+    return results;
+}
+/** @} */
+
 /** @}*/
