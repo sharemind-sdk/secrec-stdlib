@@ -45,7 +45,6 @@ bool gspca_test (T data) {
     T[[1]] flat = reshape (mat, size (mat));
     T error = sqrt (sum (flat * flat));
 
-    print("Reconstruction error");
     if (error > 0.05)
         return false;
 
@@ -55,11 +54,9 @@ bool gspca_test (T data) {
     T[[1]] correctProp = {0.9944027, 0.005597302};
 
     // TODO: 1e-2 is too high
-    print ("Variances");
     if (!all ((abs (var - correctVar) / correctVar) < 1e-2))
         return false;
 
-    print ("Proportions");
     if (!all ((abs (prop - correctProp) / correctProp) < 1e-2))
         return false;
 
