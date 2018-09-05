@@ -134,6 +134,20 @@ bool unsafe_sort_test (D T proxy) {
     return all (declassify (res) == expected);
 }
 
+template<domain D>
+bool unsafe_sort_bool_test (D bool proxy) {
+    D bool[[1]] x = {true, false, true, false, false};
+    bool[[1]] expected = {false, false, false, true, true};
+    uint[[1]] perm = iota (size (x));
+    D xor_uint64[[1]] idx = perm;
+    uint[[1]] p = unsafeSort (x, idx, true);
+    D bool[[1]] res (size (x));
+    for (uint i = 0; i < size (x); ++i) {
+        res[i] = x[p[i]];
+    }
+    return all (declassify (res) == expected);
+}
+
 
 void main () {
     {pd_shared3p uint64 a;      test ("RadixSort(vector)", radix_test (a), a);}
@@ -150,6 +164,7 @@ void main () {
     //{pd_shared3p uint64 a;        test ("RadixSortWithIndex", radix_index_test (a), a);}
     {pd_shared3p xor_uint64 a;  test ("RadixSortWithIndex", radix_index_test (a), a);}
 
+    {pd_shared3p bool a; test ("UnsafeSort", unsafe_sort_bool_test (a), a);}
     {pd_shared3p uint8 a; test ("UnsafeSort", unsafe_sort_test (a), a);}
     {pd_shared3p uint16 a; test ("UnsafeSort", unsafe_sort_test (a), a);}
     {pd_shared3p uint32 a; test ("UnsafeSort", unsafe_sort_test (a), a);}

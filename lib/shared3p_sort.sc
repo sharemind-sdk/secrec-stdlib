@@ -2377,6 +2377,11 @@ uint[[1]] _unsafeSort(D T[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
  *  including whether elements are equal}
  */
 template<domain D : shared3p>
+uint[[1]] unsafeSort(D bool[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
+    return _unsafeSort((xor_uint8) vec, indices, ascending);
+}
+
+template<domain D : shared3p>
 uint[[1]] unsafeSort(D xor_uint8[[1]] vec, D xor_uint64[[1]] indices, bool ascending) {
     return _unsafeSort(vec, indices, ascending);
 }
@@ -2516,12 +2521,17 @@ D T[[2]] _quicksort(D T[[2]] matrix, uint column, bool ascending) {
  *  algorithm
  *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param matrix - a matrix of supported type
  *  @param column - the index of the sorting column
  *  @return returns a matrix where the input matrix rows are sorted based on values of the specified column
  *  @leakage{None}
  */
+template<domain D : shared3p>
+D bool[[2]] quicksort(D bool[[2]] matrix, uint column) {
+    return _quicksort(matrix, column, true);
+}
+
 template<domain D : shared3p>
 D xor_uint8[[2]] quicksort(D xor_uint8[[2]] matrix, uint column) {
     return _quicksort(matrix, column, true);
@@ -2598,13 +2608,18 @@ D float64[[2]] quicksort(D float64[[2]] matrix, uint column) {
  *  @brief Functions for sorting rows in a matrix using the quicksort algorithm
  *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param matrix - a matrix of supported type
  *  @param column - the index of the sorting column
  *  @param ascending - a boolean indicating if the input should be sorted in ascending order
  *  @return returns a matrix where the input matrix rows are sorted based on values of the specified column
  *  @leakage{None}
  */
+template<domain D : shared3p>
+D bool[[2]] quicksort(D bool[[2]] matrix, uint column, bool ascending) {
+    return _quicksort(matrix, column, ascending);
+}
+
 template<domain D : shared3p>
 D xor_uint8[[2]] quicksort(D xor_uint8[[2]] matrix, uint column, bool ascending) {
     return _quicksort(matrix, column, ascending);
@@ -2681,11 +2696,16 @@ D float64[[2]] quicksort(D float64[[2]] matrix, uint column, bool ascending) {
  *  @brief Functions for sorting values in a matrix using the quicksort algorithm
  *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param vec - a vector of supported type
  *  @return returns the input vector sorted in ascending order
  *  @leakage{None}
  */
+template<domain D : shared3p>
+D bool[[1]] quicksort(D bool[[1]] vec) {
+    return _quicksort(vec, true);
+}
+
 template<domain D : shared3p>
 D xor_uint8[[1]] quicksort(D xor_uint8[[1]] vec) {
     return _quicksort(vec, true);
@@ -2762,12 +2782,17 @@ D float64[[1]] quicksort(D float64[[1]] vec) {
  *  @brief Functions for sorting values in a matrix using the quicksort algorithm
  *  @note quicksort is stable
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref float32 "float32" / \ref float64 "float64"
  *  @param vec - a vector of supported type
  *  @param ascending - whether to sort in ascending (**true**) or descending (**false**) order
  *  @return returns the sorted input vector
  *  @leakage{None}
  */
+template<domain D : shared3p>
+D bool[[1]] quicksort(D bool[[1]] vec, bool ascending) {
+    return _quicksort(vec, ascending);
+}
+
 template<domain D : shared3p>
 D xor_uint8[[1]] quicksort(D xor_uint8[[1]] vec, bool ascending) {
     return _quicksort(vec, ascending);
