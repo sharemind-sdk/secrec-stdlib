@@ -131,20 +131,20 @@ A regular string exactly like in c++, c ,java etc.
 
 |        |            |
 | :----: | :-------:  |
-| Maximum positive value | \f[3.402823 \times 10^{38}\f] | 
-| Minimum positive value | \f[2.802597 \times 10^{-45}\f] | 
-| Maximum negative value | \f[-3.402823 \times 10^{38}\f] | 
-| Minimum negative value | \f[-2.802597 \times 10^{-45}\f] | 
+| Maximum positive value | 3.402823 &times; 10<sup>38</sup> |
+| Minimum positive value | 2.802597 &times; 10<sup>-45</sup> |
+| Maximum negative value | -3.402823 &times; 10<sup>38</sup> |
+| Minimum negative value | -2.802597 &times; 10<sup>-45</sup> |
 
 
 @subsection float64 float64
 
 |        |            |
 | :----: | :-------:  |
-| Maximum positive value | \f[1.797693 \times 10^{308}\f] |
-| Minimum positive value | \f[4.940656 \times 10^{-324}\f] |
-| Maximum negative value | \f[-1.797693 \times 10^{308}\f] |
-| Minimum negative value | \f[-4.940656 \times 10^{-324}\f] |
+| Maximum positive value | 1.797693 &times; 10<sup>308</sup> |
+| Minimum positive value | 4.940656 &times; 10<sup>-324</sup> |
+| Maximum negative value | -1.797693 &times; 10<sup>308</sup> |
+| Minimum negative value | -4.940656 &times; 10<sup>-324</sup> |
 
 @note in the language reference **float32** and **float** are considered the same and can be declared in either way  
 
