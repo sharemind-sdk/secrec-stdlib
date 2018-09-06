@@ -73,7 +73,7 @@ D T[[1]] _rowSums (D T[[2]] mat) {
  *  @{
  *  @brief Function for summarizing the rows of a matrix
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" / \ref fix32 "fix32" / \ref fix64 "fix64"
  *  @note When adding boolean values, the numerical value of boolean is used
  *  @param mat - a matrix of supported type
  *  @return returns a vector with the sums of each row in the input matrix
@@ -135,12 +135,22 @@ D float64[[1]] rowSums (D float64[[2]] mat) {
     return _rowSums (mat);
 }
 
+template <domain D : shared3p>
+D fix32[[1]] rowSums (D fix32[[2]] mat) {
+    return _rowSums (mat);
+}
+
+template <domain D : shared3p>
+D fix64[[1]] rowSums (D fix64[[2]] mat) {
+    return _rowSums (mat);
+}
+
 /** @}*/
 /** \addtogroup shared3p_colsums
  *  @{
  *  @brief Function for summarizing the columns of a matrix
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" / \ref fix32 "fix32" / \ref fix64 "fix64"
  *  @note When adding boolean values, the numerical value of boolean is used
  *  @param mat - a matrix of supported type
  *  @return returns a vector with the sums of each column in the input matrix
@@ -202,6 +212,15 @@ D float64[[1]] colSums (D float64[[2]] mat) {
     return rowSums(transpose(mat));
 }
 
+template <domain D : shared3p>
+D fix32[[1]] colSums (D fix32[[2]] mat) {
+    return rowSums(transpose(mat));
+}
+
+template <domain D : shared3p>
+D fix64[[1]] colSums (D fix64[[2]] mat) {
+    return rowSums(transpose(mat));
+}
 /** @}*/
 
 /*******************************
@@ -738,7 +757,7 @@ D T[[2]] _intMatrixMultiplication(D T[[2]] x, D T[[2]] y) {
  *  @{
  *  @brief Function for multiplying two matrices
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" / \ref fix32 "fix32" / \ref fix64 "fix64"
  *  @warning no. of columns of x must equal no. of rows of y
  *  @param x,y - 2-dimensional matrices of supported type and shape
  *  @return returns the matrix of x*y
@@ -792,6 +811,16 @@ D float32[[2]] matrixMultiplication (D float32[[2]] x, D float32[[2]] y) {
 
 template <domain D : shared3p>
 D float64[[2]] matrixMultiplication (D float64[[2]] x, D float64[[2]] y) {
+    return _matrixMultiplication (x, y);
+}
+
+template <domain D : shared3p>
+D fix32[[2]] matrixMultiplication (D fix32[[2]] x, D fix32[[2]] y) {
+    return _matrixMultiplication (x, y);
+}
+
+template <domain D : shared3p>
+D fix64[[2]] matrixMultiplication (D fix64[[2]] x, D fix64[[2]] y) {
     return _matrixMultiplication (x, y);
 }
 
