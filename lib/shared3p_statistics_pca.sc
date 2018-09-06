@@ -79,133 +79,6 @@ uint8 PCA_RETURN_PROPORTIONS = 16;
 /** @} */
 
 /** \cond */
-template<domain D : shared3p, dim N>
-D uint32[[N]] _mulFix(D uint32[[N]] x, D uint32[[N]] y) {
-    D uint32[[N]] res = x;
-    __syscall("shared3p::mul_fix32_vec", __domainid (D), x, y, res);
-    return res;
-}
-
-template<domain D : shared3p, dim N>
-D uint64[[N]] _mulFix(D uint64[[N]] x, D uint64[[N]] y) {
-    D uint64[[N]] res = x;
-    __syscall("shared3p::mul_fix64_vec", __domainid (D), x, y, res);
-    return res;
-}
-
-template<domain D : shared3p>
-D uint32[[2]] _toFix(D float32[[2]] x) {
-    D uint32[[2]] res(shape(x)[0], shape(x)[1]);
-    __syscall("shared3p::conv_float32_to_fix32_vec", __domainid (D), x, res);
-    return res;
-}
-
-template<domain D : shared3p>
-D uint64[[2]] _toFix(D float64[[2]] x) {
-    D uint64[[2]] res(shape(x)[0], shape(x)[1]);
-    __syscall("shared3p::conv_float64_to_fix64_vec", __domainid (D), x, res);
-    return res;
-}
-
-template<domain D : shared3p>
-D float32[[1]] _fromFix(D uint32[[1]] x) {
-    D float32[[1]] res(size(x));
-    __syscall("shared3p::conv_fix32_to_float32_vec", __domainid (D), x, res);
-    return res;
-}
-
-template<domain D : shared3p>
-D float64[[1]] _fromFix(D uint64[[1]] x) {
-    D float64[[1]] res(size(x));
-    __syscall("shared3p::conv_fix64_to_float64_vec", __domainid (D), x, res);
-    return res;
-}
-
-template<domain D : shared3p>
-D float32[[2]] _fromFix(D uint32[[2]] x) {
-    D float32[[2]] res(shape(x)[0], shape(x)[1]);
-    __syscall("shared3p::conv_fix32_to_float32_vec", __domainid (D), x, res);
-    return res;
-}
-
-template<domain D : shared3p>
-D float64[[2]] _fromFix(D uint64[[2]] x) {
-    D float64[[2]] res(shape(x)[0], shape(x)[1]);
-    __syscall("shared3p::conv_fix64_to_float64_vec", __domainid (D), x, res);
-    return res;
-}
-
-template <domain D : shared3p, type Fix>
-D Fix[[2]] _fixMatrixMultiplication(D Fix[[2]] x, D Fix[[2]] y) {
-	// For parallelisation
-	uint [[1]] xShape = shape (x);
-	uint [[1]] yShape = shape (y);
-
-	// no. of columns of x must equal no. of rows of y
-	assert (xShape[1] == yShape[0]);
-
-	uint commonDim = xShape[1];
-
-	D Fix[[1]] mulVec1 (xShape[0] * yShape[1] * commonDim),
-				  mulVec2 (xShape[0] * yShape[1] * commonDim),
-				  product (xShape[0] * yShape[1] * commonDim);
-
-	// At the moment our matrices are kept in memory in row major order
-	// We only take the column we need from memory once
-	// This is also why our cycles run first over y and then over x
-	D Fix[[1]] yColumn (commonDim);
-	for (uint i = 0; i < yShape[1]; i++) {
-		yColumn = y[:, i];
-		for (uint j = 0; j < xShape[0]; j++) {
-			mulVec1[((xShape[0] * i + j) * commonDim) : ((xShape[0] * i + j + 1) * commonDim)] = x[j, :];
-			mulVec2[((xShape[0] * i + j) * commonDim) : ((xShape[0] * i + j + 1) * commonDim)] = yColumn;
-		}
-	}
-
-	product = _mulFix (mulVec1, mulVec2);
-
-	D Fix[[2]] result (xShape[0], yShape[1]);
-	D Fix[[1]] resultVec (xShape[0] * yShape[1]);
-
-	resultVec = sum (product, (xShape[0] * yShape[1]));
-
-	for (uint i = 0; i < yShape[1]; i++){
-		result[:, i] = resultVec [i * xShape[0] : (i + 1) * xShape[0]];
-	}
-
-	return result;
-}
-
-template<domain D : shared3p>
-D uint32 _invFix(D uint32 x) {
-    __syscall("shared3p::inv_fix32_vec", __domainid(D), x, x);
-    return x;
-}
-
-template<domain D : shared3p>
-D uint64 _invFix(D uint64 x) {
-    __syscall("shared3p::inv_fix64_vec", __domainid(D), x, x);
-    return x;
-}
-
-template<domain D : shared3p>
-D uint64 _invSqrtFix(D uint64 x) {
-    D uint64 x1;
-    __syscall("shared3p::sqrt_fix64_vec", __domainid (D), x, x1);
-    D uint64 x2;
-    __syscall("shared3p::inv_fix64_vec", __domainid (D), x1, x2);
-    return x2;
-}
-
-template<domain D : shared3p>
-D uint32 _invSqrtFix(D uint32 x) {
-    D uint32 x1;
-    __syscall("shared3p::sqrt_fix32_vec", __domainid (D), x, x1);
-    D uint32 x2;
-    __syscall("shared3p::inv_fix32_vec", __domainid (D), x1, x2);
-    return x2;
-}
-
 template <type T, type UT, dim N, domain D>
 D T[[N]] _power(D T[[N]] x, UT e) {
     if (e == 0) {
@@ -222,38 +95,28 @@ D T[[N]] _power(D T[[N]] x, UT e) {
     return pow;
 }
 
-uint64 pubDoubleToFix(float64 x, uint radix_point) {
-    return (uint64) round(x * (float64) _power(2, radix_point));
-}
-
-uint32 pubDoubleToFix(float64 x, uint32 radix_point) {
-    return (uint32) round(x * (float64) _power(2, radix_point));
-}
-
-uint64 _getRadix(uint64 x) {
-    return 32;
-}
-
-uint32 _getRadix(uint32 x) {
-    return 16;
-}
-
-uint64 _getDivisor(uint64 radix) {
+template<domain D>
+D fix64 _getDivisor(D fix64 fix) {
     // This is 1/2^12 as a fixed point number
-    return 1 << (radix - 12);
+    D uint64 x = 1 << (32 - 12);
+    __syscall("shared3p::assign_uint64_vec", __domainid(D), x, fix);
+    return fix;
 }
 
-uint32 _getDivisor(uint32 radix) {
+template<domain D>
+D fix32 _getDivisor(D fix32 fix) {
     // This is 1/2^6 as a fixed point number
-    return 1 << (radix - 6);
+    D uint32 x = 1 << (16 - 6);
+    __syscall("shared3p::assign_uint32_vec", __domainid(D), x, fix);
+    return fix;
 }
 
 /*
  * GS-PCA algorithm from "Parallel GPU Implementation of Iterative PCA
  * Algorithms".
  */
-template<domain D : shared3p, type Fix>
-PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
+template<domain D : shared3p, type Fix, type Float>
+PCAResult<D, Fix> _gspca(Float proxy, D Fix[[2]] X, uint n_components,
                          uint iterations, uint8 returnValues)
 {
     bool wantResidual = (bool) (returnValues & PCA_RETURN_RESIDUAL);
@@ -274,20 +137,18 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
     D Fix[[2]] pDivisor(shape(X)[1], 1);
     D Fix[[2]] vDivisor(shape(X)[0], 1);
 
-    Fix proxy;
-    Fix radix = _getRadix(proxy);
+    D Fix proxy;
     // The divisor is used to shorten vectors before normalisation to
     // avoid overflow.
-    Fix divisor = _getDivisor(radix);
+    D Fix divisor = _getDivisor(proxy);
     pDivisor = divisor;
     vDivisor = divisor;
 
     // todo: optimize, use k sum
     // Center
-    Fix invRows = pubDoubleToFix(1.0 / (float64) shape(X)[0], radix);
-    D Fix invRowsPriv = invRows;
+    D Fix invRows = 1.0 / (Float) shape(X)[0];
     for (uint i = 0; i < shape(X)[1]; ++i) {
-        D Fix mu = _mulFix(sum(X[:, i]), invRowsPriv);
+        D Fix mu = sum(X[:, i]) * invRows;
         X[:, i] = X[:, i] - mu;
     }
     R = X;
@@ -299,26 +160,26 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
         D Fix[[2]] p(shape(X)[1], 1);
 
         for (uint i = 0; i < iterations; ++i) {
-            p = _fixMatrixMultiplication(Rtrans, v);
-            p = _mulFix(p, pDivisor);
+            p = matrixMultiplication(Rtrans, v);
+            p = p * pDivisor;
 
             if (k > 0) {
                 // Orthogonality correction
-                D Fix[[2]] A = _fixMatrixMultiplication(transpose(P[:, 0:k]), p);
-                p = p - _fixMatrixMultiplication(P[:, 0:k], A);
+                D Fix[[2]] A = matrixMultiplication(transpose(P[:, 0:k]), p);
+                p = p - matrixMultiplication(P[:, 0:k], A);
             }
 
             {
-                D Fix invSqrt = _invSqrtFix(sum((_mulFix(p, p))[:, 0]));
+                D Fix invSqrt = inv(sqrt(sum((p * p)[:, 0])));
                 D Fix[[2]] invSqrtMat(shape(X)[1], 1) = invSqrt;
-                p = _mulFix(p, invSqrtMat);
-                v = _fixMatrixMultiplication(R, p);
+                p = p * invSqrtMat;
+                v = matrixMultiplication(R, p);
             }
 
             if (k > 0) {
                 // Orthogonality correction
-                D Fix[[2]] B = _fixMatrixMultiplication(transpose(V[:, 0:k]), v);
-                v = v - _fixMatrixMultiplication(V[:, 0:k], B);
+                D Fix[[2]] B = matrixMultiplication(transpose(V[:, 0:k]), v);
+                v = v - matrixMultiplication(V[:, 0:k], B);
             }
 
             if (i == iterations - 1) {
@@ -327,20 +188,20 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
             }
 
             {
-                v = _mulFix(v, vDivisor);
-                D Fix invSqrt = _invSqrtFix(sum((_mulFix(v, v))[:, 0]));
+                v = v * vDivisor;
+                D Fix invSqrt = inv(sqrt(sum((v * v)[:, 0])));
                 D Fix[[2]] invSqrtMat(shape(X)[0], 1) = invSqrt;
-                v = _mulFix(v, invSqrtMat);
+                v = v * invSqrtMat;
             }
         }
 
         if (k == n_components - 1) {
             if (wantResidual)
-                R = R - _fixMatrixMultiplication(t, transpose(p));
+                R = R - matrixMultiplication(t, transpose(p));
             if (wantLoads)
                 P[:, k] = p[:, 0];
         } else {
-            R = R - _fixMatrixMultiplication(t, transpose(p));
+            R = R - matrixMultiplication(t, transpose(p));
             P[:, k] = p[:, 0];
             V[:, k] = v[:, 0];
         }
@@ -355,22 +216,22 @@ PCAResult<D, Fix> _gspca(D Fix[[2]] X, uint n_components,
         res.loads = P;
 
     if (wantVariances || wantProportions) {
-        T = _mulFix(T, T);
-        Fix div = pubDoubleToFix(1 / (float64) shape(T)[0], radix);
+        T = T * T;
+        D Fix div = 1 / (Float) shape(T)[0];
         D Fix[[1]] divs(shape(T)[1]) = div;
         D Fix[[1]] vars = colSums(T);
         // We don't need to subtract means because PCs are centered
-        res.variances = _mulFix(vars, divs);
+        res.variances = vars * divs;
     }
 
     if (wantProportions) {
         assert(wantVariances);
         // X is already centered
-        D Fix[[1]] div(shape(X)[1]) = invRowsPriv;
-        D Fix[[1]] variances = _mulFix(colSums(_mulFix(X, X)), div);
-        D Fix totalVarInv = _invFix(sum(variances));
+        D Fix[[1]] div(shape(X)[1]) = invRows;
+        D Fix[[1]] variances = colSums(X * X) * div;
+        D Fix totalVarInv = inv(sum(variances));
         D Fix[[1]] pcdiv(n_components) = totalVarInv;
-        res.proportions = _mulFix(res.variances, pcdiv);
+        res.proportions = res.variances * pcdiv;
     }
 
     return res;
@@ -398,15 +259,16 @@ template<domain D : shared3p>
 PCAResult<D, float32> gspca(D float32[[2]] X, uint n_components,
                             uint iterations, uint8 returnValues)
 {
-    D uint32[[2]] fixX = _toFix(X);
-    PCAResult<D, uint32> resFix = _gspca(fixX, n_components, iterations, returnValues);
+    float32 floatProxy;
+    D fix32[[2]] fixX = (fix32) X;
+    PCAResult<D, fix32> resFix = _gspca(floatProxy, fixX, n_components, iterations, returnValues);
     PCAResult<D, float32> res;
 
-    res.residual = _fromFix(resFix.residual);
-    res.scores = _fromFix(resFix.scores);
-    res.loads = _fromFix(resFix.loads);
-    res.variances = _fromFix(resFix.variances);
-    res.proportions = _fromFix(resFix.proportions);
+    res.residual = (float32) resFix.residual;
+    res.scores = (float32) resFix.scores;
+    res.loads = (float32) resFix.loads;
+    res.variances = (float32) resFix.variances;
+    res.proportions = (float32) resFix.proportions;
 
     return res;
 }
@@ -415,15 +277,16 @@ template<domain D : shared3p>
 PCAResult<D, float64> gspca(D float64[[2]] X, uint n_components,
                             uint iterations, uint8 returnValues)
 {
-    D uint64[[2]] fixX = _toFix(X);
-    PCAResult<D, uint64> resFix = _gspca(fixX, n_components, iterations, returnValues);
+    float64 floatProxy;
+    D fix64[[2]] fixX = (fix64) X;
+    PCAResult<D, fix64> resFix = _gspca(floatProxy, fixX, n_components, iterations, returnValues);
     PCAResult<D, float64> res;
 
-    res.residual = _fromFix(resFix.residual);
-    res.scores = _fromFix(resFix.scores);
-    res.loads = _fromFix(resFix.loads);
-    res.variances = _fromFix(resFix.variances);
-    res.proportions = _fromFix(resFix.proportions);
+    res.residual = (float64) resFix.residual;
+    res.scores = (float64) resFix.scores;
+    res.loads = (float64) resFix.loads;
+    res.variances = (float64) resFix.variances;
+    res.proportions = (float64) resFix.proportions;
 
     return res;
 }
