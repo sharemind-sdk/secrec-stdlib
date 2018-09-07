@@ -359,112 +359,96 @@ void testFloorFloat64() {
 }
 
 void testMinFloat32() {
-    pd_shared3p float32[[1]] res(5);
-    float32[[1]] correct = {-0, -1, 0, -13.37e80, 13.37e-80};
+    pd_shared3p float32[[1]] res(4);
+    float32[[1]] correct = {-1, 0, -13.37e30, 13.37e-30};
 
     {
-        pd_shared3p float32[[1]] x = {-0, 0};
+        pd_shared3p float32[[1]] x = {-1, 0};
         res[0] = min(x);
     }
     {
-        pd_shared3p float32[[1]] x = {-1, 0};
+        pd_shared3p float32[[1]] x = {0, 1};
         res[1] = min(x);
     }
     {
-        pd_shared3p float32[[1]] x = {0, 1};
+        pd_shared3p float32[[1]] x = {-13.37e30, 0};
         res[2] = min(x);
     }
     {
-        pd_shared3p float32[[1]] x = {-13.37e80, 0};
+        pd_shared3p float32[[1]] x = {13.37e-30, 13.37e-29};
         res[3] = min(x);
-    }
-    {
-        pd_shared3p float32[[1]] x = {13.37e-80, 13.37e-79};
-        res[4] = min(x);
     }
 
     test("[float32] Min", all(declassify(res) == correct));
 }
 
 void testMinFloat64() {
-    pd_shared3p float64[[1]] res(5);
-    float64[[1]] correct = {-0, -1, 0, -13.37e240, 13.37e-240};
+    pd_shared3p float64[[1]] res(4);
+    float64[[1]] correct = {-1, 0, -13.37e240, 13.37e-240};
 
     {
-        pd_shared3p float64[[1]] x = {-0, 0};
+        pd_shared3p float64[[1]] x = {-1, 0};
         res[0] = min(x);
     }
     {
-        pd_shared3p float64[[1]] x = {-1, 0};
+        pd_shared3p float64[[1]] x = {0, 1};
         res[1] = min(x);
     }
     {
-        pd_shared3p float64[[1]] x = {0, 1};
+        pd_shared3p float64[[1]] x = {-13.37e240, 0};
         res[2] = min(x);
     }
     {
-        pd_shared3p float64[[1]] x = {-13.37e240, 0};
-        res[3] = min(x);
-    }
-    {
         pd_shared3p float64[[1]] x = {13.37e-240, 13.37e-200};
-        res[4] = min(x);
+        res[3] = min(x);
     }
 
     test("[float64] Min", all(declassify(res) == correct));
 }
 
 void testMaxFloat32() {
-    pd_shared3p float32[[1]] res(5);
-    float32[[1]] correct = {0, 0, 1, 0, 13.37e-79};
+    pd_shared3p float32[[1]] res(4);
+    float32[[1]] correct = {0, 1, 0, 13.37e-29};
 
     {
-        pd_shared3p float32[[1]] x = {-0, 0};
+        pd_shared3p float32[[1]] x = {-1, 0};
         res[0] = max(x);
     }
     {
-        pd_shared3p float32[[1]] x = {-1, 0};
+        pd_shared3p float32[[1]] x = {0, 1};
         res[1] = max(x);
     }
     {
-        pd_shared3p float32[[1]] x = {0, 1};
+        pd_shared3p float32[[1]] x = {-13.37e30, 0};
         res[2] = max(x);
     }
     {
-        pd_shared3p float32[[1]] x = {-13.37e80, 0};
+        pd_shared3p float32[[1]] x = {13.37e-30, 13.37e-29};
         res[3] = max(x);
-    }
-    {
-        pd_shared3p float32[[1]] x = {13.37e-80, 13.37e-79};
-        res[4] = max(x);
     }
 
     test("[float32] Max", all(declassify(res) == correct));
 }
 
 void testMaxFloat64() {
-    pd_shared3p float64[[1]] res(5);
-    float64[[1]] correct = {0, 0, 1, 0, 13.37e-200};
+    pd_shared3p float64[[1]] res(4);
+    float64[[1]] correct = {0, 1, 0, 13.37e-200};
 
     {
-        pd_shared3p float64[[1]] x = {-0, 0};
+        pd_shared3p float64[[1]] x = {-1, 0};
         res[0] = max(x);
     }
     {
-        pd_shared3p float64[[1]] x = {-1, 0};
+        pd_shared3p float64[[1]] x = {0, 1};
         res[1] = max(x);
     }
     {
-        pd_shared3p float64[[1]] x = {0, 1};
+        pd_shared3p float64[[1]] x = {-13.37e240, 0};
         res[2] = max(x);
     }
     {
-        pd_shared3p float64[[1]] x = {-13.37e240, 0};
-        res[3] = max(x);
-    }
-    {
         pd_shared3p float64[[1]] x = {13.37e-240, 13.37e-200};
-        res[4] = max(x);
+        res[3] = max(x);
     }
 
     test("[float64] Max", all(declassify(res) == correct));
