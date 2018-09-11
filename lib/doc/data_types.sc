@@ -33,12 +33,6 @@
 \anchor int64
 \anchor float32
 \anchor float64
-\anchor xor_uint8
-\anchor xor_uint16
-\anchor xor_uint32
-\anchor xor_uint64
-\anchor fix32
-\anchor fix64
 \anchor string
 \anchor uint
 \anchor int
@@ -66,6 +60,13 @@
 @note **float** is an alias for **float32**
 
 @section shared3p-pdk shared3p data types
+
+\anchor xor_uint8
+\anchor xor_uint16
+\anchor xor_uint32
+\anchor xor_uint64
+\anchor fix32
+\anchor fix64
 
 | Type        | Respective public type | Minimum value        | Maximum value        | Maximum negative value | Minimum positive value |
 | :---------: | :--------------------: | :------------------: | :------------------: | :--------------------: | :--------------------: |
