@@ -3,7 +3,7 @@
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
- * for the Software may use this file according to the written 
+ * for the Software may use this file according to the written
  * agreement between you and Cybernetica.
  *
  * GNU Lesser General Public License Usage
@@ -20,132 +20,71 @@
 /**
 
 @page data_types Data types
-@brief Different data types of the SecreC language
+@brief Different primitive data types of the SecreC language.
 
+\anchor bool
+\anchor uint8
+\anchor uint16
+\anchor uint32
+\anchor uint64
+\anchor int8
+\anchor int16
+\anchor int32
+\anchor int64
+\anchor float32
+\anchor float64
+\anchor xor_uint8
+\anchor xor_uint16
+\anchor xor_uint32
+\anchor xor_uint64
+\anchor fix32
+\anchor fix64
+\anchor string
+\anchor uint
+\anchor int
+\anchor float
 
-@section string string
+@section public-pdk Public protection domain
 
-A regular string exactly like in c++, c ,java etc.
-  
-@section bool boolean
+| Type        | Minimum value        | Maximum value        | Maximum negative value | Minimum positive value |
+| :---------: | :------------------: | :------------------: | :--------------------: | :--------------------: |
+| string      | NA                   | NA                   | NA                     | NA                     |
+| bool        | NA                   | NA                   | NA                     | NA                     |
+| uint8       | 0                    | 255                  | NA                     | NA                     |
+| uint16      | 0                    | 65535                | NA                     | NA                     |
+| uint32      | 0                    | 4294967295           | NA                     | NA                     |
+| uint64      | 0                    | 18446744073709551615 | NA                     | NA                     |
+| int8        | -128                 | 127                  | NA                     | NA                     |
+| int16       | -32768               | 32767                | NA                     | NA                     |
+| int32       | -2147483648          | 2147483647           | NA                     | NA                     |
+| int64       | -9223372036854775808 | 9223372036854775807  | NA                     | NA                     |
+| float32 | -3.402823 &times; 10<sup>38</sup> | 3.402823 &times; 10<sup>38</sup> | -2.802597 &times; 10<sup>-45</sup> | 2.802597 &times; 10<sup>-45</sup> |
+| float64 | -1.797693 &times; 10<sup>308</sup> | 1.797693 &times; 10<sup>308</sup> | -4.940656 &times; 10<sup>-324</sup> | 4.940656 &times; 10<sup>-324</sup> |
 
-| Bool   | Numerical |
-| :----: | :-------: |
-| true   | 1 | 
-| false  | 0 | 
+@note **uint** is an alias for **uint64**
+@note **int** is an alias for **int64**
+@note **float** is an alias for **float32**
 
-@section uint Unsigned integer
-@subsection uint8 uint8
+@section shared3p-pdk shared3p data types
 
-|        |            |
-| :----: | :-------:  |
-| Maximum value | 255 | 
-| Minimum value | 0   | 
-
-@subsection uint16 uint16
-
-|        |            |
-| :----: | :-------:  |
-| Maximum value | 65535 | 
-| Minimum value | 0   | 
-
-@subsection uint32 uint32
-
-|        |            |
-| :----: | :-------:  |
-| Maximum value | 4294967295 | 
-| Minimum value | 0   | 
-
-@subsection uint64 uint64/uint
-
-|        |            |
-| :----: | :-------:  |
-| Maximum value | 18446744073709551615 | 
-| Minimum value | 0   |
-
-@note in the language reference **uint64** and **uint** are considered the same and can be declared in either way  
-
-@section int Signed integer
-@subsection int8 int8
-
-|        |            |
-| :----: | :-------:  |
-| Maximum value | 127 | 
-| Minimum value | -128 | 
-
-@subsection int16 int16
-
-|        |            |
-| :----: | :-------:  |
-| Maximum value | 32767 | 
-| Minimum value | -32768  | 
-
-@subsection int32 int32
-
-|        |            |
-| :----: | :-------:  |
-| Maximum value | 2147483647 | 
-| Minimum value | -2147483648 | 
-
-@subsection int64 int64/int
-
-|        |            |
-| :----: | :-------:  |
-| Maximum value | 9223372036854775807 | 
-| Minimum value | -9223372036854775808 |
-
-@note in the language reference **int64** and **int** are considered the same and can be declared in either way  
-
-@section xor_uint XOR Unsigned integer
-@subsection xor_uint8 xor_uint8
-
-|        |            |
-| :----: | :-------:  |
-| Maximum value | 255 | 
-| Minimum value | 0   | 
-
-@subsection xor_uint16 xor_uint16
-
-|        |            |
-| :----: | :-------:  |
-| Maximum value | 65535 | 
-| Minimum value | 0   | 
-
-@subsection xor_uint32 xor_uint32
-
-|        |            |
-| :----: | :-------:  |
-| Maximum value | 4294967295 | 
-| Minimum value | 0   | 
-
-@subsection xor_uint64 xor_uint64
-
-|        |            |
-| :----: | :-------:  |
-| Maximum value | 18446744073709551615 | 
-| Minimum value | 0   |
-
-
-@section float Floating point number
-@subsection float32 float32/float
-
-|        |            |
-| :----: | :-------:  |
-| Maximum positive value | 3.402823 &times; 10<sup>38</sup> |
-| Minimum positive value | 2.802597 &times; 10<sup>-45</sup> |
-| Maximum negative value | -3.402823 &times; 10<sup>38</sup> |
-| Minimum negative value | -2.802597 &times; 10<sup>-45</sup> |
-
-
-@subsection float64 float64
-
-|        |            |
-| :----: | :-------:  |
-| Maximum positive value | 1.797693 &times; 10<sup>308</sup> |
-| Minimum positive value | 4.940656 &times; 10<sup>-324</sup> |
-| Maximum negative value | -1.797693 &times; 10<sup>308</sup> |
-| Minimum negative value | -4.940656 &times; 10<sup>-324</sup> |
-
-@note in the language reference **float32** and **float** are considered the same and can be declared in either way  
+| Type        | Respective public type | Minimum value        | Maximum value        | Maximum negative value | Minimum positive value |
+| :---------: | :--------------------: | :------------------: | :------------------: | :--------------------: | :--------------------: |
+| bool        | bool                   | NA                   | NA                   | NA                     | NA                     |
+| uint8       | uint8                  | 0                    | 255                  | NA                     | NA                     |
+| uint16      | uint16                 | 0                    | 65535                | NA                     | NA                     |
+| uint32      | uint32                 | 0                    | 4294967295           | NA                     | NA                     |
+| uint64      | uint64                 | 0                    | 18446744073709551615 | NA                     | NA                     |
+| int8        | int8                   | -128                 | 127                  | NA                     | NA                     |
+| int16       | int16                  | -32768               | 32767                | NA                     | NA                     |
+| int32       | int32                  | -2147483648          | 2147483647           | NA                     | NA                     |
+| int64       | int64                  | -9223372036854775808 | 9223372036854775807  | NA                     | NA                     |
+| xor_uint8   | uint8                  | 0                    | 255                  | NA                     | NA                     |
+| xor_uint16  | uint16                 | 0                    | 65535                | NA                     | NA                     |
+| xor_uint32  | uint32                 | 0                    | 4294967295           | NA                     | NA                     |
+| xor_uint64  | uint64                 | 0                    | 18446744073709551615 | NA                     | NA                     |
+| float32 | float32 | ≈ -2.4 &times; 10<sup>4932</sup> | ≈ 2.4 &times; 10<sup>4932</sup> | ≈ -1.7 &times; 10<sup>-4932</sup> | ≈ 1.7 &times; 10<sup>-4932</sup> |
+| float64 | float64 | ≈ -2.4 &times; 10<sup>4932</sup> | ≈ 2.4 &times; 10<sup>4932</sup> | ≈ -1.7 &times; 10<sup>-4932</sup> | ≈ 1.7 &times; 10<sup>-4932</sup> |
+| fix32 | float32 | -32768.0 | 32767.99998474121 | -1.52587890625 &times; 10<sup>-5</sup> | 1.52587890625 &times; 10<sup>-5</sup> |
+| fix64 | float64 | -2.147483648 &times; 10<sup>9</sup> | 2.14748364799999999976716935634613037109375 &times; 10<sup>9</sup> | -2.3283064365386962890625 &times; 10<sup>-10</sup> | 2.3283064365386962890625 &times; 10<sup>-10</sup> |
 
 */
