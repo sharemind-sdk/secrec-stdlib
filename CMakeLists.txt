@@ -78,7 +78,7 @@ INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests/"
         COMPONENT "tests"
         FILES_MATCHING PATTERN "*.sc")
 
-SharemindUseCMakeFindFiles()
+SharemindUseCMakeFindFiles(COMPONENT "tests")
 
 # Packaging:
 SharemindSetupPackaging()
