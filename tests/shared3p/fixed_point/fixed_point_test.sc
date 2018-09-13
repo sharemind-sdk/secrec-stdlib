@@ -40,11 +40,11 @@ bool fix_conv_test (D Fix fixProxy, D Float floatProxy) {
 float64[[1]] aconst = {46.1031757062301, 0.662917271256447, -10.5627957265824, 17.7343259332702, -10.5071143712848, -36.2001691944897, -26.2601210037246, 17.2664207406342, -15.5826088041067, -43.2740949559957};
 float64[[1]] bconst = {24.8451678548008, -42.5837906310335, 26.0335614671931, -39.3047024030238, 0.727065955288708, -5.81115016248077, 26.5707450453192, -30.5834022816271, -42.3886028584093, 44.1291213734075};
 
-float32 mul_err (pd_shared3p fix32 x) {
+float32 fix_err (pd_shared3p fix32 x) {
     return 1e-2;
 }
 
-float64 mul_err (pd_shared3p fix64 x) {
+float64 fix_err (pd_shared3p fix64 x) {
     return 1e-4;
 }
 
@@ -60,15 +60,37 @@ bool fix_mul_test (D Fix fixProxy, D Float floatProxy) {
 
     Float error = sum (declassify (abs (result - expected_result)));
 
-    return error < mul_err (fixProxy);
+    return error < fix_err (fixProxy);
 }
 
-float32 div_err (pd_shared3p fix32 x) {
-    return 1e-2;
+template<domain D : shared3p, type Fix, type Float>
+bool fix_add_test (D Fix fixProxy, D Float floatProxy) {
+    D Float[[1]] af = (Float) aconst;
+    D Fix[[1]] a = (Fix) af;
+    D Float[[1]] bf = (Float) bconst;
+    D Fix[[1]] b = (Fix) bf;
+    D Fix[[1]] result_fix = a + b;
+    D Float[[1]] result = (Float) result_fix;
+    D Float[[1]] expected_result = af + bf;
+
+    Float error = sum (declassify (abs (result - expected_result)));
+
+    return error < fix_err (fixProxy);
 }
 
-float64 div_err (pd_shared3p fix64 x) {
-    return 1e-4;
+template<domain D : shared3p, type Fix, type Float>
+bool fix_sub_test (D Fix fixProxy, D Float floatProxy) {
+    D Float[[1]] af = (Float) aconst;
+    D Fix[[1]] a = (Fix) af;
+    D Float[[1]] bf = (Float) bconst;
+    D Fix[[1]] b = (Fix) bf;
+    D Fix[[1]] result_fix = a - b;
+    D Float[[1]] result = (Float) result_fix;
+    D Float[[1]] expected_result = af - bf;
+
+    Float error = sum (declassify (abs (result - expected_result)));
+
+    return error < fix_err (fixProxy);
 }
 
 template<domain D : shared3p, type Fix, type Float>
@@ -82,7 +104,7 @@ bool fix_div_test (D Fix fixProxy, D Float floatProxy) {
 
     Float error = sum (declassify (abs (result - expected_result)));
 
-    return error < div_err (fixProxy);
+    return error < fix_err (fixProxy);
 }
 
 template<domain D : shared3p, type Fix, type Float>
@@ -93,6 +115,54 @@ bool fix_eq_test (D Fix fixProxy, D Float floatProxy) {
     D Fix[[1]] b = (Fix) bf;
     D bool[[1]] result = a == b;
     D bool[[1]] expected_result = af == bf;
+
+    return declassify (all (expected_result == result));
+}
+
+template<domain D : shared3p, type Fix, type Float>
+bool fix_lt_test (D Fix fixProxy, D Float floatProxy) {
+    D Float[[1]] af = (Float) aconst;
+    D Float[[1]] bf = (Float) bconst;
+    D Fix[[1]] a = (Fix) af;
+    D Fix[[1]] b = (Fix) bf;
+    D bool[[1]] result = a < b;
+    D bool[[1]] expected_result = af < bf;
+
+    return declassify (all (expected_result == result));
+}
+
+template<domain D : shared3p, type Fix, type Float>
+bool fix_gt_test (D Fix fixProxy, D Float floatProxy) {
+    D Float[[1]] af = (Float) aconst;
+    D Float[[1]] bf = (Float) bconst;
+    D Fix[[1]] a = (Fix) af;
+    D Fix[[1]] b = (Fix) bf;
+    D bool[[1]] result = a > b;
+    D bool[[1]] expected_result = af > bf;
+
+    return declassify (all (expected_result == result));
+}
+
+template<domain D : shared3p, type Fix, type Float>
+bool fix_lte_test (D Fix fixProxy, D Float floatProxy) {
+    D Float[[1]] af = (Float) aconst;
+    D Float[[1]] bf = (Float) bconst;
+    D Fix[[1]] a = (Fix) af;
+    D Fix[[1]] b = (Fix) bf;
+    D bool[[1]] result = a <= b;
+    D bool[[1]] expected_result = af <= bf;
+
+    return declassify (all (expected_result == result));
+}
+
+template<domain D : shared3p, type Fix, type Float>
+bool fix_gte_test (D Fix fixProxy, D Float floatProxy) {
+    D Float[[1]] af = (Float) aconst;
+    D Float[[1]] bf = (Float) bconst;
+    D Fix[[1]] a = (Fix) af;
+    D Fix[[1]] b = (Fix) bf;
+    D bool[[1]] result = a >= b;
+    D bool[[1]] expected_result = af >= bf;
 
     return declassify (all (expected_result == result));
 }
@@ -148,11 +218,29 @@ void main () {
     test ("Fixed point multiplication", fix_mul_test (fi32, fl32), fi32);
     test ("Fixed point multiplication", fix_mul_test (fi64, fl64), fi64);
 
+    test ("Fixed point addition", fix_add_test (fi32, fl32), fi32);
+    test ("Fixed point addition", fix_add_test (fi64, fl64), fi64);
+
     test ("Fixed point division", fix_div_test (fi32, fl32), fi32);
     test ("Fixed point division", fix_div_test (fi64, fl64), fi64);
 
+    test ("Fixed point subtraction", fix_sub_test (fi32, fl32), fi32);
+    test ("Fixed point subtraction", fix_sub_test (fi64, fl64), fi64);
+
     test ("Fixed point equality", fix_eq_test (fi32, fl32), fi32);
     test ("Fixed point equality", fix_eq_test (fi64, fl64), fi64);
+
+    test ("Fixed point less-than", fix_lt_test (fi32, fl32), fi32);
+    test ("Fixed point less-than", fix_lt_test (fi64, fl64), fi64);
+
+    test ("Fixed point greater-than", fix_gt_test (fi32, fl32), fi32);
+    test ("Fixed point greater-than", fix_gt_test (fi64, fl64), fi64);
+
+    test ("Fixed point less-than-equal", fix_lte_test (fi32, fl32), fi32);
+    test ("Fixed point less-than-equal", fix_lte_test (fi64, fl64), fi64);
+
+    test ("Fixed point greater-than-equal", fix_gte_test (fi32, fl32), fi32);
+    test ("Fixed point greater-than-equal", fix_gte_test (fi64, fl64), fi64);
 
     test ("Fixed point square root", fix_sqrt_test (fi32, fl32), fi32);
     test ("Fixed point square root", fix_sqrt_test (fi64, fl64), fi64);

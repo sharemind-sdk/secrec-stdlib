@@ -2835,15 +2835,23 @@ D bool[[1]] operator < (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
 
 template <domain D : shared3p>
 D bool[[1]] operator < (D fix32[[1]] x, D fix32[[1]] y) {
-    D bool[[1]] res (size (x));
-    __syscall ("shared3p::lt_uint32_vec", __domainid (D), x, y, res);
+    uint n = size (x);
+    D bool[[1]] res (n);
+    D int32[[1]] xi (n), yi (n);
+    __syscall ("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    __syscall ("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
+    __syscall ("shared3p::lt_int32_vec", __domainid (D), xi, yi, res);
     return res;
 }
 
 template <domain D : shared3p>
 D bool[[1]] operator < (D fix64[[1]] x, D fix64[[1]] y) {
-    D bool[[1]] res (size (x));
-    __syscall ("shared3p::lt_uint64_vec", __domainid (D), x, y, res);
+    uint n = size (x);
+    D bool[[1]] res (n);
+    D int64[[1]] xi (n), yi (n);
+    __syscall ("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    __syscall ("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
+    __syscall ("shared3p::lt_int64_vec", __domainid (D), xi, yi, res);
     return res;
 }
 
@@ -2947,15 +2955,23 @@ D bool[[1]] operator > (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
 
 template <domain D : shared3p>
 D bool[[1]] operator > (D fix32[[1]] x, D fix32[[1]] y) {
-    D bool[[1]] res (size (x));
-    __syscall ("shared3p::gt_uint32_vec", __domainid (D), x, y, res);
+    uint n = size (x);
+    D bool[[1]] res (n);
+    D int32[[1]] xi (n), yi (n);
+    __syscall ("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    __syscall ("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
+    __syscall ("shared3p::gt_int32_vec", __domainid (D), xi, yi, res);
     return res;
 }
 
 template <domain D : shared3p>
 D bool[[1]] operator > (D fix64[[1]] x, D fix64[[1]] y) {
-    D bool[[1]] res (size (x));
-    __syscall ("shared3p::gt_uint64_vec", __domainid (D), x, y, res);
+    uint n = size (x);
+    D bool[[1]] res (n);
+    D int64[[1]] xi (n), yi (n);
+    __syscall ("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    __syscall ("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
+    __syscall ("shared3p::gt_int64_vec", __domainid (D), xi, yi, res);
     return res;
 }
 
@@ -3059,15 +3075,23 @@ D bool[[1]] operator <= (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
 
 template <domain D : shared3p>
 D bool[[1]] operator <= (D fix32[[1]] x, D fix32[[1]] y) {
-    D bool[[1]] res (size (x));
-    __syscall ("shared3p::lte_uint32_vec", __domainid (D), x, y, res);
+    uint n = size (x);
+    D bool[[1]] res (n);
+    D int32[[1]] xi (n), yi (n);
+    __syscall ("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    __syscall ("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
+    __syscall ("shared3p::lte_int32_vec", __domainid (D), xi, yi, res);
     return res;
 }
 
 template <domain D : shared3p>
 D bool[[1]] operator <= (D fix64[[1]] x, D fix64[[1]] y) {
-    D bool[[1]] res (size (x));
-    __syscall ("shared3p::lte_uint64_vec", __domainid (D), x, y, res);
+    uint n = size (x);
+    D bool[[1]] res (n);
+    D int64[[1]] xi (n), yi (n);
+    __syscall ("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    __syscall ("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
+    __syscall ("shared3p::lte_int64_vec", __domainid (D), xi, yi, res);
     return res;
 }
 
@@ -3171,15 +3195,23 @@ D bool[[1]] operator >= (D xor_uint64[[1]] x, D xor_uint64[[1]] y) {
 
 template <domain D : shared3p>
 D bool[[1]] operator >= (D fix32[[1]] x, D fix32[[1]] y) {
-    D bool[[1]] res (size (x));
-    __syscall ("shared3p::gte_uint32_vec", __domainid (D), x, y, res);
+    uint n = size (x);
+    D bool[[1]] res (n);
+    D int32[[1]] xi (n), yi (n);
+    __syscall ("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    __syscall ("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
+    __syscall ("shared3p::gte_int32_vec", __domainid (D), xi, yi, res);
     return res;
 }
 
 template <domain D : shared3p>
 D bool[[1]] operator >= (D fix64[[1]] x, D fix64[[1]] y) {
-    D bool[[1]] res (size (x));
-    __syscall ("shared3p::gte_uint64_vec", __domainid (D), x, y, res);
+    uint n = size (x);
+    D bool[[1]] res (n);
+    D int64[[1]] xi (n), yi (n);
+    __syscall ("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    __syscall ("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
+    __syscall ("shared3p::gte_int64_vec", __domainid (D), xi, yi, res);
     return res;
 }
 
