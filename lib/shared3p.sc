@@ -184,7 +184,7 @@ D int[[N]] sign (D int[[N]] x) {
  *  @{
  *  @brief Function for finding absolute values
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" / \ref fix32 "fix32" / \ref fix64 "fix64"
  *  @param x - an array of any dimension
  *  @return returns an array of equal shape, size and dimension, where all values are the absolute values of the input array at that position
  *  @leakage{None}
@@ -234,6 +234,18 @@ D float64[[N]] abs (D float64[[N]] value) {
     D float64[[N]] out = value;
     __syscall("shared3p::abs_float64_vec", __domainid (D), value, out);
     return out;
+}
+
+template<domain D : shared3p, dim N>
+D fix32[[N]] abs (D fix32[[N]] value) {
+    D fix32[[N]] cond = (fix32) (value > 0);
+    return cond * (value + value) - value;
+}
+
+template<domain D : shared3p, dim N>
+D fix64[[N]] abs (D fix64[[N]] value) {
+    D fix64[[N]] cond = (fix64) (value > 0);
+    return cond * (value + value) - value;
 }
 /** @}*/
 
