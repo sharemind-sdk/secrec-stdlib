@@ -145,6 +145,18 @@ D T[[2]] shuffleRows (D T[[2]] mat) {
     return mat;
 }
 
+template <domain D : shared3p>
+D fix32[[2]] shuffleRows (D fix32[[2]] mat) {
+    __syscall ("shared3p::matshuf_uint32_vec", __domainid (D), mat, shape (mat)[1]);
+    return mat;
+}
+
+template <domain D : shared3p>
+D fix64[[2]] shuffleRows (D fix64[[2]] mat) {
+    __syscall ("shared3p::matshuf_uint64_vec", __domainid (D), mat, shape (mat)[1]);
+    return mat;
+}
+
 /** @}*/
 /** \addtogroup shufflerows2
  *  @{
