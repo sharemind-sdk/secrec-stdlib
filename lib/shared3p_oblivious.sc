@@ -48,7 +48,7 @@ import stdlib;
  *  @{
  *  @brief Function for obliviously choosing one of the inputs
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64" / \ref fix32 "fix32" / \ref fix64 "fix64"
  *  @param cond - a boolean array
  *  @param first - values for **true** case
  *  @param second - values for **false** case
@@ -70,6 +70,15 @@ D float64[[N]] choose(D bool[[N]] cond, D float64[[N]] first, D float64[[N]] sec
     return out;
 }
 
+template <domain D, dim N>
+D fix32[[N]] choose(D bool[[N]] cond, D fix32[[N]] first, D fix32[[N]] second) {
+    return _chooseInt (cond, first, second);
+}
+
+template <domain D, dim N>
+D fix64[[N]] choose(D bool[[N]] cond, D fix64[[N]] first, D fix64[[N]] second) {
+    return _chooseInt (cond, first, second);
+}
 /** @}*/
 
 
