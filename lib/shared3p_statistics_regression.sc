@@ -20,14 +20,15 @@
 /** \cond */
 module shared3p_statistics_regression;
 
+import matrix;
+import oblivious;
+import shared3p;
 import shared3p_matrix;
+import shared3p_oblivious;
 import shared3p_random;
 import shared3p_statistics_common;
 import shared3p_statistics_summary;
-import shared3p_oblivious;
-import shared3p;
-import matrix;
-import oblivious;
+import stdlib;
 /** \endcond */
 
 /**
@@ -134,17 +135,37 @@ D float64[[1]] simpleLinearRegression(D float64[[1]] x, D float64[[1]] y, D bool
 /** \cond */
 template<domain D : shared3p, type T>
 uint _maxFirstLoc(D T[[1]] vec) {
-    D T best = vec[0];
-    D uint idx = 0;
+    D uint[[1]] idx = iota(size(vec));
+    D uint resIdx;
 
-    for (uint i = 1; i < size(vec); i++) {
-        D bool comp = vec[i] > best;
-        best = choose(comp, vec[i], best);
-        D uint secret = i;
-        idx = choose(comp, secret, idx);
+    while (true) {
+        uint len = size(vec);
+
+        if (len == 1) {
+            resIdx = idx[0];
+            break;
+        }
+
+        uint n = len / 2;
+        D T[[1]] left = vec[:n];
+        D uint[[1]] leftIdx = idx[:n];
+        D T[[1]] right = vec[n : 2*n];
+        D uint[[1]] rightIdx = idx[n : 2*n];
+        D bool[[1]] greater = left > right | (left == right & leftIdx < rightIdx);
+
+        D uint[[1]] newIdx = choose(greater, leftIdx, rightIdx);
+        D T[[1]] newVec = choose(greater, left, right);
+
+        if (len % 2 != 0) {
+            idx = cat(newIdx, {idx[len - 1]});
+            vec = cat(newVec, {vec[len - 1]});
+        } else {
+            idx = newIdx;
+            vec = newVec;
+        }
     }
 
-    return declassify(idx);
+    return declassify(resIdx);
 }
 
 template<domain D, type T>
@@ -201,19 +222,66 @@ D T[[1]] _gaussianElimination(D T[[2]] a, D T[[1]] b) {
         a[icol, icol] = 1;
         D T[[1]] mult(n) = pivinv;
         mult[icol] = 1;
-        a[icol, :] *= mult;
+        a[icol, :] = a[icol, :] * mult;
         b[icol] *= pivinv;
 
-        // Reduce the rows below the pivot row
-        for (uint ll = icol + 1; ll < n; ll++) {
-            D T dum = a[ll, icol];
-            a[ll, icol] = 0;
+        /*
+         * Reduce the rows below the pivot row
+         *
+         * Leaving the original reduction loop as a comment because
+         * the optimised thing is completely unreadable. It is derived
+         * from this loop.
+         *
+         * for (uint ll = icol + 1; ll < n; ll++) {
+         *     D T dum = a[ll, icol];
+         *     a[ll, icol] = 0;
+         *
+         *     D T[[1]] sub(n) = a[icol, :] * dum;
+         *     sub[icol] = 0;
+         *     a[ll, :] = a[ll, :] - sub;
+         *
+         *     b[ll] -= b[icol] * dum;
+         * }
+         */
 
-            D T[[1]] sub(n) = a[icol, :] * dum;
-            sub[icol] = 0;
-            a[ll, :] -= sub;
+        if (icol + 1 < n) {
+            uint rows = n - (icol + 1);
 
-            b[ll] -= b[icol] * dum;
+            D T[[2]] aleft(rows, n);
+            D T[[2]] aright(rows, n);
+            D T[[2]] dum(rows, n);
+
+            uint[[1]] idx = iota(rows * n) + (icol + 1) * n;
+            __syscall("shared3p::gather_$T\_vec", __domainid(D), a, aleft, __cref idx);
+
+            D T[[1]] asubvec(n);
+            uint[[1]] asubvecidx(n) = iota(n) + icol * n;
+            __syscall("shared3p::gather_$T\_vec", __domainid(D), a, asubvec, __cref asubvecidx);
+            asubvec[icol] = 0;
+
+            for (uint j = 0; j < rows; ++j) {
+                uint[[1]] idx(n) = iota(n) + j * n;
+                __syscall("shared3p::scatter_$T\_vec", __domainid(D), asubvec, aright, __cref idx);
+                D T[[1]] dumTmp(n) = a[icol + 1 + j, icol];
+                __syscall("shared3p::scatter_$T\_vec", __domainid(D), dumTmp, dum, __cref idx);
+            }
+
+            aleft = aleft - aright * dum;
+
+            __syscall("shared3p::scatter_$T\_vec", __domainid(D), aleft, a, __cref idx);
+
+            D T[[1]] bleft(rows);
+            idx = iota(rows) + icol + 1;
+            __syscall("shared3p::gather_$T\_vec", __domainid(D), b, bleft, __cref idx);
+
+            D T[[1]] bright(rows);
+            idx = iota(rows) * n + (icol + 1) * n + icol;
+            __syscall("shared3p::gather_$T\_vec", __domainid(D), a, bright, __cref idx);
+            bright = bright * b[icol];
+
+            bleft = bleft - bright;
+            uint[[1]] bIdx(rows) = iota(rows) + icol + 1;
+            __syscall("shared3p::scatter_$T\_vec", __domainid(D), bleft, b, __cref bIdx);
         }
     }
 
