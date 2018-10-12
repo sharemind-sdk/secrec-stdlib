@@ -74,6 +74,18 @@ D T[[1]] shuffle (D T[[1]] vec) {
     return vec;
 }
 
+template <domain D : shared3p>
+D fix32[[1]] shuffle (D fix32[[1]] vec) {
+    __syscall ("shared3p::vecshuf_uint32_vec", __domainid (D), vec);
+    return vec;
+}
+
+template <domain D : shared3p>
+D fix64[[1]] shuffle (D fix64[[1]] vec) {
+    __syscall ("shared3p::vecshuf_uint64_vec", __domainid (D), vec);
+    return vec;
+}
+
 /** @}*/
 /** \addtogroup shuffle2
  *  @{
@@ -100,6 +112,19 @@ D T[[1]] shuffle (D T[[1]] vec, D uint8[[1]] key) {
     return vec;
 }
 
+template <domain D : shared3p>
+D fix32[[1]] shuffle (D fix32[[1]] vec, D uint8[[1]] key) {
+    assert (size (key) == 32);
+    __syscall ("shared3p::vecshufkey_uint32_vec", __domainid (D), vec, key);
+    return vec;
+}
+
+template <domain D : shared3p>
+D fix64[[1]] shuffle (D fix64[[1]] vec, D uint8[[1]] key) {
+    assert (size (key) == 32);
+    __syscall ("shared3p::vecshufkey_uint64_vec", __domainid (D), vec, key);
+    return vec;
+}
 /** @}*/
 /** \addtogroup shuffle3
  *  @{
