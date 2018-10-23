@@ -43,7 +43,7 @@ module trace;
  * @param operation - operation name
  */
 void traceOperation(string program, string operation) {
-    print("program=$program,operation=$operation");
+    print("program=\"$program\",operation=\"$operation\"");
 }
 /** @} */
 
