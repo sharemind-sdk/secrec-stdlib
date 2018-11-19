@@ -42,6 +42,7 @@ import matrix;
 * \defgroup shufflecols2 shuffleColumns(key)
 * \defgroup shufflecols3 inverseShuffleColumns(key)
 * \defgroup randomize randomize
+* \defgroup randomized randomized
 */
 
 /** \addtogroup shared3p_random
@@ -319,81 +320,188 @@ D T[[2]] inverseShuffleColumns (D T[[2]] mat, D uint8[[1]] key) {
  *  @param arr - an array of any dimension
  *  @return returns an array with randomized values
  *  @leakage{None}
+ *  @deprecated Use \ref randomized.
  */
 template <domain D : shared3p, dim N>
+@deprecated
 D bool[[N]] randomize(D bool[[N]] arr) {
     __syscall("shared3p::randomize_bool_vec", __domainid(D), arr);
     return arr;
 }
 
 template <domain D : shared3p, dim N>
+@deprecated
 D uint8[[N]] randomize(D uint8[[N]] arr) {
     __syscall("shared3p::randomize_uint8_vec", __domainid(D), arr);
     return arr;
 }
 
 template <domain D : shared3p, dim N>
+@deprecated
 D uint16[[N]] randomize(D uint16[[N]] arr) {
     __syscall("shared3p::randomize_uint16_vec", __domainid(D), arr);
     return arr;
 }
 
 template <domain D : shared3p, dim N>
+@deprecated
 D uint32[[N]] randomize(D uint32[[N]] arr) {
     __syscall("shared3p::randomize_uint32_vec", __domainid(D), arr);
     return arr;
 }
 
 template <domain D : shared3p, dim N>
+@deprecated
 D uint[[N]] randomize(D uint[[N]] arr) {
     __syscall("shared3p::randomize_uint64_vec", __domainid(D), arr);
     return arr;
 }
 
 template <domain D : shared3p, dim N>
+@deprecated
 D int8[[N]] randomize(D int8[[N]] arr) {
     __syscall("shared3p::randomize_int8_vec", __domainid(D), arr);
     return arr;
 }
 
 template <domain D : shared3p, dim N>
+@deprecated
 D int16[[N]] randomize(D int16[[N]] arr) {
     __syscall("shared3p::randomize_int16_vec", __domainid(D), arr);
     return arr;
 }
 
 template <domain D : shared3p, dim N>
+@deprecated
 D int32[[N]] randomize(D int32[[N]] arr) {
     __syscall("shared3p::randomize_int32_vec", __domainid(D), arr);
     return arr;
 }
 
 template <domain D : shared3p, dim N>
+@deprecated
 D int[[N]] randomize(D int[[N]] arr) {
     __syscall("shared3p::randomize_int64_vec", __domainid(D), arr);
     return arr;
 }
 
 template <domain D : shared3p, dim N>
+@deprecated
 D xor_uint8[[N]] randomize(D xor_uint8[[N]] arr) {
     __syscall("shared3p::randomize_xor_uint8_vec", __domainid(D), arr);
     return arr;
 }
 
 template <domain D : shared3p, dim N>
+@deprecated
 D xor_uint16[[N]] randomize(D xor_uint16[[N]] arr) {
     __syscall("shared3p::randomize_xor_uint16_vec", __domainid(D), arr);
     return arr;
 }
 
 template <domain D : shared3p, dim N>
+@deprecated
 D xor_uint32[[N]] randomize(D xor_uint32[[N]] arr) {
     __syscall("shared3p::randomize_xor_uint32_vec", __domainid(D), arr);
     return arr;
 }
 
 template <domain D : shared3p, dim N>
+@deprecated
 D xor_uint64[[N]] randomize(D xor_uint64[[N]] arr) {
+    __syscall("shared3p::randomize_xor_uint64_vec", __domainid(D), arr);
+    return arr;
+}
+/** @}*/
+
+/*******************************
+    randomize
+********************************/
+
+
+/** \addtogroup randomized
+ *  @{
+ *  @brief Function for randomizing values
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @param arr - an array of any dimension
+ *  @return returns an array with randomized values
+ *  @leakage{None}
+ */
+template <domain D : shared3p, dim N>
+D bool[[N]] randomized(D bool[[N]] arr) {
+    __syscall("shared3p::randomize_bool_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D uint8[[N]] randomized(D uint8[[N]] arr) {
+    __syscall("shared3p::randomize_uint8_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D uint16[[N]] randomized(D uint16[[N]] arr) {
+    __syscall("shared3p::randomize_uint16_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D uint32[[N]] randomized(D uint32[[N]] arr) {
+    __syscall("shared3p::randomize_uint32_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D uint[[N]] randomized(D uint[[N]] arr) {
+    __syscall("shared3p::randomize_uint64_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D int8[[N]] randomized(D int8[[N]] arr) {
+    __syscall("shared3p::randomize_int8_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D int16[[N]] randomized(D int16[[N]] arr) {
+    __syscall("shared3p::randomize_int16_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D int32[[N]] randomized(D int32[[N]] arr) {
+    __syscall("shared3p::randomize_int32_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D int[[N]] randomized(D int[[N]] arr) {
+    __syscall("shared3p::randomize_int64_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D xor_uint8[[N]] randomized(D xor_uint8[[N]] arr) {
+    __syscall("shared3p::randomize_xor_uint8_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D xor_uint16[[N]] randomized(D xor_uint16[[N]] arr) {
+    __syscall("shared3p::randomize_xor_uint16_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D xor_uint32[[N]] randomized(D xor_uint32[[N]] arr) {
+    __syscall("shared3p::randomize_xor_uint32_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D xor_uint64[[N]] randomized(D xor_uint64[[N]] arr) {
     __syscall("shared3p::randomize_xor_uint64_vec", __domainid(D), arr);
     return arr;
 }
