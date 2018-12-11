@@ -23,14 +23,14 @@ module profiling;
 
 /**
  * @file
- * \defgroup module_profiling profiling.sc
+ * \defgroup profiling profiling.sc
  * \defgroup profiling_new_section_type newSectionType
  * \defgroup profiling_start_section startSection
  * \defgroup profiling_end_section endSection
  * \defgroup profiling_flush_profile_log flushProfileLog
  */
 
-/** \addtogroup module_profiling
+/** \addtogroup profiling
  * @{
  * @brief Module for profiling SecreC programs
  */
