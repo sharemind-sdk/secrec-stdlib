@@ -23,14 +23,14 @@ module trace;
 
 /**
  * @file
- * \defgroup module_trace trace.sc
+ * \defgroup trace trace.sc
  * \defgroup trace_operation traceOperation
  * \defgroup trace_load traceLoad
  * \defgroup trace_load_column traceLoad(column)
  * \defgroup trace_save traceSave
  */
 
-/** \addtogroup module_trace
+/** \addtogroup trace
  * @{
  * @brief Module for tracing operations in sharemind-trace format
  */
@@ -70,6 +70,7 @@ void traceLoad(string ds, string table, string column) {
 void traceLoad(string ds, string table) {
     print("load-table,ds=\"$ds\",name=\"$table\"");
 }
+/** @} */
 
 /**
  * \addtogroup trace_save
