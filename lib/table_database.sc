@@ -44,6 +44,8 @@ import stdlib;
  * \defgroup tdb_table_create2 tdbTableCreateWithErrorCode
  * \defgroup tdb_table_delete tdbTableDelete
  * \defgroup tdb_table_exists tdbTableExists
+ * \defgroup tdb_table_get_attributes tdbTableGetAttributes
+ * \defgroup tdb_table_set_attributes tdbTableSetAttributes
  * \defgroup tdb_insert_row tdbInsertRow
  * \defgroup tdb_get_row_count tdbGetRowCount
  * \defgroup tdb_vmap_string_vector_size tdbVmapStringVectorSize
@@ -328,6 +330,33 @@ bool tdbTableExists (string datasource, string table) {
     uint64 rv = 0;
     __syscall ("tdb_tbl_exists", __cref datasource, __cref table, __return rv);
     return rv != 0;
+}
+/** @} */
+
+/** \addtogroup tdb_table_get_attributes
+ *  @{
+ *  @brief Get user defined attributes of a table
+ *  @param ds - name of the data source containing the table
+ *  @param table - table name
+ *  @return returns a vector map with two string vectors - "keys" and "values"
+ */
+uint tdbTableGetAttributes(string ds, string table) {
+    uint vmap;
+    __syscall("tdb_get_attributes", __cref ds, __cref table, __return vmap);
+    return vmap;
+}
+/** @} */
+
+/** \addtogroup tdb_table_set_attributes
+ *  @{
+ *  @brief Set user defined attributes of a table
+ *  @param ds - name of the data source containing the table
+ *  @param table - table name
+ *  @param vmap - vector map containing the key-value attribute pairs
+ *  as two string vectors - "keys" and "values"
+ */
+void tdbTableSetAttributes(string ds, string table, uint vmap) {
+    __syscall("tdb_set_attributes", __cref ds, __cref table, vmap);
 }
 /** @} */
 
