@@ -43,6 +43,8 @@ import stdlib;
  * \defgroup paired_t_test pairedTTest
  * \defgroup chisq chiSquared
  * \defgroup chisq_cb chiSquared(with codebook)
+ * \defgroup chisq_goodness_of_fit chiSquared(goodness of fit)
+ * \defgroup chisq_goodness_of_fit_prob chiSquared(goodness of fit with probabilities)
  * \defgroup wilcoxon_rank_sum wilcoxonRankSum
  * \defgroup wilcoxon_signed_rank wilcoxonSignedRank
  * \defgroup hypothesis_testing_constants constants
@@ -584,8 +586,8 @@ D FT _chiSquaredXClasses (D UT[[2]] contTable, T dummy) {
 
     D FT[[1]] flatFreq (k * 2);
 
-    flatFreq[0 : k] = (FT)contTable [:, 0];
-    flatFreq[k : k * 2] = (FT)contTable [:, 1];
+    flatFreq[0 : k] = (FT) contTable [:, 0];
+    flatFreq[k : k * 2] = (FT) contTable [:, 1];
 
     // Calculate sum ((realFreq - expectedFreq)**2 / expectedFreq) in parallel as much as possible
     D FT[[1]] diffs (k * 2), squares (k * 2), quotients (k * 2);
@@ -595,6 +597,20 @@ D FT _chiSquaredXClasses (D UT[[2]] contTable, T dummy) {
     quotients = squares / expectedFreq;
 
     return sum (quotients);
+}
+
+/*
+ * observed - observed frequency of each class
+ * p - theoretical probability of each class
+ */
+template<domain D : shared3p, type T, type FT>
+D FT _chiSquared(D T[[1]] observed, D FT[[1]] p) {
+    D T N = sum(observed);
+    D FT[[1]] expected = p * (FT) N;
+    D FT[[1]] diff = (FT) observed - expected;
+    D FT[[1]] sqr = diff * diff;
+    D FT[[1]] quotients = sqr / expected;
+    return sum(quotients);
 }
 /** \endcond */
 
@@ -686,6 +702,48 @@ D float64 chiSquared (D uint64[[1]] data,
 }
 /** @} */
 
+/** \addtogroup chisq_goodness_of_fit
+ *  @{
+ *  @brief Perform Pearson's chi-squared goodness of fit test
+ *  @note **D** - any protection domain
+ *  @note Supported types - \ref uint32 "uint32" / \ref uint64 "uint64"
+ *  @param observed - observed frequency of each class
+ *  @return returns chi-squared test statistic
+ */
+template<domain D>
+D float32 chiSquared (D uint32[[1]] observed) {
+    uint n = size(observed);
+    D float32[[1]] p(n) = 1 / (float32) n;
+    return _chiSquared (observed, p);
+}
+
+template<domain D>
+D float64 chiSquared (D uint64[[1]] observed) {
+    uint n = size(observed);
+    D float64[[1]] p(n) = 1 / (float64) n;
+    return _chiSquared (observed, p);
+}
+/** @} */
+
+/** \addtogroup chisq_goodness_of_fit_prob
+ *  @{
+ *  @brief Perform Pearson's chi-squared goodness of fit test
+ *  @note **D** - any protection domain
+ *  @note Supported types - \ref uint32 "uint32" / \ref uint64 "uint64"
+ *  @param observed - observed frequency of each class
+ *  @param p - theoretical probability of each class
+ *  @return returns chi-squared test statistic
+ */
+template<domain D>
+D float32 chiSquared (D uint32[[1]] observed, D float32[[1]] p) {
+    return _chiSquared (observed, p);
+}
+
+template<domain D>
+D float64 chiSquared (D uint64[[1]] observed, D float64[[1]] p) {
+    return _chiSquared (observed, p);
+}
+/** @} */
 
 /** \cond */
 template <domain D, type T, type FT>
