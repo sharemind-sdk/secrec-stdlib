@@ -25,7 +25,6 @@ import shared3p_sort;
 
 domain pd_shared3p shared3p;
 
-
 template<type T, type G>
 bool tTest_test_samples (T data, G data2) {
 	pd_shared3p T[[1]] a = {2, 2, 3, 3, 4, 5, 3, 2, 2, 1, 1};
@@ -42,7 +41,6 @@ bool tTest_test_samples (T data, G data2) {
 
 	return true;
 }
-
 
 template<type T, type G>
 bool tTest_test (T data, G data2) {
@@ -63,7 +61,6 @@ bool tTest_test (T data, G data2) {
 	return true;
 }
 
-
 template<type T, type G>
 bool tTest_test_paired (T data, G data2) {
 	pd_shared3p T[[1]] a = {2, 2, 3, 3, 4, 5, 3, 2, 2, 1, 1};
@@ -81,7 +78,6 @@ bool tTest_test_paired (T data, G data2) {
 	return true;
 }
 
-
 template<type T>
 bool multiple_testing_test (T data) {
 	pd_shared3p T[[1]] a = {-0.746104585315861, 1.09965460219645, 6.07052021555544, 7.89302942941279};
@@ -92,7 +88,6 @@ bool multiple_testing_test (T data) {
 
 	return all (declassify (sort (result) == expected_result));
 }
-
 
 template<type T, type G>
 bool mann_whitney_u_test (T data, G data2) {
@@ -110,7 +105,6 @@ bool mann_whitney_u_test (T data, G data2) {
 
 	return isNegligible (error1) && isNegligible (error2) && isNegligible (error3);
 }
-
 
 template<type T, type G>
 bool wilcoxon_rank_sum_test (T data, G data2) {
@@ -130,7 +124,6 @@ bool wilcoxon_rank_sum_test (T data, G data2) {
 	return isNegligible (error1) && isNegligible (error2) && isNegligible (error3);
 }
 
-
 template<type T, type G>
 bool wilcoxon_signed_rank_test (T data, G data2) {
 	pd_shared3p T[[1]] a = {2, 2, 3, 3, 4, 5, 3, 2, 2, 1, 1};
@@ -149,7 +142,6 @@ bool wilcoxon_signed_rank_test (T data, G data2) {
 	return isNegligible (error1) && isNegligible (error2) && isNegligible (error3);
 }
 
-
 template<type T, type G>
 bool chi_squared_test (T data, G data2) {
 	pd_shared3p T[[2]] a = reshape ({0, 3,
@@ -165,7 +157,14 @@ bool chi_squared_test (T data, G data2) {
 	return isNegligible(relative_error);
 }
 
-
+template<type T, type FT>
+bool chi_squared_gof_test (T proxy, FT floatProxy) {
+    pd_shared3p T[[1]] x = {3, 3, 1, 3, 2, 2, 5, 2, 2, 1, 5, 5, 5, 1, 5, 1, 5, 5, 2, 2};
+    pd_shared3p FT res = chiSquared (x);
+    pd_shared3p FT expected = 16.6666666666667;
+    FT rel_err = declassify ((res - expected) / expected);
+    return isNegligible (rel_err);
+}
 
 void main () {
 	string test_prefix = "tTest (two sample vectors)";
@@ -176,7 +175,7 @@ void main () {
 	test (test_prefix, tTest_test (0::int32, 0::float32), 0::int32);
 	test (test_prefix, tTest_test (0::int64, 0::float64), 0::int64);
 
-	test_prefix = "PairedTTest";
+	test_prefix = "pairedTTest";
 	test (test_prefix, tTest_test_paired (0::int32, 0::float32), 0::int32);
 	test (test_prefix, tTest_test_paired (0::int64, 0::float64), 0::int64);
 
@@ -184,21 +183,25 @@ void main () {
 	test (test_prefix, multiple_testing_test (0::float32), 0::float32);
 	test (test_prefix, multiple_testing_test (0::float64), 0::float64);
 
-	test_prefix = "MannWhitneyU";
+	test_prefix = "mannWhitneyU";
 	test (test_prefix, mann_whitney_u_test (0::int32, 0::float32), 0::float32);
 	test (test_prefix, mann_whitney_u_test (0::int64, 0::float64), 0::float64);
 
-	test_prefix = "WilcoxonRankSum";
+	test_prefix = "wilcoxonRankSum";
 	test (test_prefix, wilcoxon_rank_sum_test (0::int32, 0::float32), 0::int32);
 	test (test_prefix, wilcoxon_rank_sum_test (0::int64, 0::float64), 0::int64);
 
-	test_prefix = "WilcoxonSignedRank";
+	test_prefix = "wilcoxonSignedRank";
 	test (test_prefix, wilcoxon_signed_rank_test (0::int32, 0::float32), 0::int32);
 	test (test_prefix, wilcoxon_signed_rank_test (0::int64, 0::float64), 0::int64);
 
-	test_prefix = "ChiSquared";
+	test_prefix = "chiSquared (independence)";
 	test (test_prefix, chi_squared_test (0::uint32, 0::float32), 0::uint32);
 	test (test_prefix, chi_squared_test (0::uint64, 0::float64), 0::uint64);
+
+    test_prefix = "chiSquared (goodness of fit)";
+    test (test_prefix, chi_squared_test (0u32, 0f32), 0u32);
+    test (test_prefix, chi_squared_test (0u64, 0f64), 0u64);
 
 	test_report ();
 
