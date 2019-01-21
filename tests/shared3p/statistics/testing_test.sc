@@ -144,65 +144,76 @@ bool wilcoxon_signed_rank_test (T data, G data2) {
 
 template<type T, type G>
 bool chi_squared_test (T data, G data2) {
-	pd_shared3p T[[2]] a = reshape ({0, 3,
-									 1, 2,
-									 2, 1,
-									 3, 0}, 4, 2);
-
-	pd_shared3p G result = chiSquared (a);
-	pd_shared3p G expected_result = 6.66666666666667;
-
-	G relative_error = declassify ((result - expected_result) / expected_result);
-
-	return isNegligible(relative_error);
+    pd_shared3p T[[2]] a = reshape ({0, 3,
+                                     1, 2,
+                                     2, 1,
+                                     3, 0}, 4, 2);
+    G result = declassify (chiSquared (a));
+    G expected_result = 6.66666666666667;
+    G relative_error = (result - expected_result) / expected_result;
+    return isNegligible (relative_error);
 }
 
 template<type T, type FT>
 bool chi_squared_gof_test (T proxy, FT floatProxy) {
     pd_shared3p T[[1]] x = {3, 3, 1, 3, 2, 2, 5, 2, 2, 1, 5, 5, 5, 1, 5, 1, 5, 5, 2, 2};
-    pd_shared3p FT res = chiSquared (x);
-    pd_shared3p FT expected = 16.6666666666667;
-    FT rel_err = declassify ((res - expected) / expected);
+    FT res = declassify (chiSquared (x));
+    FT expected = 16.6666666666667;
+    FT rel_err = (res - expected) / expected;
+    return isNegligible (rel_err);
+}
+
+template<type T, type FT>
+bool chi_squared_pq_test (T proxy, FT floatProxy) {
+    pd_shared3p T[[2]] ct = reshape({3, 2, 3,
+                                     2, 1, 2,
+                                     1, 0, 6}, 3, 3);
+    FT res = declassify(chiSquared (ct));
+    FT expected = 4.41017316017316;
+    FT rel_err = (res - expected) / expected;
     return isNegligible (rel_err);
 }
 
 void main () {
 	string test_prefix = "tTest (two sample vectors)";
-	test (test_prefix, tTest_test_samples (0::int32, 0::float32), 0::int32);
-	test (test_prefix, tTest_test_samples (0::int64, 0::float64), 0::int64);
+	test (test_prefix, tTest_test_samples (0i32, 0f32), 0i32);
+	test (test_prefix, tTest_test_samples (0i64, 0f64), 0i64);
 
 	test_prefix = "tTest";
-	test (test_prefix, tTest_test (0::int32, 0::float32), 0::int32);
-	test (test_prefix, tTest_test (0::int64, 0::float64), 0::int64);
+	test (test_prefix, tTest_test (0i32, 0f32), 0i32);
+	test (test_prefix, tTest_test (0i64, 0f64), 0i64);
 
 	test_prefix = "pairedTTest";
-	test (test_prefix, tTest_test_paired (0::int32, 0::float32), 0::int32);
-	test (test_prefix, tTest_test_paired (0::int64, 0::float64), 0::int64);
+	test (test_prefix, tTest_test_paired (0i32, 0f32), 0i32);
+	test (test_prefix, tTest_test_paired (0i64, 0f64), 0i64);
 
 	test_prefix = "multipleTesting";
-	test (test_prefix, multiple_testing_test (0::float32), 0::float32);
-	test (test_prefix, multiple_testing_test (0::float64), 0::float64);
+	test (test_prefix, multiple_testing_test (0f32), 0f32);
+	test (test_prefix, multiple_testing_test (0f64), 0f64);
 
 	test_prefix = "mannWhitneyU";
-	test (test_prefix, mann_whitney_u_test (0::int32, 0::float32), 0::float32);
-	test (test_prefix, mann_whitney_u_test (0::int64, 0::float64), 0::float64);
+	test (test_prefix, mann_whitney_u_test (0i32, 0f32), 0f32);
+	test (test_prefix, mann_whitney_u_test (0i64, 0f64), 0f64);
 
 	test_prefix = "wilcoxonRankSum";
-	test (test_prefix, wilcoxon_rank_sum_test (0::int32, 0::float32), 0::int32);
-	test (test_prefix, wilcoxon_rank_sum_test (0::int64, 0::float64), 0::int64);
+	test (test_prefix, wilcoxon_rank_sum_test (0i32, 0f32), 0i32);
+	test (test_prefix, wilcoxon_rank_sum_test (0i64, 0f64), 0i64);
 
 	test_prefix = "wilcoxonSignedRank";
-	test (test_prefix, wilcoxon_signed_rank_test (0::int32, 0::float32), 0::int32);
-	test (test_prefix, wilcoxon_signed_rank_test (0::int64, 0::float64), 0::int64);
+	test (test_prefix, wilcoxon_signed_rank_test (0i32, 0f32), 0i32);
+	test (test_prefix, wilcoxon_signed_rank_test (0i64, 0f64), 0i64);
 
 	test_prefix = "chiSquared (independence)";
-	test (test_prefix, chi_squared_test (0::uint32, 0::float32), 0::uint32);
-	test (test_prefix, chi_squared_test (0::uint64, 0::float64), 0::uint64);
+	test (test_prefix, chi_squared_test (0u32, 0f32), 0u32);
+	test (test_prefix, chi_squared_test (0u64, 0f64), 0u64);
+
+    test_prefix = "chiSquared (independence, p x q)";
+    test (test_prefix, chi_squared_pq_test (0u32, 0f32), 0u32);
+    test (test_prefix, chi_squared_pq_test (0u32, 0f32), 0u32);
 
     test_prefix = "chiSquared (goodness of fit)";
-    test (test_prefix, chi_squared_test (0u32, 0f32), 0u32);
-    test (test_prefix, chi_squared_test (0u64, 0f64), 0u64);
+    test (test_prefix, chi_squared_gof_test (0u32, 0f32), 0u32);
+    test (test_prefix, chi_squared_gof_test (0u64, 0f64), 0u64);
 
 	test_report ();
-
 }

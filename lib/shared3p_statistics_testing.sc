@@ -536,8 +536,8 @@ D float64 pairedTTest (D float64[[1]] sample1, D float64[[1]] sample2, D bool[[1
 
 
 /** \cond */
-template <domain D, type T, type FT, type UT>
-D FT _chiSquared2Classes (D UT[[2]] contTable, T dummy)
+template <domain D, type FT, type UT>
+D FT _chiSquared2Classes (D UT[[2]] contTable)
 {
     D FT result;
     D FT a, b, c, d;
@@ -561,40 +561,39 @@ D FT _chiSquared2Classes (D UT[[2]] contTable, T dummy)
     return result;
 }
 
-// For reference, see Test 43 in the book "100 Statistical Tests"
-template <domain D, type T, type FT, type UT>
-D FT _chiSquaredXClasses (D UT[[2]] contTable, T dummy) {
-    // Calculate expected frequencies as {(row subtotal x column subtotal) / total}
-    uint[[1]] shapeContingency = shape (contTable);
-    uint k = shapeContingency[0];
+// For reference, see Test 44 in the book "100 Statistical Tests"
+template <domain D, type FT, type UT>
+D FT _chiSquaredXClasses (D UT[[2]] contTable) {
+    uint[[1]] s = shape (contTable);
+    uint q = s[0];
+    uint p = s[1];
 
-    D UT[[1]] colSums (k), rowSums (2);
-    colSums = contTable[:, 0] + contTable[:, 1];
-    rowSums[0] = sum (contTable [:, 0]);
-    rowSums[1] = sum (contTable [:, 1]);
-    D UT total = rowSums[0] + rowSums[1];
-    D FT[[1]] mulParA (2 * k), mulParB (2 * k), mulParRes (2 * k);
+    D UT[[1]] rowS = rowSums (contTable);
+    D UT[[1]] colS = colSums (contTable);
 
-    mulParA [0 : k] = (FT) colSums;
-    mulParA [k : 2 * k] = (FT) colSums;
-    mulParB [0 : k] = (FT) rowSums[0];
-    mulParB [k : 2 * k] = (FT) rowSums[1];
+    D UT total = sum (rowS);
+    D FT[[1]] mulParA (p * q),
+        mulParB (p * q),
+        mulParRes (p * q);
+
+    for (uint i = 0; i < q; ++i) {
+        mulParA[i * p : (i + 1) * p] = (FT) colS;
+        mulParB[i * p : (i + 1) * p] = (FT) rowS[i];
+    }
+
     mulParRes = mulParA * mulParB;
 
-    D FT[[1]] totals (k * 2) = (FT) total;
+    D FT[[1]] totals (p * q) = (FT) total;
     D FT[[1]] expectedFreq = (FT) mulParRes / totals;
+    D FT[[1]] flatFreq (p * q);
 
-    D FT[[1]] flatFreq (k * 2);
+    for (uint i = 0; i < q; ++i) {
+        flatFreq[i * p : (i + 1) * p] = (FT) contTable[i, :];
+    }
 
-    flatFreq[0 : k] = (FT) contTable [:, 0];
-    flatFreq[k : k * 2] = (FT) contTable [:, 1];
-
-    // Calculate sum ((realFreq - expectedFreq)**2 / expectedFreq) in parallel as much as possible
-    D FT[[1]] diffs (k * 2), squares (k * 2), quotients (k * 2);
-
-    diffs = flatFreq - expectedFreq;
-    squares = diffs * diffs;
-    quotients = squares / expectedFreq;
+    D FT[[1]] diffs = flatFreq - expectedFreq;
+    D FT[[1]] squares = diffs * diffs;
+    D FT[[1]] quotients = squares / expectedFreq;
 
     return sum (quotients);
 }
@@ -635,28 +634,29 @@ D FT _chiSquared(D T[[1]] observed, D FT[[1]] p) {
 template <domain D>
 D float32 chiSquared (D uint32[[2]] contTable) {
     uint[[1]] tableShape = shape (contTable);
-    assert (tableShape[0] >= 2 && tableShape[1] == 2);
 
-    int32 i;
+    print("šeip");
+    printVector(tableShape);
+
+    assert (tableShape[0] >= 2);
+    assert (tableShape[1] >= 2);
 
     if (shape (contTable)[0] == 2)
-        return _chiSquared2Classes (contTable, i);
+        return _chiSquared2Classes (contTable);
     else
-        return _chiSquaredXClasses (contTable, i);
+        return _chiSquaredXClasses (contTable);
 }
 
 template <domain D>
 D float64 chiSquared (D uint64[[2]] contTable) {
     uint[[1]] tableShape = shape (contTable);
     assert (tableShape[0] >= 2);
-    assert (tableShape[1] == 2);
-
-    int64 i;
+    assert (tableShape[1] >= 2);
 
     if (shape (contTable)[0] == 2)
-        return _chiSquared2Classes (contTable, i);
+        return _chiSquared2Classes (contTable);
     else
-        return _chiSquaredXClasses (contTable, i);
+        return _chiSquaredXClasses (contTable);
 }
 /** @} */
 
