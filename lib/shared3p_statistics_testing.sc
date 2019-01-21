@@ -634,10 +634,6 @@ D FT _chiSquared(D T[[1]] observed, D FT[[1]] p) {
 template <domain D>
 D float32 chiSquared (D uint32[[2]] contTable) {
     uint[[1]] tableShape = shape (contTable);
-
-    print("šeip");
-    printVector(tableShape);
-
     assert (tableShape[0] >= 2);
     assert (tableShape[1] >= 2);
 
