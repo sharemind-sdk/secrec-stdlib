@@ -191,7 +191,7 @@ Listing 6: Declassify example
 
 The binary comma operator first evaluates its first argument and then evaluates its second argument. The result of the first argument is discarded, and the result of the second argument is returned.
 
-The comma operator is distinct from commas used as separators as in function parameter lists, function argument lists, variable declarations etc. To use the comma operator in such contexts one must first parenthesize the expression or subexpression containing the comma operator. The comma operator is most useful in contexts where additional side-effects are required in an expression, such as in the initialization and increment expressions of a **for**-loop, for example:
+The comma operator is distinct from commas used as separators as in function parameter lists, function argument lists, variable declarations etc. To use the comma operator in such contexts one must first parenthesize the expression or subexpression containing the comma operator. The comma operator is most useful in contexts where additional side-effects are required in an expression, such as in the initialization and increment expressions of a for-loop, for example:
 
 Listing 7: Example of comma operator used in the increment expression of a for-loop
 \code
