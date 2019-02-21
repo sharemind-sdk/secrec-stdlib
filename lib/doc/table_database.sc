@@ -46,7 +46,7 @@ Listing 1: Creating an empty table
 		tdbOpenConnection (datasource);
 		pd_shared3p int32 data_type;
 
-		tdbTableCreate (datasource, table_name, data_type);
+		tdbTableCreate (datasource, table_name, data_type, (uint64) 3);
 	}
 \endcode
 
