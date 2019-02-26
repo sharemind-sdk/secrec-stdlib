@@ -22,6 +22,7 @@
 */
 module shared3p;
 
+import matrix; // for log gamma
 import stdlib;
 
 kind shared3p {
@@ -87,6 +88,7 @@ kind shared3p {
 * \defgroup shared3p_reshare reshare
 * \defgroup shared3p_choose1 choose(single condition)
 * \defgroup shared3p_choose2 choose(multiple conditions)
+* \defgroup shared3p_log_gamma logGamma
 */
 
 /** \addtogroup shared3p
@@ -2677,7 +2679,6 @@ D xor_uint64[[N]] choose(D bool cond, D xor_uint64[[N]] first, D xor_uint64[[N]]
  *  @return pointwise check if **cond** at a certain position is **true** or **false**. if **true** the element of **first** at that position is returned else the element of **second** at that position is returned
  *  @leakage{None}
  */
-
 template <domain D : shared3p, dim N>
 D xor_uint8[[N]] choose(D bool[[N]] cond, D xor_uint8[[N]] first, D xor_uint8[[N]] second) {
     D xor_uint8[[N]] out = first;
@@ -2705,8 +2706,68 @@ D xor_uint64[[N]] choose(D bool[[N]] cond, D xor_uint64[[N]] first, D xor_uint64
     __syscall ("shared3p::choose_xor_uint64_vec", __domainid (D), cond, first, second, out);
     return out;
 }
-
 /** @}*/
+
+/** \cond */
+float64[[1]] _logGammaCoeffs = {
+    0.99999999999999709182,
+    57.156235665862923517,
+    -59.597960355475491248,
+    14.136097974741747174,
+    -0.49191381609762019978,
+    0.33994649984811888699e-4,
+    0.46523628927048575665e-4,
+    -0.98374475304879564677e-4,
+    0.15808870322491248884e-3,
+    -0.21026444172410488319e-3,
+    0.21743961811521264320e-3,
+    -0.16431810653676389022e-3,
+    0.84418223983852743293e-4,
+    -0.26190838401581408670e-4,
+    0.36899182659531622704e-5
+};
+
+float64 _g_plus_half = 607 / 128.0 + 0.5;
+
+float64 _half_log_2_pi = 0.9189385332046727418;
+/** \endcond */
+
+/*
+ * Lanczos approximation with coefficients from
+ * http://my.fit.edu/~gabdo/gamma.txt
+ */
+
+/** \addtogroup shared3p_log_gamma
+ *  @{
+ *  @brief Compute the logarithm of the Gamma function.
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref float64 "float64"
+ *  @param x - input
+ *  @return returns log(Gamma(x))
+ *  @leakage{None}
+ */
+template<domain D : shared3p>
+D float64[[1]] logGamma(D float64[[1]] x) {
+    uint n = size(x);
+    uint nCoeff = size(_logGammaCoeffs);
+
+    float64[[2]] addL(n, nCoeff - 1);
+    D float64[[2]] addR(n, nCoeff - 1);
+    D float64[[2]] divL(n, nCoeff - 1);
+    for (uint i = 1; i < nCoeff; ++i) {
+        addL[:, i - 1] = (float64) i;
+        addR[:, i - 1] = x;
+        divL[:, i - 1] = _logGammaCoeffs[i];
+    }
+
+    D float64[[2]] addRes = addL + addR;
+    D float64[[2]] divRes = divL / addRes;
+    D float64[[1]] sums = rowSums(divRes) + _logGammaCoeffs[0];
+    D float64[[1]] tmp = x + _g_plus_half;
+
+    return ((x + 0.5) * ln(tmp)) - tmp + _half_log_2_pi + ln(sums / x);
+}
+/** @} */
 
 /** \cond */
 
