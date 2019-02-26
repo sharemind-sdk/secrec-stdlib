@@ -77,6 +77,7 @@ struct GLMResult {
  */
 int64 GLM_FAMILY_GAUSSIAN       = 0;
 int64 GLM_FAMILY_BINOMIAL_LOGIT = 1;
+int64 GLM_FAMILY_GAMMA          = 2;
 
 int64 GLM_SOLE_METHOD_INVERT             = 0;
 int64 GLM_SOLE_METHOD_LU_DECOMPOSITION   = 1;
@@ -100,7 +101,8 @@ _glm(D FT[[1]] dependent,
      uint SOLEiterations)
 {
     assert(family == GLM_FAMILY_GAUSSIAN ||
-           family == GLM_FAMILY_BINOMIAL_LOGIT);
+           family == GLM_FAMILY_BINOMIAL_LOGIT ||
+           family == GLM_FAMILY_GAMMA);
 
     assert(SOLEmethod == GLM_SOLE_METHOD_INVERT ||
            SOLEmethod == GLM_SOLE_METHOD_LU_DECOMPOSITION ||
@@ -201,10 +203,13 @@ template<domain D, type FT>
 D FT[[2]] _initialmu(D FT[[2]] y, int64 family) {
     D FT[[2]] res(shape(y)[0], 1);
 
-    if (family == GLM_FAMILY_GAUSSIAN)
+    if (family == GLM_FAMILY_GAUSSIAN) {
         res = y;
-    else if (family == GLM_FAMILY_BINOMIAL_LOGIT)
+    } else if (family == GLM_FAMILY_BINOMIAL_LOGIT) {
         res = (y + 0.5) / 2;
+    } else if (family == GLM_FAMILY_GAMMA) {
+        res = y;
+    }
 
     return res;
 }
@@ -217,8 +222,9 @@ D FT[[2]] _link(D FT[[2]] mu, int64 family) {
         // Link is id
         res = mu;
     } else if (family == GLM_FAMILY_BINOMIAL_LOGIT) {
-        // Link is ln(mu / (1 - mu))
         res = ln(mu / (1 - mu));
+    } else if (family == GLM_FAMILY_GAMMA) {
+        res = 1 / mu;
     }
 
     return res;
@@ -235,6 +241,8 @@ D FT[[2]] _linkInverse(D FT[[2]] eta, int64 family) {
         // exp(eta) / (exp(eta) + 1)
         D FT[[2]] x = exp(eta);
         res = x / (x + 1);
+    } else if (family == GLM_FAMILY_GAMMA) {
+        res = 1 / eta;
     }
 
     return res;
@@ -253,6 +261,8 @@ D FT[[2]] _derivative(D FT[[2]] eta, int64 family) {
         D FT[[2]] x = exp(eta);
         D FT[[2]] xp1 = x + 1;
         res = x / (xp1 * xp1);
+    } else if (family == GLM_FAMILY_GAMMA) {
+        res = - 1 / (eta * eta);
     }
 
     return res;
@@ -266,6 +276,8 @@ D FT[[2]] _variance(D FT[[2]] mu, int64 family) {
         res = 1;
     } else if (family == GLM_FAMILY_BINOMIAL_LOGIT) {
         res = mu * (1 - mu);
+    } else if (family == GLM_FAMILY_GAMMA) {
+        res = mu * mu;
     }
 
     return res;
@@ -329,6 +341,12 @@ D T[[1]] _glmStandardErrors(D T[[1]] dependent,
         D T[[2]] residuals = _toCol(dependent) - eta;
         // No weights since they are all 1 for Gaussian
         D T disp = sum((residuals * residuals)[:, 0]) / (T) (observationCount - varCount);
+        res *= disp;
+    } else if (family == GLM_FAMILY_GAMMA) {
+        // Estimate dispersion
+        D T[[2]] residuals = (_toCol(dependent) - mu) / derivative;
+        D T disp = sum((weight * residuals * residuals)[:, 0]) /
+            (T) (observationCount - varCount);
         res *= disp;
     } else if (family == GLM_FAMILY_BINOMIAL_LOGIT) {
         // Dispersion is 1
@@ -503,6 +521,8 @@ D T _glmaic(D T[[1]] y, GLMResult<D, T> glm) {
     } else if (glm.family == GLM_FAMILY_BINOMIAL_LOGIT) {
         D T ll = sum(y * ln(glm.means / (1 - glm.means)) + ln(1 - glm.means));
         aic = 2 * (T) size(glm.coefficients) - 2 * ll;
+    } else if (glm.family == GLM_FAMILY_GAMMA) {
+        
     } else {
         assert(false); // Unknown family
     }
