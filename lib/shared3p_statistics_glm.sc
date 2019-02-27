@@ -547,9 +547,9 @@ D T _glmaic(D T[[1]] y, GLMResult<D, T> glm) {
         D T[[1]] ymu = choose(y == 0, one, y / glm.means);
         D T dev = sum(- 2 * (ln(ymu) - (y - glm.means) / glm.means));
         D T disp = dev / (T) n;
-        print("disp");
-        print(declassify(disp));
-        D T ll = sum(_logDGamma(y, 1 / disp, glm.means * disp)) - 1;
+        D T ll = sum((T) _logDGamma((float64) y,
+                                    (float64) (1 / disp),
+                                    (float64) (glm.means * disp))) - 1;
         aic = 2 * (T) size(glm.coefficients) - 2 * ll;
     } else {
         assert(false); // Unknown family
