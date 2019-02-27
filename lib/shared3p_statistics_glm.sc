@@ -468,37 +468,37 @@ generalizedLinearModel(D float64[[1]] dependent, D float64[[2]] variables, int64
 template<domain D : shared3p>
 D float32[[1]] glmStandardErrors(D int32[[1]] dependent,
                                  D int32[[2]] variables,
-                                 D float32[[1]] parameters,
+                                 D float32[[1]] coefficients,
                                  int64 family)
 {
-    return _glmStandardErrors((float32) dependent, (float32) variables, parameters, family);
+    return _glmStandardErrors((float32) dependent, (float32) coefficients, parameters, family);
 }
 
 template<domain D : shared3p>
 D float64[[1]] glmStandardErrors(D int64[[1]] dependent,
                                  D int64[[2]] variables,
-                                 D float64[[1]] parameters,
+                                 D float64[[1]] coefficients,
                                  int64 family)
 {
-    return _glmStandardErrors((float64) dependent, (float64) variables, parameters, family);
+    return _glmStandardErrors((float64) dependent, (float64) variables, coefficients, family);
 }
 
 template<domain D : shared3p>
 D float32[[1]] glmStandardErrors(D float32[[1]] dependent,
                                  D float32[[2]] variables,
-                                 D float32[[1]] parameters,
+                                 D float32[[1]] coefficients,
                                  int64 family)
 {
-    return _glmStandardErrors(dependent, variables, parameters, family);
+    return _glmStandardErrors(dependent, variables, coefficients, family);
 }
 
 template<domain D : shared3p>
 D float64[[1]] glmStandardErrors(D float64[[1]] dependent,
                                  D float64[[2]] variables,
-                                 D float64[[1]] parameters,
+                                 D float64[[1]] coefficients,
                                  int64 family)
 {
-    return _glmStandardErrors(dependent, variables, parameters, family);
+    return _glmStandardErrors(dependent, variables, coefficients, family);
 }
 /** @} */
 
