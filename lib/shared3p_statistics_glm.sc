@@ -471,7 +471,7 @@ D float32[[1]] glmStandardErrors(D int32[[1]] dependent,
                                  D float32[[1]] coefficients,
                                  int64 family)
 {
-    return _glmStandardErrors((float32) dependent, (float32) coefficients, parameters, family);
+    return _glmStandardErrors((float32) dependent, (float32) variables, coefficients, family);
 }
 
 template<domain D : shared3p>
