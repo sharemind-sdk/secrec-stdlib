@@ -506,6 +506,26 @@ D float64[[1]] glmStandardErrors(D float64[[1]] dependent,
 /** @} */
 
 /** \cond */
+
+/*
+ * Logarithm of the density of the Gamma distribution. Shape is a
+ * reserved keyword so we use shp.
+ */
+template<domain D : shared3p>
+D float64[[1]] _logDGamma(D float64[[1]] x, D float64 shp, D float64[[1]] scale) {
+    /*
+     * The formula is:
+     * (shp - 1) ln(x) - x / scale - shp ln(scale) - lnGamma(shp)
+     */
+    uint n = size(x);
+    D float64[[1]] lns(2 * n);
+    lns[:n] = x;
+    lns[n:] = scale;
+    lns = ln(lns);
+    D float64[[1]] shpVec = {shp};
+    return (shp - 1) * lns[:n] - x / scale - shp * lns[n:] - logGamma(shpVec)[0];
+}
+
 template<domain D : shared3p, type T>
 D T _glmaic(D T[[1]] y, GLMResult<D, T> glm) {
     D T aic;
@@ -522,7 +542,15 @@ D T _glmaic(D T[[1]] y, GLMResult<D, T> glm) {
         D T ll = sum(y * ln(glm.means / (1 - glm.means)) + ln(1 - glm.means));
         aic = 2 * (T) size(glm.coefficients) - 2 * ll;
     } else if (glm.family == GLM_FAMILY_GAMMA) {
-        
+        uint n = size(y);
+        D T[[1]] one(n) = 1.0;
+        D T[[1]] ymu = choose(y == 0, one, y / glm.means);
+        D T dev = sum(- 2 * (ln(ymu) - (y - glm.means) / glm.means));
+        D T disp = dev / (T) n;
+        print("disp");
+        print(declassify(disp));
+        D T ll = sum(_logDGamma(y, 1 / disp, glm.means * disp)) - 1;
+        aic = 2 * (T) size(glm.coefficients) - 2 * ll;
     } else {
         assert(false); // Unknown family
     }

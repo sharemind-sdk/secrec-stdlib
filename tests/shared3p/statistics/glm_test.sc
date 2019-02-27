@@ -62,7 +62,7 @@ bool glm_test_binomial_logit (T proxy) {
     T[[1]] correct = {4.1795259575741, 2.90761690234768};
     T[[1]] result = declassify(generalizedLinearModel(dependent, variables,
                                                       GLM_FAMILY_BINOMIAL_LOGIT,
-                                                      10 :: uint).coefficients);
+                                                      10u64).coefficients);
     return checkError (result, correct);
 }
 
@@ -86,7 +86,7 @@ bool glm_test_gaussian_standard_errors (T proxy) {
 
     pd_shared3p T[[1]] params = generalizedLinearModel (dependent, variables,
                                                         GLM_FAMILY_GAUSSIAN,
-                                                        1 :: uint).coefficients;
+                                                        1u64).coefficients;
 
     T[[1]] correct = {0.0678241596985888, 0.0938740634943971, 9.14127043177142};
     T[[1]] result = declassify (glmStandardErrors (dependent, variables,
@@ -101,7 +101,7 @@ bool glm_test_binomial_logit_standard_errors (T proxy) {
 
     pd_shared3p T[[1]] params = generalizedLinearModel (dependent, variables,
                                                         GLM_FAMILY_BINOMIAL_LOGIT,
-                                                        10 :: uint).coefficients;
+                                                        10u64).coefficients;
 
     T[[1]] correct = {1.52981053976479, 1.08391410852815};
     T[[1]] errors = declassify (glmStandardErrors (dependent, variables,
@@ -117,7 +117,7 @@ bool glm_test_gamma_standard_errors (T proxy) {
 
     pd_shared3p T[[1]] params = generalizedLinearModel (dependent, variables,
                                                         GLM_FAMILY_GAMMA,
-                                                        10 :: uint).coefficients;
+                                                        10u64).coefficients;
 
     T[[1]] correct = {0.10380816933941, 0.51836580460864};
     T[[1]] errors = declassify (glmStandardErrors (dependent, variables,
@@ -131,7 +131,7 @@ bool glm_test_gauss_aic (T proxy) {
     pd_shared3p T[[1]] dependent = (T) gaussDependent;
     pd_shared3p T[[2]] variables = (T) gaussVariables;
     GLMResult<pd_shared3p, T> m = generalizedLinearModel (dependent, variables,
-                                                          GLM_FAMILY_GAUSSIAN, 1 :: uint);
+                                                          GLM_FAMILY_GAUSSIAN, 1u64);
     T aic = declassify (GLMAIC (dependent, m));
     T correct = 27.6760089698144;
 
@@ -143,9 +143,21 @@ bool glm_test_binomial_aic (T proxy) {
     pd_shared3p T[[1]] dependent = (T) binomialDependent;
     pd_shared3p T[[2]] variables = (T) binomialVariables;
     GLMResult<pd_shared3p, T> m = generalizedLinearModel (dependent, variables,
-                                                          GLM_FAMILY_BINOMIAL_LOGIT, 10 :: uint);
+                                                          GLM_FAMILY_BINOMIAL_LOGIT, 10u64);
     T aic = declassify (GLMAIC (dependent, m));
     T correct = 24.2553922448486;
+
+    return checkError (aic, correct);
+}
+
+template<type T>
+bool glm_test_gamma_aic (T proxy) {
+    pd_shared3p T[[1]] dependent = (T) gammaDependent;
+    pd_shared3p T[[2]] variables = (T) gammaVariables;
+    GLMResult<pd_shared3p, T> m = generalizedLinearModel (dependent, variables,
+                                                          GLM_FAMILY_GAMMA, 10u64);
+    T aic = declassify (GLMAIC (dependent, m));
+    T correct = -544.72219707391;
 
     return checkError (aic, correct);
 }
@@ -184,6 +196,10 @@ void main () {
     // 32-bit version runs out of bits at some point :(
     //test (test_prefix, glm_test_binomial_aic (0 :: float32), 0 :: float32);
     test (test_prefix, glm_test_binomial_aic (0 :: float64), 0 :: float64);
+
+    test_prefix = "GeneralizedLinearModelAIC(Gamma)";
+    test (test_prefix, glm_test_gamma_aic (0 :: float32), 0 :: float32);
+    test (test_prefix, glm_test_gamma_aic (0 :: float64), 0 :: float64);
 
     test_report ();
 }
