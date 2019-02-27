@@ -78,6 +78,7 @@ struct GLMResult {
 int64 GLM_FAMILY_GAUSSIAN       = 0;
 int64 GLM_FAMILY_BINOMIAL_LOGIT = 1;
 int64 GLM_FAMILY_GAMMA          = 2;
+int64 GLM_FAMILY_POISSON        = 3;
 
 int64 GLM_SOLE_METHOD_INVERT             = 0;
 int64 GLM_SOLE_METHOD_LU_DECOMPOSITION   = 1;
@@ -102,7 +103,8 @@ _glm(D FT[[1]] dependent,
 {
     assert(family == GLM_FAMILY_GAUSSIAN ||
            family == GLM_FAMILY_BINOMIAL_LOGIT ||
-           family == GLM_FAMILY_GAMMA);
+           family == GLM_FAMILY_GAMMA ||
+           family == GLM_FAMILY_POISSON);
 
     assert(SOLEmethod == GLM_SOLE_METHOD_INVERT ||
            SOLEmethod == GLM_SOLE_METHOD_LU_DECOMPOSITION ||
@@ -209,6 +211,8 @@ D FT[[2]] _initialmu(D FT[[2]] y, int64 family) {
         res = (y + 0.5) / 2;
     } else if (family == GLM_FAMILY_GAMMA) {
         res = y;
+    } else if (family == GLM_FAMILY_POISSON) {
+        res = y + 0.1;
     }
 
     return res;
@@ -225,6 +229,8 @@ D FT[[2]] _link(D FT[[2]] mu, int64 family) {
         res = ln(mu / (1 - mu));
     } else if (family == GLM_FAMILY_GAMMA) {
         res = 1 / mu;
+    } else if (family == GLM_FAMILY_POISSON) {
+        res = ln(mu);
     }
 
     return res;
@@ -243,6 +249,8 @@ D FT[[2]] _linkInverse(D FT[[2]] eta, int64 family) {
         res = x / (x + 1);
     } else if (family == GLM_FAMILY_GAMMA) {
         res = 1 / eta;
+    } else if (family == GLM_FAMILY_POISSON) {
+        res = exp(eta);
     }
 
     return res;
@@ -263,6 +271,8 @@ D FT[[2]] _derivative(D FT[[2]] eta, int64 family) {
         res = x / (xp1 * xp1);
     } else if (family == GLM_FAMILY_GAMMA) {
         res = - 1 / (eta * eta);
+    } else if (family == GLM_FAMILY_POISSON) {
+        res = exp(eta);
     }
 
     return res;
@@ -278,6 +288,8 @@ D FT[[2]] _variance(D FT[[2]] mu, int64 family) {
         res = mu * (1 - mu);
     } else if (family == GLM_FAMILY_GAMMA) {
         res = mu * mu;
+    } else if (family == GLM_FAMILY_POISSON) {
+        res = mu;
     }
 
     return res;
@@ -349,6 +361,8 @@ D T[[1]] _glmStandardErrors(D T[[1]] dependent,
             (T) (observationCount - varCount);
         res *= disp;
     } else if (family == GLM_FAMILY_BINOMIAL_LOGIT) {
+        // Dispersion is 1
+    } else if (family == GLM_FAMILY_POISSON) {
         // Dispersion is 1
     } else {
         assert(false); // Unknown family
@@ -526,6 +540,14 @@ D float64[[1]] _logDGamma(D float64[[1]] x, D float64 shp, D float64[[1]] scale)
     return (shp - 1) * lns[:n] - x / scale - shp * lns[n:] - logGamma(shpVec)[0];
 }
 
+/*
+ * Logarithm of the density (mass) of the Poisson distribution.
+ */
+template<domain D : shared3p>
+D float64[[1]] _logDPoisson(D float64[[1]] k, D float64[[1]] lambda) {
+    return k * ln(lambda) - lambda - logGamma(k + 1);
+}
+
 template<domain D : shared3p, type T>
 D T _glmaic(D T[[1]] y, GLMResult<D, T> glm) {
     D T aic;
@@ -550,6 +572,9 @@ D T _glmaic(D T[[1]] y, GLMResult<D, T> glm) {
         D T ll = sum((T) _logDGamma((float64) y,
                                     (float64) (1 / disp),
                                     (float64) (glm.means * disp))) - 1;
+        aic = 2 * (T) size(glm.coefficients) - 2 * ll;
+    } else if (glm.family == GLM_FAMILY_POISSON) {
+        D T ll = sum((T) _logDPoisson((float64) y, (float64) glm.means));
         aic = 2 * (T) size(glm.coefficients) - 2 * ll;
     } else {
         assert(false); // Unknown family
