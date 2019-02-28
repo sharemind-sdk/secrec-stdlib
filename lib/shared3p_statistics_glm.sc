@@ -299,6 +299,13 @@ _dispatch(D T[[1]] dependent,
     }
 }
 
+/*
+ * The standard errors are elements of the diagonal of the
+ * variance-covariance matrix. In R these values are multiplied by
+ * dispersion parameter sigma^2. For Gauss and Gamma this is
+ * calculated from the residuals and for logistic and Poisson
+ * regression it's 1.
+ */
 template<domain D : shared3p, type T>
 D T[[1]] _glmStandardErrors(D T[[1]] dependent,
                             D T[[2]] vars,
