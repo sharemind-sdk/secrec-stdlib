@@ -39,6 +39,7 @@ import shared3p;
 * \defgroup CRC2 CRC(0 initial hash)
 * \defgroup murmurhashervec murmurHasherVec
 * \defgroup countzeroes countZeroes
+* \defgroup bl_str_type BlStringVector
 * \defgroup bl_str bl_str
 * \defgroup bl_strisempty bl_strIsEmpty
 * \defgroup bl_strdeclassify bl_strDeclassify
@@ -54,6 +55,11 @@ import shared3p;
 * \defgroup bl_strcontains bl_strContains
 * \defgroup bl_strindexof bl_strIndexOf
 * \defgroup bl_strhamming bl_strHamming
+* \defgroup bl_strshuffle bl_strShuffle
+* \defgroup bl_strshuffle_key bl_strShuffle(key)
+* \defgroup bl_strlengthenbound bl_strLengthenBound
+* \defgroup bl_strempty bl_strEmpty
+* \defgroup bl_strequals_parallel bl_strEquals(parallel)
 * \defgroup kl_str kl_str
 * \defgroup kl_strdeclassify kl_strDeclassify
 * \defgroup kl_strlength kl_strLength
@@ -243,6 +249,17 @@ D xor_uint32[[1]] murmurHasherVec (D xor_uint32[[1]] hashee,  public uint32[[1]]
 * @brief Module with functions for bounded length strings
 */
 
+/** \addtogroup bl_str_type
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Bounded-length string vector type
+ */
+template<domain D>
+struct BlStringVector {
+    D xor_uint8[[1]] value;
+    uint bound;
+}
+/** @} */
 
 /** \addtogroup countzeroes
  *  @{
@@ -300,6 +317,7 @@ D xor_uint8[[1]] bl_str (string s) {
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
  *  @note this is done by checking if all of the bytes in the string are zeroed
+ *  @note See \ref bl_strempty "bl_strEmpty" for parallel version.
  *  @param s - a vector of supported type
  *  @brief Check if the input string is empty
  *  @return returns **true** if the given known length input \ref string "string" is empty
@@ -688,8 +706,258 @@ D uint bl_strHamming (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     uint k = min (size (s), size (t));
     return sum ((uint) (s[:k] != t[:k]));
 }
-
 /** @}*/
+
+/** \addtogroup bl_strshuffle
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Shuffle a bounded-length string vector
+ *  @param s - input string vector
+ *  @return returns shuffled s
+ *  @leakage{None}
+ */
+template <domain D : shared3p>
+BlStringVector<D> bl_strShuffle(BlStringVector<D> s)
+{
+    D xor_uint8[[1]] x = s.value;
+    assert (s.bound > 0 && size(s.value) % s.bound == 0);
+    __syscall ("shared3p::matshuf_xor_uint8_vec", __domainid (D), x, s.bound);
+    s.value = x;
+    return s;
+}
+/** @} */
+
+/** \addtogroup bl_strshuffle_key
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Shuffle a bounded-length string vector
+ *  @param s - input string vector
+ *  @param sLen - bound
+ *  @param key - shuffle key
+ *  @return returns shuffled s
+ *  @leakage{None}
+ */
+template <domain D : shared3p>
+BlStringVector<D> bl_strShuffle(BlStringVector<D> s, D uint8[[1]] key)
+{
+    if (size(s) == 0)
+        return s;
+
+    D xor_uint8[[1]] x = s.value;
+    assert (s.bound > 0 && size(s.value) % s.bound == 0);
+    assert (size(key) == 32);
+    __syscall ("shared3p::matshufkey_xor_uint8_vec", __domainid (D), x, s.bound, key);
+    s.value = x;
+    return s;
+}
+/** @}*/
+
+/** \addtogroup bl_strlengthenbound
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Increase the bound of a bounded-length string vector
+ *  @param s - input string vector
+ *  @param biggerBound - new bound
+ *  @return returns s with the bound increased to biggerBound
+ *  @leakage{None}
+ */
+template <domain D : shared3p>
+BlStringVector<D> bl_strLengthenBound(BlStringVector<D> s, uint biggerBound) {
+    assert (biggerBound > s.bound);
+    assert (size(s.value) % s.bound == 0);
+
+    uint n = size(s.value) / s.bound;
+    uint[[1]] strideOld = s.bound * iota(n);
+    uint[[1]] strideNew = biggerBound * iota(n);
+    D xor_uint8[[1]] result (n * biggerBound);
+    D xor_uint8[[1]] row (n);
+    D xor_uint8[[1]] x = s.value;
+    for (uint i = 0; i < s.bound; ++ i) {
+        __syscall("shared3p::gather_xor_uint8_vec",
+            __domainid(D), x, row, __cref strideOld + i);
+
+        __syscall("shared3p::scatter_xor_uint8_vec",
+            __domainid(D), row, result, __cref strideNew + i);
+    }
+
+    s.value = result;
+    return s;
+}
+/** @} */
+template <domain D : shared3p>
+D bool[[1]] _bl_strEmpty(D xor_uint8[[1]] s, uint bound) {
+    assert (bound > 0);
+    assert (size(s) % bound == 0);
+    uint numRows = size(s) / bound;
+    return all(s == 0, numRows);
+}
+/** \cond */
+
+/** \endcond */
+
+/** \addtogroup bl_strempty
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Check if a bounded-length string vector contains empty strings
+ *  @param s - input string vector
+ *  @return returns a boolean vector indicating if the string in the
+ *  corresponding position in s was empty
+ *  @leakage{None}
+ */
+template <domain D : shared3p>
+D bool[[1]] bl_strEmpty(BlStringVector<D> s) {
+    assert (s.bound > 0);
+    assert (size(s.value) % s.bound == 0);
+    uint numRows = size(s.value) / s.bound;
+    return all(s.value == 0, numRows);
+}
+/** @} */
+
+/** \cond */
+template <type T, domain D : shared3p>
+D T[[1]] _parallelTake(D T[[1]] s, uint rowLen, uint resultRowLen)
+{
+    assert (0 < resultRowLen);
+    assert (0 < resultRowLen && resultRowLen <= rowLen);
+    assert (size(s) % rowLen == 0);
+
+    uint limit = 200 * 1024 * 1024; // 200M bytes
+
+    uint numOfRows = size(s) / rowLen;
+    uint resultSize = numOfRows * resultRowLen;
+    uint rowLimit = limit / numOfRows;
+    D T[[1]] result (resultSize);
+
+    if (numOfRows > rowLimit) {
+        uint done = 0;  // rows trimmed
+
+        while (done < numOfRows) {
+            uint batchSize = rowLimit;
+            if (numOfRows - done < rowLimit) {
+                batchSize = numOfRows - done;
+            }
+
+            uint[[1]] indices1(batchSize * resultRowLen);
+            uint[[1]] indices2(batchSize * resultRowLen);
+
+            for (uint i = 0; i < batchSize; i++) {
+                indices1[i * resultRowLen : (i+1) * resultRowLen] = iota(resultRowLen) + (i + done) * rowLen;
+                indices2[i * resultRowLen : (i+1) * resultRowLen] = iota(resultRowLen) + (i + done) * resultRowLen;
+            }
+
+            D T[[1]] singleRow (resultRowLen);
+            __syscall ("shared3p::gather_$T\_vec", __domainid (D), s, singleRow, __cref indices1);
+
+            __syscall ("shared3p::scatter_$T\_vec", __domainid (D), singleRow, result, __cref indices2);
+
+            done += batchSize;
+        }
+    } else {
+        uint[[1]] indices(resultSize);
+
+        for (uint i = 0; i < numOfRows; i++) {
+            indices[i * resultRowLen : (i+1) * resultRowLen] = iota(resultRowLen) + i * rowLen;
+        }
+
+        __syscall ("shared3p::gather_$T\_vec", __domainid (D), s, result, __cref indices);
+    }
+
+    return result;
+}
+
+template <type T, domain D : shared3p>
+D T[[1]] _parallelDrop(D T[[1]] s, uint rowLen, uint len)
+{
+    assert (len <= rowLen);
+    assert (size(s) % rowLen == 0);
+
+    if (len == 0)
+        return s;
+
+    if (rowLen == len)
+        return reshape(0, 0);
+
+    uint limit = 200 * 1024 * 1024; // 200M bytes
+
+    uint resultRowLen = rowLen - len;
+    uint numOfRows = size(s) / rowLen;
+    uint rowLimit = limit / numOfRows;
+    D T[[1]] result (numOfRows * resultRowLen);
+
+    if (numOfRows > rowLimit) {
+        uint done = 0;  // rows trimmed
+
+        while (done < numOfRows) {
+            uint batchSize = rowLimit;
+            if (numOfRows - done < rowLimit) {
+                batchSize = numOfRows - done;
+            }
+
+            uint[[1]] indices1(batchSize * resultRowLen);
+            uint[[1]] indices2(batchSize * resultRowLen);
+
+            for (uint i = 0; i < batchSize; i++) {
+                indices1[i * resultRowLen : (i+1) * resultRowLen] = iota(resultRowLen) + len + (i + done) * rowLen;
+                indices2[i * resultRowLen : (i+1) * resultRowLen] = iota(resultRowLen) + (i + done) * resultRowLen;
+            }
+
+            D T[[1]] singleRow (resultRowLen);
+            __syscall ("shared3p::gather_$T\_vec", __domainid (D), s, singleRow, __cref indices1);
+
+            __syscall ("shared3p::scatter_$T\_vec", __domainid (D), singleRow, result, __cref indices2);
+
+            done += batchSize;
+        }
+    } else {
+        uint[[1]] indices(numOfRows * resultRowLen);
+
+        for (uint i = 0; i < numOfRows; i++) {
+            indices[i * resultRowLen : (i+1) * resultRowLen] = iota(resultRowLen) + len + i * rowLen;
+        }
+
+        __syscall ("shared3p::gather_$T\_vec", __domainid (D), s, result, __cref indices);
+    }
+    return result;
+}
+/** \endcond */
+
+/** \addtogroup bl_strequals_parallel
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Performs pointwise equality comparison of bounded-length string vectors.
+ *  @param s - string vector
+ *  @param t - string vector
+ *  @return returns a boolean indicating if the strings in the
+ *  corresponding position in s and t were equal
+ *  @leakage{None}
+ */
+template <domain D : shared3p>
+D bool[[1]] bl_strEquals(BlStringVector<D> s, BlStringVector<D> t)
+{
+    if (size(s.value) == 0 || size(t.value) == 0) {
+        D bool[[1]] res;
+        return res;
+    }
+
+    assert (s.bound > 0 && t.bound > 0);
+    assert (size(s.value) % s.bound == 0 && size(t.value) % t.bound == 0);
+
+    uint numRows = size(s.value) / s.bound;
+
+    if (s.bound == t.bound) {
+        return all(s.value == t.value, numRows);
+    }
+
+    if (s.bound > t.bound) {
+        return bl_strEquals(t, s);
+    }
+
+    D bool[[1]] prefixesAreEqual = all(s.value == _parallelTake(t.value, t.bound, s.bound), numRows);
+    D bool[[1]] restAreEmpty = _bl_strEmpty(_parallelDrop(t.value, t.bound, s.bound), t.bound - s.bound);
+    return prefixesAreEqual & restAreEmpty;
+}
+/** @} */
+
 /** @}*/
 
 /*******************************************************************************
