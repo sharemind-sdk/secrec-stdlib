@@ -60,7 +60,6 @@ import shared3p;
 * \defgroup bl_strshuffle_key bl_strShuffle(key)
 * \defgroup bl_strlengthenbound bl_strLengthenBound
 * \defgroup bl_strempty bl_strEmpty
-* \defgroup bl_strequals_parallel bl_strEquals(parallel)
 * \defgroup bl_strlessthan_parallel bl_strLessThan(parallel)
 * \defgroup kl_str kl_str
 * \defgroup kl_strdeclassify kl_strDeclassify
@@ -296,7 +295,6 @@ D uint countZeroes (D xor_uint8[[1]] s) {
  * @note the excess bytes in the shared string are placed in the end and are zeroed
  */
 template <domain D : shared3p>
-@deprecated("use BlStringVector version of bl_str")
 D xor_uint8[[1]] bl_str (string s, uint n) {
     uint8[[1]] bytes = __bytes_from_string (s);
     uint8[[1]] out (n);
@@ -349,7 +347,6 @@ BlStringVector<D> bl_str (string s, uint n) {
  *  @leakage{None}
  */
 template <domain D : shared3p>
-@deprecated("use bl_strEmpty")
 D bool bl_strIsEmpty (D xor_uint8[[1]] s) {
    return all (s == 0);
 }
@@ -364,9 +361,7 @@ D bool bl_strIsEmpty (D xor_uint8[[1]] s) {
  *  @return returns a declassified bounded length \ref string "string", extra bytes are removed
  *  @leakage{Leaks the input}
  */
-
 template <domain D : shared3p>
-@deprecated("use BlStringVector version of bl_strDeclassify")
 string bl_strDeclassify (D xor_uint8[[1]] ps) {
     uint8[[1]] bytes = declassify (ps);
     uint i = 0;
@@ -405,7 +400,6 @@ string bl_strDeclassify (BlStringVector<D> str, uint i) {
  *  @leakage{None}
  */
 template <domain D : shared3p>
-@deprecated("use BlStringVector version of bl_strLength")
 D uint bl_strLength (D xor_uint8[[1]] s) {
     return size (s) - countZeroes (s);
 }
@@ -473,7 +467,6 @@ BlStringVector<D> bl_strTrim (BlStringVector<D> s) {
  *  @leakage{None}
  */
 template <domain D : shared3p>
-@deprecated("use BlStringVector version of bl_strEquals")
 D bool bl_strEquals (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     uint n = size (s), m = size (t);
 
@@ -483,7 +476,43 @@ D bool bl_strEquals (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
 
     return all (s == t[:n]) & bl_strIsEmpty (t[n:]);
 }
+
+/**
+ *  @note **D** - shared3p protection domain
+ *  @brief Performs pointwise equality comparison of bounded-length string vectors.
+ *  @param s - string vector
+ *  @param t - string vector
+ *  @return returns a boolean indicating if the strings in the
+ *  corresponding position in s and t were equal
+ *  @leakage{None}
+ */
+template <domain D : shared3p>
+D bool[[1]] bl_strEquals(BlStringVector<D> s, BlStringVector<D> t)
+{
+    if (size(s.value) == 0 || size(t.value) == 0) {
+        D bool[[1]] res;
+        return res;
+    }
+
+    assert (s.bound > 0 && t.bound > 0);
+    assert (size(s.value) % s.bound == 0 && size(t.value) % t.bound == 0);
+
+    uint numRows = size(s.value) / s.bound;
+
+    if (s.bound == t.bound) {
+        return all(s.value == t.value, numRows);
+    }
+
+    if (s.bound > t.bound) {
+        return bl_strEquals(t, s);
+    }
+
+    D bool[[1]] prefixesAreEqual = all(s.value == _parallelTake(t.value, t.bound, s.bound), numRows);
+    D bool[[1]] restAreEmpty = _bl_strEmpty(_parallelDrop(t.value, t.bound, s.bound), t.bound - s.bound);
+    return prefixesAreEqual & restAreEmpty;
+}
 /** @}*/
+
 /** \addtogroup findsortingpermutation
  *  @{
  *  @note **D** - shared3p protection domain
@@ -1002,43 +1031,6 @@ D T[[1]] _parallelDrop(D T[[1]] s, uint rowLen, uint len)
     return result;
 }
 /** \endcond */
-
-/** \addtogroup bl_strequals_parallel
- *  @{
- *  @note **D** - shared3p protection domain
- *  @brief Performs pointwise equality comparison of bounded-length string vectors.
- *  @param s - string vector
- *  @param t - string vector
- *  @return returns a boolean indicating if the strings in the
- *  corresponding position in s and t were equal
- *  @leakage{None}
- */
-template <domain D : shared3p>
-D bool[[1]] bl_strEquals(BlStringVector<D> s, BlStringVector<D> t)
-{
-    if (size(s.value) == 0 || size(t.value) == 0) {
-        D bool[[1]] res;
-        return res;
-    }
-
-    assert (s.bound > 0 && t.bound > 0);
-    assert (size(s.value) % s.bound == 0 && size(t.value) % t.bound == 0);
-
-    uint numRows = size(s.value) / s.bound;
-
-    if (s.bound == t.bound) {
-        return all(s.value == t.value, numRows);
-    }
-
-    if (s.bound > t.bound) {
-        return bl_strEquals(t, s);
-    }
-
-    D bool[[1]] prefixesAreEqual = all(s.value == _parallelTake(t.value, t.bound, s.bound), numRows);
-    D bool[[1]] restAreEmpty = _bl_strEmpty(_parallelDrop(t.value, t.bound, s.bound), t.bound - s.bound);
-    return prefixesAreEqual & restAreEmpty;
-}
-/** @} */
 
 /** \addtogroup bl_strlessthan_parallel
  *  @{
