@@ -217,11 +217,9 @@ void main () {
     test (test_prefix, glm_test_binomial_logit (0::float64), 0::float64);
 
     test_prefix = "GeneralizedLinearModel(Gamma)";
-    test (test_prefix, glm_test_gamma (0::float32), 0::float32);
     test (test_prefix, glm_test_gamma (0::float64), 0::float64);
 
     test_prefix = "GeneralizedLinearModel(Poisson)";
-    test (test_prefix, glm_test_poisson (0::float32), 0::float32);
     test (test_prefix, glm_test_poisson (0::float64), 0::float64);
 
     test_prefix = "GeneralizedLinearModelStandardErrors(Gaussian)";
@@ -233,29 +231,21 @@ void main () {
     test (test_prefix, glm_test_binomial_logit_standard_errors (0 :: float64), 0 :: float64);
 
     test_prefix = "GeneralizedLinearModelStandardErrors(Gamma)";
-    test (test_prefix, glm_test_gamma_standard_errors (0 :: float32), 0 :: float32);
     test (test_prefix, glm_test_gamma_standard_errors (0 :: float64), 0 :: float64);
 
     test_prefix = "GeneralizedLinearModelStandardErrors(Poisson)";
-    test (test_prefix, glm_test_poisson_standard_errors (0 :: float32), 0 :: float32);
     test (test_prefix, glm_test_poisson_standard_errors (0 :: float64), 0 :: float64);
 
     test_prefix = "GeneralizedLinearModelAIC(Gaussian)";
-    test (test_prefix, glm_test_gauss_aic (0 :: float32), 0 :: float32);
     test (test_prefix, glm_test_gauss_aic (0 :: float64), 0 :: float64);
 
     test_prefix = "GeneralizedLinearModelAIC(Binomial)";
-    // 32-bit version runs out of bits at some point :(
-    //test (test_prefix, glm_test_binomial_aic (0 :: float32), 0 :: float32);
     test (test_prefix, glm_test_binomial_aic (0 :: float64), 0 :: float64);
 
     test_prefix = "GeneralizedLinearModelAIC(Gamma)";
-    test (test_prefix, glm_test_gamma_aic (0 :: float32), 0 :: float32);
     test (test_prefix, glm_test_gamma_aic (0 :: float64), 0 :: float64);
 
     test_prefix = "GeneralizedLinearModelAIC(Poisson)";
-    // 32-bit version has very low precision again
-    //test (test_prefix, glm_test_poisson_aic (0 :: float32), 0 :: float32);
     test (test_prefix, glm_test_poisson_aic (0 :: float64), 0 :: float64);
 
     test_report ();
