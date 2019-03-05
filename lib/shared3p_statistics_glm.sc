@@ -125,7 +125,7 @@ _glm(D FT[[1]] dependent,
     uint varCount = shape(vars)[1];
     D FT[[2]] y = _toCol(dependent);
     D FT[[2]] p(varCount, 1);
-    D FT[[2]] mu = y;
+    D FT[[2]] mu = _initialmu(y, family);
     // Calculate initial eta from mu
     D FT[[2]] eta = _link(mu, family);
     D FT[[2]] varsTransposed = transpose(vars);
@@ -197,6 +197,23 @@ _glm(D FT[[1]] dependent,
     res.coefficients = p[:, 0];
     res.means = mu[:, 0];
     res.linearPredictors = eta[:, 0];
+
+    return res;
+}
+
+template<domain D, type FT>
+D FT[[2]] _initialmu(D FT[[2]] y, int64 family) {
+    D FT[[2]] res(shape(y)[0], 1);
+
+    if (family == GLM_FAMILY_GAUSSIAN) {
+        res = y;
+    } else if (family == GLM_FAMILY_BINOMIAL_LOGIT) {
+        res = (y + 0.5) / 2;
+    } else if (family == GLM_FAMILY_GAMMA) {
+        res = y;
+    } else if (family == GLM_FAMILY_POISSON) {
+        res = y + 0.1;
+    }
 
     return res;
 }
