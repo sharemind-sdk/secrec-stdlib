@@ -41,6 +41,7 @@ import shared3p;
 * \defgroup countzeroes countZeroes
 * \defgroup bl_str_type BlStringVector
 * \defgroup bl_str bl_str
+* \defgroup bl_str_struct bl_str(struct)
 * \defgroup bl_strisempty bl_strIsEmpty
 * \defgroup bl_strdeclassify bl_strDeclassify
 * \defgroup bl_strlength bl_strLength
@@ -277,6 +278,7 @@ D uint countZeroes (D xor_uint8[[1]] s) {
     return sum ((uint) (s == 0));
 }
 /** @}*/
+
 /** \addtogroup bl_str
  *  @{
  *  @note **D** - shared3p protection domain
@@ -293,6 +295,7 @@ D uint countZeroes (D xor_uint8[[1]] s) {
  * @note the excess bytes in the shared string are placed in the end and are zeroed
  */
 template <domain D : shared3p>
+@deprecated("use BlStringVector version of bl_str")
 D xor_uint8[[1]] bl_str (string s, uint n) {
     uint8[[1]] bytes = __bytes_from_string (s);
     uint8[[1]] out (n);
@@ -310,8 +313,29 @@ template <domain D : shared3p>
 D xor_uint8[[1]] bl_str (string s) {
     return __bytes_from_string (s);
 }
-
 /** @}*/
+
+/** \addtogroup bl_str_struct
+ *  @{
+ *  @param s - a \ref string "string"
+ *  @param n - an \ref uint64 "uint" type bound
+ *  @return returns a bounded length string vector created from the public string
+ *  @post the output string is of length n
+ *  @note the excess bytes in the shared string are placed in the end and are zeroed
+ */
+template <domain D : shared3p>
+BlStringVector<D> bl_str (string s, uint n) {
+    public BlStringVector<D> res;
+    uint8[[1]] bytes = __bytes_from_string (s);
+    uint8[[1]] out (n);
+    assert (size(bytes) <= n);
+    out[:size(bytes)] = bytes;
+    res.value = out;
+    res.bound = n;
+    return res;
+}
+/** @} */
+
 /** \addtogroup bl_strisempty
  *  @{
  *  @note **D** - shared3p protection domain
@@ -323,8 +347,8 @@ D xor_uint8[[1]] bl_str (string s) {
  *  @return returns **true** if the given known length input \ref string "string" is empty
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
+@deprecated("use bl_strEmpty")
 D bool bl_strIsEmpty (D xor_uint8[[1]] s) {
    return all (s == 0);
 }
@@ -341,6 +365,7 @@ D bool bl_strIsEmpty (D xor_uint8[[1]] s) {
  */
 
 template <domain D : shared3p>
+@deprecated("use BlStringVector version of bl_strDeclassify")
 string bl_strDeclassify (D xor_uint8[[1]] ps) {
     uint8[[1]] bytes = declassify (ps);
     uint i = 0;
@@ -352,8 +377,23 @@ string bl_strDeclassify (D xor_uint8[[1]] ps) {
     return __string_from_bytes (bytes[:i]);
 }
 
-
+/**
+ * @param str - input string vector
+ * @param i - position of string to declassify
+ */
+template <domain D : shared3p>
+string bl_strDeclassify (BlStringVector<D> str, uint i) {
+    D xor_uint8[[1]] x = str.value[str.bound * i : str.bound * (i + 1)];
+    uint8[[1]] bytes = declassify (x);
+    uint i = 0;
+    for (uint n = size (bytes); i < n; ++i) {
+        if (bytes[i] == 0)
+            break;
+    }
+    return __string_from_bytes (bytes[:i]);
+}
 /** @}*/
+
 /** \addtogroup bl_strlength
  *  @{
  *  @note **D** - shared3p protection domain
@@ -364,10 +404,25 @@ string bl_strDeclassify (D xor_uint8[[1]] ps) {
  *  @leakage{None}
  */
 template <domain D : shared3p>
+@deprecated("use BlStringVector version of bl_strLength")
 D uint bl_strLength (D xor_uint8[[1]] s) {
     return size (s) - countZeroes (s);
 }
+
+/**
+ *  @note **D** - shared3p protection domain
+ *  @note param s - bounded-length string vector
+ *  @note param i - position of string
+ *  @return returns the actual length of the string at position i
+ *  @leakage{None}
+ */
+template <domain D : shared3p>
+D uint bl_strLength (BlStringVector<D> s, uint i) {
+    D xor_uint8[[1]] x = s.value[s.bound * i : s.bound * (i + 1)];
+    return size (x) - countZeroes (x);
+}
 /** @}*/
+
 /** \addtogroup bl_strtrim
  *  @{
  *  @note **D** - shared3p protection domain
@@ -383,7 +438,30 @@ D xor_uint8[[1]] bl_strTrim (D xor_uint8[[1]] s) {
     return s[:n];
 }
 
-/** @}*/
+/**
+ *  @note **D** - shared3p protection domain
+ *  @param s - bounded-length string vector.
+ *  @brief Trim a bounded-length string vector.
+ *  @return returns input string vector with excess bytes removed
+ *  @leakage{Leaks the length of the longest string}
+ */
+template <domain D : shared3p>
+BlStringVector<D> bl_strTrim (BlStringVector<D> s) {
+    uint len = size (s.value) / s.bound;
+    D uint[[1]] zeroCounts(len) = 0;
+    for (uint i = 0; i < s.bound; ++i) {
+        D xor_uint8[[1]] x(len);
+        uint[[1]] idx(len) = iota (len) * s.bound + i;
+        __syscall("shared3p::gather_xor_uint8_vec", __domainid (D), s.value, x, __cref idx);
+        zeroCounts += (uint) (x == 0);
+    }
+    uint maxBound = s.bound - declassify (min (zeroCounts));
+    s.value = _parallelTake(s.value, s.bound, maxBound);
+    s.bound = maxBound;
+    return s;
+}
+/** @} */
+
 /** \addtogroup bl_strequals
  *  @{
  *  @note **D** - shared3p protection domain
@@ -394,6 +472,7 @@ D xor_uint8[[1]] bl_strTrim (D xor_uint8[[1]] s) {
  *  @leakage{None}
  */
 template <domain D : shared3p>
+@deprecated("use BlStringVector version of bl_strEquals")
 D bool bl_strEquals (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     uint n = size (s), m = size (t);
 
@@ -784,6 +863,8 @@ BlStringVector<D> bl_strLengthenBound(BlStringVector<D> s, uint biggerBound) {
     return s;
 }
 /** @} */
+
+/** \cond */
 template <domain D : shared3p>
 D bool[[1]] _bl_strEmpty(D xor_uint8[[1]] s, uint bound) {
     assert (bound > 0);
@@ -791,8 +872,6 @@ D bool[[1]] _bl_strEmpty(D xor_uint8[[1]] s, uint bound) {
     uint numRows = size(s) / bound;
     return all(s == 0, numRows);
 }
-/** \cond */
-
 /** \endcond */
 
 /** \addtogroup bl_strempty
