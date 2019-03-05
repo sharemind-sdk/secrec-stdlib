@@ -61,6 +61,7 @@ import shared3p;
 * \defgroup bl_strlengthenbound bl_strLengthenBound
 * \defgroup bl_strempty bl_strEmpty
 * \defgroup bl_strequals_parallel bl_strEquals(parallel)
+* \defgroup bl_strlessthan_parallel bl_strLessThan(parallel)
 * \defgroup kl_str kl_str
 * \defgroup kl_strdeclassify kl_strDeclassify
 * \defgroup kl_strlength kl_strLength
@@ -517,6 +518,7 @@ D uint[[1]] findSortingPermutation (D bool[[1]] arr) {
     return vec * (pTrue - pFalse) + pFalse;
 }
 /** @}*/
+
 /** \addtogroup bl_strcat
  *  @{
  *  @note **D** - shared3p protection domain
@@ -546,8 +548,8 @@ D xor_uint8[[1]] bl_strCat (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
 
     return out;
 }
-
 /** @}*/
+
 /** \addtogroup zeroextend
  *  @{
  *  @note **D** - shared3p protection domain
@@ -577,6 +579,7 @@ D xor_uint8[[1]] zeroExtend (D xor_uint8[[1]] s, uint n) {
  *  @{
  *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref xor_uint8 "xor_uint8"
+ *  @note See \ref bl_strlessthan_parallel "bl_strLessThan" for parallel version.
  *  @param s,t - input string vectors of supported type
  *  @brief function for comparing two strings alphabetically
  *  @return returns **true** if s < t
@@ -1034,6 +1037,51 @@ D bool[[1]] bl_strEquals(BlStringVector<D> s, BlStringVector<D> t)
     D bool[[1]] prefixesAreEqual = all(s.value == _parallelTake(t.value, t.bound, s.bound), numRows);
     D bool[[1]] restAreEmpty = _bl_strEmpty(_parallelDrop(t.value, t.bound, s.bound), t.bound - s.bound);
     return prefixesAreEqual & restAreEmpty;
+}
+/** @} */
+
+/** \addtogroup bl_strlessthan_parallel
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Compares two bounded-length string vectors point-wise.
+ *  @param x, y - input bounded-length string vectors
+ *  @return returns a boolean vector indicating if the element of x is
+ *  less than the element of y in the corresponding position
+ *  @leakage{None}
+ */
+template<domain D : shared3p>
+D bool[[1]] bl_strLessThan(BlStringVector<D> x,
+                           BlStringVector<D> y)
+{
+    assert(x.bound > 0 && y.bound > 0);
+
+    uint bound = max(x.bound, y.bound);
+    if (x.bound < bound)
+        x = bl_strLengthenBound(x, bound);
+
+    if (y.bound < bound)
+        y = bl_strLengthenBound(y, bound);
+
+    uint len = size(x.value) / bound;
+    D bool[[1]] res(len);
+    D bool[[1]] prefixEq(len) = true;
+
+    for (uint i = 0; i < bound; ++i) {
+        D xor_uint8[[1]] tmpLeft(len);
+        D xor_uint8[[1]] tmpRight(len);
+        uint[[1]] idx = iota(len) * bound + i;
+
+        __syscall("shared3p::gather_xor_uint8_vec", __domainid(D), x.value, tmpLeft, __cref(idx));
+        __syscall("shared3p::gather_xor_uint8_vec", __domainid(D), y.value, tmpRight, __cref(idx));
+
+        D bool[[1]] tmpCmp = tmpLeft < tmpRight;
+        D bool[[1]] tmpEq = tmpLeft == tmpRight;
+
+        res = res | (prefixEq & tmpCmp);
+        prefixEq = prefixEq & tmpEq;
+    }
+
+    return res;
 }
 /** @} */
 
