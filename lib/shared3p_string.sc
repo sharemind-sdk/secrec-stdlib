@@ -63,6 +63,9 @@ import table_database;
 * \defgroup bl_strlessthan_parallel bl_strLessThan(parallel)
 * \defgroup bl_strvectorlength bl_strVectorLength
 * \defgroup tdb_vmap_add_bl_string_value tdbVmapAddBlStringValue
+* \defgroup tdb_vmap_add_bl_string_type tdbVmapAddBlStringType
+* \defgroup tdb_vmap_get_bl_string tdbVmapGetBlString
+* \defgroup tdb_read_bl_string_column tdbReadBlStringColumn
 * \defgroup kl_str kl_str
 * \defgroup kl_strdeclassify kl_strDeclassify
 * \defgroup kl_strlength kl_strLength
@@ -263,6 +266,12 @@ struct BlStringVector {
     uint bound;
 }
 /** @} */
+
+/** \cond */
+bool _isBlString(string x) {
+    return isPrefixOf("bl_string(", x);
+}
+/** \endcond */
 
 /** \addtogroup countzeroes
  *  @{
@@ -1123,6 +1132,96 @@ void tdbVmapAddBlStringValue(uint params, string key, BlStringVector<D> vec) {
     bool isScalar = false;
     uint bound = vec.bound;
     __syscall("tdb_vmap_push_back_value", params, __cref key, __cref "$D", __cref "bl_string($bound)", bound, __cref bytevec, isScalar);
+}
+/** @} */
+
+/** \addtogroup tdb_vmap_add_bl_string_type
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Add bounded-length string type to a type vector in a \ref
+ *  table_database "table_database" vector map.
+ *  @param vmap - vector map
+ *  @param domainProxy - proxy value used to specify protection domain
+ *  (actual value is not important)
+ *  @param bound - string bound
+ *  @leakage{None}
+ */
+template<domain D : shared3p>
+void tdbVmapAddBlStringType(uint vmap, D uint domainProxy, uint bound) {
+    __syscall("tdb_vmap_push_back_type", vmap, __cref "types", __cref "$D", __cref "bl_string($bound)", bound);
+}
+/** @} */
+
+/** \addtogroup tdb_vmap_get_bl_string
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Get bounded-length string vector from a \ref table_database
+ *  "table_database" vector map.
+ *  @param vmap - vector map
+ *  @param string - key of vector in vector map
+ *  @param idx - index of bounded-length string vector in vector map vector
+ *  @return returns string vector in position idx
+ *  @leakage{None}
+ */
+template<domain D : shared3p>
+BlStringVector<D> tdbVmapGetBlString(uint vmap, string key, uint idx) {
+    string rt_dom;
+    __syscall("tdb_vmap_at_value_type_domain", vmap, __cref key, idx, __return rt_dom);
+    assert(rt_dom == "$D");
+
+    string rt_name;
+    __syscall("tdb_vmap_at_value_type_name", vmap, __cref key, idx, __return rt_name);
+    assert(_isBlString(rt_name));
+
+    uint num_bytes;
+    __syscall("tdb_vmap_at_value", vmap, __cref key, idx, __return num_bytes);
+    uint8[[1]] bytes(num_bytes);
+    __syscall("tdb_vmap_at_value", vmap, __cref key, idx, __ref bytes);
+    D xor_uint8[[1]] str(num_bytes);
+    __syscall("shared3p::set_shares_xor_uint8_vec", __domainid(D), str, __cref bytes);
+
+    uint t_size;
+    __syscall("tdb_vmap_at_value_type_size", vmap, __cref key, idx, __return t_size);
+
+    public BlStringVector<D> res;
+    res.value = str;
+    res.bound = t_size;
+
+    return res;
+}
+/** @} */
+
+/** \addtogroup tdb_read_bl_string_column
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Read a bounded-length string vector from a \ref
+ *  table_database "table_database" table.
+ *  @param ds - data source name
+ *  @param table - table name
+ *  @param col - column index
+ *  @return returns the column of the table as a bounded-length string
+ *  vector
+ *  @leakage{None}
+ */
+template<domain D : shared3p>
+BlStringVector<D> tdbReadBlStringColumn(string ds, string table, uint col) {
+    uint vmap = tdbReadColumn(ds, table, col);
+    public BlStringVector<D> res = tdbVmapGetBlString(vmap, "values", 0 :: uint);
+    tdbVmapDelete(vmap);
+    return res;
+}
+
+/**
+ * @param ds - data source name
+ * @param table - table name
+ * @param name - column name
+ */
+template<domain D : shared3p>
+BlStringVector<D> tdbReadBlStringColumn(string ds, string table, string name) {
+    uint vmap = tdbReadColumn(ds, table, name);
+    public BlStringVector<D> res = tdbVmapGetBlString(vmap, "values", 0 :: uint);
+    tdbVmapDelete(vmap);
+    return res;
 }
 /** @} */
 
