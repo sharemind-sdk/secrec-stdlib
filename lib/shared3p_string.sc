@@ -59,6 +59,7 @@ import shared3p;
 * \defgroup bl_strshuffle bl_strShuffle
 * \defgroup bl_strshuffle_key bl_strShuffle(key)
 * \defgroup bl_strlengthenbound bl_strLengthenBound
+* \defgroup bl_strvectorlength bl_strVectorLength
 * \defgroup bl_strempty bl_strEmpty
 * \defgroup bl_strlessthan_parallel bl_strLessThan(parallel)
 * \defgroup kl_str kl_str
@@ -331,6 +332,18 @@ BlStringVector<D> bl_str (string s, uint n) {
     out[:size(bytes)] = bytes;
     res.value = out;
     res.bound = n;
+    return res;
+}
+
+/**
+ *  @param s - a \ref string "string"
+ *  @return returns a bounded length string vector created from the public string
+ */
+template <domain D : shared3p>
+BlStringVector<D> bl_str (string s) {
+    public BlStringVector<D> res;
+    res.value = __bytes_from_string (s);
+    res.bound = size (res.value);
     return res;
 }
 /** @} */
@@ -1077,6 +1090,19 @@ D bool[[1]] bl_strLessThan(BlStringVector<D> x,
 }
 /** @} */
 
+/** \addtogroup bl_strvectorlength
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Calculate the length of a bounded-length string vector.
+ *  @param s - input string vector
+ *  @return returns the length of s
+ *  @leakage{None}
+ */
+template<domain D : shared3p>
+uint bl_strVectorLength(BlStringVector<D> s) {
+    assert(s.bound > 0);
+    return size(s.value) / s.bound;
+}
 /** @}*/
 
 /*******************************************************************************
