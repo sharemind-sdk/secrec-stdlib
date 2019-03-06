@@ -22,10 +22,10 @@
 */
 module shared3p_string;
 
-import stdlib;
 import shared3p;
 import shared3p_random;
-import shared3p;
+import stdlib;
+import table_database;
 /**
 * \endcond
 */
@@ -59,9 +59,10 @@ import shared3p;
 * \defgroup bl_strshuffle bl_strShuffle
 * \defgroup bl_strshuffle_key bl_strShuffle(key)
 * \defgroup bl_strlengthenbound bl_strLengthenBound
-* \defgroup bl_strvectorlength bl_strVectorLength
 * \defgroup bl_strempty bl_strEmpty
 * \defgroup bl_strlessthan_parallel bl_strLessThan(parallel)
+* \defgroup bl_strvectorlength bl_strVectorLength
+* \defgroup tdb_vmap_add_bl_string_value tdbVmapAddBlStringValue
 * \defgroup kl_str kl_str
 * \defgroup kl_strdeclassify kl_strDeclassify
 * \defgroup kl_strlength kl_strLength
@@ -1104,6 +1105,26 @@ uint bl_strVectorLength(BlStringVector<D> s) {
     return size(s.value) / s.bound;
 }
 /** @}*/
+
+/** \addtogroup tdb_vmap_add_bl_string_value
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Add a bounded-length string vector to a \ref table_database
+ *  "table_database" vector map.
+ *  @param params - vector map
+ *  @param key - key of vector in vector map
+ *  @param vec - bounded length string vector
+ *  @leakage{None}
+ */
+template<domain D : shared3p>
+void tdbVmapAddBlStringValue(uint params, string key, BlStringVector<D> vec) {
+    uint8[[1]] bytevec(size(vec.value));
+    __syscall("shared3p::get_shares_xor_uint8_vec", __domainid(D), vec.value, __ref bytevec);
+    bool isScalar = false;
+    uint bound = vec.bound;
+    __syscall("tdb_vmap_push_back_value", params, __cref key, __cref "$D", __cref "bl_string($bound)", bound, __cref bytevec, isScalar);
+}
+/** @} */
 
 /*******************************************************************************
 ********************************************************************************
