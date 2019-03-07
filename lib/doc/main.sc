@@ -21,7 +21,7 @@
  *
  * @section LICENSE
  *
- * Copyright (C) 2018 Cybernetica
+ * Copyright (C) 2019 Cybernetica
  *
  * \subsection commercial_license Research/Commercial License Usage
  *
