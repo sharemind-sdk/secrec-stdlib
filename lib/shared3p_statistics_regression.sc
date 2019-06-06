@@ -574,7 +574,7 @@ D T[[1]] _weightedLinearRegression(D T[[2]] variables, D T[[1]] dependent, D T[[
     assert(varsRows == 0 || varsRows == obs);
     assert(obs == size(weights));
 
-    weights = sqrt(weights);
+    D T[[1]] sqrtWeights = sqrt(weights);
 
     if (varsRows > 0) {
         D T[[2]] W(obs, vars);
@@ -583,13 +583,13 @@ D T[[1]] _weightedLinearRegression(D T[[2]] variables, D T[[1]] dependent, D T[[
             // W[:, i] = weights;
             uint[[1]] indices = iota(obs) * vars + i;
             __syscall("shared3p::scatter_$T\_vec", __domainid(D),
-                      weights, W, __cref indices);
+                      sqrtWeights, W, __cref indices);
         }
 
         variables = variables * W;
     }
 
-    dependent = dependent * weights;
+    dependent = dependent * sqrtWeights;
 
     // Modify a and b to account for the intercept. To get the
     // intercept, a column of ones should be added as the last column
@@ -598,7 +598,7 @@ D T[[1]] _weightedLinearRegression(D T[[2]] variables, D T[[1]] dependent, D T[[
     D T[[2]] extendedA;
     D T[[2]] extendedB;
     D T[[2]] depSum(1, 1);
-    depSum[0, 0] = sum(dependent * weights);
+    depSum[0, 0] = sum(dependent * sqrtWeights);
 
     if (vars > 0) {
         D T[[2]] xt = transpose(variables);
@@ -607,7 +607,7 @@ D T[[1]] _weightedLinearRegression(D T[[2]] variables, D T[[1]] dependent, D T[[
 
         D T[[2]] extA(vars + 1, vars + 1);
         extA[:vars, :vars] = a;
-        extA[vars, vars] = sum(weights * weights);
+        extA[vars, vars] = sum(weights);
         extendedA = extA;
 
         extendedB = cat(b, depSum, 0);
@@ -619,7 +619,7 @@ D T[[1]] _weightedLinearRegression(D T[[2]] variables, D T[[1]] dependent, D T[[
     }
 
     for (uint i = 0; i < vars; i++) {
-        D T s = sum(variables[:, i] * weights);
+        D T s = sum(variables[:, i] * sqrtWeights);
         extendedA[vars, i] = s;
         extendedA[i, vars] = s;
     }
