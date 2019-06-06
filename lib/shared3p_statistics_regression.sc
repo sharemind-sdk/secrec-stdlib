@@ -37,6 +37,7 @@ import stdlib;
  * \defgroup shared3p_simple_linear_regression simpleLinearRegression
  * \defgroup shared3p_linear_regression linearRegression
  * \defgroup shared3p_linear_regression_cg linearRegressionCG
+ * \defgroup shared3p_weighted_linear_regression weightedLinearRegression
  * \defgroup shared3p_regression_method constants
  */
 
@@ -560,6 +561,112 @@ template<domain D : shared3p>
 D float64[[1]] linearRegressionCG(D float64[[2]] variables, D float64[[1]] dependent, uint iterations) {
     assert(iterations > 0);
     return _linearRegression(variables, dependent, LINEAR_REGRESSION_CONJUGATE_GRADIENT, iterations);
+}
+/** @} */
+
+/** \cond */
+template<domain D : shared3p, type T>
+D T[[1]] _weightedLinearRegression(D T[[2]] variables, D T[[1]] dependent, D T[[1]] weights) {
+    uint obs = size(dependent);
+    uint vars = shape(variables)[1];
+    uint varsRows = shape(variables)[0];
+
+    assert(varsRows == 0 || varsRows == obs);
+    assert(obs == size(weights));
+
+    weights = sqrt(weights);
+
+    if (varsRows > 0) {
+        D T[[2]] W(obs, vars);
+
+        for (uint i = 0; i < vars; ++i) {
+            // W[:, i] = weights;
+            uint[[1]] indices = iota(obs) * vars + i;
+            __syscall("shared3p::scatter_$T\_vec", __domainid(D),
+                      weights, W, __cref indices);
+        }
+
+        variables = variables * W;
+    }
+
+    dependent = dependent * weights;
+
+    // Modify a and b to account for the intercept. To get the
+    // intercept, a column of ones should be added as the last column
+    // of variables. Instead, we can do multiplications without it and
+    // then extend a and b to account for the ones "variable".
+    D T[[2]] extendedA;
+    D T[[2]] extendedB;
+    D T[[2]] depSum(1, 1);
+    depSum[0, 0] = sum(dependent * weights);
+
+    if (vars > 0) {
+        D T[[2]] xt = transpose(variables);
+        D T[[2]] a = leftTransposedMultiplication(variables);
+        D T[[2]] b = matrixMultiplication(xt, reshape(dependent, size(dependent), 1));
+
+        D T[[2]] extA(vars + 1, vars + 1);
+        extA[:vars, :vars] = a;
+        extA[vars, vars] = sum(weights * weights);
+        extendedA = extA;
+
+        extendedB = cat(b, depSum, 0);
+    } else {
+        D T[[2]] extA(1, 1);
+        extA[0, 0] = sum(weights * weights);
+        extendedA = extA;
+        extendedB = depSum;
+    }
+
+    for (uint i = 0; i < vars; i++) {
+        D T s = sum(variables[:, i] * weights);
+        extendedA[vars, i] = s;
+        extendedA[i, vars] = s;
+    }
+
+    D T[[1]] bvec = extendedB[:, 0];
+
+    if (vars == 0) {
+        return {1 / extendedA[0, 0] * extendedB[0, 0]};
+    } else if (vars == 1) {
+        return matrixMultiplication(_invert2by2(extendedA), extendedB)[:, 0];
+    } else if (vars == 2) {
+        return matrixMultiplication(_invert3by3(extendedA), extendedB)[:, 0];
+    } else if (vars == 3) {
+        return matrixMultiplication(_invert4by4(extendedA), extendedB)[:, 0];
+    } else {
+        return _gaussianElimination(extendedA, bvec);
+    }
+}
+/** \endcond */
+
+/**
+ * \addtogroup shared3p_weighted_linear_regression
+ * @{
+ * @brief Fitting of linear models with observation weights
+ * @note **D** - shared3p protection domain
+ * @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ * @param variables - independent variable samples as column vectors
+ * @param dependent - dependent variable sample
+ * @param weights - observation weight vector
+ * @return returns coefficient vector. The last element is the
+ * intercept.
+ * @leakage{None}
+ */
+template<domain D : shared3p>
+D float32[[1]] weightedLinearRegression(D float32[[2]] variables,
+                                        D float32[[1]] dependent,
+                                        D float32[[1]] weights)
+{
+    return _weightedLinearRegression(variables, dependent, weights);
+}
+
+template<domain D : shared3p>
+D float64[[1]] weightedLinearRegression(D float64[[2]] variables,
+                                        D float64[[1]] dependent,
+                                        D float64[[1]] weights)
+{
+    return _weightedLinearRegression(variables, dependent, weights);
 }
 /** @} */
 
