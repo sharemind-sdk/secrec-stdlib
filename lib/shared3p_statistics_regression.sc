@@ -26,6 +26,7 @@ import shared3p;
 import shared3p_matrix;
 import shared3p_oblivious;
 import shared3p_random;
+import shared3p_sort;
 import shared3p_statistics_common;
 import shared3p_statistics_summary;
 import stdlib;
@@ -39,6 +40,8 @@ import stdlib;
  * \defgroup shared3p_linear_regression_cg linearRegressionCG
  * \defgroup shared3p_weighted_linear_regression weightedLinearRegression
  * \defgroup shared3p_regression_method constants
+ * \defgroup shared3p_regression_loess_result LOESSResult
+ * \defgroup shared3p_regression_loess loess
  */
 
 /** \addtogroup shared3p_statistics_regression
@@ -667,6 +670,145 @@ D float64[[1]] weightedLinearRegression(D float64[[2]] variables,
                                         D float64[[1]] weights)
 {
     return _weightedLinearRegression(variables, dependent, weights);
+}
+/** @} */
+
+/** \cond */
+template<domain D, type T>
+D T[[1]] _cube(D T[[1]] x) {
+    return x * x * x;
+}
+
+/*
+ * LOESS regression with one explanatory variable and linear local
+ * regression.
+ */
+template<domain D : shared3p, type T, type FT>
+LOESSResult<D, FT> _loess(D T[[1]] x,
+                         D T[[1]] y,
+                         float64 span,
+                         FT xmin,
+                         FT xmax,
+                         uint xpoints)
+{
+    public LOESSResult<D, FT> res;
+
+    if (size(x) != size(y)) {
+        res.good = false;
+        res.error = "Input sizes do not match.";
+        return res;
+    }
+
+    uint width = (uint) round(span * (float64) size(y));
+
+    if (width == 0 || width > size(x)) {
+        res.good = false;
+        res.error = "Invalid span argument.";
+        return res;
+    }
+
+    FT xstep = (xmax - xmin) / (FT) xpoints;
+    FT xcurr = xmin;
+    D FT[[1]] intercept(xpoints);
+    D FT[[1]] slope(xpoints);
+    uint[[1]] idx = iota(size(x));
+
+    for (uint i = 0; i < xpoints; ++i) {
+        D xor_uint64[[1]] ind = idx;
+        D uint8[[1]] k(32);
+        k = randomize(k);
+
+        x = shuffle(x, k);
+        y = shuffle(y, k);
+        ind = shuffle(ind, k);
+
+        D FT[[1]] dists = abs((FT) x - xcurr);
+        uint[[1]] perm = unsafeSort(dists, ind, true)[:xpoints];
+
+        D T[[1]] xsub(width);
+        D T[[1]] ysub(width);
+        D T[[1]] distsub(width);
+
+        __syscall("shared3p::gather_$T\_vec", __domainid(D), x, xsub, __cref perm);
+        __syscall("shared3p::gather_$T\_vec", __domainid(D), y, ysub, __cref perm);
+        __syscall("shared3p::gather_$FT\_vec", __domainid(D), dists, distsub, __cref perm);
+
+        D FT[[1]] weights = _cube(1.0 - _cube(abs((FT) distsub / (FT) max(distsub))));
+        D T[[2]] vars = reshape(xsub, xpoints, 1);
+        D FT[[1]] coeffs = weightedLinearRegression((FT) vars, (FT) ysub, weights);
+
+        intercept[i] = coeffs[1];
+        slope[i] = coeffs[0];
+
+        xcurr += xstep;
+    }
+
+    res.good = true;
+    res.intercept = intercept;
+    res.slope = slope;
+
+    return res;
+}
+/** \endcond */
+
+/**
+ * \addtogroup shared3p_regression_loess_result
+ * @{
+ * @brief LOESS result type
+ */
+template<domain D : shared3p, type T>
+struct LOESSResult {
+    /** whether the procedure finished successfully */
+    bool good;
+    /** error message if the procedure failed */
+    string error;
+    /** intercepts of local regressions */
+    D T[[1]] intercept;
+    /** slopes of local regressions */
+    D T[[1]] slope;
+}
+/** @} */
+
+/**
+ * \addtogroup shared3p_regression_loess
+ * @{
+ * @brief LOESS regression with linear local regression.
+
+ * @note This implementation of LOESS only supports linear local
+ * regression with one explanatory variable. Robust regression is not
+ * supported so it might not work well in the case of outliers. Unlike
+ * most software you must specify the x-axis values where regressions
+ * are evaluated using xmin, xmax and xpoints arguments.
+
+ * @note **D** - shared3p protection domain
+
+ * @param x - x-axis values
+ * @param y - y-axis values
+ * @param span - fraction of points used for each local regression
+ * @param xmin - smallest x-axis value where a local model is fitted
+ * @param xmax - largest x-axis value where a local model is fitted
+ * @param xpoints - number of regressions desired
+ * @return returns \ref LOESSResult structure
+ * @leakage{None}
+ */
+template<domain D : shared3p>
+LOESSResult<D, float32> loess(D int32[[1]] x, D int32[[1]] y, float64 span, float32 xmin, float32 xmax, uint xpoints) {
+    return _loess(x, y, span, xmin, xmax, xpoints);
+}
+
+template<domain D : shared3p>
+LOESSResult<D, float64> loess(D int64[[1]] x, D int64[[1]] y, float64 span, float64 xmin, float64 xmax, uint xpoints) {
+    return _loess(x, y, span, xmin, xmax, xpoints);
+}
+
+template<domain D : shared3p>
+LOESSResult<D, float32> loess(D float32[[1]] x, D float32[[1]] y, float64 span, float32 xmin, float32 xmax, uint xpoints) {
+    return _loess(x, y, span, xmin, xmax, xpoints);
+}
+
+template<domain D : shared3p>
+LOESSResult<D, float64> loess(D float64[[1]] x, D float64[[1]] y, float64 span, float64 xmin, float64 xmax, uint xpoints) {
+    return _loess(x, y, span, xmin, xmax, xpoints);
 }
 /** @} */
 
