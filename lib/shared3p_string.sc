@@ -251,7 +251,7 @@ D xor_uint32[[1]] murmurHasherVec (D xor_uint32[[1]] hashee,  public uint32[[1]]
 ********************************************************************************
 *******************************************************************************/
 /** \addtogroup shared3p_bl_string
-*@{
+* @{
 * @brief Module with functions for bounded length strings
 */
 
@@ -373,8 +373,8 @@ template <domain D : shared3p>
 D bool bl_strIsEmpty (D xor_uint8[[1]] s) {
    return all (s == 0);
 }
-
 /** @}*/
+
 /** \addtogroup bl_strdeclassify
  *  @{
  *  @note **D** - shared3p protection domain
@@ -625,8 +625,8 @@ D xor_uint8[[1]] zeroExtend (D xor_uint8[[1]] s, uint n) {
 
     return s;
 }
-
 /** @}*/
+
 /** \addtogroup bl_strislessthan
  *  @{
  *  @note **D** - shared3p protection domain
@@ -637,7 +637,6 @@ D xor_uint8[[1]] zeroExtend (D xor_uint8[[1]] s, uint n) {
  *  @return returns **true** if s < t
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
 D bool bl_strIsLessThan (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     s = zeroExtend (s, size (t));
@@ -647,8 +646,8 @@ D bool bl_strIsLessThan (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     D uint nEQ = truePrefixLength (s == t);
     return nLE > nEQ;
 }
-
 /** @}*/
+
 /** \addtogroup bl_strlevenshtein
  *  @{
  *  @brief function for finding the edit distance of the two input strings
@@ -744,6 +743,7 @@ D uint bl_strLevenshtein (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     return result;
 }
 /** @}*/
+
 /** \addtogroup bl_streqprefixes
  *  @{
  *  @note **D** - shared3p protection domain
@@ -755,7 +755,6 @@ D uint bl_strLevenshtein (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @return returns a boolean vector indicating if the pattern is a substring of the input string at that position
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
 D bool[[1]] bl_strEqPrefixes (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
     uint n = size (str), m = size (pat);
@@ -785,7 +784,6 @@ D bool[[1]] bl_strEqPrefixes (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
 }
 /** @}*/
 
-
 /** \addtogroup bl_strcontains
  *  @{
  *  @note **D** - shared3p protection domain
@@ -805,6 +803,7 @@ D bool bl_strContains (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
     return any (bl_strEqPrefixes (str, pat));
 }
 /** @}*/
+
 /** \addtogroup bl_strindexof
  *  @{
  *  @note **D** - shared3p protection domain
@@ -816,14 +815,12 @@ D bool bl_strContains (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
  *  @note if the string is not found returns value that is or equal to size (str)
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
 D uint bl_strIndexOf (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
     return truePrefixLength (! bl_strEqPrefixes (str, pat));
 }
-
-
 /** @}*/
+
 /** \addtogroup bl_strhamming
  *  @{
  *  @note **D** - shared3p protection domain
@@ -834,7 +831,6 @@ D uint bl_strIndexOf (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
  *  @pre bl_strLength(s) == bl_strLength(t), otherwise the behaviour is undefined
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
 D uint bl_strHamming (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     uint k = min (size (s), size (t));
@@ -1225,6 +1221,8 @@ BlStringVector<D> tdbReadBlStringColumn(string ds, string table, string name) {
 }
 /** @} */
 
+/** @} */
+
 /*******************************************************************************
 ********************************************************************************
 **                                                                            **
@@ -1251,8 +1249,8 @@ template <domain D : shared3p>
 D xor_uint8[[1]] kl_str (string s) {
     return __bytes_from_string (s);
 }
-
 /** @}*/
+
 /** \addtogroup kl_strdeclassify
  *  @{
  *  @note **D** - shared3p protection domain
@@ -1262,14 +1260,12 @@ D xor_uint8[[1]] kl_str (string s) {
  *  @return returns a public string
  *  @leakage{Leaks the input string}
  */
-
 template <domain D : shared3p>
 string kl_strDeclassify (D xor_uint8[[1]] ps) {
     return __string_from_bytes (declassify (ps));
 }
-
-
 /** @}*/
+
 /** \addtogroup kl_strlength
  *  @{
  *  @note **D** - shared3p protection domain
@@ -1279,13 +1275,12 @@ string kl_strDeclassify (D xor_uint8[[1]] ps) {
  *  @return returns a length of the string
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
 uint kl_strLength (D xor_uint8[[1]] str) {
     return size(str);
 }
-
 /** @}*/
+
 /** \addtogroup kl_strequals
  *  @{
  *  @note **D** - shared3p protection domain
@@ -1295,8 +1290,6 @@ uint kl_strLength (D xor_uint8[[1]] str) {
  *  @return returns **true** if the input strings are equal, **false** it they are not
  *  @leakage{None}
  */
-
-
 template <domain D : shared3p>
 D bool kl_strEquals (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     if (kl_strLength (s) != kl_strLength (t)) {
@@ -1305,8 +1298,8 @@ D bool kl_strEquals (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
 
     return all (s == t);
 }
-
 /** @}*/
+
 /** \addtogroup kl_strislessthan
  *  @{
  *  @note **D** - shared3p protection domain
@@ -1316,7 +1309,6 @@ D bool kl_strEquals (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @return returns **true** if the first input string is less than the second (in dictionary order)
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
 D bool kl_strIsLessThan (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     uint n = kl_strLength(s), m = kl_strLength(t);
@@ -1339,8 +1331,8 @@ D bool kl_strIsLessThan (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
         return x != y;
     }
 }
-
 /** @}*/
+
 /** \addtogroup kl_strcat
  *  @{
  *  @note **D** - shared3p protection domain
@@ -1350,13 +1342,12 @@ D bool kl_strIsLessThan (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @return returns a concatenation of the two input strings
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
 D xor_uint8[[1]] kl_strCat (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     return cat (s, t);
 }
-
 /** @}*/
+
 /** \addtogroup kl_streqprefixes
  *  @{
  *  @note **D** - shared3p protection domain
@@ -1368,7 +1359,6 @@ D xor_uint8[[1]] kl_strCat (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @return returns a boolean vector indicating if the pattern is a substring of the input string in that position
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
 D bool[[1]] kl_strEqPrefixes (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
     uint n = kl_strLength(str),
@@ -1399,8 +1389,8 @@ D bool[[1]] kl_strEqPrefixes (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
 
     return acc;
 }
-
 /** @}*/
+
 /** \addtogroup kl_strcontains
  *  @{
  *  @note **D** - shared3p protection domain
@@ -1412,13 +1402,12 @@ D bool[[1]] kl_strEqPrefixes (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
  *  @return returns if the needle is found within the haystack
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
 D bool kl_strContains (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
     return any (kl_strEqPrefixes (str, pat));
 }
-
 /** @}*/
+
 /** \addtogroup kl_strindexof
  *  @{
  *  @note **D** - shared3p protection domain
@@ -1431,7 +1420,6 @@ D bool kl_strContains (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
  *  @return returns size(str) if the pat is not a substring of str
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
 D uint kl_strIndexOf (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
     uint n = size (str),
@@ -1446,8 +1434,8 @@ D uint kl_strIndexOf (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
     zeros[:k] = kl_strEqPrefixes (str, pat);
     return truePrefixLength (! zeros);
 }
-
 /** @}*/
+
 /** \addtogroup kl_strhamming
  *  @{
  *  @note **D** - shared3p protection domain
@@ -1458,14 +1446,13 @@ D uint kl_strIndexOf (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
  *  @return returns the number of bytes that the inputs differ in
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
 D uint kl_strHamming (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     assert (size (s) == size (t));
     return sum ((uint) (s != t));
 }
-
 /** @}*/
+
 /** \addtogroup kl_strlevenshtein
  *  @{
  *  @note **D** - shared3p protection domain
@@ -1476,7 +1463,6 @@ D uint kl_strHamming (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
  *  @return returns the edit distance of the two input strings
  *  @leakage{None}
  */
-
 template <domain D : shared3p>
 D uint kl_strLevenshtein (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     uint n = size (s),
@@ -1553,6 +1539,7 @@ D uint kl_strLevenshtein (D xor_uint8[[1]] s, D xor_uint8[[1]] t) {
     return prevDiag[0];
 }
 /** @}*/
+
 /** @}*/
 
 /** \addtogroup cw128genkey
