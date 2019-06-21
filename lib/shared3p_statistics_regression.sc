@@ -712,6 +712,7 @@ LOESSResult<D, FT> _loess(D T[[1]] x,
     D FT[[1]] intercept(xpoints);
     D FT[[1]] slope(xpoints);
     uint[[1]] idx = iota(size(x));
+    FT[[1]] points(xpoints);
 
     for (uint i = 0; i < xpoints; ++i) {
         D xor_uint64[[1]] ind = idx;
@@ -723,7 +724,7 @@ LOESSResult<D, FT> _loess(D T[[1]] x,
         ind = shuffle(ind, k);
 
         D FT[[1]] dists = abs((FT) x - xcurr);
-        uint[[1]] perm = unsafeSort(dists, ind, true)[:xpoints];
+        uint[[1]] perm = unsafeSort(dists, ind, true)[:width];
 
         D T[[1]] xsub(width);
         D T[[1]] ysub(width);
@@ -734,11 +735,12 @@ LOESSResult<D, FT> _loess(D T[[1]] x,
         __syscall("shared3p::gather_$FT\_vec", __domainid(D), dists, distsub, __cref perm);
 
         D FT[[1]] weights = _cube(1.0 - _cube(abs((FT) distsub / (FT) max(distsub))));
-        D T[[2]] vars = reshape(xsub, xpoints, 1);
+        D T[[2]] vars = reshape(xsub, width, 1);
         D FT[[1]] coeffs = weightedLinearRegression((FT) vars, (FT) ysub, weights);
 
         intercept[i] = coeffs[1];
         slope[i] = coeffs[0];
+        points[i] = xcurr;
 
         xcurr += xstep;
     }
@@ -746,6 +748,7 @@ LOESSResult<D, FT> _loess(D T[[1]] x,
     res.good = true;
     res.intercept = intercept;
     res.slope = slope;
+    res.points = points;
 
     return res;
 }
@@ -766,6 +769,8 @@ struct LOESSResult {
     D T[[1]] intercept;
     /** slopes of local regressions */
     D T[[1]] slope;
+    /** x-axis points where regressions were evaluated */
+    T[[1]] points;
 }
 /** @} */
 
