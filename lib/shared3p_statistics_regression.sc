@@ -707,7 +707,7 @@ LOESSResult<D, FT> _loess(D T[[1]] x,
         return res;
     }
 
-    FT xstep = (xmax - xmin) / (FT) xpoints;
+    FT xstep = (xmax - xmin) / (FT) (xpoints - 1);
     FT xcurr = xmin;
     D FT[[1]] intercept(xpoints);
     D FT[[1]] slope(xpoints);
