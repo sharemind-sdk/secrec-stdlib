@@ -49,6 +49,7 @@ import stdlib;
  * \defgroup mad_filter MAD(filter)
  * \defgroup mad_filter_constant MAD(filter, constant)
  * \defgroup five_number_summary fiveNumberSummary
+ * \defgroup quantiles quantiles
  * \defgroup covariance covariance
  * \defgroup covariance_filter covariance(filter)
  */
@@ -517,69 +518,58 @@ D float64 MAD (D float64[[1]] data, D bool[[1]] mask, float64 constant) {
 /** \cond */
 // This algorithm is Q7 from the article Sample Quantiles in Statistical Packages
 template <domain D, type T, type FT>
-D FT[[1]] _fiveNumberSummary (D T[[1]] data, D bool[[1]] isAvailable) {
-	D FT [[1]] result (5);
-	D T[[1]] cutDatabase = cut (data, isAvailable);
-	D T[[1]] sortedDatabase = quicksort (cutDatabase);
+D FT[[1]] _quantiles(D T[[1]] data, D bool[[1]] isAvailable, float64[[1]] probabilities) {
+    uint nProbs = size(probabilities);
+    assert(nProbs > 0);
 
- 	uint sortedSize = size (sortedDatabase);
+    for (uint i = 0; i < size(probabilities); ++i) {
+        assert(probabilities[i] >= 0 && probabilities[i] <= 1.0);
+    }
 
-	if (sortedSize < 5){
+	D FT [[1]] result(nProbs);
+	D T[[1]] sortedData = quicksort(cut(data, isAvailable));
+ 	uint cutSize = size(sortedData);
+
+	if (cutSize < 5) {
 		return result;
 	}
 
- 	result[0] = (FT) sortedDatabase [0]; // minimum
-	result[4] = (FT) sortedDatabase [sortedSize - 1]; // maximum
-
-	// We are using integer division.
-	// Note that the formula gives us which position holds the value but we have to subtract 1 as our indices start from 0
+	// Note that the formula gives us which position holds the value
+	// but we have to subtract 1 as our indices start from 0.
 
 	// Q_p = (1 - gamma) * X[j] + gamma * X[j + 1]
 	// j = floor((n - 1) * p) + 1
 	// gamma = (n-1) * p - floor((n - 1) * p)
 	// gamma is the fraction part of ((n-1) * p)
 
-	// lq(0.25), me(0.5), uq(0.75)
-	uint[[1]] parA (3), parB (3), floorP (3), j (3);
-	parA[0 : 2] = (sortedSize - 1);
-	parA[2] = (sortedSize - 1) * 3;
-	parB[0] = 4;
-	parB[1] = 2;
-	parB[2] = 4;
-	floorP = parA / parB;
-    j = floorP;
+    FT[[1]] pSize = (FT) probabilities * ((FT) cutSize - 1);
+    uint[[1]] floorP = (uint64) pSize;
 
+    uint[[1]] gt = (uint) ((FT) floorP > pSize);
+    floorP = gt * (floorP - 1) + (1 - gt) * floorP;
 
-	FT[[1]] gammaA (3), gammaB (3), gammaRes (3), oneMinusGamma (3);
-	gammaA[0 : 3] = (FT) (sortedSize - 1);
-	gammaB[0] = 0.25;
-	gammaB[1] = 0.5;
-	gammaB[2] = 0.75;
-	gammaRes = gammaA * gammaB;
-	gammaRes = gammaRes - (FT) floorP;
-	oneMinusGamma = 1.0 - gammaRes;
+    uint[[1]] j = floorP;
+    FT[[1]] gamma = pSize - (FT) floorP;
 
-	D FT[[1]] floatParA (6), floatParB (6), floatParRes (6);
-	for (uint i = 0; i < 3; i = i + 1) {
-		floatParA[i] = oneMinusGamma[i];
-		floatParA[i + 3] = gammaRes[i];
-		floatParB[i] = (FT) sortedDatabase[(j[i])];
-		if (j[i] + 1 >= size (sortedDatabase))
-    		floatParB[i + 3] = (FT) sortedDatabase[(j[i])];
-    	else
-        	floatParB[i + 3] = (FT) sortedDatabase[(j[i] + 1)];
-	}
-	floatParRes = floatParA * floatParB;
-	result[1 : 4] = floatParRes[0 : 3] + floatParRes[3 : 6];
+    D T[[1]] left(nProbs);
+    D T[[1]] right(nProbs);
+    uint[[1]] sizes(nProbs) = cutSize - 1;
+    uint[[1]] leftIdx = min(j, sizes);
+    uint[[1]] rightIdx = min(j + 1, sizes);
 
-	return result;
+    __syscall("shared3p::gather_$T\_vec", __domainid(D), sortedData, left, __cref leftIdx);
+    __syscall("shared3p::gather_$T\_vec", __domainid(D), sortedData, right, __cref rightIdx);
+
+    return (1 - gamma) * (FT) left + gamma * (FT) right;
 }
+
+float64[[1]] _fnsProbs = {0, 0.25, 0.5, 0.75, 1.0};
 /** \endcond */
 
 /** \addtogroup five_number_summary
  *  @{
  *  @brief Find the minimum, lower quartile, median, upper quartile and maximum of a sample
- *  @note **D** - any protection domain
+ *  @note **D** - shared3p protection domain
  *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
  *  @note A version of this function which hides the sample size was
  *  implemented for the paper "Going Beyond Millionaires:
@@ -593,21 +583,53 @@ D FT[[1]] _fiveNumberSummary (D T[[1]] data, D bool[[1]] isAvailable) {
  *  returned.
  *  @leakage{Leaks the number of true values in isAvailable}
  */
-template<domain D>
+template<domain D : shared3p>
 D float32[[1]] fiveNumberSummary (D int32[[1]] data, D bool[[1]] isAvailable) {
-    return _fiveNumberSummary (data, isAvailable);
+    return _quantiles (data, isAvailable, _fnsProbs);
 }
-template<domain D>
+template<domain D : shared3p>
 D float64[[1]] fiveNumberSummary (D int64[[1]] data, D bool[[1]] isAvailable) {
-    return _fiveNumberSummary (data, isAvailable);
+    return _quantiles (data, isAvailable, _fnsProbs);
 }
-template<domain D>
+template<domain D : shared3p>
 D float32[[1]] fiveNumberSummary (D float32[[1]] data, D bool[[1]] isAvailable) {
-    return _fiveNumberSummary (data, isAvailable);
+    return _quantiles (data, isAvailable, _fnsProbs);
 }
-template<domain D>
+template<domain D : shared3p>
 D float64[[1]] fiveNumberSummary (D float64[[1]] data, D bool[[1]] isAvailable) {
-    return _fiveNumberSummary (data, isAvailable);
+    return _quantiles (data, isAvailable, _fnsProbs);
+}
+/** @} */
+
+/** \addtogroup quantiles
+ *  @{
+ *  @brief Calculate sample quantiles
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref int32 "int32" / \ref int64 "int64" / \ref float32 "float32" / \ref float64 "float64"
+ *  @param data - input sample
+ *  @param isAvailable - vector indicating which elements of the input sample are available
+ *  @param probabilities - vector of probabilities between 0 and 1
+ *  @return returns sample quantiles corresponding to the specified probabilities
+ *  @leakage{Leaks the number of true values in isAvailable}
+ */
+template<domain D : shared3p>
+D float32[[1]] quantiles(D int32[[1]] data, D bool[[1]] isAvailable, float64[[1]] probabilities) {
+    return _quantiles(data, isAvailable, probabilities);
+}
+
+template<domain D : shared3p>
+D float64[[1]] quantiles(D int64[[1]] data, D bool[[1]] isAvailable, float64[[1]] probabilities) {
+    return _quantiles(data, isAvailable, probabilities);
+}
+
+template<domain D : shared3p>
+D float32[[1]] quantiles(D float32[[1]] data, D bool[[1]] isAvailable, float64[[1]] probabilities) {
+    return _quantiles(data, isAvailable, probabilities);
+}
+
+template<domain D : shared3p>
+D float64[[1]] quantiles(D float64[[1]] data, D bool[[1]] isAvailable, float64[[1]] probabilities) {
+    return _quantiles(data, isAvailable, probabilities);
 }
 /** @} */
 
