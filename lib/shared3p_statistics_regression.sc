@@ -616,7 +616,7 @@ D T[[1]] _weightedLinearRegression(D T[[2]] variables, D T[[1]] dependent, D T[[
         extendedB = cat(b, depSum, 0);
     } else {
         D T[[2]] extA(1, 1);
-        extA[0, 0] = sum(weights * weights);
+        extA[0, 0] = sum(weights);
         extendedA = extA;
         extendedB = depSum;
     }

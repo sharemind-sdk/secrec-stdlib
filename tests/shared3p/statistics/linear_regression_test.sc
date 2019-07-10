@@ -121,6 +121,16 @@ bool test_weighted_lm (T proxy) {
     return isNegligible(sum(abs(output - expected) / expected));
 }
 
+template<type T>
+bool test_weighted_lm_null (T proxy) {
+    pd_shared3p float64[[1]] y = {-0.106124516091484, 1.51152199743894, -0.0946590384130976, 2.01842371387704, -0.062714099052421, 1.30486965422349, 2.28664539270111, -1.38886070111234, -0.278788766817371, -0.133321336393658};
+    pd_shared3p float64[[1]] w = {0.914806043496355, 0.937075413297862, 0.286139534786344, 0.830447626067325, 0.641745518893003, 0.519095949130133, 0.736588314641267, 0.13466659723781, 0.656992290401831, 0.705064784036949};
+    pd_shared3p float64[[2]] x;
+    float64[[1]] coeffs = declassify(weightedLinearRegression(x, y, w));
+    float64 expected = 0.758439386591662;
+    return isNegligible(abs(coeffs[0] - expected) / expected);
+}
+
 void main() {
 	string test_prefix = "LinearRegression (Gauss)";
 	test (test_prefix, test_lg (0::int32, 0::float32, LINEAR_REGRESSION_GAUSS), 0::int32);
@@ -141,6 +151,10 @@ void main() {
     test_prefix = "Weighted linear regression";
     test (test_prefix, test_weighted_lm (0 :: float32), 0 :: float32);
     test (test_prefix, test_weighted_lm (0 :: float64), 0 :: float64);
+
+    test_prefix = "Weighted linear regression (null model)";
+    test (test_prefix, test_weighted_lm_null (0 :: float32), 0 :: float32);
+    test (test_prefix, test_weighted_lm_null (0 :: float64), 0 :: float64);
 
 	test_report();
 }
