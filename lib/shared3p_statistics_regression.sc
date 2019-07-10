@@ -728,13 +728,13 @@ LOESSResult<D, FT> _loess(D T[[1]] x,
 
         D T[[1]] xsub(width);
         D T[[1]] ysub(width);
-        D T[[1]] distsub(width);
+        D FT[[1]] distsub(width);
 
         __syscall("shared3p::gather_$T\_vec", __domainid(D), x, xsub, __cref perm);
         __syscall("shared3p::gather_$T\_vec", __domainid(D), y, ysub, __cref perm);
         __syscall("shared3p::gather_$FT\_vec", __domainid(D), dists, distsub, __cref perm);
 
-        D FT[[1]] weights = _cube(1.0 - _cube(abs((FT) distsub / (FT) max(distsub))));
+        D FT[[1]] weights = _cube(1.0 - _cube(abs(distsub / distsub[width - 1])));
         D T[[2]] vars = reshape(xsub, width, 1);
         D FT[[1]] coeffs = weightedLinearRegression((FT) vars, (FT) ysub, weights);
 

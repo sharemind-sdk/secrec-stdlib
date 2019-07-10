@@ -40,22 +40,30 @@ bool testLoess(FT proxy) {
     pd_shared3p FT[[1]] y = {0.72521521938788, 0.123352636731389, 0.77099112938544, 1.37356596292468, 0.175085579102816, -0.63054823241008, 1.07832789745638, 1.42785682735176, 0.506309345119511, 1.11231345496861, -0.622107395700289, 1.19376360251485, 0.272030393873059, 0.896703993777019, -0.994026885370565, 0.441088282342767, -0.346253507140514, 1.02647059144904, -0.545993182046701, -0.322793159881682};
     FT xmin = 1.0;
     FT xmax = 10.0;
-    public LOESSResult<pd_shared3p, FT> res = loess(x, y, 0.5, xmin, xmax, 10u64);
-    FT[[1]] interceptExpected = {2.01337326010854, 2.03742020314104, 2.08756901334219, 2.45858133763966, -0.0310308323423644, -3.58371124273634, -5.37952669716792, -3.3183172829887, 3.61830184166846, 6.11262882392136};
-    FT[[1]] slopeExpected = {-0.530003827564528, -0.540755179379007, -0.556495366459796, -0.640237611583802, -0.0943196254444856, 0.598887636833, 0.89716189505699, 0.592796172985467, -0.322383520269567, -0.621346511264165};
+    public LOESSResult<pd_shared3p, FT> loessRes = loess(x, y, 0.5, xmin, xmax, 10u64);
+    FT[[1]] xpoints = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    FT[[1]] yhat = declassify(loessRes.intercept) + declassify(loessRes.slope) * xpoints;
+    FT[[1]] expected = {1.483369432544005, 0.956331006707545, 0.426573066546283, -0.09225413189280163, -0.5817571341963559, -0.004697605143984873, 0.8185822487156384, 1.109264907582611, 0.5198053843252097, -0.1793523694445547};
+    return all(_isNegligible(abs(yhat - expected) / expected));
+}
 
-    return
-        all(_isNegligible(
-                abs(interceptExpected - declassify(res.intercept)) /
-                interceptExpected)) &&
-        all(_isNegligible(
-                abs(slopeExpected - declassify(res.slope)) /
-                slopeExpected));
+template<type T, type FT>
+bool testLoessInt(T proxy, FT floatProxy) {
+    pd_shared3p T[[1]] x = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    pd_shared3p T[[1]] y = {8, 9, 1, -8, -10, -3, 7, 10, 4, -5};
+    FT xmin = 1.0;
+    FT xmax = 10.0;
+    public LOESSResult<pd_shared3p, FT> res = loess(x, y, 0.5, xmin, xmax, 10u64);
+    FT[[1]] yhat = (FT) declassify(x) * declassify(res.slope) + declassify(res.intercept);
+    FT[[1]] expected = {10.06138113656549, 5.648218943235182, 0.7136894824707802, -5.995826377295515, -7.42320534223709, -2.14106844741238, 4.995826377295487, 7.423205342236997, 2.313850362637183, -3.522204404808598};
+    return all(_isNegligible(abs(yhat - expected) / expected));
 }
 
 void main() {
 	string testPrefix = "LOESS regression";
 	test(testPrefix, testLoess(0f32), 0f32);
     test(testPrefix, testLoess(0f64), 0f64);
+    test(testPrefix, testLoessInt(0i32, 0f32), 0i32);
+    test(testPrefix, testLoessInt(0i64, 0f64), 0i64);
     test_report();
 }
