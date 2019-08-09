@@ -685,13 +685,20 @@ D T[[1]] _cube(D T[[1]] x) {
  */
 template<domain D : shared3p, type T, type FT>
 LOESSResult<D, FT> _loess(D T[[1]] x,
-                         D T[[1]] y,
-                         float64 span,
-                         FT xmin,
-                         FT xmax,
-                         uint xpoints)
+                          D T[[1]] y,
+                          float64 span,
+                          FT xmin,
+                          FT xmax,
+                          uint xpoints,
+                          uint degree)
 {
     public LOESSResult<D, FT> res;
+
+    if (degree == 0 || degree > 2) {
+        res.good = false;
+        res.error = "Degree must be 1 or 2.";
+        return res;
+    }
 
     if (size(x) != size(y)) {
         res.good = false;
@@ -709,8 +716,7 @@ LOESSResult<D, FT> _loess(D T[[1]] x,
 
     FT xstep = (xmax - xmin) / (FT) (xpoints - 1);
     FT xcurr = xmin;
-    D FT[[1]] intercept(xpoints);
-    D FT[[1]] slope(xpoints);
+    D FT[[1]] yhat(xpoints);
     uint[[1]] idx = iota(size(x));
     FT[[1]] points(xpoints);
 
@@ -736,19 +742,27 @@ LOESSResult<D, FT> _loess(D T[[1]] x,
 
         D FT[[1]] weights = _cube(1.0 - _cube(abs(distsub / distsub[width - 1])));
         D T[[2]] vars = reshape(xsub, width, 1);
-        D FT[[1]] coeffs = weightedLinearRegression((FT) vars, (FT) ysub, weights);
 
-        intercept[i] = coeffs[1];
-        slope[i] = coeffs[0];
+        if (degree == 2) {
+            D T[[2]] squared(width, 1) = vars * vars;
+            vars = cat(vars, squared, 1);
+        }
+
+        D FT[[1]] coeffs = weightedLinearRegression((FT) vars, (FT) ysub, weights);
         points[i] = xcurr;
+
+        if (degree == 1) {
+            yhat[i] = xcurr * coeffs[0] + coeffs[1];
+        } else {
+            yhat[i] = xcurr * coeffs[0] + xcurr * xcurr * coeffs[1] + coeffs[2];
+        }
 
         xcurr += xstep;
     }
 
     res.good = true;
-    res.intercept = intercept;
-    res.slope = slope;
     res.points = points;
+    res.predictions = yhat;
 
     return res;
 }
@@ -765,12 +779,10 @@ struct LOESSResult {
     bool good;
     /** error message if the procedure failed */
     string error;
-    /** intercepts of local regressions */
-    D T[[1]] intercept;
-    /** slopes of local regressions */
-    D T[[1]] slope;
     /** x-axis points where regressions were evaluated */
     T[[1]] points;
+    /** estimated y-axis values evaluated at 'points' */
+    D T[[1]] predictions;
 }
 /** @} */
 
@@ -793,27 +805,28 @@ struct LOESSResult {
  * @param xmin - smallest x-axis value where a local model is fitted
  * @param xmax - largest x-axis value where a local model is fitted
  * @param xpoints - number of regressions desired
+ * @param degree - degree of local regression polynomial (1 or 2)
  * @return returns \ref LOESSResult structure
  * @leakage{None}
  */
 template<domain D : shared3p>
-LOESSResult<D, float32> loess(D int32[[1]] x, D int32[[1]] y, float64 span, float32 xmin, float32 xmax, uint xpoints) {
-    return _loess(x, y, span, xmin, xmax, xpoints);
+LOESSResult<D, float32> loess(D int32[[1]] x, D int32[[1]] y, float64 span, float32 xmin, float32 xmax, uint xpoints, uint degree) {
+    return _loess(x, y, span, xmin, xmax, xpoints, degree);
 }
 
 template<domain D : shared3p>
-LOESSResult<D, float64> loess(D int64[[1]] x, D int64[[1]] y, float64 span, float64 xmin, float64 xmax, uint xpoints) {
-    return _loess(x, y, span, xmin, xmax, xpoints);
+LOESSResult<D, float64> loess(D int64[[1]] x, D int64[[1]] y, float64 span, float64 xmin, float64 xmax, uint xpoints, uint degree) {
+    return _loess(x, y, span, xmin, xmax, xpoints, degree);
 }
 
 template<domain D : shared3p>
-LOESSResult<D, float32> loess(D float32[[1]] x, D float32[[1]] y, float64 span, float32 xmin, float32 xmax, uint xpoints) {
-    return _loess(x, y, span, xmin, xmax, xpoints);
+LOESSResult<D, float32> loess(D float32[[1]] x, D float32[[1]] y, float64 span, float32 xmin, float32 xmax, uint xpoints, uint degree) {
+    return _loess(x, y, span, xmin, xmax, xpoints, degree);
 }
 
 template<domain D : shared3p>
-LOESSResult<D, float64> loess(D float64[[1]] x, D float64[[1]] y, float64 span, float64 xmin, float64 xmax, uint xpoints) {
-    return _loess(x, y, span, xmin, xmax, xpoints);
+LOESSResult<D, float64> loess(D float64[[1]] x, D float64[[1]] y, float64 span, float64 xmin, float64 xmax, uint xpoints, uint degree) {
+    return _loess(x, y, span, xmin, xmax, xpoints, degree);
 }
 /** @} */
 
