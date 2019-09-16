@@ -910,6 +910,7 @@ BlStringVector<D> bl_strLengthenBound(BlStringVector<D> s, uint biggerBound) {
             __domainid(D), row, result, __cref strideNew + i);
     }
 
+    s.bound = biggerBound;
     s.value = result;
     return s;
 }
