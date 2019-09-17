@@ -22,7 +22,9 @@
 */
 module shared3p_string;
 
+import oblivious;
 import shared3p;
+import shared3p_oblivious;
 import shared3p_random;
 import stdlib;
 import table_database;
@@ -54,6 +56,7 @@ import table_database;
 * \defgroup bl_strislessthan bl_strIsLessThan
 * \defgroup bl_strlevenshtein bl_strLevenshtein
 * \defgroup bl_strcontains bl_strContains
+* \defgroup bl_strfind bl_strFind
 * \defgroup bl_strindexof bl_strIndexOf
 * \defgroup bl_strhamming bl_strHamming
 * \defgroup bl_strshuffle bl_strShuffle
@@ -803,6 +806,54 @@ D bool bl_strContains (D xor_uint8[[1]] str, D xor_uint8[[1]] pat) {
     return any (bl_strEqPrefixes (str, pat));
 }
 /** @}*/
+
+/** \addtogroup bl_strfind
+ *  @{
+ *  @note **D** - shared3p protection domain
+ *  @brief Searches for a string in a string vector
+ *  @param needle - query string
+ *  @param haystack - string vector
+ *  @return returns the index of the first occurence of needle in
+ *  haystack if found and -1 otherwise
+ *  @leakage{None}
+ */
+template <domain D : shared3p>
+D int64 bl_strFind (D xor_uint8[[1]] needle, BlStringVector<D> haystack) {
+    uint bound = max(size(needle), haystack.bound);
+
+    if (bound > haystack.bound) {
+        haystack = bl_strLengthenBound(haystack, bound);
+    }
+
+    if (bound > size(needle)) {
+        D xor_uint8[[1]] tmp(bound);
+        tmp[:size(needle)] = needle;
+        needle = tmp;
+    }
+
+    uint n = size(haystack.value) / haystack.bound;
+    D xor_uint8[[1]] tmp(n * bound);
+    uint[[1]] indices(n * bound);
+
+    for (uint i = 0; i < n * bound; ++i) {
+        indices[i] = i % bound;
+    }
+
+    __syscall("shared3p::gather_xor_uint8_vec", __domainid(D), needle, tmp, __cref indices);
+
+    public BlStringVector<D> needleVec;
+    needleVec.value = tmp;
+    needleVec.bound = bound;
+
+    D bool[[1]] eq = bl_strEquals(needleVec, haystack);
+    D bool found = any(eq);
+    D int64 idx = (int64) truePrefixLength(!eq);
+    D int64 notFound = -1;
+    idx = choose(found, idx, notFound);
+
+    return idx;
+}
+/** @} */
 
 /** \addtogroup bl_strindexof
  *  @{
