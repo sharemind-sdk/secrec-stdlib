@@ -312,7 +312,7 @@ _dispatch(D T[[1]] dependent,
     if (varCount < 4) {
         return _glm(dependent, variables, family, iterations, GLM_SOLE_METHOD_INVERT, 0 :: uint);
     } else {
-        return _glm(dependent, variables, family, iterations, GLM_SOLE_METHOD_LU_DECOMPOSITION, 0 :: uint);
+        return _glm(dependent, variables, family, iterations, GLM_SOLE_METHOD_GAUSS, 0 :: uint);
     }
 }
 
