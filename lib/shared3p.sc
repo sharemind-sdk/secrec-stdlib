@@ -57,6 +57,7 @@ kind shared3p {
 * \defgroup shared3p_sum_vec sum
 * \defgroup shared3p_sum_k sum(parts)
 * \defgroup shared3p_prefix_sum prefixSum
+* \defgroup shared3p_inv_prefix_sum invPrefixSum
 * \defgroup shared3p_product product
 * \defgroup shared3p_product_vec product
 * \defgroup shared3p_product_k product(parts)
@@ -544,6 +545,57 @@ D int32[[1]] prefixSum(D int32[[1]] vec) {
 template<domain D : shared3p>
 D int64[[1]] prefixSum(D int64[[1]] vec) {
     return _prefixSum(vec);
+}
+/** @} */
+
+/** \cond */
+template<domain D : shared3p, type T>
+D T[[1]] _invPrefixSum(D T[[1]] a) {
+    D T[[1]] res(size(a));
+    __syscall("shared3p::inv_prefix_sum_$T\_vec", __domainid(D), a, res);
+    return res;
+}
+/** \endcond */
+
+/** \addtogroup shared3p_inv_prefix_sum
+ *  @{
+ *  @brief Fast inverse prefix sum
+ *  @note **D** - shared3p protection domain
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
+ *  @param vec - a vector of supported type
+ *  @return Turns the input vector [x1, x2, ..., xn] to [x1, x1 + x2, ... , x1 + ... + xn]
+ */
+template<domain D : shared3p>
+D uint8[[1]] invPrefixSum(D uint8[[1]] vec) {
+    return _invPrefixSum(vec);
+}
+template<domain D : shared3p>
+D uint16[[1]] invPrefixSum(D uint16[[1]] vec) {
+    return _invPrefixSum(vec);
+}
+template<domain D : shared3p>
+D uint32[[1]] invPrefixSum(D uint32[[1]] vec) {
+    return _invPrefixSum(vec);
+}
+template<domain D : shared3p>
+D uint64[[1]] invPrefixSum(D uint64[[1]] vec) {
+    return _invPrefixSum(vec);
+}
+template<domain D : shared3p>
+D int8[[1]] invPrefixSum(D int8[[1]] vec) {
+    return _invPrefixSum(vec);
+}
+template<domain D : shared3p>
+D int16[[1]] invPrefixSum(D int16[[1]] vec) {
+    return _invPrefixSum(vec);
+}
+template<domain D : shared3p>
+D int32[[1]] invPrefixSum(D int32[[1]] vec) {
+    return _invPrefixSum(vec);
+}
+template<domain D : shared3p>
+D int64[[1]] invPrefixSum(D int64[[1]] vec) {
+    return _invPrefixSum(vec);
 }
 /** @} */
 
