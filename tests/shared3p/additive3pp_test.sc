@@ -112,6 +112,38 @@ bool test_sum2(T data){
     return all(control == result);
 }
 
+struct uint_tag {}
+struct int_tag {}
+
+template<domain D : shared3p, type T>
+D T[[1]] prefix_sum_data(int_tag t) {
+    pd_shared3p T[[1]] x = {-10, -9, -8, -7, -6, -5, -4, -3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    x = shuffle(x);
+    return x;
+}
+
+template<domain D : shared3p, type T>
+D T[[1]] prefix_sum_data(uint_tag t) {
+    pd_shared3p T[[1]] x = {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+    x = shuffle(x);
+    return x;
+}
+
+template<type T, type Tag>
+bool test_prefix_sum(T proxy, Tag tag) {
+    pd_shared3p T[[1]] tmp = prefix_sum_data(tag);
+    uint n = size(tmp);
+    T[[1]] pub = declassify(tmp);
+    T[[1]] prsum(n);
+
+    prsum[0] = pub[0];
+    for (uint i = 1; i < n; ++i) {
+        prsum[i] = prsum[i - 1] + pub[i];
+    }
+
+    return all(declassify(prefixSum((T) tmp)) == prsum);
+}
+
 template<type T>
 bool test_product(T data){
     pd_shared3p T[[1]] temp (10);
@@ -486,6 +518,18 @@ void main(){
     test(test_prefix, test_sum2(0::int16), 0::int16);
     test(test_prefix, test_sum2(0::int32), 0::int32);
     test(test_prefix, test_sum2(0::int64), 0::int64);
+
+    test_prefix = "Prefix sum";
+    uint_tag ut;
+    int_tag it;
+    test(test_prefix, test_prefix_sum(0u8, ut), 0u8);
+    test(test_prefix, test_prefix_sum(0u16, ut), 0u16);
+    test(test_prefix, test_prefix_sum(0u32, ut), 0u32);
+    test(test_prefix, test_prefix_sum(0u64, ut), 0u64);
+    test(test_prefix, test_prefix_sum(0i8, it), 0i8);
+    test(test_prefix, test_prefix_sum(0i16, it), 0i16);
+    test(test_prefix, test_prefix_sum(0i32, it), 0i32);
+    test(test_prefix, test_prefix_sum(0i64, it), 0i64);
 
     test_prefix = "Product";
     test(test_prefix, test_product(0::uint8), 0::uint8);
