@@ -22,6 +22,7 @@ import stdlib;
  * \defgroup shared3p_private_random_permutation privateRandomPermutation
  * \defgroup shared3p_apply_public_permutation applyPublicPermutation
  * \defgroup shared3p_apply_public_permutation_rows applyPublicPermutationRows
+ * \defgroup shared3p_apply_public_permutation_cols applyPublicPermutationCols
  */
 
 /**
@@ -78,8 +79,8 @@ D T[[N]] _partialRearrange(D T[[N]] a, D T[[N]] b, uint[[1]] source, uint[[1]] t
  * @{
  * @brief Permute a vector according to a public permutation
  * @param x - vector to be permuted
- * @param p - permutation. Output at index i will be x[p[i]].
- * @return x permuted according to permutation p
+ * @param p - permutation. Output at index `i` will be `x[p[i]]`.
+ * @return `x` permuted according to permutation `p`
  */
 template<domain D : shared3p, type T>
 D T[[1]] applyPublicPermutation(D T[[1]] x, uint[[1]] p) {
@@ -98,8 +99,8 @@ D T[[1]] applyPublicPermutation(D T[[1]] x, uint[[1]] p) {
  * @{
  * @brief Permute matrix rows according to a public permutation
  * @param X - matrix to be permuted
- * @param p - permutation. Output row at index i will be x[p[i], :].
- * @return X where rows have been permuted according to permutation p
+ * @param p - permutation. Output row at index `i` will be `X[p[i], :]`.
+ * @return `X` where rows have been permuted according to permutation `p`
  */
 template<domain D : shared3p, type T>
 D T[[2]] applyPublicPermutationRows(D T[[2]] X, uint[[1]] p) {
@@ -112,7 +113,32 @@ D T[[2]] applyPublicPermutationRows(D T[[2]] X, uint[[1]] p) {
             source[i * n + j] = p[i] * shape(X)[1] + j;
         }
     }
-    D T[[2]] Y(m,n);
+    D T[[2]] Y(m, n);
+    Y = _partialRearrange(X, Y, source, target);
+    return Y;
+}
+/** @} */
+
+/**
+ * \addtogroup shared3p_apply_public_permutation_cols
+ * @{
+ * @brief Permute matrix columns according to a public permutation
+ * @param X - matrix to be permuted
+ * @param p - permutation. Output column at index `i` will be `X[:, p[i]]`.
+ * @return `X` where columns have been permuted according to permutation `p`
+ */
+template<domain D : shared3p, type T>
+D T[[2]] applyPublicPermutationCols(D T[[2]] X, uint[[1]] p) {
+    uint m = shape(X)[0];
+    uint n = shape(p)[0];
+    uint[[1]] source (m * n);
+    uint[[1]] target = iota(m * n);
+    for (uint i = 0; i < m; ++i) {
+        for (uint j = 0; j < n; ++j) {
+            source[i * n + j] = i * shape(X)[1] + p[j];
+        }
+    }
+    D T[[2]] Y(m, n);
     Y = _partialRearrange(X, Y, source, target);
     return Y;
 }
