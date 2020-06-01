@@ -21,6 +21,7 @@ import stdlib;
  * \defgroup shared3p_public_random_permutation publicRandomPermutation
  * \defgroup shared3p_private_random_permutation privateRandomPermutation
  * \defgroup shared3p_apply_public_permutation applyPublicPermutation
+ * \defgroup shared3p_apply_public_permutation_rows applyPublicPermutationRows
  */
 
 /**
@@ -89,6 +90,31 @@ D T[[1]] applyPublicPermutation(D T[[1]] x, uint[[1]] p) {
     D T[[1]] y(n);
     y = _partialRearrange(x, y, source, target);
     return y;
+}
+/** @} */
+
+/**
+ * \addtogroup shared3p_apply_public_permutation_rows
+ * @{
+ * @brief Permute matrix rows according to a public permutation
+ * @param X - matrix to be permuted
+ * @param p - permutation. Output row at index i will be x[p[i], :].
+ * @return X where rows have been permuted according to permutation p
+ */
+template<domain D : shared3p, type T>
+D T[[2]] applyPublicPermutationRows(D T[[2]] X, uint[[1]] p) {
+    uint m = shape(p)[0];
+    uint n = shape(X)[1];
+    uint[[1]] source(m * n);
+    uint[[1]] target = iota(m * n);
+    for (uint i = 0; i < m; ++i) {
+        for (uint j = 0; j < n; ++j) {
+            source[i * n + j] = p[i] * shape(X)[1] + j;
+        }
+    }
+    D T[[2]] Y(m,n);
+    Y = _partialRearrange(X, Y, source, target);
+    return Y;
 }
 /** @} */
 
