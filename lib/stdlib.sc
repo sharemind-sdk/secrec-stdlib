@@ -102,6 +102,9 @@ int64 INT64_MIN = -9223372036854775808;
 * \defgroup isprefixof_string isPrefixOf
 * \defgroup issuffixof_string isSuffixOf
 * \defgroup iota iota
+* \defgroup stdlib_sort sort
+* \defgroup stdlib_sort_simple sort
+* \defgroup stdlib_sort_direction sort(direction)
 */
 
 /** \addtogroup stdlib
@@ -1769,6 +1772,59 @@ D uint[[1]] iota (uint n) {
 
     return out;
 }
+/** @} */
+
+/** \addtogroup stdlib_sort
+ *  @{
+ *  @brief Public sorting functions
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
+ *  \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
+ *  \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
+ *  int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ */
+
+/** \addtogroup stdlib_sort_simple
+ *  @{
+ *  @brief Sort a public vector
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
+ *  \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
+ *  \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
+ *  int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @param x - vector to be sorted
+ *  @return `x` sorted in ascending order
+ */
+template<type T>
+T[[1]] sort(T[[1]] x) {
+    return sort(x, true);
+}
+/** @} */
+
+/** \addtogroup stdlib_sort_direction
+ *  @{
+ *  @brief Sort a public vector
+ *  @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
+ *  \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
+ *  \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
+ *  int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @param x - vector to be sorted
+ *  @param ascending - boolean indicating if the input should be sorted in ascending or descending order
+ *  @return `x` sorted according to the ordering specified by `ascending`
+ */
+template<type T>
+T[[1]] sort(T[[1]] x, bool ascending) {
+    uint n = size(x);
+    uint[[1]] p = iota(n);
+
+    __syscall("public_$T\_sort_permutation", ascending, __cref x, __ref p);
+
+    T[[1]] res(n);
+    for (uint i = 0; i < n; ++i) {
+        res[i] = x[p[i]];
+    }
+
+    return res;
+}
+/** @} */
 /** @} */
 
 /** @}*/
