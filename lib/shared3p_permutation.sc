@@ -35,14 +35,18 @@ import stdlib;
  * \addtogroup shared3p_public_random_permutation
  * @{
  * @brief Generates a random public permutation
+ * @note This procedure actually generates a `uint32` permutation
+ * vector which is converted to `uint64`. It does not work when `n >
+ * UINT32_MAX`.
  * @param domainProxy - a value used to indicate the shared3p domain
  * used for generating shared randomness by the procedure. The value
  * of this parameter is not important.
  * @param n - length of the permutation
- * @return a random permutation of length n
+ * @return a random permutation of length `n`
  */
 template<domain D : shared3p>
 uint[[1]] publicRandomPermutation(D uint domainProxy, uint n) {
+    assert(n <= (uint) UINT32_MAX);
     uint32[[1]] pi(n);
     __syscall("shared3p::gen_rand_pub_perm", __domainid(D), __ref pi);
     return (uint) pi;
