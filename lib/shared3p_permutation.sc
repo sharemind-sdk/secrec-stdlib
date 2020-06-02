@@ -82,6 +82,11 @@ D T[[N]] _partialRearrange(D T[[N]] a, D T[[N]] b, uint[[1]] source, uint[[1]] t
  * \addtogroup shared3p_apply_public_permutation
  * @{
  * @brief Permute a vector according to a public permutation
+ * @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
+ * \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
+ * \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
+ * int64 "int" / \ref float32 "float32" / \ref float64 "float64" /
+ * \ref fix32 "fix32" / \ref fix64 "fix64"
  * @param x - vector to be permuted
  * @param p - permutation. Output at index `i` will be `x[p[i]]`.
  * @return `x` permuted according to permutation `p`
@@ -102,6 +107,11 @@ D T[[1]] applyPublicPermutation(D T[[1]] x, uint[[1]] p) {
  * \addtogroup shared3p_apply_public_permutation_rows
  * @{
  * @brief Permute matrix rows according to a public permutation
+ * @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
+ * \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
+ * \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
+ * int64 "int" / \ref float32 "float32" / \ref float64 "float64" /
+ * \ref fix32 "fix32" / \ref fix64 "fix64"
  * @param X - matrix to be permuted
  * @param p - permutation. Output row at index `i` will be `X[p[i], :]`.
  * @return `X` where rows have been permuted according to permutation `p`
@@ -127,6 +137,11 @@ D T[[2]] applyPublicPermutationRows(D T[[2]] X, uint[[1]] p) {
  * \addtogroup shared3p_apply_public_permutation_cols
  * @{
  * @brief Permute matrix columns according to a public permutation
+ * @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
+ * \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
+ * \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
+ * int64 "int" / \ref float32 "float32" / \ref float64 "float64" /
+ * \ref fix32 "fix32" / \ref fix64 "fix64"
  * @param X - matrix to be permuted
  * @param p - permutation. Output column at index `i` will be `X[:, p[i]]`.
  * @return `X` where columns have been permuted according to permutation `p`
