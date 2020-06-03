@@ -64,6 +64,16 @@ bool testApplyPublicPermutationCols(T proxy) {
     return all(res[0, :] == expected);
 }
 
+template<type T>
+bool testApplyPrivatePermutation(T proxy) {
+    pd_shared3p T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
+    pd_shared3p uint[[1]] p = {4, 0, 7, 6, 5, 1, 2, 3, 9, 8};
+    uint n = size(x);
+    T[[1]] expected = (T) iota(n);
+    T[[1]] res = declassify(applyPrivatePermutation(x, p));
+    return all(res == expected);
+}
+
 void main() {
     string test_prefix = "publicRandomPermutation";
     test(test_prefix, testGenPublicPermutation(), 0u64);
@@ -79,6 +89,9 @@ void main() {
 
     test_prefix = "applyPublicPermutationCols";
     test(test_prefix, testApplyPublicPermutationCols(0f64), 0f64);
+
+    test_prefix = "applyPrivatePermutation";
+    test(test_prefix, testApplyPrivatePermutation(0u64), 0u64);
 
     test_report();
 }
