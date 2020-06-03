@@ -90,6 +90,7 @@ D T[[N]] _partialRearrange(D T[[N]] a, D T[[N]] b, uint[[1]] source, uint[[1]] t
  * @param x - vector to be permuted
  * @param p - permutation. Output at index `i` will be `x[p[i]]`.
  * @return `x` permuted according to permutation `p`
+ * @leakage{None}
  */
 template<domain D : shared3p, type T>
 D T[[1]] applyPublicPermutation(D T[[1]] x, uint[[1]] p) {
@@ -115,6 +116,7 @@ D T[[1]] applyPublicPermutation(D T[[1]] x, uint[[1]] p) {
  * @param X - matrix to be permuted
  * @param p - permutation. Output row at index `i` will be `X[p[i], :]`.
  * @return `X` where rows have been permuted according to permutation `p`
+ * @leakage{None}
  */
 template<domain D : shared3p, type T>
 D T[[2]] applyPublicPermutationRows(D T[[2]] X, uint[[1]] p) {
@@ -145,6 +147,7 @@ D T[[2]] applyPublicPermutationRows(D T[[2]] X, uint[[1]] p) {
  * @param X - matrix to be permuted
  * @param p - permutation. Output column at index `i` will be `X[:, p[i]]`.
  * @return `X` where columns have been permuted according to permutation `p`
+ * @leakage{None}
  */
 template<domain D : shared3p, type T>
 D T[[2]] applyPublicPermutationCols(D T[[2]] X, uint[[1]] p) {
