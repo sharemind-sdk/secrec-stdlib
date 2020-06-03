@@ -36,6 +36,7 @@ import stdlib;
  * \addtogroup shared3p_public_random_permutation
  * @{
  * @brief Generates a random public permutation
+ * @note **D** - shared3p protection domain
  * @note This procedure actually generates a `uint32` permutation
  * vector which is converted to `uint64`. It does not work when `n >
  * UINT32_MAX`.
@@ -58,6 +59,7 @@ uint[[1]] publicRandomPermutation(D uint domainProxy, uint n) {
  * \addtogroup shared3p_private_random_permutation
  * @{
  * @brief Generates a random private permutation
+ * @note **D** - shared3p protection domain
  * @param n - length of the permutation
  * @return a random permutation of length n
  */
@@ -83,6 +85,7 @@ D T[[N]] _partialRearrange(D T[[N]] a, D T[[N]] b, uint[[1]] source, uint[[1]] t
  * \addtogroup shared3p_apply_public_permutation
  * @{
  * @brief Permute a vector according to a public permutation
+ * @note **D** - shared3p protection domain
  * @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
  * \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
  * \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
@@ -109,6 +112,7 @@ D T[[1]] applyPublicPermutation(D T[[1]] x, uint[[1]] p) {
  * \addtogroup shared3p_apply_public_permutation_rows
  * @{
  * @brief Permute matrix rows according to a public permutation
+ * @note **D** - shared3p protection domain
  * @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
  * \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
  * \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
@@ -140,6 +144,7 @@ D T[[2]] applyPublicPermutationRows(D T[[2]] X, uint[[1]] p) {
  * \addtogroup shared3p_apply_public_permutation_cols
  * @{
  * @brief Permute matrix columns according to a public permutation
+ * @note **D** - shared3p protection domain
  * @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
  * \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
  * \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
@@ -171,6 +176,7 @@ D T[[2]] applyPublicPermutationCols(D T[[2]] X, uint[[1]] p) {
  * \addtogroup shared3p_apply_private_permutation
  * @{
  * @brief Permute a vector according to a private permutation
+ * @note **D** - shared3p protection domain
  * @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
  * \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
  * \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
