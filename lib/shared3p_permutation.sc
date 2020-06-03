@@ -24,6 +24,7 @@ import stdlib;
  * \defgroup shared3p_apply_public_permutation_rows applyPublicPermutationRows
  * \defgroup shared3p_apply_public_permutation_cols applyPublicPermutationCols
  * \defgroup shared3p_apply_private_permutation applyPrivatePermutation
+ * \defgroup shared3p_apply_private_permutation_rows applyPrivatePermutationRows
  */
 
 /**
@@ -189,11 +190,36 @@ D T[[2]] applyPublicPermutationCols(D T[[2]] X, uint[[1]] p) {
  */
 template<domain D, type T>
 D T[[1]] applyPrivatePermutation(D T[[1]] data, D uint[[1]] p) {
-    pd_shared3p uint8[[1]] key(32);
+    D uint8[[1]] key(32);
     key = randomize(key);
     uint[[1]] tau = (uint) declassify(shuffle(p, key));
     data = applyPublicPermutation(data, tau);
     return inverseShuffle(data, key);
+}
+/** @} */
+
+/**
+ * \addtogroup shared3p_apply_private_permutation_rows
+ * @{
+ * @brief Permute matrix rows according to a private permutation
+ * @note **D** - shared3p protection domain
+ * @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
+ * \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
+ * \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
+ * int64 "int" / \ref float32 "float32" / \ref float64 "float64" /
+ * \ref fix32 "fix32" / \ref fix64 "fix64"
+ * @param X - matrix to be permuted
+ * @param p - permutation. Output row at index `i` will be `X[p[i], :]`.
+ * @return `X` where rows have been permuted according to permutation `p`
+ * @leakage{None}
+ */
+template <domain D, type T>
+D T[[2]] applyPrivatePermutationRows(D T[[2]] data, D uint[[1]] p) {
+    D uint8 [[1]] key(32);
+    key = randomize(key);
+    uint[[1]] tau = (uint) declassify(shuffle(p, key));
+    data = applyPublicPermutationRows(data, tau);
+    return inverseShuffleRows(data, key);
 }
 /** @} */
 
