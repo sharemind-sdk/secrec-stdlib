@@ -10,8 +10,8 @@
 /** \cond */
 module shared3p_permutation;
 
-import matrix;
 import shared3p;
+import shared3p_matrix;
 import shared3p_random;
 import stdlib;
 /** \endcond */
@@ -72,17 +72,6 @@ D uint[[1]] privateRandomPermutation(uint n) {
     return shuffle(pi);
 }
 /** @} */
-
-/** \cond */
-template<domain D : shared3p, type T, dim N>
-D T[[N]] _partialRearrange(D T[[N]] a, D T[[N]] b, uint[[1]] source, uint[[1]] target) {
-    assert(size(source) == size(target));
-    D T[[1]] temp(size(source));
-    __syscall("shared3p::gather_$T\_vec",  __domainid(D), a, temp, __cref source);
-    __syscall("shared3p::scatter_$T\_vec", __domainid(D), temp, b, __cref target);
-    return b;
-}
-/** \endcond */
 
 /**
  * \addtogroup shared3p_apply_public_permutation

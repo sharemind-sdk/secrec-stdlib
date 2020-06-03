@@ -48,6 +48,7 @@ import matrix;
 * \defgroup shared3p_cholesky cholesky
 * \defgroup shared3p_choleskyinverse choleskyInverse
 * \defgroup shared3p_borderinginverse borderingInverse
+* \defgroup shared3p_transpose transpose
 */
 
 /** \addtogroup shared3p_matrix
@@ -1150,5 +1151,33 @@ D float64[[2]] borderingInverse(D float64[[2]] x) {
     return _borderingInv(x);
 }
 /** @} */
+
+/** \addtogroup shared3p_transpose
+ * @{
+ * @brief Function for transposing matrices
+ * @note **D** - shared3p protection domain
+ * @note **T** - any \ref data_types "data" type
+ * @param mat - a 2-dimensional matrix
+ * @return returns the transposed version of the input matrix
+ * @leakage{None}
+ */
+template<domain D : shared3p, type T>
+D T[[2]] transpose(D T[[2]] X) {
+    uint[[1]] s = shape(X);
+    uint [[1]] source(size(X));
+    uint [[1]] target = iota(size(X));
+    D T[[2]] Y(s[1], s[0]);
+
+    for (uint i = 0; i < s[1]; ++i) {
+      for (uint j = 0; j < s[0]; ++j) {
+          source[j + i * s[0]] = j * s[1] + i;
+      }
+    }
+
+    Y = _partialRearrange(X, Y, source, target);
+
+    return Y;
+}
+/* @} */
 
 /** @}*/

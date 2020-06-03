@@ -102,6 +102,17 @@ kind shared3p {
 /**
  * \cond
  */
+
+// Useful for simplifying gather/scatter usage
+template<domain D : shared3p, type T, dim N>
+D T[[N]] _partialRearrange(D T[[N]] a, D T[[N]] b, uint[[1]] source, uint[[1]] target) {
+    assert(size(source) == size(target));
+    D T[[1]] temp(size(source));
+    __syscall("shared3p::gather_$T\_vec",  __domainid(D), a, temp, __cref source);
+    __syscall("shared3p::scatter_$T\_vec", __domainid(D), temp, b, __cref target);
+    return b;
+}
+
 template <domain D : shared3p, type T>
 D fix32[[1]] _toFixCastHelper (D T[[1]] x) {
     D int32[[1]] xint (size (x));
