@@ -30,72 +30,72 @@ bool testGenPrivatePermutation() {
     return !all(i == p) && all(i == sort(p));
 }
 
-template<type T>
-bool testApplyPublicPermutation(T proxy) {
-    pd_shared3p T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
+template<domain D, type T>
+bool testApplyPublicPermutation(D T proxy) {
+    D T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
     uint[[1]] p = {4, 0, 7, 6, 5, 1, 2, 3, 9, 8};
     uint n = size(x);
-    T[[1]] expected = (T) iota(n);
-    T[[1]] res = declassify(applyPublicPermutation(x, p));
-    return all(res == expected);
+    D T[[1]] expected = (T) iota(n);
+    D T[[1]] res = applyPublicPermutation(x, p);
+    return declassify(all(res == expected));
 }
 
-template<type T>
-bool testApplyPublicPermutationRows(T proxy) {
-    pd_shared3p T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
+template<domain D, type T>
+bool testApplyPublicPermutationRows(D T proxy) {
+    D T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
     uint n = size(x);
-    pd_shared3p T[[2]] X(n, 1);
+    D T[[2]] X(n, 1);
     uint[[1]] p = {4, 0, 7, 6, 5, 1, 2, 3, 9, 8};
-    T[[1]] expected = (T) iota(n);
+    D T[[1]] expected = (T) iota(n);
     X[:, 0] = x;
-    T[[2]] res = declassify(applyPublicPermutationRows(X, p));
-    return all(res[:, 0] == expected);
+    D T[[2]] res = applyPublicPermutationRows(X, p);
+    return declassify(all(res[:, 0] == expected));
 }
 
-template<type T>
-bool testApplyPublicPermutationCols(T proxy) {
-    pd_shared3p T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
+template<domain D, type T>
+bool testApplyPublicPermutationCols(D T proxy) {
+    D T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
     uint n = size(x);
-    pd_shared3p T[[2]] X(1, n);
+    D T[[2]] X(1, n);
     uint[[1]] p = {4, 0, 7, 6, 5, 1, 2, 3, 9, 8};
-    T[[1]] expected = (T) iota(n);
+    D T[[1]] expected = (T) iota(n);
     X[0, :] = x;
-    T[[2]] res = declassify(applyPublicPermutationCols(X, p));
-    return all(res[0, :] == expected);
+    D T[[2]] res = applyPublicPermutationCols(X, p);
+    return declassify(all(res[0, :] == expected));
 }
 
-template<type T>
-bool testApplyPrivatePermutation(T proxy) {
-    pd_shared3p T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
-    pd_shared3p uint[[1]] p = {4, 0, 7, 6, 5, 1, 2, 3, 9, 8};
+template<domain D, type T>
+bool testApplyPrivatePermutation(D T proxy) {
+    D T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
+    D uint[[1]] p = {4, 0, 7, 6, 5, 1, 2, 3, 9, 8};
     uint n = size(x);
-    T[[1]] expected = (T) iota(n);
-    T[[1]] res = declassify(applyPrivatePermutation(x, p));
-    return all(res == expected);
+    D T[[1]] expected = (T) iota(n);
+    D T[[1]] res = applyPrivatePermutation(x, p);
+    return declassify(all(res == expected));
 }
 
-template<type T>
-bool testApplyPrivatePermutationRows(T proxy) {
-    pd_shared3p T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
+template<domain D, type T>
+bool testApplyPrivatePermutationRows(D T proxy) {
+    D T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
     uint n = size(x);
-    pd_shared3p T[[2]] X(n, 1);
-    pd_shared3p uint[[1]] p = {4, 0, 7, 6, 5, 1, 2, 3, 9, 8};
-    T[[1]] expected = (T) iota(n);
+    D T[[2]] X(n, 1);
+    D uint[[1]] p = {4, 0, 7, 6, 5, 1, 2, 3, 9, 8};
+    D T[[1]] expected = (T) iota(n);
     X[:, 0] = x;
-    T[[2]] res = declassify(applyPrivatePermutationRows(X, p));
-    return all(res[:, 0] == expected);
+    D T[[2]] res = applyPrivatePermutationRows(X, p);
+    return declassify(all(res[:, 0] == expected));
 }
 
-template<type T>
-bool testApplyPrivatePermutationCols(T proxy) {
-    pd_shared3p T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
+template<domain D, type T>
+bool testApplyPrivatePermutationCols(D T proxy) {
+    D T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
     uint n = size(x);
-    pd_shared3p T[[2]] X(1, n);
-    pd_shared3p uint[[1]] p = {4, 0, 7, 6, 5, 1, 2, 3, 9, 8};
-    T[[1]] expected = (T) iota(n);
+    D T[[2]] X(1, n);
+    D uint[[1]] p = {4, 0, 7, 6, 5, 1, 2, 3, 9, 8};
+    D T[[1]] expected = (T) iota(n);
     X[0, :] = x;
-    T[[2]] res = declassify(applyPrivatePermutationCols(X, p));
-    return all(res[0, :] == expected);
+    D T[[2]] res = applyPrivatePermutationCols(X, p);
+    return declassify(all(res[0, :] == expected));
 }
 
 void main() {
@@ -106,22 +106,34 @@ void main() {
     test(test_prefix, testGenPrivatePermutation(), 0u64);
 
     test_prefix = "applyPublicPermutation";
-    test(test_prefix, testApplyPublicPermutation(0u64), 0u64);
+    { pd_shared3p int32 proxy; test(test_prefix, testApplyPublicPermutation(proxy), proxy); }
+    { pd_shared3p fix32 proxy; test(test_prefix, testApplyPublicPermutation(proxy), proxy); }
+    { pd_shared3p float32 proxy; test(test_prefix, testApplyPublicPermutation(proxy), proxy); }
 
     test_prefix = "applyPublicPermutationRows";
-    test(test_prefix, testApplyPublicPermutationRows(0i64), 0i64);
+    { pd_shared3p int32 proxy; test(test_prefix, testApplyPublicPermutationRows(proxy), proxy); }
+    { pd_shared3p fix32 proxy; test(test_prefix, testApplyPublicPermutationRows(proxy), proxy); }
+    { pd_shared3p float32 proxy; test(test_prefix, testApplyPublicPermutationRows(proxy), proxy); }
 
     test_prefix = "applyPublicPermutationCols";
-    test(test_prefix, testApplyPublicPermutationCols(0f64), 0f64);
+    { pd_shared3p int32 proxy; test(test_prefix, testApplyPublicPermutationCols(proxy), proxy); }
+    { pd_shared3p fix32 proxy; test(test_prefix, testApplyPublicPermutationCols(proxy), proxy); }
+    { pd_shared3p float32 proxy; test(test_prefix, testApplyPublicPermutationCols(proxy), proxy); }
 
     test_prefix = "applyPrivatePermutation";
-    test(test_prefix, testApplyPrivatePermutation(0u64), 0u64);
+    { pd_shared3p int32 proxy; test(test_prefix, testApplyPrivatePermutation(proxy), proxy); }
+    { pd_shared3p fix32 proxy; test(test_prefix, testApplyPrivatePermutation(proxy), proxy); }
+    { pd_shared3p float32 proxy; test(test_prefix, testApplyPrivatePermutation(proxy), proxy); }
 
     test_prefix = "applyPrivatePermutationRows";
-    test(test_prefix, testApplyPrivatePermutationRows(0i64), 0i64);
+    { pd_shared3p int32 proxy; test(test_prefix, testApplyPrivatePermutationRows(proxy), proxy); }
+    { pd_shared3p fix32 proxy; test(test_prefix, testApplyPrivatePermutationRows(proxy), proxy); }
+    { pd_shared3p float32 proxy; test(test_prefix, testApplyPrivatePermutationRows(proxy), proxy); }
 
     test_prefix = "applyPrivatePermutationCols";
-    test(test_prefix, testApplyPrivatePermutationCols(0i64), 0i64);
+    { pd_shared3p int32 proxy; test(test_prefix, testApplyPrivatePermutationCols(proxy), proxy); }
+    { pd_shared3p fix32 proxy; test(test_prefix, testApplyPrivatePermutationCols(proxy), proxy); }
+    { pd_shared3p float32 proxy; test(test_prefix, testApplyPrivatePermutationCols(proxy), proxy); }
 
     test_report();
 }
