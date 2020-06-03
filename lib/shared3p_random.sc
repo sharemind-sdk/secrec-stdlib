@@ -151,6 +151,19 @@ D T[[1]] inverseShuffle (D T[[1]] vec, D uint8[[1]] key) {
     return vec;
 }
 
+template <domain D : shared3p>
+D fix32[[1]] inverseShuffle (D fix32[[1]] vec, D uint8[[1]] key) {
+    assert(size(key) == 32);
+    __syscall("shared3p::vecshufinv_uint32_vec", __domainid(D), vec, key);
+    return vec;
+}
+
+template <domain D : shared3p>
+D fix64[[1]] inverseShuffle (D fix64[[1]] vec, D uint8[[1]] key) {
+    assert(size(key) == 64);
+    __syscall("shared3p::vecshufinv_uint64_vec", __domainid(D), vec, key);
+    return vec;
+}
 /** @}*/
 /** \addtogroup shufflerows1
 *  @{
