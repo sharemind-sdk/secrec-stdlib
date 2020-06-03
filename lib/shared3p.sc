@@ -513,6 +513,7 @@ D T[[1]] _prefixSum(D T [[1]] a) {
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @param vec - a vector of supported type
  *  @return Turns the input vector [x1, x2, ..., xn] to [x1, x1 + x2, ... , x1 + ... + xn]
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D uint8[[1]] prefixSum(D uint8[[1]] vec) {
@@ -564,6 +565,7 @@ D T[[1]] _invPrefixSum(D T[[1]] a) {
  *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
  *  @param vec - a vector of supported type
  *  @return Reverses prefixSum: subtracts the preceding element from each element of vec.
+ *  @leakage{None}
  */
 template<domain D : shared3p>
 D uint8[[1]] invPrefixSum(D uint8[[1]] vec) {
