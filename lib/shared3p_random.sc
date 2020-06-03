@@ -221,7 +221,21 @@ D T[[2]] shuffleRows (D T[[2]] mat, D uint8[[1]] key) {
     return mat;
 }
 
+template <domain D : shared3p>
+D fix32[[2]] shuffleRows (D fix32[[2]] mat, D uint8[[1]] key) {
+    assert (size (key) == 32);
+    __syscall ("shared3p::matshufkey_uint32_vec", __domainid (D), mat, shape (mat)[1], key);
+    return mat;
+}
+
+template <domain D : shared3p>
+D fix64[[2]] shuffleRows (D fix64[[2]] mat, D uint8[[1]] key) {
+    assert (size (key) == 32);
+    __syscall ("shared3p::matshufkey_uint64_vec", __domainid (D), mat, shape (mat)[1], key);
+    return mat;
+}
 /** @}*/
+
 /** \addtogroup shufflerows3
  *  @{
  *  @brief Protocols to undo the shuffling of rows in a matrix with given key.
@@ -247,7 +261,21 @@ D T[[2]] inverseShuffleRows (D T[[2]] mat, D uint8[[1]] key) {
     return mat;
 }
 
+template <domain D : shared3p>
+D fix32[[2]] inverseShuffleRows (D fix32[[2]] mat, D uint8[[1]] key) {
+    assert (size (key) == 32);
+    __syscall ("shared3p::matshufinv_uint32_vec", __domainid (D), mat, shape (mat)[1], key);
+    return mat;
+}
+
+template <domain D : shared3p>
+D fix64[[2]] inverseShuffleRows (D fix64[[2]] mat, D uint8[[1]] key) {
+    assert (size (key) == 32);
+    __syscall ("shared3p::matshufinv_uint64_vec", __domainid (D), mat, shape (mat)[1], key);
+    return mat;
+}
 /** @}*/
+
 /** \addtogroup shufflecols1
 *  @{
 *  @brief Function for shuffling columns in a matrix
@@ -264,9 +292,8 @@ template <domain D : shared3p, type T>
 D T[[2]] shuffleColumns (D T[[2]] mat) {
     return transpose(shuffleRows(transpose(mat)));
 }
-
-
 /** @}*/
+
 /** \addtogroup shufflecols2
  *  @{
  *  @brief Protocols to shuffle columns in a matrix with given key.
@@ -290,8 +317,8 @@ D T[[2]] shuffleColumns (D T[[2]] mat, D uint8[[1]] key) {
     assert (size (key) == 32);
     return transpose(shuffleRows(transpose(mat), key));
 }
-
 /** @}*/
+
 /** \addtogroup shufflecols3
  *  @{
  *  @brief Protocols to undo the shuffle of columns in a matrix with given key.
@@ -315,7 +342,6 @@ D T[[2]] inverseShuffleColumns (D T[[2]] mat, D uint8[[1]] key) {
     assert (size (key) == 32);
     return transpose(inverseShuffleRows(transpose(mat), key));
 }
-
 /** @}*/
 /** @}*/
 
@@ -408,6 +434,18 @@ D xor_uint32[[N]] randomize(D xor_uint32[[N]] arr) {
 template <domain D : shared3p, dim N>
 D xor_uint64[[N]] randomize(D xor_uint64[[N]] arr) {
     __syscall("shared3p::randomize_xor_uint64_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D fix32[[N]] randomize(D fix32[[N]] arr) {
+    __syscall("shared3p::randomize_uint32_vec", __domainid(D), arr);
+    return arr;
+}
+
+template <domain D : shared3p, dim N>
+D fix64[[N]] randomize(D fix64[[N]] arr) {
+    __syscall("shared3p::randomize_uint64_vec", __domainid(D), arr);
     return arr;
 }
 /** @}*/
