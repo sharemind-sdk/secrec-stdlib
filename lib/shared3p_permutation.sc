@@ -32,6 +32,7 @@ import stdlib;
  * \defgroup shared3p_unapply_public_permutation_cols unapplyPublicPermutationCols
  * \defgroup shared3p_unapply_private_permutation unapplyPrivatePermutation
  * \defgroup shared3p_unapply_private_permutation_rows unapplyPrivatePermutationRows
+ * \defgroup shared3p_unapply_private_permutation_cols unapplyPrivatePermutationCols
  * \defgroup shared3p_inverse_permutation inversePermutation
  */
 
@@ -210,7 +211,7 @@ D T[[1]] applyPrivatePermutation(D T[[1]] data, D uint[[1]] p) {
  * @return `X` where rows have been permuted according to permutation `p`
  * @leakage{None}
  */
-template <domain D : shared3p, type T>
+template<domain D : shared3p, type T>
 D T[[2]] applyPrivatePermutationRows(D T[[2]] data, D uint[[1]] p) {
     D uint8 [[1]] key(32);
     key = randomize(key);
@@ -235,7 +236,7 @@ D T[[2]] applyPrivatePermutationRows(D T[[2]] data, D uint[[1]] p) {
  * @return `X` where columns have been permuted according to permutation `p`
  * @leakage{None}
  */
-template <domain D : shared3p, type T>
+template<domain D : shared3p, type T>
 D T[[2]] applyPrivatePermutationCols(D T[[2]] data, D uint[[1]] p) {
     D uint8 [[1]] key(32);
     key = randomize(key);
@@ -261,7 +262,7 @@ D T[[2]] applyPrivatePermutationCols(D T[[2]] data, D uint[[1]] p) {
  * @return `x` permuted according to permutation `p`
  * @leakage{None}
  */
-template <domain D : shared3p, type T>
+template<domain D : shared3p, type T>
 D T[[1]] unapplyPublicPermutation(D T[[1]] x, uint[[1]] p) {
     assert(size(x) == size(p));
     uint n = shape(p)[0];
@@ -289,7 +290,7 @@ D T[[1]] unapplyPublicPermutation(D T[[1]] x, uint[[1]] p) {
  * @return `X` where rows have been permuted according to permutation `p`
  * @leakage{None}
  */
-template <domain D : shared3p, type T>
+template<domain D : shared3p, type T>
 D T[[2]] unapplyPublicPermutationRows(D T[[2]] X, uint[[1]] p) {
     assert(shape(X)[0] == size(p));
     uint m = shape(p)[0];
@@ -323,7 +324,7 @@ D T[[2]] unapplyPublicPermutationRows(D T[[2]] X, uint[[1]] p) {
  * @return `X` where columns have been permuted according to permutation `p`
  * @leakage{None}
  */
-template <domain D : shared3p, type T>
+template<domain D : shared3p, type T>
 D T[[2]] unapplyPublicPermutationCols(D T[[2]] X, uint[[1]] p) {
     assert(shape(X)[1] == size(p));
     uint m = shape(X)[0];
@@ -357,7 +358,7 @@ D T[[2]] unapplyPublicPermutationCols(D T[[2]] X, uint[[1]] p) {
  * @return `x` permuted according to permutation `p`
  * @leakage{None}
  */
-template <domain D : shared3p, type T>
+template<domain D : shared3p, type T>
 D T[[1]] unapplyPrivatePermutation(D T[[1]] x, D uint[[1]] p) {
     D uint8[[1]] key(32);
     key = randomize(key);
@@ -402,13 +403,39 @@ uint[[1]] inversePermutation(uint[[1]] permutation) {
  * @return `X` where rows have been permuted according to permutation `p`
  * @leakage{None}
  */
-template <domain D : shared3p, type T>
+template<domain D : shared3p, type T>
 D T[[2]] unapplyPrivatePermutationRows(D T[[2]] X, D uint[[1]] p) {
     D uint8 [[1]] key(32);
     key = randomize(key);
     X = shuffleRows(X, key);
     uint[[1]] tau = declassify(shuffle(p, key));
     return applyPublicPermutationRows(X, inversePermutation(tau));
+}
+/** @} */
+
+/**
+ * \addtogroup shared3p_unapply_private_permutation_cols
+ * @{
+ * @brief Permute matrix columns according to a private
+ * permutation. Reverses the effect of `applyPrivatePermutationCols`.
+ * @note **D** - shared3p protection domain
+ * @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
+ * \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
+ * \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
+ * int64 "int" / \ref float32 "float32" / \ref float64 "float64" /
+ * \ref fix32 "fix32" / \ref fix64 "fix64"
+ * @param X - matrix to be permuted
+ * @param p - permutation. Output column at index `p[i]` will be `X[:, i]`.
+ * @return `X` where columns have been permuted according to permutation `p`
+ * @leakage{None}
+ */
+template<domain D : shared3p, type T>
+D T[[2]] unapplyPrivatePermutationCols(D T[[2]] X, D uint[[1]] p) {
+    D uint8[[1]] key(32);
+    key = randomize(key);
+    X = shuffleRows(transpose(X), key);
+    uint[[1]] tau = declassify(shuffle(p, key));
+    return transpose(applyPublicPermutationRows(X, inversePermutation(tau)));
 }
 /** @} */
 
