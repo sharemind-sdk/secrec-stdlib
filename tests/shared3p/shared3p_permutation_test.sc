@@ -102,7 +102,6 @@ template<domain D, type T>
 bool testUnapplyPublicPermutation(D T proxy) {
     D T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
     uint[[1]] p = {4, 0, 7, 6, 5, 1, 2, 3, 9, 8};
-    uint n = size(x);
     D T[[1]] res = unapplyPublicPermutation(applyPublicPermutation(x, p), p);
     return declassify(all(res == x));
 }
@@ -127,6 +126,14 @@ bool testUnapplyPublicPermutationCols(D T proxy) {
     X[0, :] = x;
     D T[[2]] res = unapplyPublicPermutationCols(applyPublicPermutationCols(X, p), p);
     return declassify(all(res == X));
+}
+
+template<domain D, type T>
+bool testUnapplyPrivatePermutation(D T proxy) {
+    D T[[1]] x = {1, 5, 6, 7, 0, 4, 3, 2, 9, 8};
+    D uint[[1]] p = {4, 0, 7, 6, 5, 1, 2, 3, 9, 8};
+    D T[[1]] res = unapplyPrivatePermutation(applyPrivatePermutation(x, p), p);
+    return declassify(all(res == x));
 }
 
 void main() {
@@ -180,6 +187,11 @@ void main() {
     { pd_shared3p int32 proxy; test(test_prefix, testUnapplyPublicPermutationCols(proxy), proxy); }
     { pd_shared3p fix32 proxy; test(test_prefix, testUnapplyPublicPermutationCols(proxy), proxy); }
     { pd_shared3p float32 proxy; test(test_prefix, testUnapplyPublicPermutationCols(proxy), proxy); }
+
+    test_prefix = "unapplyPrivatePermutation";
+    { pd_shared3p int32 proxy; test(test_prefix, testUnapplyPrivatePermutation(proxy), proxy); }
+    { pd_shared3p fix32 proxy; test(test_prefix, testUnapplyPrivatePermutation(proxy), proxy); }
+    { pd_shared3p float32 proxy; test(test_prefix, testUnapplyPrivatePermutation(proxy), proxy); }
 
     test_report();
 }

@@ -30,6 +30,8 @@ import stdlib;
  * \defgroup shared3p_unapply_public_permutation unapplyPublicPermutation
  * \defgroup shared3p_unapply_public_permutation_rows unapplyPublicPermutationRows
  * \defgroup shared3p_unapply_public_permutation_cols unapplyPublicPermutationCols
+ * \defgroup shared3p_unapply_private_permutation unapplyPrivatePermutation
+ * \defgroup shared3p_inverse_permutation inversePermutation
  */
 
 /**
@@ -335,6 +337,51 @@ D T[[2]] unapplyPublicPermutationCols(D T[[2]] X, uint[[1]] p) {
     D T[[2]] Y(m, n);
     Y = _partialRearrange(X, Y, source, target);
     return Y;
+}
+/** @} */
+
+/**
+ * \addtogroup shared3p_unapply_private_permutation
+ * @{
+ * @brief Permute a vector according to a private
+ * permutation. Reverses the effect of `applyPrivatePermutation`.
+ * @note **D** - shared3p protection domain
+ * @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
+ * \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
+ * \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
+ * int64 "int" / \ref float32 "float32" / \ref float64 "float64" /
+ * \ref fix32 "fix32" / \ref fix64 "fix64"
+ * @param x - vector to be permuted
+ * @param p - permutation. Output at index `p[i]` will be `x[i]`.
+ * @return `x` permuted according to permutation `p`
+ * @leakage{None}
+ */
+template <domain D : shared3p, type T>
+D T[[1]] unapplyPrivatePermutation(D T[[1]] x, D uint[[1]] p) {
+    D uint8[[1]] key(32);
+    key = randomize(key);
+    x = shuffle(x, key);
+    uint[[1]] tau = declassify(shuffle(p, key));
+    return applyPublicPermutation(x, inversePermutation(tau));
+}
+/** @} */
+
+
+/**
+ * \addtogroup shared3p_inverse_permutation
+ * @{
+ * @brief Calculate inverse permutation from a permutation
+ * @note Supported types - \ref uint64 "uint64"
+ * @param permutation - permutation
+ * @return returns inverse permutation of `permutation`
+ */
+uint[[1]] inversePermutation(uint[[1]] permutation) {
+    uint n = size(permutation);
+    uint[[1]] inv(n);
+    for (uint i = 0; i < n; i++) {
+        inv[permutation[i]] = i;
+    }
+    return inv;
 }
 /** @} */
 
