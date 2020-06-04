@@ -29,6 +29,7 @@ import stdlib;
  * \defgroup shared3p_apply_private_permutation_cols applyPrivatePermutationCols
  * \defgroup shared3p_unapply_public_permutation unapplyPublicPermutation
  * \defgroup shared3p_unapply_public_permutation_rows unapplyPublicPermutationRows
+ * \defgroup shared3p_unapply_public_permutation_cols unapplyPublicPermutationCols
  */
 
 /**
@@ -295,6 +296,40 @@ D T[[2]] unapplyPublicPermutationRows(D T[[2]] X, uint[[1]] p) {
     for (uint i = 0; i < m; ++i) {
         for (uint j = 0; j < n; ++j) {
             target[i * n + j] = p[i] * n + j;
+        }
+    }
+    D T[[2]] Y(m, n);
+    Y = _partialRearrange(X, Y, source, target);
+    return Y;
+}
+/** @} */
+
+/**
+ * \addtogroup shared3p_unapply_public_permutation_cols
+ * @{
+ * @brief Permute matrix columns according to a public
+ * permutation. Reverses the effect of `applyPublicPermutationCols`.
+ * @note **D** - shared3p protection domain
+ * @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
+ * \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
+ * \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
+ * int64 "int" / \ref float32 "float32" / \ref float64 "float64" /
+ * \ref fix32 "fix32" / \ref fix64 "fix64"
+ * @param X - matrix to be permuted
+ * @param p - permutation. Output column at index `p[i]` will be `X[:, i]`.
+ * @return `X` where columns have been permuted according to permutation `p`
+ * @leakage{None}
+ */
+template <domain D : shared3p, type T>
+D T[[2]] unapplyPublicPermutationCols(D T[[2]] X, uint[[1]] p) {
+    assert(shape(X)[1] == size(p));
+    uint m = shape(X)[0];
+    uint n = shape(p)[0];
+    uint [[1]] source = iota(m * n);
+    uint [[1]] target(m * n);
+    for (uint i = 0; i < m; ++i) {
+        for (uint j = 0; j < n; ++j) {
+            target[i * n + j] = i * shape(X)[1] + p[j];
         }
     }
     D T[[2]] Y(m, n);
