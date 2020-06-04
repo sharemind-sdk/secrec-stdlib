@@ -27,6 +27,7 @@ import stdlib;
  * \defgroup shared3p_apply_private_permutation applyPrivatePermutation
  * \defgroup shared3p_apply_private_permutation_rows applyPrivatePermutationRows
  * \defgroup shared3p_apply_private_permutation_cols applyPrivatePermutationCols
+ * \defgroup shared3p_unapply_public_permutation unapplyPublicPermutation
  */
 
 /**
@@ -236,6 +237,34 @@ D T[[2]] applyPrivatePermutationCols(D T[[2]] data, D uint[[1]] p) {
     uint [[1]] tau = declassify(shuffle(p, key));
     data = applyPublicPermutationRows(transpose(data), tau);
     return transpose(inverseShuffleRows(data, key));
+}
+/** @} */
+
+/**
+ * \addtogroup shared3p_unapply_public_permutation
+ * @{
+ * @brief Permute a vector according to a public permutation. Reverses
+ * the effect of applyPublicPermutation.
+ * @note **D** - shared3p protection domain
+ * @note Supported types - \ref bool "bool" / \ref uint8 "uint8" /
+ * \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" /
+ * \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref
+ * int64 "int" / \ref float32 "float32" / \ref float64 "float64" /
+ * \ref fix32 "fix32" / \ref fix64 "fix64"
+ * @param X - matrix to be permuted
+ * @param p - permutation. Output at index `p[i]` will be `x[i]`.
+ * @return `x` permuted according to permutation `p`
+ * @leakage{None}
+ */
+template <domain D, type T>
+D T[[1]] unapplyPublicPermutation(D T[[1]] a, uint[[1]] p) {
+    assert(size(a) == size(p));
+    uint n = shape(p)[0];
+    uint [[1]] source = iota(n);
+    uint [[1]] target = p;
+    D T[[1]] b(n);
+    b = _partialRearrange(a, b, source, target);
+    return b;
 }
 /** @} */
 
