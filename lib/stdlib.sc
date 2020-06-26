@@ -138,6 +138,22 @@ uint sizeof (float64 x)  { return 8; }
 /** @}*/
 
 /*******************************
+    Client auth.
+********************************/
+
+/** @brief Function for accessing client authentication string.
+ *  @return the client authentication string.
+*/
+string clientAuth() {
+    uint num_bytes;
+    __syscall("Process_clientAuth", __return num_bytes);
+    uint8[[1]] bytes (num_bytes);
+    if (num_bytes > 0)
+        __syscall("Process_clientAuth", __ref bytes, __return num_bytes);
+    return __string_from_bytes (bytes);
+}
+
+/*******************************
     Arguments
 ********************************/
 
