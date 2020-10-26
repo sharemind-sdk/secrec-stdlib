@@ -226,8 +226,9 @@ main() {
     shift
     "scan_${SCAN_NAME}" "$@"
     local SORTED_TEST_NAMES
-    IFS=$'\n' SORTED_TEST_NAMES=($(sort <<<"${!TESTS[*]}"))
-    unset IFS
+    mapfile -t SORTED_TEST_NAMES < <(
+        for i in "${!TESTS[@]}"; do printf '%s\n' "$i"; done | sort
+    )
     local TEST_NAME
     for TEST_NAME in "${SORTED_TEST_NAMES[@]}"; do
         compile "${TESTS[$TEST_NAME]}" "$TEST_NAME"
