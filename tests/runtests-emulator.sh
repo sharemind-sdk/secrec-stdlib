@@ -56,23 +56,6 @@ fi
 
 echo "SHAREMIND_PATH='${SHAREMIND_PATH}'"
 
-# http://www.linuxjournal.com/content/use-bash-trap-statement-cleanup-temporary-files
-declare -a ON_EXIT_ITEMS
-
-function on_exit() {
-    for ITEM in "${ON_EXIT_ITEMS[@]}"; do
-        eval "${ITEM}"
-    done
-}
-
-function add_on_exit() {
-    local N=${#ON_EXIT_ITEMS[*]}
-    ON_EXIT_ITEMS["${N}"]="$*"
-    if [[ "${N}" -eq 0 ]]; then
-        trap on_exit EXIT
-    fi
-}
-
 if [ -d "${SHAREMIND_PATH}" ]; then
   L=$(find "${SHAREMIND_PATH}" -name *.so -print0 | xargs -0 -n1 dirname | sort -u)
   L=$(for d in $L; do echo -n "$(cd "$d"; pwd):"; done)
@@ -125,7 +108,7 @@ run_test() {
     local TEST="$2"
     local SC_BN=`basename "${SC}"`
     local SB=`mktemp --tmpdir sharemind_stlib_runtests.$$.XXXXXXXXXX.sb`
-    add_on_exit "rm \"${SB}\""
+    trap "rm \"${SB}\"" EXIT
 
     local TEST_NAME="[${SC}]: "
     if [ -n "${TEST}" ]; then
