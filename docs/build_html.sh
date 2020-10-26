@@ -26,8 +26,8 @@ if [ $# -eq 0 ]; then
 fi
 
 doxygen "$@"
-for file in $(grep -il "." html/*.html)
-do
+
+for file in html/*.html; do
 	sed '/.*<td class=\"paramtype\">.*<\/td>/ {
 		N
 		s/\[\[\(.\)\]/\[\[\1\]\]/
