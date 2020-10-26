@@ -150,7 +150,7 @@ run_normal() {
     local SB_BN="$1"
     local TEST_NAME="$2"
     (cd "$(dirname "${TEST_RUNNER}")" &&
-        ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
+        ( (LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
                 "./$(basename "${TEST_RUNNER}")" --conf "${TEST_RUNNER_CONF}" --file "${SB_BN}" \
                         --logfile "${TEST_LOG_FILE_PATH}" --logmode append \
                     | sed "s#^#${TEST_NAME}#g") \
@@ -163,7 +163,7 @@ run_gdb() {
     local SB_BN="$1"
     local TEST_NAME="$2"
     (cd "$(dirname "${TEST_RUNNER}")" &&
-        ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
+        ( (LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
                 gdb -return-child-result -batch -quiet \
                     -ex 'run' \
                     -ex 'backtrace' \

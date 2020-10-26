@@ -89,7 +89,7 @@ run() {
     local SB="$1"
     local TEST_NAME="$2"
     (cd "$(dirname "${EMULATOR}")" &&
-        ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
+        ( (LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
                 "./$(basename "${EMULATOR}")" --conf="${EMULATOR_CONF}" \
                 --outFile=emulator.out --force "${SB}" \
                     | sed "s#^#${TEST_NAME}#g") \
@@ -97,7 +97,7 @@ run() {
             3>&1 1>&2 2>&3 3>&-
         )
     (cd "$(dirname "${EMULATOR}")" &&
-        ((python "${TEST_PARSER}" < emulator.out | sed "s#^#${TEST_NAME}#g") \
+        ( (python "${TEST_PARSER}" < emulator.out | sed "s#^#${TEST_NAME}#g") \
             3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
             3>&1 1>&2 2>&3 3>&-
         )
