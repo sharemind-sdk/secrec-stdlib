@@ -105,7 +105,7 @@ declare -A BYTECODES
 install() {
     SOURCE="$1"
     TARGET_FN="$2"
-    for I in $(seq 1 3); do
+    for I in {1..3}; do
         local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
         mkdir -p "${SCRIPTS_PATH}"
         local TARGET="${SCRIPTS_PATH}/${TARGET_FN}"
@@ -115,7 +115,7 @@ install() {
 
 uninstall() {
     TARGET_FN="$1"
-    for I in $(seq 1 3); do
+    for I in {1..3}; do
         local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
         local TARGET="${SCRIPTS_PATH}/${TARGET_FN}"
         rm -f "$TARGET"
