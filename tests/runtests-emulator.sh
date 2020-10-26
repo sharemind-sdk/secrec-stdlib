@@ -133,6 +133,7 @@ run_testset() {
 }
 
 run_all() {
+    local TESTSET
     for TESTSET in $(find "${TEST_PATH}" -mindepth 1 -maxdepth 1 -type d | sort); do
         run_testset "${TESTSET}"
     done
