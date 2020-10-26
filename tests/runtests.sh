@@ -103,8 +103,9 @@ TEST_RUNNER="${SHAREMIND_PATH}/bin/sharemind-secrec-test-runner"
 declare -A BYTECODES
 
 install() {
-    SOURCE="$1"
-    TARGET_FN="$2"
+    local SOURCE="$1"
+    local TARGET_FN="$2"
+    local I
     for I in {1..3}; do
         local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
         mkdir -p "${SCRIPTS_PATH}"
@@ -114,7 +115,8 @@ install() {
 }
 
 uninstall() {
-    TARGET_FN="$1"
+    local TARGET_FN="$1"
+    local I
     for I in {1..3}; do
         local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
         local TARGET="${SCRIPTS_PATH}/${TARGET_FN}"
@@ -205,12 +207,14 @@ scan_testset() {
     local TESTSET_BN
     TESTSET_BN=$(basename "${TESTSET}")
     local TESTSET_PREFIX="${TESTSET::-${#TESTSET_BN}}"
+    local TEST
     for TEST in $(find "${TESTSET}" -mindepth 1 -type f -name "*.sc" | sort); do
         TESTS["${TEST:${#TESTSET_PREFIX}}"]="$TEST"
     done
 }
 
 scan_all() {
+    local TESTSET
     for TESTSET in $(find "${TEST_PATH}" -mindepth 1 -maxdepth 1 -type d | sort); do
         scan_testset "${TESTSET}"
     done
@@ -218,11 +222,13 @@ scan_all() {
 
 main() {
     echo "SHAREMIND_PATH=$SHAREMIND_PATH"
-    SCAN_NAME="$1"
+    local SCAN_NAME="$1"
     shift
     "scan_${SCAN_NAME}" "$@"
+    local SORTED_TEST_NAMES
     IFS=$'\n' SORTED_TEST_NAMES=($(sort <<<"${!TESTS[*]}"))
     unset IFS
+    local TEST_NAME
     for TEST_NAME in "${SORTED_TEST_NAMES[@]}"; do
         compile "${TESTS[$TEST_NAME]}" "$TEST_NAME"
     done
