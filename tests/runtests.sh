@@ -82,7 +82,7 @@ fi
 TEST_LOG_FILE_PATH="${SHAREMIND_TEST_LOG_FILE:-${SHAREMIND_TEST_LOG_PATH}/stdlibtests.log}"
 
 if [ -d "${SHAREMIND_PATH}" ]; then
-  L=$(find "${SHAREMIND_PATH}" -name *.so -print0 | xargs -0 -n1 dirname | sort -u)
+  L=$(find "${SHAREMIND_PATH}" -name '*.so' -print0 | xargs -0 -n1 dirname | sort -u)
   L=$(for d in $L; do echo -n "$(cd "$d"; pwd):"; done)
   L="${L%:}"
   if [ "$L" != "" ]; then
@@ -149,9 +149,9 @@ compile() {
 run_normal() {
     local SB_BN="$1"
     local TEST_NAME="$2"
-    (cd "$(dirname ${TEST_RUNNER})" &&
+    (cd "$(dirname "${TEST_RUNNER}")" &&
         ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
-                "./$(basename ${TEST_RUNNER})" --conf "${TEST_RUNNER_CONF}" --file "${SB_BN}" \
+                "./$(basename "${TEST_RUNNER}")" --conf "${TEST_RUNNER_CONF}" --file "${SB_BN}" \
                         --logfile "${TEST_LOG_FILE_PATH}" --logmode append \
                     | sed "s#^#${TEST_NAME}#g") \
              3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
@@ -162,7 +162,7 @@ run_normal() {
 run_gdb() {
     local SB_BN="$1"
     local TEST_NAME="$2"
-    (cd "$(dirname ${TEST_RUNNER})" &&
+    (cd "$(dirname "${TEST_RUNNER}")" &&
         ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
                 gdb -return-child-result -batch -quiet \
                     -ex 'run' \
@@ -171,7 +171,7 @@ run_gdb() {
                     -ex 'thread apply all backtrace full' \
                     -ex 'info registers' \
                     --args \
-                        "./$(basename ${TEST_RUNNER})" --conf "${TEST_RUNNER_CONF}" --file "${SB_BN}" \
+                        "./$(basename "${TEST_RUNNER}")" --conf "${TEST_RUNNER_CONF}" --file "${SB_BN}" \
                                 --logfile "${TEST_LOG_FILE_PATH}" --logmode append \
                             | sed "s#^#${TEST_NAME}#g") \
              3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
@@ -196,7 +196,7 @@ run() {
 declare -A TESTS
 
 scan_test() {
-    TESTS[$(basename $1)]="$1"
+    TESTS[$(basename "$1")]="$1"
 }
 
 scan_testset() {
@@ -220,7 +220,7 @@ main() {
     echo "SHAREMIND_PATH=$SHAREMIND_PATH"
     SCAN_NAME="$1"
     shift
-    scan_${SCAN_NAME} "$@"
+    "scan_${SCAN_NAME}" "$@"
     IFS=$'\n' SORTED_TEST_NAMES=($(sort <<<"${!TESTS[*]}"))
     unset IFS
     for TEST_NAME in "${SORTED_TEST_NAMES[@]}"; do

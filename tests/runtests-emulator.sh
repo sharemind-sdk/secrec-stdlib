@@ -57,7 +57,7 @@ fi
 echo "SHAREMIND_PATH='${SHAREMIND_PATH}'"
 
 if [ -d "${SHAREMIND_PATH}" ]; then
-  L=$(find "${SHAREMIND_PATH}" -name *.so -print0 | xargs -0 -n1 dirname | sort -u)
+  L=$(find "${SHAREMIND_PATH}" -name '*.so' -print0 | xargs -0 -n1 dirname | sort -u)
   L=$(for d in $L; do echo -n "$(cd "$d"; pwd):"; done)
   L="${L%:}"
   if [ "$L" != "" ]; then
@@ -88,15 +88,15 @@ compile() {
 run() {
     local SB="$1"
     local TEST_NAME="$2"
-    (cd "$(dirname ${EMULATOR})" &&
+    (cd "$(dirname "${EMULATOR}")" &&
         ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
-                "./$(basename ${EMULATOR})" --conf="${EMULATOR_CONF}" \
+                "./$(basename "${EMULATOR}")" --conf="${EMULATOR_CONF}" \
                 --outFile=emulator.out --force "${SB}" \
                     | sed "s#^#${TEST_NAME}#g") \
             3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
             3>&1 1>&2 2>&3 3>&-
         )
-    (cd "$(dirname ${EMULATOR})" &&
+    (cd "$(dirname "${EMULATOR}")" &&
         ((python "${TEST_PARSER}" < emulator.out | sed "s#^#${TEST_NAME}#g") \
             3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
             3>&1 1>&2 2>&3 3>&-
