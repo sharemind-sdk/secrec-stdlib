@@ -88,15 +88,15 @@ compile() {
 run() {
     local SB="$1"
     local TEST_NAME="$2"
-    (cd "`dirname ${EMULATOR}`" &&
+    (cd "$(dirname ${EMULATOR})" &&
         ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
-                "./`basename ${EMULATOR}`" --conf="${EMULATOR_CONF}" \
+                "./$(basename ${EMULATOR})" --conf="${EMULATOR_CONF}" \
                 --outFile=emulator.out --force "${SB}" \
                     | sed "s#^#${TEST_NAME}#g") \
             3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
             3>&1 1>&2 2>&3 3>&-
         )
-    (cd "`dirname ${EMULATOR}`" &&
+    (cd "$(dirname ${EMULATOR})" &&
         ((python "${TEST_PARSER}" < emulator.out | sed "s#^#${TEST_NAME}#g") \
             3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
             3>&1 1>&2 2>&3 3>&-
@@ -121,16 +121,16 @@ run_test() {
 }
 
 run_testset() {
-    local TESTSET=`echo "$1" | sed 's/\/\+$//'`
-    local TESTSET_BN=`basename "${TESTSET}"`
+    local TESTSET=$(echo "$1" | sed 's/\/\+$//')
+    local TESTSET_BN=$(basename "${TESTSET}")
     local TESTSET_PREFIX="${TESTSET::-${#TESTSET_BN}}"
-    for TEST in `find "${TESTSET}" -mindepth 1 -type f -name "*.sc" | sort`; do
+    for TEST in $(find "${TESTSET}" -mindepth 1 -type f -name "*.sc" | sort); do
         run_test "${TEST}" "${TEST:${#TESTSET_PREFIX}}"
     done
 }
 
 run_all() {
-    for TESTSET in `find "${TEST_PATH}" -mindepth 1 -maxdepth 1 -type d | sort`; do
+    for TESTSET in $(find "${TEST_PATH}" -mindepth 1 -maxdepth 1 -type d | sort); do
         run_testset "${TESTSET}"
     done
 }
@@ -142,7 +142,7 @@ elif [ -f "$1" ]; then
 elif [ -d "$1" ]; then
     run_testset "$1"
 else
-    echo "Usage of `basename "$0"`:"
+    echo "Usage of $(basename "$0"):"
     echo "runtests.sh [filename.sc]"
     echo "If no filename is specified, all tests will be run."
 fi

@@ -105,7 +105,7 @@ declare -A BYTECODES
 install() {
     SOURCE="$1"
     TARGET_FN="$2"
-    for I in `seq 1 3`; do
+    for I in $(seq 1 3); do
         local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
         mkdir -p "${SCRIPTS_PATH}"
         local TARGET="${SCRIPTS_PATH}/${TARGET_FN}"
@@ -115,7 +115,7 @@ install() {
 
 uninstall() {
     TARGET_FN="$1"
-    for I in `seq 1 3`; do
+    for I in $(seq 1 3); do
         local SCRIPTS_PATH="${SHAREMIND_PATH}/bin/miner${I}/scripts"
         local TARGET="${SCRIPTS_PATH}/${TARGET_FN}"
         rm -f "$TARGET"
@@ -125,7 +125,7 @@ uninstall() {
 compile() {
     local SC="$1"
     local TEST_NAME="$2"
-    local SC_BN=`basename "$SC"`
+    local SC_BN=$(basename "$SC")
     local SB_BN="${SC_BN%.sc}.sb"
     local HASH=$(sha512sum "$SC"|awk '{print $1}')
     local SB_DIR="${CACHE_DIR}/$HASH"
@@ -147,9 +147,9 @@ compile() {
 run_normal() {
     local SB_BN="$1"
     local TEST_NAME="$2"
-    (cd "`dirname ${TEST_RUNNER}`" &&
+    (cd "$(dirname ${TEST_RUNNER})" &&
         ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
-                "./`basename ${TEST_RUNNER}`" --conf "${TEST_RUNNER_CONF}" --file "${SB_BN}" \
+                "./$(basename ${TEST_RUNNER})" --conf "${TEST_RUNNER_CONF}" --file "${SB_BN}" \
                         --logfile "${TEST_LOG_FILE_PATH}" --logmode append \
                     | sed "s#^#${TEST_NAME}#g") \
              3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
@@ -160,7 +160,7 @@ run_normal() {
 run_gdb() {
     local SB_BN="$1"
     local TEST_NAME="$2"
-    (cd "`dirname ${TEST_RUNNER}`" &&
+    (cd "$(dirname ${TEST_RUNNER})" &&
         ((LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
                 gdb -return-child-result -batch -quiet \
                     -ex 'run' \
@@ -169,7 +169,7 @@ run_gdb() {
                     -ex 'thread apply all backtrace full' \
                     -ex 'info registers' \
                     --args \
-                        "./`basename ${TEST_RUNNER}`" --conf "${TEST_RUNNER_CONF}" --file "${SB_BN}" \
+                        "./$(basename ${TEST_RUNNER})" --conf "${TEST_RUNNER_CONF}" --file "${SB_BN}" \
                                 --logfile "${TEST_LOG_FILE_PATH}" --logmode append \
                             | sed "s#^#${TEST_NAME}#g") \
              3>&1 1>&2 2>&3 3>&- | sed "s#^#${TEST_NAME}#g") \
@@ -197,16 +197,16 @@ scan_test() {
 }
 
 scan_testset() {
-    local TESTSET=`echo "$1" | sed 's/\/\+$//'`
-    local TESTSET_BN=`basename "${TESTSET}"`
+    local TESTSET=$(echo "$1" | sed 's/\/\+$//')
+    local TESTSET_BN=$(basename "${TESTSET}")
     local TESTSET_PREFIX="${TESTSET::-${#TESTSET_BN}}"
-    for TEST in `find "${TESTSET}" -mindepth 1 -type f -name "*.sc" | sort`; do
+    for TEST in $(find "${TESTSET}" -mindepth 1 -type f -name "*.sc" | sort); do
         TESTS["${TEST:${#TESTSET_PREFIX}}"]="$TEST"
     done
 }
 
 scan_all() {
-    for TESTSET in `find "${TEST_PATH}" -mindepth 1 -maxdepth 1 -type d | sort`; do
+    for TESTSET in $(find "${TEST_PATH}" -mindepth 1 -maxdepth 1 -type d | sort); do
         scan_testset "${TESTSET}"
     done
 }
@@ -233,7 +233,7 @@ elif [ -f "$1" ]; then
 elif [ -d "$1" ]; then
     main testset "$1"
 else
-    echo "Usage of `basename "$0"`:"
+    echo "Usage of $(basename "$0"):"
     echo "runtests.sh [filename.sc]"
     echo "If no filename is specified, all tests will be run."
     exit 1
