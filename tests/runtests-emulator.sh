@@ -105,17 +105,19 @@ run() {
 
 run_test() {
     local SC="$1"
+    local SC_BN
+    SC_BN="$(basename "$SC")"
     local TEST="$2"
-    local SC_BN=`basename "${SC}"`
-    local SB=`mktemp --tmpdir sharemind_stlib_runtests.$$.XXXXXXXXXX.sb`
-    trap "rm \"${SB}\"" EXIT
+    (
+        set -euo pipefail
+        TMPDIR=$(mktemp -d)
+        # shellcheck disable=2064 # We intend to expand $TMPDIR now, not later:
+        trap "rm -rf \"${TMPDIR}\"" EXIT
+        SB="${TMPDIR}/${SC_BN%.sc}.sb"
 
-    local TEST_NAME="[${SC}]: "
-    if [ -n "${TEST}" ]; then
-        TEST_NAME="[${TEST}]: "
-    fi
-
-    compile "${SC}" "${SB}" && run "${SB}" "${TEST_NAME}"
+        compile "${SC}" "${SB}"
+        run "${SB}" "[${TEST:-$SC_BN}]: "
+    )
 }
 
 run_testset() {
