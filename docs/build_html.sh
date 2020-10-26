@@ -32,6 +32,6 @@ do
 		N
 		s/\[\[\(.\)\]/\[\[\1\]\]/
 		s/\(.*\)\(\]\)\(.*\)\(\[\[.\]\]\)\(.*\)/\1\4\3\5/
-	}'<$file >html/tempfile.txt
-	mv html/tempfile.txt $file
+	}'<"$file" >html/tempfile.txt
+	mv html/tempfile.txt "$file"
 done
