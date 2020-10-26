@@ -121,9 +121,12 @@ run_test() {
 }
 
 run_testset() {
-    local TESTSET=$(echo "$1" | sed 's/\/\+$//')
-    local TESTSET_BN=$(basename "${TESTSET}")
+    local TESTSET
+    TESTSET=$(echo "$1" | sed 's/\/\+$//')
+    local TESTSET_BN
+    TESTSET_BN=$(basename "${TESTSET}")
     local TESTSET_PREFIX="${TESTSET::-${#TESTSET_BN}}"
+    local TEST
     for TEST in $(find "${TESTSET}" -mindepth 1 -type f -name "*.sc" | sort); do
         run_test "${TEST}" "${TEST:${#TESTSET_PREFIX}}"
     done

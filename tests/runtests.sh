@@ -125,9 +125,11 @@ uninstall() {
 compile() {
     local SC="$1"
     local TEST_NAME="$2"
-    local SC_BN=$(basename "$SC")
+    local SC_BN
+    SC_BN=$(basename "$SC")
     local SB_BN="${SC_BN%.sc}.sb"
-    local HASH=$(sha512sum "$SC"|awk '{print $1}')
+    local HASH
+    HASH=$(sha512sum "$SC"|awk '{print $1}')
     local SB_DIR="${CACHE_DIR}/$HASH"
     local SB="${SB_DIR}/$SB_BN"
 
@@ -180,7 +182,8 @@ run_gdb() {
 run() {
     local TEST_NAME="$1"
     local SB=${BYTECODES["$TEST_NAME"]}
-    local TEST_BN=$(basename "${TEST_NAME%.sc}.sb")
+    local TEST_BN
+    TEST_BN=$(basename "${TEST_NAME%.sc}.sb")
     install "$SB" "$TEST_BN"
     if [ "${RUN_GDB}" -eq 0 ] && [ "${HAVE_GDB}" -eq 0 ]; then
         run_gdb "$TEST_BN" "[${TEST_NAME}]: "
@@ -197,8 +200,10 @@ scan_test() {
 }
 
 scan_testset() {
-    local TESTSET=$(echo "$1" | sed 's/\/\+$//')
-    local TESTSET_BN=$(basename "${TESTSET}")
+    local TESTSET
+    TESTSET=$(echo "$1" | sed 's/\/\+$//')
+    local TESTSET_BN
+    TESTSET_BN=$(basename "${TESTSET}")
     local TESTSET_PREFIX="${TESTSET::-${#TESTSET_BN}}"
     for TEST in $(find "${TESTSET}" -mindepth 1 -type f -name "*.sc" | sort); do
         TESTS["${TEST:${#TESTSET_PREFIX}}"]="$TEST"
