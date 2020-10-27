@@ -74,9 +74,7 @@ bool testLoessDegree2(FT proxy) {
 
 void main() {
 	string testPrefix = "LOESS regression";
-	test(testPrefix, testLoess(0f32), 0f32);
     test(testPrefix, testLoess(0f64), 0f64);
-    test(testPrefix, testLoessInt(0i32, 0f32), 0i32);
     test(testPrefix, testLoessInt(0i64, 0f64), 0i64);
     testPrefix = "LOESS regression (degree 2)";
     test(testPrefix, testLoessDegree2(0f64), 0f64);

@@ -810,6 +810,7 @@ struct LOESSResult {
  * @leakage{None}
  */
 template<domain D : shared3p>
+@deprecated("the float32 version of LOESS is deprecated due to low precision. Use float64 version.")
 LOESSResult<D, float32> loess(D int32[[1]] x, D int32[[1]] y, float64 span, float32 xmin, float32 xmax, uint xpoints, uint degree) {
     return _loess(x, y, span, xmin, xmax, xpoints, degree);
 }
@@ -820,6 +821,7 @@ LOESSResult<D, float64> loess(D int64[[1]] x, D int64[[1]] y, float64 span, floa
 }
 
 template<domain D : shared3p>
+@deprecated("the float32 version of LOESS is deprecated due to low precision. Use float64 version.")
 LOESSResult<D, float32> loess(D float32[[1]] x, D float32[[1]] y, float64 span, float32 xmin, float32 xmax, uint xpoints, uint degree) {
     return _loess(x, y, span, xmin, xmax, xpoints, degree);
 }
