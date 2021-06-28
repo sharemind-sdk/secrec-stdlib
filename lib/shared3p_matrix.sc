@@ -641,41 +641,200 @@ D float64[[2]] crossProduct (D float64[[2]] x, D float64[[2]] y) {
 
 /** \cond */
 
-template <domain D : shared3p, type T>
-D T[[2]] _matrixMultiplication (D T[[2]] x, D T[[2]] y) {
-    // For parallelisation
-    uint [[1]] xShape = shape (x);
-    uint [[1]] yShape = shape (y);
+///// from rearrange.sc: start /////
 
-    // no. of columns of x must equal no. of rows of y
-    assert (xShape[1] == yShape[0]);
-    uint commonDim = xShape[1];
-
-    D T[[1]] mulVec1 (xShape[0] * yShape[1] * commonDim),
-                   mulVec2 (xShape[0] * yShape[1] * commonDim),
-                   product (xShape[0] * yShape[1] * commonDim);
-
-    // At the moment our matrices are kept in memory in row major order
-    // We only take the column we need from memory once
-    // This is also why our cycles run first over y and then over x
-    D T[[1]] yColumn (commonDim);
-    for(uint i = 0; i < yShape[1]; i++) {
-        yColumn = y[:, i];
-        for(uint j = 0; j < xShape[0]; j++) {
-            mulVec1[(xShape[0] * i + j) * commonDim : (xShape[0] * i + j + 1) * commonDim] = x[j, :];
-            mulVec2[(xShape[0] * i + j) * commonDim : (xShape[0] * i + j + 1) * commonDim] = yColumn;
+uint [[1]] _widenIndices (uint [[1]] indices, uint m) {
+    uint k = 0;
+    uint [[1]] result (size(indices) * m);
+    indices = indices * m;
+    for (uint i = 0; i < size(indices); i++) {
+        for (uint j = 0; j < m; j++) {
+             result[k] = indices[i] + j;
+             k = k + 1;
         }
     }
+    return result;
+}
 
-    product = mulVec1 * mulVec2;
+template <type T, type T0, dim N>
+T [[N]] _replicate(T [[N]] a, T0 _n) {
+    uint n = (uint)(_n);
+    uint [[1]] ms = {shape(a)[0]};
+    uint [[1]] ns = {n};
+    return _replicate(a, ms, ns);
+}
 
-    D T[[2]] result (xShape[0], yShape[1]);
-    D T[[1]] resultVec (xShape[0] * yShape[1]);
+template <domain D, type T, type T0, dim N>
+D T [[N]] _replicate(D T [[N]] a, T0 _n) {
+    uint n = (uint)(_n);
+    uint [[1]] ms = {shape(a)[0]};
+    uint [[1]] ns = {n};
+    return _replicate(a, ms, ns);
+}
 
-    resultVec = sum (product, xShape[0] * yShape[1]);
+//ms - differences between starting points (steps)
+//ns - times to replicate
+template <domain D, type T>
+D T [[1]] _replicate(D T [[1]] a, uint [[1]] ms, uint [[1]] ns) {
 
-    for (uint i = 0; i < yShape[1]; i++){
-        result[:, i] = resultVec[i * xShape[0] : (i + 1) * xShape[0]];
+    assert(size(ms) == size(ns));
+
+    uint [[1]] indices = iota(size(a));
+    uint [[1]] source = _replicate(indices, ms, ns);
+    uint [[1]] target = iota(size(source));
+    D T [[1]] b (size(source));
+    b = _partialRearrange(a, b, source, target);
+    return b;
+}
+
+template <domain D, type T>
+D T [[1]] _replicate(D T [[1]] a, uint [[1]] ns) {
+
+    assert(size(a) == size(ns));
+    uint [[1]] ms (size(ns));
+    ms = 1;
+
+    uint [[1]] source = _replicate(iota(size(a)), ms, ns);
+    uint [[1]] target = iota(size(source));
+    D T [[1]] b (size(source));
+    b = _partialRearrange(a, b, source, target);
+    return b;
+}
+
+template <domain D, type T>
+D T [[2]] _replicate(D T [[2]] a, uint [[1]] ms, uint [[1]] ns) {
+
+    assert(size(ms) == size(ns));
+
+    uint [[1]] source = _widenIndices(_replicate(iota(shape(a)[0]), ms, ns), shape(a)[1]);
+    uint [[1]] target = iota(size(source));
+    D T [[2]] b (sum(ms * ns), shape(a)[1]);
+    b = _partialRearrange(a, b, source, target);
+    return b;
+}
+
+template <type T>
+T [[1]] _replicate(T [[1]] a, uint [[1]] ms, uint [[1]] ns) {
+
+    assert(size(ms) == size(ns));
+
+    T [[1]] b (sum(ms * ns));
+    uint t = 0;
+    uint s = 0;
+
+    for (uint k = 0; k < size(ms); k++) {
+        uint m = ms[k];
+        uint n = ns[k];
+        for (uint i = 0; i < m; i++) {
+           for (uint j = 0; j < n; j++) {
+               b[t] = a[s + i];
+               t = t + 1;
+           }
+       }
+       s = s + m;
+    }
+    return b;
+}
+
+//copy the entire block n times
+//ms - differences between starting points (steps)
+//ns - times to replicate
+template <type T>
+T [[1]] _copyBlock(T [[1]] a, uint [[1]] ms, uint [[1]] ns) {
+
+    assert(size(ms) == size(ns));
+
+    T [[1]] b (sum(ms * ns));
+    uint32 [[1]] source (size(b));
+    uint32 [[1]] target (size(b));
+
+    uint l = 0;
+    uint start = 0;
+
+    for (uint k = 0; k < size(ms); k++) {
+        uint m = ms[k];
+        uint n = ns[k];
+        for (uint j = 0; j < n; j++) {
+            for (uint i = 0; i < m; i++) {
+               b[l] = a[start + i];
+               l = l + 1;
+           }
+       }
+       start = start + m;
+    }
+    return b;
+}
+
+template <type T, type T0, dim N>
+T [[N]] _copyBlock(T [[N]] a, T0 _n) {
+    uint n = (uint)(_n);
+    uint [[1]] ms = {shape(a)[0]};
+    uint [[1]] ns = {n};
+    return _copyBlock(a, ms, ns);
+}
+
+template <domain D, type T, type T0, dim N>
+D T [[N]] _copyBlock(D T [[N]] a, T0 _n) {
+    uint n = (uint)(_n);
+    uint [[1]] ms = {shape(a)[0]};
+    uint [[1]] ns = {n};
+    return _copyBlock(a, ms, ns);
+}
+
+template <domain D, type T>
+D T [[1]] _copyBlock(D T [[1]] a, uint [[1]] ms, uint [[1]] ns) {
+    assert(size(ms) == size(ns));
+    uint [[1]] indices = iota(size(a));
+    uint [[1]] source = _copyBlock(indices, ms, ns);
+    return _partialRearrange(a, source);
+}
+
+template <domain D, type T>
+D T [[2]] _copyBlock(D T [[2]] a, uint [[1]] ms, uint [[1]] ns) {
+    assert(size(ms) == size(ns));
+    uint [[1]] indices = iota(shape(a)[0]);
+    uint [[1]] source = _widenIndices(_copyBlock(indices, ms, ns), shape(a)[1]);
+    uint [[1]] target = iota(size(source));
+    D T [[2]] b (sum(ms * ns), shape(a)[1]);
+    return _partialRearrange(a, b, source, target);
+}
+
+///// from rearrange.sc: end /////
+
+template <domain D : shared3p, type T>
+D T [[2]] _getTiled(D T[[1]] vec, uint N) {
+    // ex. {0, 1, 2}, 2 -> {{0, 1, 2}, {0, 1, 2}}
+
+    D T[[2]] vecMat = reshape(vec, 1, size(vec)); 
+    D T[[2]] vecMatTiled = _copyBlock(vecMat, N); 
+    return vecMatTiled;
+}
+
+template <domain D : shared3p, type T>
+D T [[2]] _getVTiled(D T[[1]] vec, uint M) {
+    // ex. {0, 1, 2}, 2 -> {{0, 0}, {1, 1}, {2, 2}}
+
+    D T[[1]] repeatedVec = _replicate(vec, M);
+
+    return reshape(repeatedVec, size(vec), M);
+}
+
+template <domain D : shared3p, type T>
+D T[[2]] _matrixMultiplication (D T[[2]] x, D T[[2]] y) {
+    uint nrow = shape(x)[0];
+    uint ncol = shape(y)[1];
+    uint niter = shape(x)[1];
+
+    // no. of columns of x must equal no. of rows of y
+    assert (niter == shape(y)[0]);
+
+    // Each element is a sum of products.
+    // and products are based on the line (col in x and row in y)
+    D T[[2]] result(nrow, ncol);
+    D T[[2]] temp(nrow, ncol);
+    for (uint i=0; i < niter; i++) {
+        temp = _getVTiled(x[:, i], ncol) * _getTiled(y[i, :], nrow);
+        result += temp;
     }
 
     return result;
