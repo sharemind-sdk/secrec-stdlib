@@ -976,12 +976,12 @@ D float64[[2]] matrixMultiplication (D float64[[2]] x, D float64[[2]] y) {
 
 template <domain D : shared3p>
 D fix32[[2]] matrixMultiplication (D fix32[[2]] x, D fix32[[2]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D fix64[[2]] matrixMultiplication (D fix64[[2]] x, D fix64[[2]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 /** @}*/

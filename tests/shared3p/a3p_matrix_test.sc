@@ -106,12 +106,56 @@ bool mat_multiplication(T data){
             T[[2]] control (k,k);
             T[[2]] matb = declassify(mat);
             T[[2]] mat2b = declassify(mat2);
-            for(uint i = 0; i < shape(declassify(mat3))[0];++i){
-                for(uint j = 0; j < shape(declassify(mat3))[1];++j){
+            for(uint i = 0; i < shape(mat3)[0];++i){
+                for(uint j = 0; j < shape(mat3)[1];++j){
                     control[i,j] = sum(matb[i,:] * mat2b[:,j]);
                 }
             }
             result[i++] = all(declassify(mat3) == control);
+        }
+    }
+
+    return all(result);
+}
+
+template<domain D : shared3p, type T>
+bool fix32_mat_multiplication(D T data){
+    bool [[1]] result (9); uint i = 0;
+    for(uint k = 3; k < 6;++k){
+        for(uint l = 5; l > 2;--l){
+            pd_shared3p T[[2]] mat (k,l);
+            pd_shared3p T[[2]] mat2 (l,k);
+            mat = randomize(mat); mat2 = randomize(mat2);
+            pd_shared3p T[[2]] mat3 (k,k) = matrixMultiplication(mat,mat2);
+            pd_shared3p T[[2]] control (k,k);
+            for(uint i = 0; i < shape(mat3)[0];++i){
+                for(uint j = 0; j < shape(mat3)[1];++j){
+                    control[i,j] = sum(mat[i,:] * mat2[:,j]);
+                }
+            }
+            result[i++] = declassify(all((abs(mat3 - control))<1e-4));
+        }
+    }
+
+    return all(result);
+}
+
+template<domain D : shared3p, type T>
+bool fix64_mat_multiplication(D T data){
+    bool [[1]] result (9); uint i = 0;
+    for(uint k = 3; k < 6;++k){
+        for(uint l = 5; l > 2;--l){
+            pd_shared3p T[[2]] mat (k,l);
+            pd_shared3p T[[2]] mat2 (l,k);
+            mat = randomize(mat); mat2 = randomize(mat2);
+            pd_shared3p T[[2]] mat3 (k,k) = matrixMultiplication(mat,mat2);
+            pd_shared3p T[[2]] control (k,k);
+            for(uint i = 0; i < shape(mat3)[0];++i){
+                for(uint j = 0; j < shape(mat3)[1];++j){
+                    control[i,j] = sum(mat[i,:] * mat2[:,j]);
+                }
+            }
+            result[i++] = declassify(all((abs(mat3 - control))<1e-8));
         }
     }
 
@@ -176,6 +220,7 @@ bool mat3D_multiplication(T data){
     return all(result);
 }
 
+
 template<type T>
 bool diag3D_mat_multiplication(T data){
     bool [[1]] result(9); uint i = 0;
@@ -212,6 +257,9 @@ bool diag3D_mat_multiplication(T data){
 }
 
 void main(){
+    pd_shared3p fix32 fi32;
+    pd_shared3p fix64 fi64;
+    
     string test_prefix = "Matrix row sums";
     test(test_prefix, row_sum_test(0::uint8), 0::uint8);
     test(test_prefix, row_sum_test(0::uint16), 0::uint16);
@@ -263,6 +311,8 @@ void main(){
     test(test_prefix, mat_multiplication(0::int16), 0::int16);
     test(test_prefix, mat_multiplication(0::int32), 0::int32);
     test(test_prefix, mat_multiplication(0::int64), 0::int64);
+    test(test_prefix, fix32_mat_multiplication(fi32), fi32);
+    test(test_prefix, fix64_mat_multiplication(fi64), fi64);
 
     test_prefix = "2D Diagonal matrix multiplication";
     test(test_prefix, diag_mat_multiplication(0::uint8), 0::uint8);
