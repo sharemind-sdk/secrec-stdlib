@@ -310,6 +310,32 @@ bool test_min3(T data){
 }
 
 template<type T>
+bool test_min4(T data){
+    pd_shared3p T[[1]] temp (10);
+    pd_shared3p T[[1]] temp2 (10);
+    temp = randomize(temp);
+    temp2 = randomize(temp2);
+    T[[1]] vec = declassify(temp);
+    T[[1]] vec2 = declassify(temp2);
+    pd_shared3p T[[1]] result (10);
+    for (uint i = 0; i < size(vec); ++i){
+    	result[i] = min(temp[i], temp2[i]);
+    }
+    T[[1]] pub_result = declassify(result);
+    T[[1]] control (10) = 0;
+    for(uint i = 0; i < size(vec);++i){
+        if(vec[i] <= vec2[i]){
+            control[i] = vec[i];
+        }
+        else{
+            control[i] = vec2[i];
+        }
+    }
+
+    return all(control == pub_result);
+}
+
+template<type T>
 bool test_max(T data){
     pd_shared3p T[[1]] temp (25);
     temp = randomize(temp);
@@ -373,6 +399,31 @@ bool test_max3(T data){
     return all(control == result);
 }
 
+template<type T>
+bool test_max4(T data){
+    pd_shared3p T[[1]] temp (10);
+    pd_shared3p T[[1]] temp2 (10);
+    temp = randomize(temp);
+    temp2 = randomize(temp2);
+    T[[1]] vec = declassify(temp);
+    T[[1]] vec2 = declassify(temp2);
+    pd_shared3p T[[1]] result (10);
+    for (uint i = 0; i < size(vec); ++i){
+    	result[i] = max(temp[i], temp2[i]);
+    }
+    T[[1]] pub_result = declassify(result);
+    T[[1]] control (10) = 0;
+    for(uint i = 0; i < size(vec);++i){
+        if(vec[i] >= vec2[i]){
+            control[i] = vec[i];
+        }
+        else{
+            control[i] = vec2[i];
+        }
+    }
+    return all(control == pub_result);
+}
+
 template<domain D, type T>
 void testCeiling(string name, D T[[1]] x, T[[1]] y) {
     test("[$name\] Ceiling", all(declassify(ceiling(x)) == y));
@@ -408,96 +459,114 @@ void testFloorFloat64() {
 }
 
 void testMinFloat32() {
-    pd_shared3p float32[[1]] res(4);
-    float32[[1]] correct = {-1, 0, -13.37e30, 13.37e-30};
+    pd_shared3p float32[[1]] res(8);
+    float32[[1]] correct = {-1, -1, 0, 0, -13.37e30, -13.37e30, 13.37e-30, 13.37e-30};
 
     {
         pd_shared3p float32[[1]] x = {-1, 0};
         res[0] = min(x);
+        res[1] = min(x[0], x[1]);
     }
     {
         pd_shared3p float32[[1]] x = {0, 1};
-        res[1] = min(x);
+        res[2] = min(x);
+        res[3] = min(x[0], x[1]);
     }
     {
         pd_shared3p float32[[1]] x = {-13.37e30, 0};
-        res[2] = min(x);
+        res[4] = min(x);
+        res[5] = min(x[0], x[1]);
     }
     {
         pd_shared3p float32[[1]] x = {13.37e-30, 13.37e-29};
-        res[3] = min(x);
+        res[6] = min(x);
+        res[7] = min(x[0], x[1]);
     }
+    printVector(declassify(res));
 
     test("[float32] Min", all(declassify(res) == correct));
 }
 
 void testMinFloat64() {
-    pd_shared3p float64[[1]] res(4);
-    float64[[1]] correct = {-1, 0, -13.37e240, 13.37e-240};
+    pd_shared3p float64[[1]] res(8);
+    float64[[1]] correct = {-1, -1, 0, 0, -13.37e240, -13.37e240, 13.37e-240, 13.37e-240};
 
     {
         pd_shared3p float64[[1]] x = {-1, 0};
         res[0] = min(x);
+        res[1] = min(x[0], x[1]);
     }
     {
         pd_shared3p float64[[1]] x = {0, 1};
-        res[1] = min(x);
+        res[2] = min(x);
+        res[3] = min(x[0], x[1]);
     }
     {
         pd_shared3p float64[[1]] x = {-13.37e240, 0};
-        res[2] = min(x);
+        res[4] = min(x);
+        res[5] = min(x[0], x[1]);
     }
     {
         pd_shared3p float64[[1]] x = {13.37e-240, 13.37e-200};
-        res[3] = min(x);
+        res[6] = min(x);
+        res[7] = min(x[0], x[1]);
     }
+    printVector(declassify(res));
 
     test("[float64] Min", all(declassify(res) == correct));
 }
 
 void testMaxFloat32() {
-    pd_shared3p float32[[1]] res(4);
-    float32[[1]] correct = {0, 1, 0, 13.37e-29};
+    pd_shared3p float32[[1]] res(8);
+    float32[[1]] correct = {0, 0, 1, 1, 0, 0, 13.37e-29, 13.37e-29};
 
     {
         pd_shared3p float32[[1]] x = {-1, 0};
         res[0] = max(x);
+        res[1] = max(x[0], x[1]);
     }
     {
         pd_shared3p float32[[1]] x = {0, 1};
-        res[1] = max(x);
+        res[2] = max(x);
+        res[3] = max(x[0], x[1]);
     }
     {
         pd_shared3p float32[[1]] x = {-13.37e30, 0};
-        res[2] = max(x);
+        res[4] = max(x);
+        res[5] = max(x[0], x[1]);
     }
     {
         pd_shared3p float32[[1]] x = {13.37e-30, 13.37e-29};
-        res[3] = max(x);
+        res[6] = max(x);
+        res[7] = max(x[0], x[1]);
     }
 
     test("[float32] Max", all(declassify(res) == correct));
 }
 
 void testMaxFloat64() {
-    pd_shared3p float64[[1]] res(4);
-    float64[[1]] correct = {0, 1, 0, 13.37e-200};
+    pd_shared3p float64[[1]] res(8);
+    float64[[1]] correct = {0, 0, 1, 1, 0, 0, 13.37e-200, 13.37e-200};
 
     {
         pd_shared3p float64[[1]] x = {-1, 0};
         res[0] = max(x);
+        res[1] = max(x[0], x[1]);
     }
     {
         pd_shared3p float64[[1]] x = {0, 1};
-        res[1] = max(x);
+        res[2] = max(x);
+        res[3] = max(x[0], x[1]);
     }
     {
         pd_shared3p float64[[1]] x = {-13.37e240, 0};
-        res[2] = max(x);
+        res[4] = max(x);
+        res[5] = max(x[0], x[1]);
     }
     {
         pd_shared3p float64[[1]] x = {13.37e-240, 13.37e-200};
-        res[3] = max(x);
+        res[6] = max(x);
+        res[7] = max(x[0], x[1]);
     }
 
     test("[float64] Max", all(declassify(res) == correct));
@@ -638,6 +707,16 @@ void main(){
     test(test_prefix, test_min3(0::int16), 0::int16);
     test(test_prefix, test_min3(0::int32), 0::int32);
     test(test_prefix, test_min3(0::int64), 0::int64);
+    
+    test_prefix = "Min (4)";
+    test(test_prefix, test_min4(0::uint8), 0::uint8);
+    test(test_prefix, test_min4(0::uint16), 0::uint16);
+    test(test_prefix, test_min4(0::uint32), 0::uint32);
+    test(test_prefix, test_min4(0::uint64), 0::uint64);
+    test(test_prefix, test_min4(0::int8), 0::int8);
+    test(test_prefix, test_min4(0::int16), 0::int16);
+    test(test_prefix, test_min4(0::int32), 0::int32);
+    test(test_prefix, test_min4(0::int64), 0::int64);
 
     test_prefix = "Max";
     test(test_prefix, test_max(0::uint8), 0::uint8);
@@ -668,6 +747,16 @@ void main(){
     test(test_prefix, test_max3(0::int16), 0::int16);
     test(test_prefix, test_max3(0::int32), 0::int32);
     test(test_prefix, test_max3(0::int64), 0::int64);
+    
+    test_prefix = "Max (4)";
+    test(test_prefix, test_max4(0::uint8), 0::uint8);
+    test(test_prefix, test_max4(0::uint16), 0::uint16);
+    test(test_prefix, test_max4(0::uint32), 0::uint32);
+    test(test_prefix, test_max4(0::uint64), 0::uint64);
+    test(test_prefix, test_max4(0::int8), 0::int8);
+    test(test_prefix, test_max4(0::int16), 0::int16);
+    test(test_prefix, test_max4(0::int32), 0::int32);
+    test(test_prefix, test_max4(0::int64), 0::int64);
 
     testCeilingFloat32();
     testCeilingFloat64();
