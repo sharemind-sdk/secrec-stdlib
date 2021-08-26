@@ -1538,12 +1538,12 @@ D int min (D int x, D int y) {
 }
 template <domain D : shared3p>
 D float32 min (D float32 x, D float32 y) {
-    __syscall ("shared3p:min_float32_vec", __domainid (D), x, y, x);
+    __syscall ("shared3p::min_float32_vec", __domainid (D), x, y, x);
     return x;
 }
 template <domain D : shared3p>
 D float64 min (D float64 x, D float64 y) {
-    __syscall ("shared3p:min_float64_vec", __domainid (D), x, y, x);
+    __syscall ("shared3p::min_float64_vec", __domainid (D), x, y, x);
     return x;
 }
 
