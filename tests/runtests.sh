@@ -67,8 +67,8 @@ RUN_GDB="${RUN_GDB:-1}"
 
 set +e
 type gdb >/dev/null 2>&1
-set -e
 HAVE_GDB="$?"
+set -e
 
 if [ -z "${SHAREMIND_TEST_LOG_PATH}" ]; then
     SHAREMIND_TEST_LOG_PATH="."
