@@ -243,8 +243,15 @@ elif [ -f "$1" ]; then
 elif [ -d "$1" ]; then
     main testset "$1"
 else
-    echo "Usage of $(basename "$0"):"
-    echo "runtests.sh [filename.sc]"
-    echo "If no filename is specified, all tests will be run."
+    PN=$(basename "$0")
+    cat <<EOF
+Usage:
+    ${PN}
+        Runs all tests.
+    ${PN} <directory>
+        Runs all tests in the given directory.
+    ${PN} <filename.sc>
+        Runs all tests in the given file.
+EOF
     exit 1
 fi
