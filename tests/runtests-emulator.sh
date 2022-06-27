@@ -139,7 +139,7 @@ run_all() {
     done
 }
 
-if [ "x$1" = "x" ]; then
+if [ -z "$1" ]; then
     run_all
 elif [ -f "$1" ]; then
     run_test "$1"
