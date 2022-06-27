@@ -81,15 +81,13 @@ fi
 
 TEST_LOG_FILE_PATH="${SHAREMIND_TEST_LOG_FILE:-${SHAREMIND_TEST_LOG_PATH}/stdlibtests.log}"
 
-if [ -d "${SHAREMIND_PATH}" ]; then
-  L=$(find "${SHAREMIND_PATH}" -name '*.so' -print0 | xargs -0 -n1 dirname | sort -u)
-  L=$(for d in $L; do echo -n "$(cd "$d"; pwd):"; done)
-  L="${L%:}"
-  if [ "$L" != "" ]; then
-    NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}$L"
-  fi
-  unset -v L
+L=$(find "${SHAREMIND_PATH}" -name '*.so' -print0 | xargs -0 -n1 dirname | sort -u)
+L=$(for d in $L; do echo -n "$(cd "$d"; pwd):"; done)
+L="${L%:}"
+if [ "$L" != "" ]; then
+  NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}$L"
 fi
+unset -v L
 
 if [ -z "${TEST_RUNNER_CONF}" ]; then
     TEST_RUNNER_CONF="client.conf"

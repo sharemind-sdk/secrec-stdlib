@@ -56,15 +56,13 @@ fi
 
 echo "SHAREMIND_PATH='${SHAREMIND_PATH}'"
 
-if [ -d "${SHAREMIND_PATH}" ]; then
-  L=$(find "${SHAREMIND_PATH}" -name '*.so' -print0 | xargs -0 -n1 dirname | sort -u)
-  L=$(for d in $L; do echo -n "$(cd "$d"; pwd):"; done)
-  L="${L%:}"
-  if [ "$L" != "" ]; then
-    NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}$L"
-  fi
-  unset -v L
+L=$(find "${SHAREMIND_PATH}" -name '*.so' -print0 | xargs -0 -n1 dirname | sort -u)
+L=$(for d in $L; do echo -n "$(cd "$d"; pwd):"; done)
+L="${L%:}"
+if [ "$L" != "" ]; then
+  NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}$L"
 fi
+unset -v L
 
 if [ -z "${EMULATOR_CONF}" ]; then
     EMULATOR_CONF="emulator.conf"
