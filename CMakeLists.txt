@@ -71,14 +71,13 @@ INSTALL(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated_docs/html"
         COMPONENT "doc")
 
 # Stdlib tests:
-
-# Note that this globbing is done by cmake, not by make, hence sometimes clean might be required.
-FILE(GLOB SharemindStdlibTest_FILES "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sh"
-                                    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.py")
-INSTALL(PROGRAMS ${SharemindStdlibTest_FILES}
-        DESTINATION "bin"
-        COMPONENT "tests")
-
+INSTALL(
+    PROGRAMS
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/sharemind-stdlib-runtests.sh"
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/sharemind-stdlib-runtests-emulator.sh"
+        "${CMAKE_CURRENT_SOURCE_DIR}/tests/sharemind-stdlib-emulator-test-parser.py"
+    DESTINATION "bin"
+    COMPONENT "tests")
 INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests/"
         DESTINATION "lib/sharemind/test"
         COMPONENT "tests"
