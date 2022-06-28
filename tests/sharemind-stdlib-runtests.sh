@@ -236,11 +236,11 @@ main() {
     done
 }
 
-if [ -z "$1" ]; then
+if [ "$#" -eq 0 ]; then
     main all
-elif [ -f "$1" ]; then
+elif [[ "$#" -eq 1 && -f "$1" ]]; then
     main test "$1"
-elif [ -d "$1" ]; then
+elif [[ "$#" -eq 1 && -d "$1" ]]; then
     main testset "$1"
 else
     PN=$(basename "$0")
