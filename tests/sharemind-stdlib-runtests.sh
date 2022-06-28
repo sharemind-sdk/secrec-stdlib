@@ -95,7 +95,6 @@ fi
 
 TEST_PATH="$(cd "${ABSSP}/../lib/sharemind/test" && pwd)"
 SCC="${SHAREMIND_PATH}/bin/scc"
-STDLIB="${SHAREMIND_PATH}/lib/sharemind/stdlib"
 TEST_RUNNER="${SHAREMIND_PATH}/bin/sharemind-secrec-test-runner"
 
 declare -A BYTECODES
@@ -140,7 +139,7 @@ compile() {
         mkdir -p "$SB_DIR"
         echo "[scc] $TEST_NAME"
         LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" "${SCC}" \
-            --include "${TEST_PATH}" --include "${STDLIB}" \
+            --include "${TEST_PATH}" \
             --input "${SC}" --output "${SB}" || exit
     fi
     BYTECODES["$TEST_NAME"]="$SB"

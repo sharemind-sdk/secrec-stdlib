@@ -70,7 +70,6 @@ fi
 
 TEST_PATH="$(cd "${ABSSP}/../lib/sharemind/test" && pwd)"
 SCC="${SHAREMIND_PATH}/bin/scc"
-STDLIB="${SHAREMIND_PATH}/lib/sharemind/stdlib"
 EMULATOR="${SHAREMIND_PATH}/bin/sharemind-emulator"
 TEST_PARSER="${ABSSP}/sharemind-stdlib-emulator-test-parser.py"
 
@@ -79,7 +78,7 @@ compile() {
     local SB="$2"
 
     LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" "${SCC}" \
-        --include "${TEST_PATH}" --include "${STDLIB}" \
+        --include "${TEST_PATH}" \
         --input "${SC}" --output "${SB}"
 }
 
