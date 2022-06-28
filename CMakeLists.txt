@@ -29,10 +29,16 @@ FIND_PACKAGE(SharemindCMakeHelpers 1.6 REQUIRED)
 FIND_PACKAGE(Doxygen REQUIRED)
 
 FILE(GLOB_RECURSE SharemindStdlib_ALLFILES
-     "${CMAKE_CURRENT_SOURCE_DIR}/docs/*"
-     "${CMAKE_CURRENT_SOURCE_DIR}/lib/*.sc"
-     "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sc"
-     "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sh"
+    "${CMAKE_CURRENT_SOURCE_DIR}/CMakeLists.txt"
+    "${CMAKE_CURRENT_SOURCE_DIR}/LICENSE.LGPLv3"
+    "${CMAKE_CURRENT_SOURCE_DIR}/SharemindStdlibConfig.cmake.in"
+    "${CMAKE_CURRENT_SOURCE_DIR}/SharemindStdlibConfigVersion.cmake.in"
+    "${CMAKE_CURRENT_SOURCE_DIR}/version.py"
+    "${CMAKE_CURRENT_SOURCE_DIR}/docs/*"
+    "${CMAKE_CURRENT_SOURCE_DIR}/lib/*.sc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sc"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sh"
+    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.py"
 )
 ADD_CUSTOM_TARGET("include_SharemindStdlib_ALLFILES_in_IDE" SOURCES
                   ${SharemindStdlib_ALLFILES})
