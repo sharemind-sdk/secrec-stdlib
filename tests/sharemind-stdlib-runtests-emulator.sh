@@ -56,13 +56,13 @@ fi
 
 echo "SHAREMIND_PATH='${SHAREMIND_PATH}'"
 
-L=$(find "${SHAREMIND_PATH}" -name '*.so' -print0 | xargs -0 -n1 dirname | sort -u)
-L=$(for d in $L; do echo -n "$(cd "$d"; pwd):"; done)
-L="${L%:}"
-if [ "$L" != "" ]; then
-  NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}$L"
-fi
-unset -v L
+NEW_LD_LIBRARY_PATH=$(
+    find "${SHAREMIND_PATH}" -type f -name '*.so' \
+    | while read -r f; do echo "${f%/*}"; done \
+    | sort -u \
+    | while read -r d; do printf ':%s' "${d}"; done;
+    echo "${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}")
+NEW_LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH#:}"
 
 if [ -z "${EMULATOR_CONF}" ]; then
     EMULATOR_CONF="emulator.conf"
@@ -78,7 +78,7 @@ compile() {
     local SC="$1"
     local SB="$2"
 
-    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" "${SCC}" \
+    LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" "${SCC}" \
         --include "${TEST_PATH}" --include "${STDLIB}" \
         --input "${SC}" --output "${SB}"
 }
@@ -87,7 +87,7 @@ run() {
     local SB="$1"
     local TEST_NAME="$2"
     (cd "$(dirname "${EMULATOR}")" &&
-        ( (LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
+        ( (LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
                 "./$(basename "${EMULATOR}")" --conf="${EMULATOR_CONF}" \
                 --outFile=emulator.out --force "${SB}" \
                     | sed "s#^#${TEST_NAME}#g") \

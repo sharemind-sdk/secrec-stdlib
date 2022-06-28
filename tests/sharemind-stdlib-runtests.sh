@@ -81,13 +81,13 @@ fi
 
 TEST_LOG_FILE_PATH="${SHAREMIND_TEST_LOG_FILE:-${SHAREMIND_TEST_LOG_PATH}/stdlibtests.log}"
 
-L=$(find "${SHAREMIND_PATH}" -name '*.so' -print0 | xargs -0 -n1 dirname | sort -u)
-L=$(for d in $L; do echo -n "$(cd "$d"; pwd):"; done)
-L="${L%:}"
-if [ "$L" != "" ]; then
-  NEW_LD_LIBRARY_PATH="${LD_LIBRARY_PATH}${LD_LIBRARY_PATH:+:}$L"
-fi
-unset -v L
+NEW_LD_LIBRARY_PATH=$(
+    find "${SHAREMIND_PATH}" -type f -name '*.so' \
+    | while read -r f; do echo "${f%/*}"; done \
+    | sort -u \
+    | while read -r d; do printf ':%s' "${d}"; done;
+    echo "${LD_LIBRARY_PATH:+:}${LD_LIBRARY_PATH}")
+NEW_LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH#:}"
 
 if [ -z "${TEST_RUNNER_CONF}" ]; then
     TEST_RUNNER_CONF="client.conf"
@@ -139,7 +139,7 @@ compile() {
         fi
         mkdir -p "$SB_DIR"
         echo "[scc] $TEST_NAME"
-        LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" "${SCC}" \
+        LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" "${SCC}" \
             --include "${TEST_PATH}" --include "${STDLIB}" \
             --input "${SC}" --output "${SB}" || exit
     fi
@@ -150,7 +150,7 @@ run_normal() {
     local SB_BN="$1"
     local TEST_NAME="$2"
     (cd "$(dirname "${TEST_RUNNER}")" &&
-        ( (LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
+        ( (LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
                 "./$(basename "${TEST_RUNNER}")" --conf "${TEST_RUNNER_CONF}" --file "${SB_BN}" \
                         --logfile "${TEST_LOG_FILE_PATH}" --logmode append \
                     | sed "s#^#${TEST_NAME}#g") \
@@ -163,7 +163,7 @@ run_gdb() {
     local SB_BN="$1"
     local TEST_NAME="$2"
     (cd "$(dirname "${TEST_RUNNER}")" &&
-        ( (LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH:-${LD_LIBRARY_PATH}}" \
+        ( (LD_LIBRARY_PATH="${NEW_LD_LIBRARY_PATH}" \
                 gdb -return-child-result -batch -quiet \
                     -ex 'run' \
                     -ex 'backtrace' \
