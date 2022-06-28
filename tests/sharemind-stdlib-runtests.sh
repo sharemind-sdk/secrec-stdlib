@@ -93,7 +93,7 @@ if [ -z "${TEST_RUNNER_CONF}" ]; then
     TEST_RUNNER_CONF="client.conf"
 fi
 
-TEST_PATH="${SHAREMIND_PATH}/lib/sharemind/test"
+TEST_PATH="$(cd "${ABSSP}/../lib/sharemind/test" && pwd)"
 SCC="${SHAREMIND_PATH}/bin/scc"
 STDLIB="${SHAREMIND_PATH}/lib/sharemind/stdlib"
 TEST_RUNNER="${SHAREMIND_PATH}/bin/sharemind-secrec-test-runner"

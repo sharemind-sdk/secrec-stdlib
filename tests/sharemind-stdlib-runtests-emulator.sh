@@ -68,11 +68,11 @@ if [ -z "${EMULATOR_CONF}" ]; then
     EMULATOR_CONF="emulator.conf"
 fi
 
-TEST_PATH="${SHAREMIND_PATH}/lib/sharemind/test"
+TEST_PATH="$(cd "${ABSSP}/../lib/sharemind/test" && pwd)"
 SCC="${SHAREMIND_PATH}/bin/scc"
 STDLIB="${SHAREMIND_PATH}/lib/sharemind/stdlib"
 EMULATOR="${SHAREMIND_PATH}/bin/sharemind-emulator"
-TEST_PARSER="${SHAREMIND_PATH}/bin/sharemind-stdlib-emulator-test-parser.py"
+TEST_PARSER="${ABSSP}/sharemind-stdlib-emulator-test-parser.py"
 
 compile() {
     local SC="$1"
