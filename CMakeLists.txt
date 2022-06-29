@@ -90,6 +90,7 @@ SharemindAddComponentPackage("tests"
     NAME "secrec-stdlib-tests"
     DESCRIPTION "SecreC Standard Library tests"
     DEB_SECTION "misc"
-    DEB_DEPENDS "secrec-stdlib"
+    DEB_DEPENDS
+        "secrec-stdlib (= ${SharemindStdlib_DEB_stdlib_PACKAGE_VERSION})"
 )
 SharemindPackagingFinalize()
