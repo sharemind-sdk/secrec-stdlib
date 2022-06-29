@@ -37,8 +37,6 @@ FILE(GLOB_RECURSE SharemindStdlib_ALLFILES
     "${CMAKE_CURRENT_SOURCE_DIR}/docs/*"
     "${CMAKE_CURRENT_SOURCE_DIR}/lib/*.sc"
     "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sc"
-    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.sh"
-    "${CMAKE_CURRENT_SOURCE_DIR}/tests/*.py"
 )
 ADD_CUSTOM_TARGET("include_SharemindStdlib_ALLFILES_in_IDE" SOURCES
                   ${SharemindStdlib_ALLFILES})
@@ -71,19 +69,10 @@ INSTALL(DIRECTORY "${CMAKE_CURRENT_BINARY_DIR}/generated_docs/html"
         COMPONENT "doc")
 
 # Stdlib tests:
-INSTALL(
-    PROGRAMS
-        "${CMAKE_CURRENT_SOURCE_DIR}/tests/sharemind-stdlib-runtests.sh"
-        "${CMAKE_CURRENT_SOURCE_DIR}/tests/sharemind-stdlib-runtests-emulator.sh"
-        "${CMAKE_CURRENT_SOURCE_DIR}/tests/sharemind-stdlib-emulator-test-parser.py"
-    DESTINATION "bin"
-    COMPONENT "tests")
 INSTALL(DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/tests/"
         DESTINATION "lib/sharemind/test"
         COMPONENT "tests"
         FILES_MATCHING PATTERN "*.sc")
-
-SharemindUseCMakeFindFiles(COMPONENT "tests")
 
 # Packaging:
 SharemindSetupPackaging()
@@ -101,9 +90,6 @@ SharemindAddComponentPackage("tests"
     NAME "secrec-stdlib-tests"
     DESCRIPTION "SecreC Standard Library tests"
     DEB_SECTION "misc"
-    DEB_DEPENDS
-        "bash"
-        "python"
-        "secrec-stdlib"
+    DEB_DEPENDS "secrec-stdlib"
 )
 SharemindPackagingFinalize()
