@@ -91,8 +91,6 @@ SharemindAddComponentPackage("stdlib"
     NAME "secrec-stdlib"
     DESCRIPTION "SecreC Standard Library"
     DEB_SECTION "devel"
-    DEB_DEPENDS
-        "scc (>= 2.0.0)"
 )
 SharemindAddComponentPackage("doc"
     NAME "secrec-stdlib-doc"
@@ -106,7 +104,6 @@ SharemindAddComponentPackage("tests"
     DEB_DEPENDS
         "bash"
         "python"
-        "scc (>= 2.0.0)"
         "secrec-stdlib"
 )
 SharemindPackagingFinalize()
