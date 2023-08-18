@@ -1053,7 +1053,7 @@ D float64[[N]] sin (D float64[[N]] x) {
  *  @{
  *  @brief Function for finding the natural logarithm of a value
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64" / \ref fix32 "fix32" / \ref fix64 "fix64"
  *  @return returns the natural logarithms of the input array
  *  @leakage{None}
  */
@@ -1068,13 +1068,25 @@ D float64[[N]] ln (D float64[[N]] x) {
     __syscall ("shared3p::ln_float64_vec", __domainid (D), x, x);
     return x;
 }
+
+template <domain D : shared3p, dim N>
+D fix32[[N]] ln (D fix32[[N]] x) {
+    __syscall ("shared3p::ln_fix32_vec", __domainid (D), x, x);
+    return x;
+}
+
+template <domain D : shared3p, dim N>
+D fix64[[N]] ln (D fix64[[N]] x) {
+    __syscall ("shared3p::ln_fix64_vec", __domainid (D), x, x);
+    return x;
+}
 /** @}*/
 
 /** \addtogroup shared3p_log
  *  @{
  *  @brief Function for finding the logarithm of a value
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64" / \ref fix32 "fix32" / \ref fix64 "fix64"
  *  @return x input
  *  @return b logarithm base
  *  @return returns the logarithms of the input array
@@ -1087,6 +1099,16 @@ D float32[[N]] log (D float32[[N]] x, D float32[[N]] b) {
 
 template <domain D : shared3p, dim N>
 D float64[[N]] log (D float64[[N]] x, D float64[[N]] b) {
+    return ln (x) / ln (b);
+}
+
+template <domain D : shared3p, dim N>
+D fix32[[N]] log (D fix32[[N]] x, D fix32[[N]] b) {
+    return ln (x) / ln (b);
+}
+
+template <domain D : shared3p, dim N>
+D fix64[[N]] log (D fix64[[N]] x, D fix64[[N]] b) {
     return ln (x) / ln (b);
 }
 /** @} */
@@ -1115,7 +1137,7 @@ D float64[[N]] log10 (D float64[[N]] x) {
  *  @{
  *  @brief Function for finding exp(x)
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref float32 "float32" / \ref float64 "float64" / \ref fix32 "fix32" / \ref fix64 "fix64"
  *  @param x - input array
  *  @return exponential function applied to elements of the input array
  *  @leakage{None}
@@ -1130,6 +1152,18 @@ D float32[[N]] exp (D float32[[N]] x) {
 template <domain D : shared3p, dim N>
 D float64[[N]] exp (D float64[[N]] x) {
     __syscall ("shared3p::exp_float64_vec", __domainid (D), x, x);
+    return x;
+}
+
+template <domain D : shared3p, dim N>
+D fix32[[N]] exp (D fix32[[N]] x) {
+    __syscall ("shared3p::exp_fix32_vec", __domainid (D), x, x);
+    return x;
+}
+
+template <domain D : shared3p, dim N>
+D fix64[[N]] exp (D fix64[[N]] x) {
+    __syscall ("shared3p::exp_fix64_vec", __domainid (D), x, x);
     return x;
 }
 /** @}*/

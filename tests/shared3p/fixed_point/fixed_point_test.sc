@@ -206,6 +206,82 @@ bool fix_inv_test (D Fix fixProxy, D Float floatProxy) {
     return relative_error < 0.0002;
 }
 
+template<domain D : shared3p, type Fix, type Float>
+bool fix_exp_test (D Fix fixProxy, D Float floatProxy) {
+    D Float[[1]] a = {0, 1, 2.302585092994046, 4.158883083359672, 4.605170185988091};
+    D Fix[[1]] a_fix = (Fix) a;
+
+    D Float b = 0.693147180559945;
+    D Fix b_fix = (Fix) b;
+
+    D Float[[1]] expected_result1 = {1, 2.71828, 10, 64, 100};
+    D Float expected_result2 = 2;
+
+    D Fix[[1]] result1_fix = exp(a_fix);
+    D Fix result2_fix = exp(b_fix);
+
+    D Float[[1]] result1 = (Float) result1_fix;
+    D Float result2 = (Float) result2_fix;
+
+    Float relative_error1 = sum (declassify ((expected_result1 - result1) / expected_result1));
+    Float relative_error2 = declassify ((expected_result2 - result2) / expected_result2);
+
+    //the relative error is around
+    return isNegligible (relative_error1) && isNegligible (relative_error2);
+}
+
+template<domain D : shared3p, type Fix, type Float>
+bool fix_ln_test (D Fix fixProxy, D Float floatProxy) {
+    D Float[[1]] a = {1, 2.71828, 10, 64, 100};
+    D Fix[[1]] a_fix = (Fix) a;
+
+    D Float b = 2;
+    D Fix b_fix = (Fix) b;
+
+    D Float[[1]] expected_result1 = {0, 1, 2.302585092994046, 4.158883083359672, 4.605170185988091};
+    D Float expected_result2 = 0.693147180559945;
+
+    D Fix[[1]] result1_fix = ln(a_fix);
+    D Fix result2_fix = ln(b_fix);
+
+    D Float[[1]] result1 = (Float) result1_fix;
+    D Float result2 = (Float) result2_fix;
+
+    Float relative_error1 = sum (declassify ((expected_result1 - result1) / expected_result1));
+    Float relative_error2 = declassify ((expected_result2 - result2) / expected_result2);
+
+    //the relative error is around
+    return isNegligible (relative_error1) && isNegligible (relative_error2);
+}
+
+template<domain D : shared3p, type Fix, type Float>
+bool fix_log_test (D Fix fixProxy, D Float floatProxy) {
+    D Float[[1]] a = {1, 50, 100, 1000, 25};
+    D Float[[1]] a_base = {10,10,10,10,10};
+    D Fix[[1]] a_fix = (Fix) a;
+    D Fix[[1]] a_base_fix = (Fix) a_base;
+
+    D Float b = 54;
+    D Float b_base = 10;
+    D Fix b_fix = (Fix) b;
+    D Fix b_fix_base = (Fix) b_base;
+
+    D Float[[1]] expected_result1 = {0, 1.69897000433601880, 2, 3, 1.39794000867204};
+    D Float expected_result2 = 1.7323937598229685;
+
+    D Fix[[1]] result1_fix = log(a_fix, a_base_fix);
+    D Fix result2_fix = log(b_fix, b_base_fix);
+
+    D Float[[1]] result1 = (Float) result1_fix;
+    D Float result2 = (Float) result2_fix;
+
+    Float relative_error1 = sum (declassify ((expected_result1 - result1) / expected_result1));
+    Float relative_error2 = declassify ((expected_result2 - result2) / expected_result2);
+
+    //the relative error is around
+    return isNegligible (relative_error1) && isNegligible (relative_error2);
+}
+
 void main () {
     pd_shared3p fix32 fi32;
     pd_shared3p float32 fl32;
@@ -247,6 +323,15 @@ void main () {
 
     test ("Fixed point invert", fix_inv_test (fi32, fl32), fi32);
     test ("Fixed point invert", fix_inv_test (fi64, fl64), fi64);
+
+    test ("Fixed point exponent", fix_exp_test (fi32, fl32), fi32);
+    test ("Fixed point exponent", fix_exp_test (fi64, fl64), fi64);
+
+    test ("Fixed point natural log", fix_ln_test (fi32, fl32), fi32);
+    test ("Fixed point natural log", fix_ln_test (fi64, fl64), fi64);
+
+    test ("Fixed point log base 10", fix_log_test (fi32, fl32), fi32);
+    test ("Fixed point log base 10", fix_log_test (fi64, fl64), fi64);
 
     test_report();
 }
