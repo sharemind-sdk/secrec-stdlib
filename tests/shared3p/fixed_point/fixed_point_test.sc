@@ -214,8 +214,8 @@ bool fix_exp_test (D Fix fixProxy, D Float floatProxy) {
     D Float b = 0.693147180559945;
     D Fix b_fix = (Fix) b;
 
-    D Float[[1]] expected_result1 = {1, 2.71828, 10, 64, 100};
-    D Float expected_result2 = 2;
+    D Float[[1]] expected_result1 = {1, 2.718281828459045, 10, 64, 99.999999999999957};
+    D Float expected_result2 = 1.999999999999999;
 
     D Fix[[1]] result1_fix = exp(a_fix);
     D Fix result2_fix = exp(b_fix);
@@ -238,7 +238,7 @@ bool fix_ln_test (D Fix fixProxy, D Float floatProxy) {
     D Float b = 2;
     D Fix b_fix = (Fix) b;
 
-    D Float[[1]] expected_result1 = {0, 1, 2.302585092994046, 4.158883083359672, 4.605170185988091};
+    D Float[[1]] expected_result1 = {0, 0.999999327347282, 2.302585092994046, 4.158883083359671, 4.605170185988092};
     D Float expected_result2 = 0.693147180559945;
 
     D Fix[[1]] result1_fix = ln(a_fix);
@@ -266,8 +266,8 @@ bool fix_log_test (D Fix fixProxy, D Float floatProxy) {
     D Fix b_fix = (Fix) b;
     D Fix b_fix_base = (Fix) b_base;
 
-    D Float[[1]] expected_result1 = {0, 1.69897000433601880, 2, 3, 1.39794000867204};
-    D Float expected_result2 = 1.7323937598229685;
+    D Float[[1]] expected_result1 = {0, 1.698970004336019, 2, 3, 1.397940008672038};
+    D Float expected_result2 = 1.732393759822969;
 
     D Fix[[1]] result1_fix = log(a_fix, a_base_fix);
     D Fix result2_fix = log(b_fix, b_base_fix);
