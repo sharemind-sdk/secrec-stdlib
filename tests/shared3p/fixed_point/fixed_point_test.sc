@@ -23,7 +23,6 @@ import test_utility;
 
 domain pd_shared3p shared3p;
 
-
 template<domain D : shared3p, type Fix, type Float>
 bool fix_conv_test (D Fix fixProxy, D Float floatProxy) {
     D Float[[2]] a = reshape ({0.5, 0.3, 123.54,
@@ -35,6 +34,18 @@ bool fix_conv_test (D Fix fixProxy, D Float floatProxy) {
 
     //the relative error is around 1e-7
     return isNegligible (relative_error);
+}
+
+
+template<domain D : shared3p, type Fix, type Float>
+bool fix_conv_test_2 (D Fix fixProxy, D Float floatProxy) {
+    pd_shared3p Fix a = 0;
+    pd_shared3p Float b = (Float) a;
+
+    // print(declassify(a));  // prints 0
+    // print(declassify(b));  // prints -inf
+
+    return (declassify(b) == 0);
 }
 
 float64[[1]] aconst = {46.1031757062301, 0.662917271256447, -10.5627957265824, 17.7343259332702, -10.5071143712848, -36.2001691944897, -26.2601210037246, 17.2664207406342, -15.5826088041067, -43.2740949559957};
@@ -203,7 +214,7 @@ bool fix_inv_test (D Fix fixProxy, D Float floatProxy) {
     Float relative_error = abs (sum (declassify ((result - expected_result) / expected_result)));
 
     //the relative error is around 1e-4
-    return relative_error < 0.0002;
+    return relative_error < fix_err (fixProxy);
 }
 
 template<domain D : shared3p, type Fix, type Float>
@@ -226,8 +237,7 @@ bool fix_exp_test (D Fix fixProxy, D Float floatProxy) {
     Float relative_error1 = sum (declassify ((expected_result1 - result1) / expected_result1));
     Float relative_error2 = declassify ((expected_result2 - result2) / expected_result2);
 
-    //the relative error is around
-    return isNegligible (relative_error1) && isNegligible (relative_error2);
+    return (relative_error1 < fix_err (fixProxy)) && (relative_error2 < fix_err (fixProxy));
 }
 
 template<domain D : shared3p, type Fix, type Float>
@@ -244,14 +254,19 @@ bool fix_ln_test (D Fix fixProxy, D Float floatProxy) {
     D Fix[[1]] result1_fix = ln(a_fix);
     D Fix result2_fix = ln(b_fix);
 
+    print("ln fix:");
+    printVector(declassify(result1_fix));
+
     D Float[[1]] result1 = (Float) result1_fix;
     D Float result2 = (Float) result2_fix;
 
     Float relative_error1 = sum (declassify ((expected_result1 - result1) / expected_result1));
     Float relative_error2 = declassify ((expected_result2 - result2) / expected_result2);
 
-    //the relative error is around
-    return isNegligible (relative_error1) && isNegligible (relative_error2);
+    print("err1");
+    print(relative_error1);
+
+    return (relative_error1 < fix_err (fixProxy)) && (relative_error2 < fix_err (fixProxy));
 }
 
 template<domain D : shared3p, type Fix, type Float>
@@ -259,7 +274,7 @@ bool fix_log_test (D Fix fixProxy, D Float floatProxy) {
     D Float[[1]] a = {1, 50, 100, 1000, 25};
     D Float[[1]] a_base = {10,10,10,10,10};
     D Fix[[1]] a_fix = (Fix) a;
-    D Fix[[1]] a_base_fix = (Fix) a_base;
+    D Fix[[1]] a_fix_base = (Fix) a_base;
 
     D Float b = 54;
     D Float b_base = 10;
@@ -269,8 +284,8 @@ bool fix_log_test (D Fix fixProxy, D Float floatProxy) {
     D Float[[1]] expected_result1 = {0, 1.698970004336019, 2, 3, 1.397940008672038};
     D Float expected_result2 = 1.732393759822969;
 
-    D Fix[[1]] result1_fix = log(a_fix, a_base_fix);
-    D Fix result2_fix = log(b_fix, b_base_fix);
+    D Fix[[1]] result1_fix = log(a_fix, a_fix_base);
+    D Fix result2_fix = log(b_fix, b_fix_base);
 
     D Float[[1]] result1 = (Float) result1_fix;
     D Float result2 = (Float) result2_fix;
@@ -278,8 +293,7 @@ bool fix_log_test (D Fix fixProxy, D Float floatProxy) {
     Float relative_error1 = sum (declassify ((expected_result1 - result1) / expected_result1));
     Float relative_error2 = declassify ((expected_result2 - result2) / expected_result2);
 
-    //the relative error is around
-    return isNegligible (relative_error1) && isNegligible (relative_error2);
+    return (relative_error1 < fix_err (fixProxy)) && (relative_error2 < fix_err (fixProxy));
 }
 
 void main () {
@@ -290,6 +304,9 @@ void main () {
 
     test ("Fixed point conversion", fix_conv_test (fi32, fl32), fi32);
     test ("Fixed point conversion", fix_conv_test (fi64, fl64), fi64);
+
+    test ("Fixed to float convert 0", fix_conv_test_2 (fi32, fl32), fi32);
+    test ("Fixed to float convert 0", fix_conv_test_2 (fi64, fl64), fi64);
 
     test ("Fixed point multiplication", fix_mul_test (fi32, fl32), fi32);
     test ("Fixed point multiplication", fix_mul_test (fi64, fl64), fi64);
