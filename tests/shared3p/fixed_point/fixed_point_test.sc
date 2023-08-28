@@ -254,17 +254,11 @@ bool fix_ln_test (D Fix fixProxy, D Float floatProxy) {
     D Fix[[1]] result1_fix = ln(a_fix);
     D Fix result2_fix = ln(b_fix);
 
-    print("ln fix:");
-    printVector(declassify(result1_fix));
-
     D Float[[1]] result1 = (Float) result1_fix;
     D Float result2 = (Float) result2_fix;
 
     Float relative_error1 = sum (declassify ((expected_result1 - result1) / expected_result1));
     Float relative_error2 = declassify ((expected_result2 - result2) / expected_result2);
-
-    print("err1");
-    print(relative_error1);
 
     return (relative_error1 < fix_err (fixProxy)) && (relative_error2 < fix_err (fixProxy));
 }
