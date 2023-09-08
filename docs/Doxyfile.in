@@ -2281,4 +2281,4 @@ DOT_CLEANUP            = YES
 # Custom command to display the leakage of a function in the documentation
 
 
-ALIASES += leakage{1}="<p><dl class="bug"><dt>Leakage</dt><dd>\1</dd></dl></p>"
+ALIASES += leakage{1}="<p><dl class=\"bug\"><dt>Leakage</dt><dd>\1</dd></dl></p>"
