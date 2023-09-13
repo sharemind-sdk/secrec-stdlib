@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2015 Cybernetica
+ * Copyright (C) Cybernetica
  *
  * Research/Commercial License Usage
  * Licensees holding a valid Research License or Commercial License
@@ -21,7 +21,7 @@
  *
  * @section LICENSE
  *
- * Copyright (C) 2020 Cybernetica
+ * Copyright (C) 2023 Cybernetica
  *
  * \subsection commercial_license Research/Commercial License Usage
  *
