@@ -23,18 +23,25 @@ def main():
         exit(1)
 
     version = sys.argv[1]
-    haveGit = cmd("command -v git") != ""
+    try:
+        with open('.version-detail', 'r') as f:
+            detail = f.read()
+        detail = detail.strip().removeprefix("release_").strip()
+        if len(detail) > 0:
+            version += f" ({detail})"
+    except:
+        haveGit = cmd("command -v git") != ""
 
-    if haveGit:
-        releases = cmd("git tag -l --points-at HEAD | grep release | sed -e 's/release_//'").split('\n')
-        releases.pop() # pop empty line
-        if releases != []:
-            releases.sort(key=releaseKey)
-            latest = releases.pop()
-            version += " (" + latest + ")"
-        else:
-            commit = cmd("git rev-parse --short HEAD").replace('\n', '')
-            version += " (git-" + commit + ")"
+        if haveGit:
+            releases = cmd("git tag -l --points-at HEAD | grep release | sed -e 's/release_//'").split('\n')
+            releases.pop() # pop empty line
+            if releases != []:
+                releases.sort(key=releaseKey)
+                latest = releases.pop()
+                version += " (" + latest + ")"
+            else:
+                commit = cmd("git rev-parse --short HEAD").replace('\n', '')
+                version += " (git-" + commit + ")"
 
     print(version)
 
