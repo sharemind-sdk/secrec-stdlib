@@ -1405,7 +1405,26 @@ D xor_uint64 min (D xor_uint64[[1]] x) {
     __syscall ("shared3p::vecmin_xor_uint64_vec", __domainid (D), x, out);
     return out;
 }
-
+template <domain D : shared3p>
+D fix32 min (D fix32[[1]] x) {
+    assert (size(x) > 0);
+    D int32[[1]] xi(size (x));
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    D int32 outi = min(xi);
+    D fix32 out;
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), outi, out);
+    return out;
+}
+template <domain D : shared3p>
+D fix64 min (D fix64[[1]] x) {
+    assert (size(x) > 0);
+    D int64[[1]] xi(size (x));
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    D int64 outi = min(xi);
+    D fix64 out;
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), outi, out);
+    return out;
+}
 /** @}*/
 /** \addtogroup shared3p_min_k
  *  @{
@@ -1504,6 +1523,28 @@ D int[[1]] min (D int[[1]] x, uint k) {
     out -= 9223372036854775808;
     return (int)out;
 }
+template <domain D : shared3p>
+D fix32[[1]] min (D fix32[[1]] x, uint k) {
+    uint n = size(x);
+    assert(n > 0 && k > 0 && n % k == 0);
+    D int32[[1]] xi(n);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    D int32[[1]] outi = min(xi, k);
+    D fix32[[1]] out(k);
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), outi, out);
+    return out;
+}
+template <domain D : shared3p>
+D fix64[[1]] min (D fix64[[1]] x, uint k) {
+    uint n = size(x);
+    assert(n > 0 && k > 0 && n % k == 0);
+    D int64[[1]] xi(n);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    D int64[[1]] outi = min(xi, k);
+    D fix64[[1]] out(k);
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), outi, out);
+    return out;
+}
 
 /** @}*/
 /** \addtogroup shared3p_min_2
@@ -1580,7 +1621,28 @@ D float64 min (D float64 x, D float64 y) {
     __syscall ("shared3p::min_float64_vec", __domainid (D), x, y, x);
     return x;
 }
-
+template <domain D : shared3p>
+D fix32 min (D fix32 x, D fix32 y) {
+    D int32 xi;
+    D int32 yi;
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
+    D int32 outi = min(xi, yi);
+    D fix32 out;
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), outi, out);
+    return out;
+}
+template <domain D : shared3p>
+D fix64 min (D fix64 x, D fix64 y) {
+    D int64 xi;
+    D int64 yi;
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
+    D int64 outi = min(xi, yi);
+    D fix64 out;
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), outi, out);
+    return out;
+}
 template <domain D : shared3p>
 D uint8[[1]] min (D uint8[[1]] x, D uint8[[1]] y) {
     assert (size(x) == size(y));
@@ -1654,7 +1716,32 @@ D float64[[1]] min(D float64[[1]] x, D float64[[1]] y) {
     __syscall ("shared3p::min_float64_vec", __domainid (D), x, y, x);
     return x;
 }
-
+template <domain D : shared3p>
+D fix32[[1]] min (D fix32[[1]] x, D fix32[[1]] y) {
+    uint n = size(x);
+    assert(n == size(y));
+    D int32[[1]] xi(n);
+    D int32[[1]] yi(n);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
+    D int32[[1]] outi = min(xi, yi);
+    D fix32[[1]] out(n);
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), outi, out);
+    return out;
+}
+template <domain D : shared3p>
+D fix64[[1]] min (D fix64[[1]] x, D fix64[[1]] y) {
+    uint n = size(x);
+    assert(n == size(y));
+    D int64[[1]] xi(n);
+    D int64[[1]] yi(n);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
+    D int64[[1]] outi = min(xi, yi);
+    D fix64[[1]] out(n);
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), outi, out);
+    return out;
+}
 template <domain D : shared3p, dim N>
 D uint8[[N]] min (D uint8[[N]] x, D uint8[[N]] y) {
     assert(shapesAreEqual(x,y));
@@ -1726,6 +1813,16 @@ D float64[[N]] min(D float64[[N]] x, D float64[[N]] y) {
     assert(size(x) == size(y));
     __syscall ("shared3p::min_float64_vec", __domainid (D), x, y, x);
     return x;
+}
+template <domain D : shared3p, dim N>
+D fix32[[N]] min (D fix32[[N]] x, D fix32[[N]] y) {
+    assert(size(x) == size(y));
+    return (fix32) min((float32) x, (float32) y);
+}
+template <domain D : shared3p, dim N>
+D fix64[[N]] min (D fix64[[N]] x, D fix64[[N]] y) {
+    assert(size(x) == size(y));
+    return (fix64) min((float64) x, (float64) y);
 }
 template <domain D : shared3p>
 D xor_uint8 min (D xor_uint8 x, D xor_uint8 y) {
@@ -1930,6 +2027,28 @@ D xor_uint64 max (D xor_uint64[[1]] x) {
     __syscall ("shared3p::vecmax_xor_uint64_vec", __domainid (D), x, out);
     return out;
 }
+template <domain D : shared3p>
+D fix32 max (D fix32[[1]] x) {
+    uint n = size(x);
+    assert (n > 0);
+    D int32[[1]] xi(n);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    D int32 outi = max(xi);
+    D fix32 out;
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), outi, out);
+    return out;
+}
+template <domain D : shared3p>
+D fix64 max (D fix64[[1]] x) {
+    uint n = size(x);
+    assert (n > 0);
+    D int64[[1]] xi(n);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    D int64 outi = max(xi);
+    D fix64 out;
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), outi, out);
+    return out;
+}
 
 /** @}*/
 /** \addtogroup shared3p_max_k
@@ -2020,6 +2139,28 @@ D int[[1]] max (D int[[1]] x, uint k) {
     out -= 9223372036854775808;
     return (int)out;
 }
+template <domain D : shared3p>
+D fix32[[1]] max (D fix32[[1]] x, uint k) {
+    uint n = size(x);
+    assert(n > 0 && k > 0 && n % k == 0);
+    D int32[[1]] xi(n);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    D int32[[1]] outi = max(xi, k);
+    D fix32[[1]] out(k);
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), outi, out);
+    return out;
+}
+template <domain D : shared3p>
+D fix64[[1]] max (D fix64[[1]] x, uint k) {
+    uint n = size(x);
+    assert(n > 0 && k > 0 && n % k == 0);
+    D int64[[1]] xi(n);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    D int64[[1]] outi = max(xi, k);
+    D fix64[[1]] out(k);
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), outi, out);
+    return out;
+}
 
 /** @}*/
 /** \addtogroup shared3p_max_2
@@ -2094,7 +2235,28 @@ D float64 max (D float64 x, D float64 y) {
     __syscall ("shared3p::max_float64_vec", __domainid (D), x, y, x);
     return x;
 }
-
+template <domain D : shared3p>
+D fix32 max (D fix32 x, D fix32 y) {
+    D int32 xi;
+    D int32 yi;
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
+    D int32 outi = max(xi, yi);
+    D fix32 out;
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), outi, out);
+    return out;
+}
+template <domain D : shared3p>
+D fix64 max (D fix64 x, D fix64 y) {
+    D int64 xi;
+    D int64 yi;
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
+    D int64 outi = max(xi, yi);
+    D fix64 out;
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), outi, out);
+    return out;
+}
 template <domain D : shared3p>
 D uint8[[1]] max (D uint8[[1]] x, D uint8[[1]] y) {
     assert (size (x) == size (y));
@@ -2167,7 +2329,32 @@ D float64[[1]] max (D float64[[1]] x, D float64[[1]] y) {
     __syscall ("shared3p::max_float64_vec", __domainid (D), x, y, x);
     return x;
 }
-
+template <domain D : shared3p>
+D fix32[[1]] max (D fix32[[1]] x, D fix32[[1]] y) {
+    uint n = size(x);
+    assert(n == size(y));
+    D int32[[1]] xi(n);
+    D int32[[1]] yi(n);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
+    D int32[[1]] outi = max(xi, yi);
+    D fix32[[1]] out(n);
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), outi, out);
+    return out;
+}
+template <domain D : shared3p>
+D fix64[[1]] max (D fix64[[1]] x, D fix64[[1]] y) {
+    uint n = size(x);
+    assert(n == size(y));
+    D int64[[1]] xi(n);
+    D int64[[1]] yi(n);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
+    D int64[[1]] outi = max(xi, yi);
+    D fix64[[1]] out(n);
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), outi, out);
+    return out;
+}
 template <domain D : shared3p, dim N>
 D uint8[[N]] max (D uint8[[N]] x, D uint8[[N]] y) {
     assert(shapesAreEqual(x,y));
@@ -2239,6 +2426,16 @@ D float64[[N]] max (D float64[[N]] x, D float64[[N]] y) {
     assert (size (x) == size (y));
     __syscall ("shared3p::max_float64_vec", __domainid (D), x, y, x);
     return x;
+}
+template <domain D : shared3p, dim N>
+D fix32[[N]] max (D fix32[[N]] x, D fix32[[N]] y) {
+    assert(size(x) == size(y));
+    return (fix32) max((float32) x, (float32) y);
+}
+template <domain D : shared3p, dim N>
+D fix64[[N]] max (D fix64[[N]] x, D fix64[[N]] y) {
+    assert(size(x) == size(y));
+    return (fix64) max((float64) x, (float64) y);
 }
 template <domain D : shared3p>
 D xor_uint8 max (D xor_uint8 x, D xor_uint8 y) {
