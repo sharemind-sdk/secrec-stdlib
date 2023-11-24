@@ -1724,10 +1724,9 @@ D fix32[[1]] min (D fix32[[1]] x, D fix32[[1]] y) {
     D int32[[1]] yi(n);
     __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
     __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
-    D int32[[1]] outi = min(xi, yi);
-    D fix32[[1]] out(n);
-    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), outi, out);
-    return out;
+    D int32[[1]] res = min(xi, yi);
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), res, x);
+    return x;
 }
 template <domain D : shared3p>
 D fix64[[1]] min (D fix64[[1]] x, D fix64[[1]] y) {
@@ -1737,10 +1736,9 @@ D fix64[[1]] min (D fix64[[1]] x, D fix64[[1]] y) {
     D int64[[1]] yi(n);
     __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
     __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
-    D int64[[1]] outi = min(xi, yi);
-    D fix64[[1]] out(n);
-    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), outi, out);
-    return out;
+    D int64[[1]] res = min(xi, yi);
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), res, x);
+    return x;
 }
 template <domain D : shared3p, dim N>
 D uint8[[N]] min (D uint8[[N]] x, D uint8[[N]] y) {
@@ -2241,10 +2239,9 @@ D fix32 max (D fix32 x, D fix32 y) {
     D int32 yi;
     __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
     __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
-    D int32 outi = max(xi, yi);
-    D fix32 out;
-    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), outi, out);
-    return out;
+    D int32 res = max(xi, yi);
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), res, x);
+    return x;
 }
 template <domain D : shared3p>
 D fix64 max (D fix64 x, D fix64 y) {
@@ -2252,10 +2249,9 @@ D fix64 max (D fix64 x, D fix64 y) {
     D int64 yi;
     __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
     __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
-    D int64 outi = max(xi, yi);
-    D fix64 out;
-    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), outi, out);
-    return out;
+    D int64 res = max(xi, yi);
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), res, x);
+    return x;
 }
 template <domain D : shared3p>
 D uint8[[1]] max (D uint8[[1]] x, D uint8[[1]] y) {
@@ -2337,10 +2333,9 @@ D fix32[[1]] max (D fix32[[1]] x, D fix32[[1]] y) {
     D int32[[1]] yi(n);
     __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
     __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
-    D int32[[1]] outi = max(xi, yi);
-    D fix32[[1]] out(n);
-    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), outi, out);
-    return out;
+    D int32[[1]] res = max(xi, yi);
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), res, x);
+    return x;
 }
 template <domain D : shared3p>
 D fix64[[1]] max (D fix64[[1]] x, D fix64[[1]] y) {
@@ -2350,10 +2345,9 @@ D fix64[[1]] max (D fix64[[1]] x, D fix64[[1]] y) {
     D int64[[1]] yi(n);
     __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
     __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
-    D int64[[1]] outi = max(xi, yi);
-    D fix64[[1]] out(n);
-    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), outi, out);
-    return out;
+    D int64[[1]] res = max(xi, yi);
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), res, x);
+    return x;
 }
 template <domain D : shared3p, dim N>
 D uint8[[N]] max (D uint8[[N]] x, D uint8[[N]] y) {
