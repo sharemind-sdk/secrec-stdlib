@@ -1812,6 +1812,34 @@ D float64[[N]] min(D float64[[N]] x, D float64[[N]] y) {
     __syscall ("shared3p::min_float64_vec", __domainid (D), x, y, x);
     return x;
 }
+// since we cannot have a placeholder for N dim (like a(shape(x))),
+// specific implementation only for 2D cases. Otherwise, convering to float.
+template <domain D: shared3p>
+D fix32[[2]] min (D fix32[[2]] x, D fix32[[2]] y) {
+    uint nrow = shape(x)[0];
+    uint ncol = shape(x)[1];
+    assert(nrow == shape(y)[0] && ncol == shape(y)[1]);
+    D int32[[2]] xi(nrow, ncol);
+    D int32[[2]] yi(nrow, ncol);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
+    D int32[[2]] res = min(xi, yi);
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), res, x);
+    return x;
+}
+template <domain D: shared3p>
+D fix64[[2]] min (D fix64[[2]] x, D fix64[[2]] y) {
+    uint nrow = shape(x)[0];
+    uint ncol = shape(x)[1];
+    assert(nrow == shape(y)[0] && ncol == shape(y)[1]);
+    D int64[[2]] xi(nrow, ncol);
+    D int64[[2]] yi(nrow, ncol);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
+    D int64[[2]] res = min(xi, yi);
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), res, x);
+    return x;
+}
 template <domain D : shared3p, dim N>
 D fix32[[N]] min (D fix32[[N]] x, D fix32[[N]] y) {
     assert(size(x) == size(y));
@@ -2419,6 +2447,34 @@ template <domain D : shared3p, dim N>
 D float64[[N]] max (D float64[[N]] x, D float64[[N]] y) {
     assert (size (x) == size (y));
     __syscall ("shared3p::max_float64_vec", __domainid (D), x, y, x);
+    return x;
+}
+// since we cannot have a placeholder for N dim (like a(shape(x))),
+// specific implementation only for 2D cases. Otherwise, convering to float.
+template <domain D: shared3p>
+D fix32[[2]] max (D fix32[[2]] x, D fix32[[2]] y) {
+    uint nrow = shape(x)[0];
+    uint ncol = shape(x)[1];
+    assert(nrow == shape(y)[0] && ncol == shape(y)[1]);
+    D int32[[2]] xi(nrow, ncol);
+    D int32[[2]] yi(nrow, ncol);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
+    D int32[[2]] res = max(xi, yi);
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), res, x);
+    return x;
+}
+template <domain D: shared3p>
+D fix64[[2]] max (D fix64[[2]] x, D fix64[[2]] y) {
+    uint nrow = shape(x)[0];
+    uint ncol = shape(x)[1];
+    assert(nrow == shape(y)[0] && ncol == shape(y)[1]);
+    D int64[[2]] xi(nrow, ncol);
+    D int64[[2]] yi(nrow, ncol);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
+    D int64[[2]] res = max(xi, yi);
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), res, x);
     return x;
 }
 template <domain D : shared3p, dim N>

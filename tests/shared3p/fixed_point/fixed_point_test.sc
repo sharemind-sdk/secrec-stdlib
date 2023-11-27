@@ -290,6 +290,98 @@ bool fix_log_test (D Fix fixProxy, D Float floatProxy) {
     return (relative_error1 < fix_err (fixProxy)) && (relative_error2 < fix_err (fixProxy));
 }
 
+template<domain D : shared3p, type Fix, type Float>
+bool fix_min_test (D Fix fixProxy, D Float floatProxy) {
+    D Float[[1]] a = {1, 2.71828, -10, 64, -100.55, 9.32};
+    D Fix[[1]] a_fix = (Fix) a;
+
+    D Float[[1]] b = {1.1, 2.61828, -10.1, 65, -100.45, 9.12};
+    D Fix[[1]] b_fix = (Fix) b;
+
+    D Float[[2]] c = reshape({1, 2.71828, -10, 64, -100.55, 9.32}, 3u64, 2u64);
+    D Fix[[2]] c_fix = (Fix) c;
+
+    D Float[[2]] d = reshape({1.1, 2.61828, -10.1, 65, -100.45, 9.12}, 3u64, 2u64);
+    D Fix[[2]] d_fix = (Fix) d;
+
+    D Float expected_result1 = -100.55;
+    D Float[[1]] expected_result2 = {-10, -100.55};
+    D Float expected_result3 = 1;
+    D Float[[1]] expected_result4 = {1, 2.61828, -10.1, 64, -100.55, 9.12};
+    D Float[[2]] expected_result5 = reshape({1, 2.61828, -10.1, 64, -100.55, 9.12}, 3u64, 2u64);
+
+    D Fix result1_fix = min(a_fix);
+    D Fix[[1]] result2_fix = min(a_fix, 2u64);
+    D Fix result3_fix = min(a_fix[0], a_fix[1]);
+    D Fix[[1]] result4_fix = min(a_fix, b_fix);
+    D Fix[[2]] result5_fix = min(c_fix, d_fix);
+
+    D Float result1 = (Float) result1_fix;
+    D Float[[1]] result2 = (Float) result2_fix;
+    D Float result3 = (Float) result3_fix;
+    D Float[[1]] result4 = (Float) result4_fix;
+    D Float[[2]] result5 = (Float) result5_fix;
+
+    Float relative_error1 = declassify ((expected_result1 - result1) / expected_result1);
+    Float relative_error2 = sum (declassify ((expected_result2 - result2) / expected_result2));
+    Float relative_error3 = declassify ((expected_result3 - result3) / expected_result3);
+    Float relative_error4 = max (declassify (abs((expected_result4 - result4) / expected_result4)));
+    Float relative_error5 = max (declassify (abs((expected_result5 - result5) / expected_result5)));
+
+    //the relative error is around 1e-7
+    return isNegligible (relative_error1)
+        && isNegligible (relative_error2)
+        && isNegligible (relative_error3)
+        && isNegligible (relative_error4)
+        && isNegligible (relative_error5);
+}
+
+template<domain D : shared3p, type Fix, type Float>
+bool fix_max_test (D Fix fixProxy, D Float floatProxy) {
+    D Float[[1]] a = {1, 2.71828, -10, 64, -100.55, 9.32};
+    D Fix[[1]] a_fix = (Fix) a;
+
+    D Float[[1]] b = {1.1, 2.61828, -10.1, 65, -100.45, 9.12};
+    D Fix[[1]] b_fix = (Fix) b;
+
+    D Float[[2]] c = reshape({1, 2.71828, -10, 64, -100.55, 9.32}, 3u64, 2u64);
+    D Fix[[2]] c_fix = (Fix) c;
+
+    D Float[[2]] d = reshape({1.1, 2.61828, -10.1, 65, -100.45, 9.12}, 3u64, 2u64);
+    D Fix[[2]] d_fix = (Fix) d;
+
+    D Float expected_result1 = 64;
+    D Float[[1]] expected_result2 = {2.71828, 64};
+    D Float expected_result3 = 2.71828;
+    D Float[[1]] expected_result4 = {1.1, 2.71828, -10, 65, -100.45, 9.32};
+    D Float[[2]] expected_result5 = reshape({1.1, 2.71828, -10, 65, -100.45, 9.32}, 3u64, 2u64);
+
+    D Fix result1_fix = max(a_fix);
+    D Fix[[1]] result2_fix = max(a_fix, 2u64);
+    D Fix result3_fix = max(a_fix[0], a_fix[1]);
+    D Fix[[1]] result4_fix = max(a_fix, b_fix);
+    D Fix[[2]] result5_fix = max(c_fix, d_fix);
+
+    D Float result1 = (Float) result1_fix;
+    D Float[[1]] result2 = (Float) result2_fix;
+    D Float result3 = (Float) result3_fix;
+    D Float[[1]] result4 = (Float) result4_fix;
+    D Float[[2]] result5 = (Float) result5_fix;
+
+    Float relative_error1 = declassify ((expected_result1 - result1) / expected_result1);
+    Float relative_error2 = sum (declassify ((expected_result2 - result2) / expected_result2));
+    Float relative_error3 = declassify ((expected_result3 - result3) / expected_result3);
+    Float relative_error4 = max (declassify (abs((expected_result4 - result4) / expected_result4)));
+    Float relative_error5 = max (declassify (abs((expected_result5 - result5) / expected_result5)));
+
+    //the relative error is around 1e-7
+    return isNegligible (relative_error1)
+        && isNegligible (relative_error2)
+        && isNegligible (relative_error3)
+        && isNegligible (relative_error4)
+        && isNegligible (relative_error5);
+}
+
 void main () {
     pd_shared3p fix32 fi32;
     pd_shared3p float32 fl32;
@@ -343,6 +435,12 @@ void main () {
 
     test ("Fixed point log base 10", fix_log_test (fi32, fl32), fi32);
     test ("Fixed point log base 10", fix_log_test (fi64, fl64), fi64);
+
+    test ("Fixed point min", fix_min_test (fi32, fl32), fi32);
+    test ("Fixed point min", fix_min_test (fi64, fl64), fi64);
+
+    test ("Fixed point max", fix_max_test (fi32, fl32), fi32);
+    test ("Fixed point max", fix_max_test (fi64, fl64), fi64);
 
     test_report();
 }
