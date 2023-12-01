@@ -1279,14 +1279,14 @@ D bool[[1]] isNegligible (D float64[[1]] a) {
  *  @{
  *  @brief Functions for finding the minimum value
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref fix32 "fix32" / \ref fix64 "fix64"
  */
 
 /** \addtogroup shared3p_min_vec
  *  @{
  *  @brief Function for finding the minimum element of the input vector.
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64" / \ref fix32 "fix32" / \ref fix64 "fix64"
  *  @param x - input
  *  @returns minimum element of the input vector.
  *  @pre input vector is not empty
@@ -1430,7 +1430,7 @@ D fix64 min (D fix64[[1]] x) {
  *  @{
  *  @brief Function for finding the minimum element in the specified parts of the vector.
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref fix32 "fix32" / \ref fix64 "fix64"
  *  @param x - input vector
  *  @param k - an \ref uint64 "uint" type value, which specifies into how many subarrays must the input array be divided
  *  @returns a vector with all the minimum elements of all the subarrays specified by k
@@ -1551,7 +1551,7 @@ D fix64[[1]] min (D fix64[[1]] x, uint k) {
  *  @{
  *  @brief Function for finding the pointwise minimum of 2 arrays
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" / \ref fix32 "fix32" / \ref fix64 "fix64" / \ref xor_uint8 "xor_uint8" / \ref xor_uint16 "xor_uint16" / \ref xor_uint32 "xor_uint32" / \ref xor_uint64 "xor_uint64"
  *  @param x - first argument
  *  @param y - second argument
  *  @returns an array with the pointwise minimum of each element in the two input vectors
@@ -1812,43 +1812,31 @@ D float64[[N]] min(D float64[[N]] x, D float64[[N]] y) {
     __syscall ("shared3p::min_float64_vec", __domainid (D), x, y, x);
     return x;
 }
-// since we cannot have a placeholder for N dim (like a(shape(x))),
-// specific implementation only for 2D cases. Otherwise, convering to float.
-template <domain D: shared3p>
-D fix32[[2]] min (D fix32[[2]] x, D fix32[[2]] y) {
-    uint nrow = shape(x)[0];
-    uint ncol = shape(x)[1];
-    assert(nrow == shape(y)[0] && ncol == shape(y)[1]);
-    D int32[[2]] xi(nrow, ncol);
-    D int32[[2]] yi(nrow, ncol);
-    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
-    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
-    D int32[[2]] res = min(xi, yi);
-    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), res, x);
-    return x;
-}
-template <domain D: shared3p>
-D fix64[[2]] min (D fix64[[2]] x, D fix64[[2]] y) {
-    uint nrow = shape(x)[0];
-    uint ncol = shape(x)[1];
-    assert(nrow == shape(y)[0] && ncol == shape(y)[1]);
-    D int64[[2]] xi(nrow, ncol);
-    D int64[[2]] yi(nrow, ncol);
-    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
-    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
-    D int64[[2]] res = min(xi, yi);
-    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), res, x);
-    return x;
-}
 template <domain D : shared3p, dim N>
 D fix32[[N]] min (D fix32[[N]] x, D fix32[[N]] y) {
-    assert(size(x) == size(y));
-    return (fix32) min((float32) x, (float32) y);
+    assert(shapesAreEqual(x,y));
+    uint n = product(shape(x));
+    D int32[[1]] xi(n);
+    D int32[[1]] yi(n);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint32_to_int32_vec", __domainid (D), y, yi);
+    D int32[[1]] outi = min(xi, yi);
+    D fix32[[N]] out = x;
+    __syscall("shared3p::conv_int32_to_uint32_vec", __domainid(D), outi, out);
+    return out;
 }
 template <domain D : shared3p, dim N>
 D fix64[[N]] min (D fix64[[N]] x, D fix64[[N]] y) {
-    assert(size(x) == size(y));
-    return (fix64) min((float64) x, (float64) y);
+    assert(shapesAreEqual(x,y));
+    uint n = product(shape(x));
+    D int64[[1]] xi(n);
+    D int64[[1]] yi(n);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), x, xi);
+    __syscall("shared3p::conv_uint64_to_int64_vec", __domainid (D), y, yi);
+    D int64[[1]] outi = min(xi, yi);
+    D fix64[[N]] out = x;
+    __syscall("shared3p::conv_int64_to_uint64_vec", __domainid(D), outi, out);
+    return out;
 }
 template <domain D : shared3p>
 D xor_uint8 min (D xor_uint8 x, D xor_uint8 y) {
