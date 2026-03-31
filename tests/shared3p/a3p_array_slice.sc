@@ -70,5 +70,20 @@ void main() {
     op[3:5, 1:4] += app[:2, :3];
     test("assignment; array_slice += array_slice (alt 2)", declassify(op[4, 3]) == 110 + 102 + 112);
 
+    pd_shared3p bool[[1]] bb = {true, true, true, true, false, true, false, false, true, false, false, false, false, true};
+    test("rvalue slicing bool; 1d (alt 1)", declassify(bb[1: 5]) == {true, true, true, false});
+    test("rvalue slicing bool; 1d (alt 2)", declassify(bb[5]) == true);
+    test("rvalue slicing bool; 1d (alt 3)", declassify(bb[6]) == false);
+    test("bool comp (alt 1)", declassify(bb[0] == bb[10]) == false);
+    test("bool comp (alt 2)", declassify(bb[0] == bb[1]) == true);
+    bb[0:2] = false;
+    test("bool assignment (alt 1)", declassify(bb[0:2]) == {false, false});
+    bb[0:2] = {true, false};
+    test("bool assignment (alt 2)", declassify(bb[0:2]) == {true, false});
+    bb[0:2] |= true;
+    test("bool OR (alt 1)", declassify(bb[0:2]) == {true, true});
+    bb[7:11] ^= true;
+    test("bool XOR (alt 1)", declassify(bb[7:11]) == {true, false, true, true});
+
     test_report();
 }
