@@ -43,6 +43,7 @@ void test(string desc, bool [[N]] resvec) {
     bool res = all(resvec);
     publish(var_prefix + tostring(all_tests) + "_description", desc);
     publish(var_prefix + tostring(all_tests) + "_result", res);
+        print(res);
     ++all_tests;
     res ? ++passed_tests : ++failed_tests;
 }
@@ -52,6 +53,7 @@ void test(string desc, bool [[N]] resvec, D T [[M]] t) {
     bool res = all(resvec);
     publish(var_prefix + tostring(all_tests) + "_description", "[$T] " + desc);
     publish(var_prefix + tostring(all_tests) + "_result", res);
+    print(res);
     ++all_tests;
     res ? ++passed_tests : ++failed_tests;
 }
@@ -60,6 +62,7 @@ template <type T>
 void test(string desc, PrecisionTest<T> p) {
     publish(var_prefix + tostring(all_tests) + "_description", "[$T] " + desc + " " + _precision_to_string(p));
     publish(var_prefix + tostring(all_tests) + "_result", p.res);
+        print(res);
     ++all_tests;
     p.res ? ++passed_tests : ++failed_tests;
 }
@@ -68,7 +71,7 @@ template <domain D, type T, type U, dim N, dim M, dim O>
 void test(string desc, bool [[N]] resvec, D T [[M]] t, D U [[O]] u) {
     bool res = all(resvec);
     publish(var_prefix + tostring(all_tests) + "_description", "[$T,$U] " + desc);
-    publish(var_prefix + tostring(all_tests) + "_result", res);
+    publish(var_prefix + tostring(all_tests) + "_result", res);    print(res);
     ++all_tests;
     res ? ++passed_tests : ++failed_tests;
 }

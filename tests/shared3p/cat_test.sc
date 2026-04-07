@@ -57,5 +57,15 @@ void main() {
     test("cat", cp[1 + 10, 2, 0] == 161);
     test("cat", cp[1 + 10, 2 + 1, 0] == 61);
 
+    pd_shared3p int32[[1]] gg0(0) = 1;
+    pd_shared3p int32[[1]] gg1(33) = 2;
+    test("cat empty", shape(cat(gg0, gg1))[0] == 33);
+    test("cat empty", declassify(cat(gg0, gg1)[0]) == 2);
+    test("cat empty", declassify(cat(gg0, gg1)[32]) == 2);
+    test("cat empty", shape(cat(gg1, gg0))[0] == 33);
+    test("cat empty", declassify(cat(gg1, gg0)[0]) == 2);
+    test("cat empty", declassify(cat(gg1, gg0)[32]) == 2);
+    test("cat empty", shape(cat(gg0, gg0))[0] == 0);
+
     test_report();
 }

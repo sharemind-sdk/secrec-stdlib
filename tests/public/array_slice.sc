@@ -67,5 +67,8 @@ void main() {
     op[3:5, 1:4] += app[:2, :3];
     test("assignment; array_slice += array_slice (alt 2)", op[4, 3] == 110 + 102 + 112);
 
+    uint64[[1]] nope(0) = 2;
+    test("empty", shape(nope[0:0])[0] == 0);
+
     test_report();
 }

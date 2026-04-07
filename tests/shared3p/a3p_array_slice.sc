@@ -85,5 +85,8 @@ void main() {
     bb[7:11] ^= true;
     test("bool XOR (alt 1)", declassify(bb[7:11]) == {true, false, true, true});
 
+    pd_shared3p uint64[[1]] nope(0) = 2;
+    test("empty", shape(nope[0:0])[0] == 0);
+
     test_report();
 }
