@@ -21,7 +21,7 @@ module test_utility_random;
 
 template <type T, dim N>
 T[[N]] randomize(T[[N]] data) {
-    __syscall ("blockingURandomize", __ref data);
+    __syscall ("blockingRandomize", __ref data);
     return data;
 }
 
