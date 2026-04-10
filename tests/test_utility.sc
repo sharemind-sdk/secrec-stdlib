@@ -62,7 +62,7 @@ template <type T>
 void test(string desc, PrecisionTest<T> p) {
     publish(var_prefix + tostring(all_tests) + "_description", "[$T] " + desc + " " + _precision_to_string(p));
     publish(var_prefix + tostring(all_tests) + "_result", p.res);
-        print(res);
+    print(p.res);
     ++all_tests;
     p.res ? ++passed_tests : ++failed_tests;
 }
