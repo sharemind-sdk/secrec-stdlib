@@ -966,12 +966,16 @@ D int[[2]] matrixMultiplication (D int[[2]] x, D int[[2]] y) {
 
 template <domain D : shared3p>
 D float32[[2]] matrixMultiplication (D float32[[2]] x, D float32[[2]] y) {
-    return _matrixMultiplication (x, y);
+    D float32[[3]] x2 = reshape(x, 1, shape(x)[0], shape(x)[1]);
+    D float32[[3]] y2 = reshape(y, 1, shape(y)[0], shape(y)[1]);
+    return _matrixMultiplication (x2, y2)[0,:,:];
 }
 
 template <domain D : shared3p>
 D float64[[2]] matrixMultiplication (D float64[[2]] x, D float64[[2]] y) {
-    return _matrixMultiplication (x, y);
+    D float64[[3]] x2 = reshape(x, 1, shape(x)[0], shape(x)[1]);
+    D float64[[3]] y2 = reshape(y, 1, shape(y)[0], shape(y)[1]);
+    return _matrixMultiplication (x2, y2)[0,:,:];
 }
 
 template <domain D : shared3p>
