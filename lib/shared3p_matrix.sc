@@ -900,7 +900,18 @@ D T[[2]] _intMatrixMultiplication(D T[[2]] x, D T[[2]] y) {
     uint64[[1]] n (2) = shape(y);
     assert(m[1] == n[0]);
     D T[[2]] z (m[0], n[1]);
-    __syscall("shared3p::mat_mult_$T\_vec", __domainid(D), x, y, z, __cref m[0], __cref m[1], __cref n[1]);
+    __syscall("shared3p::batch_mat_mult_$T\_vec", __domainid(D), x, y, z, __cref 1, __cref m[0], __cref m[1], __cref n[1]);
+    return z;
+}
+
+template <domain D : shared3p, type T>
+D T[[3]] _intMatrixMultiplication(D T[[3]] x, D T[[3]] y) {
+    uint64[[1]] m (3) = shape(x);
+    uint64[[1]] n (3) = shape(y);
+    assert(m[0] == n[0]);
+    assert(m[2] == n[1]);
+    D T[[3]] z (m[0], m[1], n[2]);
+    __syscall("shared3p::batch_mat_mult_$T\_vec", __domainid(D), x, y, z, __cref m[0], __cref m[1], __cref m[2], __cref n[2]);
     return z;
 }
 
@@ -993,7 +1004,7 @@ D fix64[[2]] matrixMultiplication (D fix64[[2]] x, D fix64[[2]] y) {
  *  @{
  *  @brief Function for multiplying two matrices
  *  @note **D** - shared3p protection domain
- *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64"
+ *  @note Supported types - \ref uint8 "uint8" / \ref uint16 "uint16" / \ref uint32 "uint32" / \ref uint64 "uint" / \ref int8 "int8" / \ref int16 "int16" / \ref int32 "int32" / \ref int64 "int" / \ref float32 "float32" / \ref float64 "float64" / \ref fix32 "fix32" / \ref fix64 "fix64"
  *  @warning no. of columns of x must equal no. of rows of y. Also, there should be an equal no. of matrices in both structures
  *  @param x,y - 3-dimensional matrices of supported type and shape
  *  @return We multiply across the last two dimensions and return a vector of product matrices
@@ -1002,42 +1013,42 @@ D fix64[[2]] matrixMultiplication (D fix64[[2]] x, D fix64[[2]] y) {
 
 template <domain D : shared3p>
 D uint8[[3]] matrixMultiplication (D uint8[[3]] x, D uint8[[3]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D uint16[[3]] matrixMultiplication (D uint16[[3]] x, D uint16[[3]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D uint32[[3]] matrixMultiplication (D uint32[[3]] x, D uint32[[3]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D uint[[3]] matrixMultiplication (D uint[[3]] x, D uint[[3]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D int8[[3]] matrixMultiplication (D int8[[3]] x, D int8[[3]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D int16[[3]] matrixMultiplication (D int16[[3]] x, D int16[[3]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D int32[[3]] matrixMultiplication (D int32[[3]] x, D int32[[3]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
 D int[[3]] matrixMultiplication (D int[[3]] x, D int[[3]] y) {
-    return _matrixMultiplication (x, y);
+    return _intMatrixMultiplication (x, y);
 }
 
 template <domain D : shared3p>
@@ -1047,6 +1058,16 @@ D float32[[3]] matrixMultiplication (D float32[[3]] x, D float32[[3]] y) {
 template <domain D : shared3p>
 D float64[[3]] matrixMultiplication (D float64[[3]] x, D float64[[3]] y) {
     return _matrixMultiplication (x, y);
+}
+
+template <domain D : shared3p>
+D fix32[[3]] matrixMultiplication (D fix32[[3]] x, D fix32[[3]] y) {
+    return _intMatrixMultiplication (x, y);
+}
+
+template <domain D : shared3p>
+D fix64[[3]] matrixMultiplication (D fix64[[3]] x, D fix64[[3]] y) {
+    return _intMatrixMultiplication (x, y);
 }
 
 /** @}*/
