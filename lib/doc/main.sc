@@ -21,7 +21,7 @@
  *
  * @section LICENSE
  *
- * Copyright (C) 2023 Cybernetica
+ * Copyright (C) 2026 Cybernetica
  *
  * \subsection commercial_license Research/Commercial License Usage
  *
